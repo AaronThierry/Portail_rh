@@ -65,5 +65,20 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        // Middleware Spatie Permission (natifs)
+        'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+
+        // Middleware personnalisés pour les permissions
+        'check.permission' => \App\Http\Middleware\CheckPermission::class,
+        'require.role' => \App\Http\Middleware\RequireRole::class,
+        'same.company' => \App\Http\Middleware\EnsureSameCompany::class,
+        'log.permissions' => \App\Http\Middleware\LogPermissionChecks::class,
+        'force.password.change' => \App\Http\Middleware\ForcePasswordChange::class,
+
+        // Middleware 2FA
+        '2fa' => \App\Http\Middleware\TwoFactorMiddleware::class,
     ];
 }

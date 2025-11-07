@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use App\Models\Personnel;
+use App\Mail\UserCredentialsMail;
+use App\Helpers\PasswordHelper;
 
 class UserController extends Controller
 {
@@ -65,11 +69,51 @@ class UserController extends Controller
 
             $user = Auth::user();
 
-            // Si c'est une requête JSON (API), générer un token
+            // Vérifier si l'utilisateur doit changer son mot de passe
+            if ($user->force_password_change) {
+                // Marquer que l'utilisateur doit changer son mot de passe
+                $request->session()->put('must_change_password', true);
+
+                // Si c'est une requête JSON (API)
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Changement de mot de passe requis',
+                        'requires_password_change' => true,
+                        'redirect' => route('password.change-first')
+                    ], 200);
+                }
+
+                // Rediriger vers la page de changement de mot de passe
+                return redirect()->route('password.change-first')
+                    ->with('info', 'Pour des raisons de sécurité, vous devez changer votre mot de passe avant de continuer.');
+            }
+
+            // Si l'utilisateur a activé le 2FA, rediriger vers la page de vérification
+            if ($user->google2fa_enabled) {
+                // Marquer que l'utilisateur a besoin de vérifier le 2FA
+                $request->session()->put('2fa_required', true);
+
+                // Si c'est une requête JSON (API)
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Authentification 2FA requise',
+                        'requires_2fa' => true,
+                        'redirect' => route('two-factor.show')
+                    ], 200);
+                }
+
+                // Rediriger vers la page de vérification 2FA
+                return redirect()->route('two-factor.show');
+            }
+
+            // Si le 2FA n'est pas activé, continuer normalement
             if ($request->expectsJson()) {
                 $token = $user->createToken('auth_token')->plainTextToken;
 
                 return response()->json([
+                    'success' => true,
                     'message' => 'Connexion réussie',
                     'user' => $user,
                     'token' => $token,
@@ -84,6 +128,7 @@ class UserController extends Controller
         // Échec de l'authentification
         if ($request->expectsJson()) {
             return response()->json([
+                'success' => false,
                 'message' => 'E-mail ou mot de passe incorrect'
             ], 401);
         }
@@ -106,9 +151,13 @@ class UserController extends Controller
         // Déconnexion de la session web
         Auth::logout();
 
+        // Suppression des données de session 2FA
+        $request->session()->forget('2fa_verified');
+        $request->session()->forget('2fa_required');
+
         // Invalidation de la session
         $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        //$request->session()->regenerateToken();
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -295,8 +344,40 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('created_at', 'desc')->get();
-        return view('utilisateurs.index', compact('users'));
+        // Vérifier que l'utilisateur a un rôle assigné
+        if (!auth()->user()->roles()->exists()) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Votre compte n\'a pas de rôle assigné. Contactez un administrateur.');
+        }
+
+        // Vérifier la permission de visualisation
+        if (!auth()->user()->can('view-users')) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Vous n\'avez pas la permission d\'accéder à cette page.');
+        }
+
+        // Si l'utilisateur est Super Admin, afficher tous les utilisateurs
+        // Sinon, filtrer par entreprise
+        $query = User::with(['entreprise', 'roles', 'personnel'])->orderBy('created_at', 'desc');
+
+        // Filtrer par entreprise si l'utilisateur n'est pas Super Admin
+        if (!auth()->user()->hasRole('Super Admin') && auth()->user()->entreprise_id) {
+            $query->where('entreprise_id', auth()->user()->entreprise_id);
+        }
+
+        $users = $query->get();
+
+        // Récupérer les personnels sans compte utilisateur
+        $personnels_query = Personnel::whereDoesntHave('user');
+
+        // Filtrer par entreprise si nécessaire
+        if (!auth()->user()->hasRole('Super Admin') && auth()->user()->entreprise_id) {
+            $personnels_query->where('entreprise_id', auth()->user()->entreprise_id);
+        }
+
+        $personnels_sans_compte = $personnels_query->get();
+
+        return view('utilisateurs.index', compact('users', 'personnels_sans_compte'));
     }
 
     /**
@@ -320,22 +401,26 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        // Mapping des rôles pour uniformiser les formats
+        $roleMapping = [
+            'Super Admin' => 'Super Admin',
+            'Admin' => 'Admin',
+            'Manager' => 'Manager',
+            'Employé' => 'Employé',
+            'RH' => 'RH'
+        ];
+
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|min:3|max:255',
+            'personnel_id' => 'required|exists:personnels,id',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'phone' => 'nullable|string|max:20',
-            'role' => 'required|in:admin,manager,employee,hr',
-            'department' => 'nullable|string|max:100',
+            'role' => 'required|in:Super Admin,Admin,Manager,Employé,RH',
             'status' => 'required|in:active,inactive'
         ], [
-            'name.required' => 'Le nom est requis',
-            'name.min' => 'Le nom doit contenir au moins 3 caractères',
+            'personnel_id.required' => 'Veuillez sélectionner un employé',
+            'personnel_id.exists' => 'L\'employé sélectionné n\'existe pas',
             'email.required' => 'L\'adresse e-mail est requise',
             'email.email' => 'L\'adresse e-mail doit être valide',
             'email.unique' => 'Cette adresse e-mail est déjà utilisée',
-            'password.required' => 'Le mot de passe est requis',
-            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères',
             'role.required' => 'Le rôle est requis',
             'role.in' => 'Le rôle sélectionné n\'est pas valide',
             'status.required' => 'Le statut est requis',
@@ -345,6 +430,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             if ($request->expectsJson()) {
                 return response()->json([
+                    'success' => false,
                     'message' => 'Erreur de validation',
                     'errors' => $validator->errors()
                 ], 422);
@@ -352,35 +438,90 @@ class UserController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        // Vérifier les permissions de l'utilisateur connecté
+        if (!auth()->user()->can('create-users')) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vous n\'avez pas la permission de créer des utilisateurs'
+                ], 403);
+            }
+            return back()->with('error', 'Vous n\'avez pas la permission de créer des utilisateurs');
+        }
+
+        // Récupérer le personnel
+        $personnel = Personnel::findOrFail($request->personnel_id);
+
+        // Vérifier que le personnel n'a pas déjà un compte
+        if ($personnel->user) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cet employé possède déjà un compte utilisateur'
+                ], 400);
+            }
+            return back()->with('error', 'Cet employé possède déjà un compte utilisateur');
+        }
+
+        // Convertir le rôle au format Spatie
+        $spatieRoleName = $roleMapping[$request->role] ?? 'Employé';
+
+        // Vérifier que seul un Super Admin peut créer un Super Admin
+        if ($spatieRoleName === 'Super Admin' && !auth()->user()->hasRole('Super Admin')) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Seul un Super Admin peut créer un compte Super Admin'
+                ], 403);
+            }
+            return back()->with('error', 'Seul un Super Admin peut créer un compte Super Admin');
+        }
+
         try {
+            // Générer un mot de passe aléatoire
+            $randomPassword = PasswordHelper::generateRandomPassword(12);
+
+            // Créer l'utilisateur
             $user = User::create([
-                'name' => $request->name,
+                'personnel_id' => $personnel->id,
+                'entreprise_id' => $personnel->entreprise_id,
+                'name' => $personnel->nom_complet,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'phone' => $request->phone,
-                'role' => $request->role,
-                'department' => $request->department,
-                'status' => $request->status
+                'password' => Hash::make($randomPassword),
+                'status' => $request->status,
+                'force_password_change' => true // Forcer le changement de mot de passe
             ]);
+
+            // Assigner le rôle via Spatie avec vérification
+            if (\Spatie\Permission\Models\Role::where('name', $spatieRoleName)->exists()) {
+                $user->assignRole($spatieRoleName);
+            } else {
+                throw new \Exception("Le rôle '{$spatieRoleName}' n'existe pas dans le système");
+            }
+
+            // Envoyer l'email avec les identifiants
+            Mail::to($user->email)->send(new UserCredentialsMail($user, $randomPassword));
 
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Utilisateur créé avec succès',
+                    'success' => true,
+                    'message' => 'Compte utilisateur créé avec succès. Les identifiants ont été envoyés par email.',
                     'user' => $user
                 ], 201);
             }
 
             return redirect()->route('utilisateurs.index')
-                ->with('success', 'Utilisateur créé avec succès');
+                ->with('success', 'Compte utilisateur créé avec succès. Les identifiants ont été envoyés par email à ' . $user->email);
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json([
+                    'success' => false,
                     'message' => 'Erreur lors de la création de l\'utilisateur',
                     'error' => $e->getMessage()
                 ], 500);
             }
 
-            return back()->with('error', 'Erreur lors de la création de l\'utilisateur')
+            return back()->with('error', 'Erreur lors de la création de l\'utilisateur: ' . $e->getMessage())
                 ->withInput();
         }
     }
@@ -392,15 +533,26 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        // Mapping des rôles pour uniformiser les formats
+        $roleMapping = [
+            'super_admin' => 'Super Admin',
+            'admin' => 'Admin',
+            'manager' => 'Manager',
+            'employee' => 'Employé',
+            'hr' => 'RH'
+        ];
+
         $validator = Validator::make($request->all(), [
+            'entreprise_id' => 'nullable|exists:entreprises,id',
             'name' => 'required|string|min:3|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6',
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|in:admin,manager,employee,hr',
+            'role' => 'required|in:admin,manager,employee,hr,super_admin',
             'department' => 'nullable|string|max:100',
             'status' => 'required|in:active,inactive'
         ], [
+            'entreprise_id.exists' => 'L\'entreprise sélectionnée n\'existe pas',
             'name.required' => 'Le nom est requis',
             'name.min' => 'Le nom doit contenir au moins 3 caractères',
             'email.required' => 'L\'adresse e-mail est requise',
@@ -423,8 +575,32 @@ class UserController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        // Vérifier les permissions de l'utilisateur connecté
+        if (!auth()->user()->can('edit-users')) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Vous n\'avez pas la permission de modifier des utilisateurs'
+                ], 403);
+            }
+            return back()->with('error', 'Vous n\'avez pas la permission de modifier des utilisateurs');
+        }
+
+        // Convertir le rôle au format Spatie
+        $spatieRoleName = $roleMapping[$request->role] ?? 'Employé';
+
+        // Vérifier que seul un Super Admin peut assigner/modifier le rôle Super Admin
+        if ($spatieRoleName === 'Super Admin' && !auth()->user()->hasRole('Super Admin')) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Seul un Super Admin peut assigner le rôle Super Admin'
+                ], 403);
+            }
+            return back()->with('error', 'Seul un Super Admin peut assigner le rôle Super Admin');
+        }
+
         try {
             $data = [
+                'entreprise_id' => $request->entreprise_id ?? $user->entreprise_id,
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
@@ -439,6 +615,13 @@ class UserController extends Controller
             }
 
             $user->update($data);
+
+            // Mettre à jour le rôle Spatie si modifié
+            if (\Spatie\Permission\Models\Role::where('name', $spatieRoleName)->exists()) {
+                $user->syncRoles([$spatieRoleName]); // syncRoles remplace tous les rôles existants
+            } else {
+                throw new \Exception("Le rôle '{$spatieRoleName}' n'existe pas dans le système");
+            }
 
             if ($request->expectsJson()) {
                 return response()->json([
@@ -500,6 +683,78 @@ class UserController extends Controller
             }
 
             return back()->with('error', 'Erreur lors de la suppression de l\'utilisateur');
+        }
+    }
+
+    /**
+     * Affiche le formulaire de changement de mot de passe obligatoire
+     */
+    public function showFirstPasswordChange()
+    {
+        // Vérifier que l'utilisateur doit effectivement changer son mot de passe
+        if (!auth()->user()->force_password_change) {
+            return redirect()->route('dashboard');
+        }
+
+        return view('auth.change-password-first');
+    }
+
+    /**
+     * Traite le changement de mot de passe obligatoire à la première connexion
+     */
+    public function changeFirstPassword(Request $request)
+    {
+        $user = auth()->user();
+
+        // Vérifier que l'utilisateur doit effectivement changer son mot de passe
+        if (!$user->force_password_change) {
+            return redirect()->route('dashboard');
+        }
+
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Le mot de passe actuel est requis',
+            'new_password.required' => 'Le nouveau mot de passe est requis',
+            'new_password.min' => 'Le nouveau mot de passe doit contenir au moins 8 caractères',
+            'new_password.confirmed' => 'La confirmation du mot de passe ne correspond pas',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        // Vérifier que le mot de passe actuel est correct
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors([
+                'current_password' => 'Le mot de passe actuel est incorrect'
+            ])->withInput();
+        }
+
+        // Vérifier que le nouveau mot de passe est différent de l'ancien
+        if (Hash::check($request->new_password, $user->password)) {
+            return back()->withErrors([
+                'new_password' => 'Le nouveau mot de passe doit être différent de l\'ancien'
+            ])->withInput();
+        }
+
+        try {
+            // Mettre à jour le mot de passe et retirer le flag de changement obligatoire
+            $user->update([
+                'password' => Hash::make($request->new_password),
+                'force_password_change' => false
+            ]);
+
+            // Retirer le flag de session
+            $request->session()->forget('must_change_password');
+
+            return redirect()->route('dashboard')
+                ->with('success', 'Votre mot de passe a été changé avec succès !');
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'Erreur lors du changement de mot de passe')
+                ->withInput();
         }
     }
 }

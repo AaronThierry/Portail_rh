@@ -117,21 +117,27 @@
 
 .filter-btn {
   padding: 8px 16px;
-  background: transparent;
-  border: 1px solid var(--card-border);
+  background: var(--bg-tertiary);
+  border: 2px solid var(--card-border);
   border-radius: 8px;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
 }
 
-.filter-btn:hover,
+.filter-btn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--primary);
+  color: var(--text-primary);
+}
+
 .filter-btn.active {
   background: var(--primary);
   border-color: var(--primary);
   color: white;
+  box-shadow: var(--shadow-md);
 }
 
 .recent-activities {
@@ -157,7 +163,8 @@
 }
 
 .activity-item:hover {
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-sm);
 }
 
 .activity-icon {
@@ -216,8 +223,8 @@
   gap: 12px;
   padding: 20px;
   background: var(--bg-tertiary);
-  border: 1px solid transparent;
-  border-radius: 10px;
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
   color: var(--text-primary);
   text-decoration: none;
   font-size: 0.875rem;
@@ -231,8 +238,12 @@
   background: var(--primary);
   border-color: var(--primary);
   color: white;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.action-btn svg {
+  transition: var(--transition);
 }
 
 .action-btn svg {
@@ -358,6 +369,28 @@
     <div class="quick-actions">
         <h2 class="chart-title" style="margin-bottom: 20px;">Actions rapides</h2>
         <div class="actions-grid">
+            @if(auth()->user()->role === 'super_admin')
+            <a href="{{ route('entreprises.index') }}" class="action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+                Gérer entreprises
+            </a>
+            @endif
+            <a href="{{ route('departements.index') }}" class="action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                Départements
+            </a>
+            <a href="{{ route('services.index') }}" class="action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                Services
+            </a>
             <a href="/employes/new" class="action-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -376,13 +409,6 @@
                 </svg>
                 Demande de congé
             </a>
-            <a href="/paie/generate" class="action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                </svg>
-                Générer la paie
-            </a>
             <a href="/rapports/new" class="action-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="20" x2="18" y2="10"></line>
@@ -390,20 +416,6 @@
                     <line x1="6" y1="20" x2="6" y2="14"></line>
                 </svg>
                 Créer un rapport
-            </a>
-            <a href="/offres/new" class="action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                </svg>
-                Publier une offre
-            </a>
-            <a href="/formations/schedule" class="action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                </svg>
-                Planifier formation
             </a>
         </div>
     </div>

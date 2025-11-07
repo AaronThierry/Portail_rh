@@ -604,6 +604,95 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Two-Factor Authentication -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="5" y="11" width="14" height="10" rx="2" ry="2"></rect>
+                            <circle cx="12" cy="16" r="1"></circle>
+                            <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="section-title">Authentification à deux facteurs (2FA)</h3>
+                        <p class="section-description">Renforcez la sécurité de votre compte avec Google Authenticator</p>
+                    </div>
+                </div>
+                <div class="section-body">
+                    @if($user->google2fa_enabled)
+                        <!-- 2FA Enabled -->
+                        <div class="alert alert-success" style="margin-bottom: 24px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <div>
+                                <strong>Authentification à deux facteurs activée</strong>
+                                <p style="margin: 4px 0 0 0; font-size: 0.875rem; opacity: 0.9;">
+                                    Activée le {{ $user->google2fa_verified_at ? $user->google2fa_verified_at->format('d/m/Y à H:i') : 'N/A' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <form method="POST" action="{{ route('two-factor.disable') }}" onsubmit="return confirm('Êtes-vous sûr de vouloir désactiver l\'authentification à deux facteurs ?');">
+                            @csrf
+                            @method('DELETE')
+
+                            <div class="form-group">
+                                <label for="password_2fa" class="form-label required">Confirmez votre mot de passe</label>
+                                <input type="password" id="password_2fa" name="password" class="form-input" required>
+                                <p class="form-help">Pour des raisons de sécurité, veuillez confirmer votre mot de passe</p>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn" style="background: #dc2626; color: white;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                                    </svg>
+                                    Désactiver l'authentification à deux facteurs
+                                </button>
+                            </div>
+                        </form>
+                    @else
+                        <!-- 2FA Disabled -->
+                        <div class="alert" style="background: #fef3c7; color: #92400e; border: 1px solid #fbbf24; margin-bottom: 24px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <div>
+                                <strong>Authentification à deux facteurs désactivée</strong>
+                                <p style="margin: 4px 0 0 0; font-size: 0.875rem; opacity: 0.9;">
+                                    Activez l'authentification à deux facteurs pour mieux protéger votre compte
+                                </p>
+                            </div>
+                        </div>
+
+                        <p style="font-size: 0.9375rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
+                            L'authentification à deux facteurs ajoute une couche de sécurité supplémentaire à votre compte.
+                            Vous devrez entrer un code de vérification depuis votre application Google Authenticator à chaque connexion.
+                        </p>
+
+                        <form method="POST" action="{{ route('two-factor.enable') }}">
+                            @csrf
+                            <div class="form-actions" style="border: none; padding: 0; margin: 0;">
+                                <button type="submit" class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="5" y="11" width="14" height="10" rx="2" ry="2"></rect>
+                                        <circle cx="12" cy="16" r="1"></circle>
+                                        <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+                                    </svg>
+                                    Activer l'authentification à deux facteurs
+                                </button>
+                            </div>
+                        </form>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
 </div>

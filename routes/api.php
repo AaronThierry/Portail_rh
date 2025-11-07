@@ -32,6 +32,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Permet de créer un nouveau compte utilisateur
 Route::post('register', function (Request $request):JsonResponse{
     // Validation des données reçues
+    if(auth()->user()->can('create-users')){
+
+    
     $data = $request->validate([
         'name'=> 'required | min:5',  // Nom obligatoire avec minimum 5 caractères
         'courrier'=> 'required',  // Email obligatoire
@@ -58,7 +61,9 @@ Route::post('register', function (Request $request):JsonResponse{
         'message'=> 'Utilisateur cree avec succes',
         'user_token'=> $token->plainTextToken,  // Le token à utiliser pour les requêtes authentifiées
         'data'=>$user
-    ]);
+      ]);}else{
+        return response()->json(['erreur'=>'Permission non accordee']) ;
+      }
 });
 
 
@@ -215,3 +220,8 @@ Route::post('reset-password', function (Request $request): JsonResponse {
         'message' => 'Mot de passe réinitialisé avec succès. Veuillez vous reconnecter'
     ], 200);
 });
+
+// Route pour récupérer les services d'un département
+Route::get('/personnels/services/{departement}', [App\Http\Controllers\PersonnelController::class, 'getServicesByDepartement'])
+    ->middleware('auth:sanctum')
+    ->name('api.personnels.services');

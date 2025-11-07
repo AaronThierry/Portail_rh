@@ -14,13 +14,16 @@ class ResetCodeMail extends Mailable
     use Queueable, SerializesModels;
     public $code;
     public $name;
+    public $expiryMinutes;
+
     /**
      * Create a new message instance.
      */
-    public function __construct($code, $name)
+    public function __construct($user, $code, $expiryMinutes = 10)
     {
         $this->code = $code;
-        $this->name = $name;
+        $this->name = $user->nom . ' ' . $user->prenom;
+        $this->expiryMinutes = $expiryMinutes;
     }
 
     /**
@@ -29,7 +32,7 @@ class ResetCodeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reset Code Mail',
+            subject: 'Code de réinitialisation de mot de passe',
         );
     }
 

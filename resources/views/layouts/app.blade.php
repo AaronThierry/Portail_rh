@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,23 +11,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}">
+    <!-- Vite Assets -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Sidebar Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
+
     @yield('styles')
 </head>
-<body>
-    <div class="dashboard-layout">
+<body class="h-full font-sans antialiased">
+    <div class="flex h-full bg-gray-50 dark:bg-gray-900">
         <!-- Sidebar -->
         @include('partials.sidebar')
 
         <!-- Main Content -->
-        <div class="main-content">
+        <div class="flex-1 flex flex-col min-w-0 transition-all duration-300 main-content" id="mainContent">
             <!-- Header -->
             @include('partials.header')
 
             <!-- Page Content -->
-            <main class="content-wrapper">
-                @yield('content')
+            <main class="app-main">
+                <div class="main-container">
+                    @yield('content')
+                </div>
             </main>
 
             <!-- Footer -->
@@ -35,8 +41,6 @@
         </div>
     </div>
 
-    <!-- Custom Scripts -->
-    <script src="{{ asset('assets/js/dashboard.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

@@ -22,7 +22,7 @@ class AssignUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'unique:users,email', 'max:255'],
+            // L'email sera pris automatiquement depuis le personnel
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
             'role' => ['required', 'string', 'exists:roles,name'],
             'status' => ['nullable', 'in:active,inactive'],
@@ -37,9 +37,6 @@ class AssignUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'L\'email est requis',
-            'email.email' => 'L\'email doit être une adresse email valide',
-            'email.unique' => 'Cet email est déjà utilisé',
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères',
             'role.required' => 'Le rôle est requis',
             'role.exists' => 'Le rôle sélectionné n\'existe pas',
@@ -55,7 +52,6 @@ class AssignUserRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'email' => 'email',
             'password' => 'mot de passe',
             'role' => 'rôle',
             'status' => 'statut',

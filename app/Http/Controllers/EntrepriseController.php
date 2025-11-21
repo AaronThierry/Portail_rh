@@ -33,10 +33,11 @@ class EntrepriseController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
-            'sigle' => 'nullable|string|max:50',
+            'sigle' => 'required|string|max:50',
             'email' => 'required|email|unique:entreprises,email',
             'telephone' => 'nullable|string|max:20',
             'adresse' => 'nullable|string|max:255',
+            'quartier' => 'nullable|string|max:100',
             'ville' => 'nullable|string|max:100',
             'pays' => 'required|string|max:100',
             'code_postal' => 'nullable|string|max:20',
@@ -47,8 +48,10 @@ class EntrepriseController extends Controller
             'nombre_employes' => 'nullable|integer|min:1',
             'numero_registre' => 'nullable|string|max:100',
             'numero_fiscal' => 'nullable|string|max:100',
+            'numero_cnss' => 'nullable|string|max:100',
         ], [
             'nom.required' => 'Le nom de l\'entreprise est requis',
+            'sigle.required' => 'Le sigle est requis',
             'email.required' => 'L\'adresse e-mail est requise',
             'email.email' => 'L\'adresse e-mail doit être valide',
             'email.unique' => 'Cette adresse e-mail est déjà utilisée',
@@ -59,11 +62,22 @@ class EntrepriseController extends Controller
         ]);
 
         if ($validator->fails()) {
+            // Si c'est une requête AJAX, retourner JSON
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur de validation',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
             return back()->withErrors($validator)->withInput();
         }
 
         try {
             $data = $request->except('logo');
+
+            // Conversion du checkbox is_active en booléen
+            $data['is_active'] = $request->has('is_active') ? 1 : 0;
 
             // Gestion du logo
             if ($request->hasFile('logo')) {
@@ -78,11 +92,27 @@ class EntrepriseController extends Controller
                 $data['logo'] = 'storage/logos/' . $filename;
             }
 
-            Entreprise::create($data);
+            $entreprise = Entreprise::create($data);
+
+            // Si c'est une requête AJAX, retourner JSON
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Entreprise créée avec succès',
+                    'entreprise' => $entreprise
+                ]);
+            }
 
             return redirect()->route('entreprises.index')
                 ->with('success', 'Entreprise créée avec succès');
         } catch (\Exception $e) {
+            // Si c'est une requête AJAX, retourner JSON
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la création de l\'entreprise: ' . $e->getMessage()
+                ], 500);
+            }
             return back()->with('error', 'Erreur lors de la création de l\'entreprise: ' . $e->getMessage())
                 ->withInput();
         }
@@ -115,10 +145,11 @@ class EntrepriseController extends Controller
 
         $validator = Validator::make($request->all(), [
             'nom' => 'required|string|max:255',
-            'sigle' => 'nullable|string|max:50',
+            'sigle' => 'required|string|max:50',
             'email' => 'required|email|unique:entreprises,email,' . $id,
             'telephone' => 'nullable|string|max:20',
             'adresse' => 'nullable|string|max:255',
+            'quartier' => 'nullable|string|max:100',
             'ville' => 'nullable|string|max:100',
             'pays' => 'required|string|max:100',
             'code_postal' => 'nullable|string|max:20',
@@ -129,6 +160,7 @@ class EntrepriseController extends Controller
             'nombre_employes' => 'nullable|integer|min:1',
             'numero_registre' => 'nullable|string|max:100',
             'numero_fiscal' => 'nullable|string|max:100',
+            'numero_cnss' => 'nullable|string|max:100',
             'is_active' => 'boolean',
         ]);
 
@@ -138,6 +170,9 @@ class EntrepriseController extends Controller
 
         try {
             $data = $request->except('logo');
+
+            // Conversion du checkbox is_active en booléen
+            $data['is_active'] = $request->has('is_active') ? 1 : 0;
 
             // Gestion du logo
             if ($request->hasFile('logo')) {

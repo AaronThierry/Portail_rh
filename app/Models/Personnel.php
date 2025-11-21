@@ -21,6 +21,7 @@ class Personnel extends Model
         'sexe',
         'civilite',
         'adresse',
+        'email',
         'telephone',
         'telephone_code_pays',
         'telephone_whatsapp',
@@ -42,7 +43,7 @@ class Personnel extends Model
         'telephone_whatsapp' => 'boolean',
     ];
 
-    protected $appends = ['telephone_complet', 'nom_complet', 'statut_contrat'];
+    protected $appends = ['telephone_complet', 'nom_complet', 'statut_contrat', 'photo_url'];
 
     /**
      * Relation avec l'entreprise
@@ -158,20 +159,55 @@ class Personnel extends Model
     }
 
     /**
-     * Générer un matricule unique
+     * Générer un matricule unique professionnel
+     * Format: [SIGLE]-[ANNÉE]-[NUMÉRO]
+     * Exemple: ACME-25-00001
+     * Similaire aux standards: IBM, Microsoft, Google, Total, Orange
      */
     public static function genererMatricule($entrepriseId)
     {
-        $prefix = 'PER';
-        $year = date('Y');
-        $lastPersonnel = static::where('entreprise_id', $entrepriseId)
-            ->whereYear('created_at', $year)
-            ->orderBy('id', 'desc')
-            ->first();
+        $entreprise = Entreprise::find($entrepriseId);
 
-        $number = $lastPersonnel ? (intval(substr($lastPersonnel->matricule, -4)) + 1) : 1;
+        // 1. Code entreprise (2-4 lettres)
+        if ($entreprise && $entreprise->sigle) {
+            $codeEntreprise = strtoupper(substr($entreprise->sigle, 0, 4));
+        } else {
+            $nom = $entreprise->nom ?? 'ENT';
+            $mots = preg_split('/\s+/', $nom);
+            $motsSignificatifs = array_filter($mots, function($mot) {
+                return strlen($mot) > 2 && !in_array(strtolower($mot), ['les', 'des', 'une', 'the', 'and', 'société', 'company']);
+            });
 
-        return sprintf('%s%s%04d', $prefix, $year, $number);
+            if (count($motsSignificatifs) >= 2) {
+                $codeEntreprise = '';
+                foreach (array_slice($motsSignificatifs, 0, 3) as $mot) {
+                    $codeEntreprise .= strtoupper($mot[0]);
+                }
+            } else {
+                $codeEntreprise = strtoupper(substr($nom, 0, 3));
+            }
+        }
+
+        // 2. Année d'embauche (2 derniers chiffres)
+        $annee = date('y');
+
+        // 3. Construire le préfixe
+        $prefix = "{$codeEntreprise}-{$annee}-";
+
+        do {
+            // Récupérer le dernier matricule de cette année pour cette entreprise
+            $lastPersonnel = static::where('entreprise_id', $entrepriseId)
+                ->where('matricule', 'like', $prefix . '%')
+                ->orderBy('matricule', 'desc')
+                ->first();
+
+            // Numéro séquentiel sur 5 chiffres
+            $number = $lastPersonnel ? (intval(substr($lastPersonnel->matricule, -5)) + 1) : 1;
+            $matricule = sprintf('%s%05d', $prefix, $number);
+
+        } while (static::where('matricule', $matricule)->exists());
+
+        return $matricule;
     }
 
     /**
@@ -194,5 +230,21 @@ class Personnel extends Model
             return null;
         }
         return $this->date_embauche->diffInYears(now());
+    }
+
+    /**
+     * Accesseur pour obtenir l'URL complète de la photo
+     * Retourne l'URL de la photo stockée ou une image par défaut (avatar généré)
+     */
+    public function getPhotoUrlAttribute()
+    {
+        if ($this->photo) {
+            // Si une photo existe, retourner l'URL via le storage public
+            return asset('storage/' . $this->photo);
+        }
+
+        // Image par défaut générée avec UI Avatars
+        // Utilise les initiales du nom complet sur fond violet
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->nom_complet) . '&size=200&background=667eea&color=fff&font-size=0.4&bold=true';
     }
 }

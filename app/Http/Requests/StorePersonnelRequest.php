@@ -36,6 +36,7 @@ class StorePersonnelRequest extends FormRequest
 
             // Coordonnées
             'adresse' => ['nullable', 'string'],
+            'email' => ['nullable', 'email', 'max:255', 'unique:personnels,email'],
             'telephone' => ['nullable', 'string', 'max:20'],
             'telephone_code_pays' => ['nullable', 'string', 'max:10'],
             'telephone_whatsapp' => ['nullable', 'boolean'],
@@ -70,6 +71,8 @@ class StorePersonnelRequest extends FormRequest
             'entreprise_id.exists' => 'L\'entreprise sélectionnée n\'existe pas',
             'nom.required' => 'Le nom est requis',
             'prenoms.required' => 'Le(s) prénom(s) est/sont requis',
+            'email.email' => 'L\'adresse email doit être valide',
+            'email.unique' => 'Cet email est déjà utilisé',
             'type_contrat.required' => 'Le type de contrat est requis',
             'date_fin_contrat.required_if' => 'La date de fin de contrat est requise pour un CDD',
             'date_fin_contrat.after' => 'La date de fin doit être après la date d\'embauche',
@@ -94,6 +97,7 @@ class StorePersonnelRequest extends FormRequest
             'prenoms' => 'prénoms',
             'sexe' => 'sexe',
             'civilite' => 'civilité',
+            'email' => 'email',
             'telephone' => 'téléphone',
             'numero_identification' => 'numéro d\'identification',
             'poste' => 'poste',

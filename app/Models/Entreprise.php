@@ -15,6 +15,7 @@ class Entreprise extends Model
         'email',
         'telephone',
         'adresse',
+        'quartier',
         'ville',
         'pays',
         'code_postal',
@@ -25,6 +26,7 @@ class Entreprise extends Model
         'nombre_employes',
         'numero_registre',
         'numero_fiscal',
+        'numero_cnss',
         'is_active',
     ];
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Personnel;
 use App\Mail\UserCredentialsMail;
@@ -418,9 +419,9 @@ class UserController extends Controller
         ], [
             'personnel_id.required' => 'Veuillez sélectionner un employé',
             'personnel_id.exists' => 'L\'employé sélectionné n\'existe pas',
-            'email.required' => 'L\'adresse e-mail est requise',
-            'email.email' => 'L\'adresse e-mail doit être valide',
-            'email.unique' => 'Cette adresse e-mail est déjà utilisée',
+            'email.required' => 'L\'email est requis',
+            'email.email' => 'L\'email doit être une adresse email valide',
+            'email.unique' => 'Cet email est déjà utilisé par un autre compte',
             'role.required' => 'Le rôle est requis',
             'role.in' => 'Le rôle sélectionné n\'est pas valide',
             'status.required' => 'Le statut est requis',
@@ -463,6 +464,9 @@ class UserController extends Controller
             return back()->with('error', 'Cet employé possède déjà un compte utilisateur');
         }
 
+        // Utiliser l'email du formulaire (déjà validé par le validator)
+        $email = $request->email;
+
         // Convertir le rôle au format Spatie
         $spatieRoleName = $roleMapping[$request->role] ?? 'Employé';
 
@@ -478,6 +482,8 @@ class UserController extends Controller
         }
 
         try {
+            DB::beginTransaction();
+
             // Générer un mot de passe aléatoire
             $randomPassword = PasswordHelper::generateRandomPassword(12);
 
@@ -486,8 +492,10 @@ class UserController extends Controller
                 'personnel_id' => $personnel->id,
                 'entreprise_id' => $personnel->entreprise_id,
                 'name' => $personnel->nom_complet,
-                'email' => $request->email,
+                'email' => $email, // Email du personnel
                 'password' => Hash::make($randomPassword),
+                'phone' => $personnel->telephone_complet ?? null,
+                'department' => $personnel->departement->nom ?? null,
                 'status' => $request->status,
                 'force_password_change' => true // Forcer le changement de mot de passe
             ]);
@@ -499,20 +507,35 @@ class UserController extends Controller
                 throw new \Exception("Le rôle '{$spatieRoleName}' n'existe pas dans le système");
             }
 
-            // Envoyer l'email avec les identifiants
-            Mail::to($user->email)->send(new UserCredentialsMail($user, $randomPassword));
+            // Lier le personnel à l'utilisateur
+            $personnel->user_id = $user->id;
+            $personnel->save();
+
+            // Envoyer l'email avec les identifiants (optionnel, peut échouer sans bloquer)
+            try {
+                Mail::to($user->email)->send(new UserCredentialsMail($user, $randomPassword));
+            } catch (\Exception $mailError) {
+                \Log::warning('Email non envoyé: ' . $mailError->getMessage());
+            }
+
+            DB::commit();
 
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Compte utilisateur créé avec succès. Les identifiants ont été envoyés par email.',
-                    'user' => $user
+                    'message' => 'Compte utilisateur créé avec succès.',
+                    'user' => $user->load('roles'),
+                    'personnel' => $personnel->fresh('user.roles')
                 ], 201);
             }
 
             return redirect()->route('utilisateurs.index')
-                ->with('success', 'Compte utilisateur créé avec succès. Les identifiants ont été envoyés par email à ' . $user->email);
+                ->with('success', 'Compte utilisateur créé avec succès pour ' . $personnel->nom_complet);
         } catch (\Exception $e) {
+            DB::rollBack();
+
+            \Log::error('Erreur création utilisateur: ' . $e->getMessage());
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,

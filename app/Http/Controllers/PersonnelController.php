@@ -91,7 +91,12 @@ class PersonnelController extends Controller
      */
     public function show($id)
     {
-        $personnel = Personnel::with(['entreprise', 'departement', 'service', 'user.roles'])
+        $personnel = Personnel::with([
+                'entreprise',
+                'departement',
+                'service',
+                'user.roles'
+            ])
             ->findOrFail($id);
 
         // Vérifier que l'utilisateur peut voir ce personnel
@@ -101,7 +106,17 @@ class PersonnelController extends Controller
 
         $roles = Role::all();
 
-        return view('personnels.show', compact('personnel', 'roles'));
+        // Charger les départements actifs de l'entreprise du personnel
+        // Inclure les départements globaux (is_global = true) ET les départements spécifiques à l'entreprise
+        $departements = Departement::where('is_active', true)
+            ->where(function ($query) use ($personnel) {
+                $query->where('is_global', true)
+                      ->orWhere('entreprise_id', $personnel->entreprise_id);
+            })
+            ->orderBy('nom')
+            ->get();
+
+        return view('personnels.show', compact('personnel', 'roles', 'departements'));
     }
 
     /**
@@ -265,7 +280,10 @@ class PersonnelController extends Controller
 
             // Vérifier les permissions
             if ($personnel->entreprise_id !== auth()->user()->entreprise_id && !auth()->user()->hasRole('Super Admin')) {
-                abort(403, 'Accès non autorisé');
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Accès non autorisé'
+                ], 403);
             }
 
             // Vérifier si le personnel a déjà un compte
@@ -278,15 +296,39 @@ class PersonnelController extends Controller
 
             $data = $request->validated();
 
+            // Utiliser l'email du personnel pour le compte utilisateur
+            $email = $personnel->email;
+
+            // Vérifier que le personnel a un email
+            if (!$email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Le personnel doit avoir un email pour créer un compte utilisateur'
+                ], 422);
+            }
+
+            // Vérifier que l'email n'est pas déjà utilisé
+            if (User::where('email', $email)->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cet email est déjà utilisé par un autre compte utilisateur'
+                ], 422);
+            }
+
+            // Générer un mot de passe aléatoire si non fourni
+            $randomPassword = $data['password'] ?? \Str::random(12);
+
             // Créer le compte utilisateur
             $user = User::create([
                 'entreprise_id' => $personnel->entreprise_id,
+                'personnel_id' => $personnel->id,
                 'name' => $personnel->nom_complet,
-                'email' => $data['email'],
-                'password' => Hash::make($data['password'] ?? 'password123'), // Mot de passe par défaut
+                'email' => $email,
+                'password' => Hash::make($randomPassword),
                 'phone' => $personnel->telephone_complet,
                 'department' => $personnel->departement->nom ?? null,
                 'status' => $data['status'] ?? 'active',
+                'force_password_change' => true
             ]);
 
             // Assigner le rôle
@@ -303,16 +345,13 @@ class PersonnelController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Compte utilisateur créé et assigné avec succès',
-                'data' => [
-                    'personnel' => $personnel->load('user.roles'),
-                    'credentials' => [
-                        'email' => $user->email,
-                        'password' => $data['password'] ?? 'password123'
-                    ]
-                ]
+                'user' => $user->load('roles'),
+                'personnel' => $personnel->load('user.roles')
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+
+            \Log::error('Erreur assignUser: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,

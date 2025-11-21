@@ -30,8 +30,8 @@ return new class extends Migration
             // Coordonnées
             $table->text('adresse')->nullable();
             $table->string('telephone', 20)->nullable();
-            $table->string('telephone_code_pays', 10)->default('+225'); // Côte d'Ivoire par défaut
-            $table->boolean('telephone_whatsapp')->default(false);
+            $table->string('telephone_code_pays', 10)->default('+226'); // Burkina Faso par défaut
+            $table->boolean('telephone_whatsapp')->default(true); // Tous les numéros sont WhatsApp par défaut
 
             // Documents
             $table->string('numero_identification', 100)->nullable()->unique();

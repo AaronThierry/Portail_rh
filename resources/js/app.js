@@ -27,6 +27,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const mobileMenuButton = document.getElementById('mobileMenuButton');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+
+    // Function to close the sidebar
+    const closeSidebar = () => {
+        if (sidebar) {
+            sidebar.classList.remove('mobile-open');
+        }
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.remove('active');
+        }
+        if (mobileMenuButton) {
+            mobileMenuButton.classList.remove('active');
+        }
+        document.body.style.overflow = '';
+    };
+
+    // Function to open the sidebar
+    const openSidebar = () => {
+        if (sidebar) {
+            sidebar.classList.add('mobile-open');
+        }
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.add('active');
+        }
+        if (mobileMenuButton) {
+            mobileMenuButton.classList.add('active');
+        }
+        document.body.style.overflow = 'hidden';
+    };
 
     // Function to sync burger icon with sidebar state
     const syncBurgerIcon = () => {
@@ -36,12 +65,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (isMobileOpen) {
             mobileMenuButton.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent scroll when menu is open
+            document.body.style.overflow = 'hidden';
         } else {
             mobileMenuButton.classList.remove('active');
             document.body.style.overflow = '';
         }
     };
+
+    // Make closeSidebar globally accessible
+    window.closeSidebar = closeSidebar;
 
     // Submenu toggle functionality
     const submenuButtons = document.querySelectorAll('.nav-link[data-submenu]');
@@ -97,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==================== MOBILE MENU TOGGLE ====================
-    if (mobileMenuButton && sidebar && sidebarOverlay) {
+    if (mobileMenuButton && sidebar) {
         // Toggle mobile menu
         mobileMenuButton.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -106,60 +138,60 @@ document.addEventListener('DOMContentLoaded', function() {
             const isOpen = sidebar.classList.contains('mobile-open');
 
             if (isOpen) {
-                sidebar.classList.remove('mobile-open');
-                sidebarOverlay.classList.remove('active');
+                closeSidebar();
             } else {
-                sidebar.classList.add('mobile-open');
-                sidebarOverlay.classList.add('active');
+                openSidebar();
             }
-
-            // Sync burger icon animation
-            syncBurgerIcon();
         });
+    }
 
-        // Close sidebar when clicking overlay
+    // Close sidebar when clicking overlay
+    if (sidebarOverlay) {
         sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.remove('mobile-open');
-            sidebarOverlay.classList.remove('active');
-            syncBurgerIcon();
+            closeSidebar();
         });
+    }
 
-        // Close mobile menu when clicking on a link (excluding submenu toggles)
+    // Close sidebar when clicking close button
+    if (sidebarCloseBtn) {
+        sidebarCloseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            closeSidebar();
+        });
+    }
+
+    // Close mobile menu when clicking on a link (excluding submenu toggles)
+    if (sidebar) {
         sidebar.querySelectorAll('a.nav-link, .submenu-link').forEach(link => {
             link.addEventListener('click', () => {
                 if (window.innerWidth <= 1024) {
-                    sidebar.classList.remove('mobile-open');
-                    sidebarOverlay.classList.remove('active');
-                    syncBurgerIcon();
+                    closeSidebar();
                 }
             });
         });
-
-        // Close sidebar on window resize to desktop
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                if (window.innerWidth > 1024) {
-                    sidebar.classList.remove('mobile-open');
-                    sidebarOverlay.classList.remove('active');
-                    syncBurgerIcon();
-                }
-            }, 250);
-        });
-
-        // Close sidebar on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && sidebar.classList.contains('mobile-open')) {
-                sidebar.classList.remove('mobile-open');
-                sidebarOverlay.classList.remove('active');
-                syncBurgerIcon();
-            }
-        });
-
-        // Initial sync on page load
-        syncBurgerIcon();
     }
+
+    // Close sidebar on window resize to desktop
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (window.innerWidth > 1024) {
+                closeSidebar();
+            }
+        }, 250);
+    });
+
+    // Close sidebar on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('mobile-open')) {
+            closeSidebar();
+        }
+    });
+
+    // Initial sync on page load
+    syncBurgerIcon();
 
     // Add smooth scroll behavior
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

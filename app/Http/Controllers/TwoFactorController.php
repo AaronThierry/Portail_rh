@@ -134,7 +134,13 @@ class TwoFactorController extends Controller
 
         if ($valid) {
             session(['2fa_verified' => true]);
-            return redirect()->intended('dashboard');
+
+            // Rediriger selon le rôle
+            if ($user->hasRole('Super Admin')) {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->route('espace-employe.dashboard');
         }
 
         return back()->with('error', 'Code de vérification invalide.');

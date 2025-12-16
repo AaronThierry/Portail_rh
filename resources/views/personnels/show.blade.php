@@ -270,7 +270,7 @@
 }
 
 .badge-info {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #4A90D9 0%, #2E6BB3 100%);
     color: #ffffff;
 }
 
@@ -1725,7 +1725,7 @@ select.form-input-compact:hover {
 }
 
 .card-contract .card-icon-modern {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    background: linear-gradient(135deg, #4A90D9 0%, #2E6BB3 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
@@ -1959,7 +1959,7 @@ select.form-input-compact:hover {
 }
 
 .dark .card-contract .card-icon-modern {
-    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    background: linear-gradient(135deg, #5BA3E8 0%, #4A90D9 100%);
 }
 
 .dark .info-item-modern:hover {
@@ -1980,7 +1980,7 @@ select.form-input-compact:hover {
 <div class="personnel-show-modern">
     <!-- Navigation avec Breadcrumb -->
     <div class="breadcrumb-nav">
-        <a href="{{ route('personnels.index') }}" class="breadcrumb-link">
+        <a href="{{ route('admin.personnels.index') }}" class="breadcrumb-link">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             </svg>

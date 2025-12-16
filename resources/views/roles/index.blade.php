@@ -10,8 +10,8 @@
             <h1 class="text-2xl font-bold text-gray-800">Gestion des Rôles</h1>
             <p class="text-sm text-gray-600 mt-1">Créez et gérez les rôles utilisateurs</p>
         </div>
-        <a href="{{ route('roles.create') }}"
-           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-150">
+        <a href="{{ route('admin.roles.create') }}"
+           class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-lg transition duration-150">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -69,7 +69,7 @@
                     <tr class="hover:bg-gray-50 transition duration-150">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
                                     <span class="text-white font-bold text-sm">{{ substr($role->name, 0, 2) }}</span>
                                 </div>
                                 <div class="ml-4">
@@ -101,7 +101,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex justify-end space-x-2">
                                 {{-- Gérer les permissions --}}
-                                <a href="{{ route('roles.permissions', $role) }}"
+                                <a href="{{ route('admin.roles.permissions', $role) }}"
                                    class="inline-flex items-center px-3 py-1.5 border border-purple-300 text-purple-700 bg-purple-50 rounded-md hover:bg-purple-100 transition"
                                    title="Gérer les permissions">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,7 +111,7 @@
                                 </a>
 
                                 {{-- Modifier --}}
-                                <a href="{{ route('roles.edit', $role) }}"
+                                <a href="{{ route('admin.roles.edit', $role) }}"
                                    class="inline-flex items-center px-3 py-1.5 border border-blue-300 text-blue-700 bg-blue-50 rounded-md hover:bg-blue-100 transition"
                                    title="Modifier">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +121,7 @@
 
                                 {{-- Supprimer --}}
                                 @unless(in_array($role->name, ['Super Admin', 'Admin']))
-                                    <form action="{{ route('roles.destroy', $role) }}" method="POST" class="inline"
+                                    <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" class="inline"
                                           onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rôle ?')">
                                         @csrf
                                         @method('DELETE')
@@ -144,7 +144,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                             </svg>
                             <p class="mt-4 text-sm text-gray-500">Aucun rôle trouvé</p>
-                            <a href="{{ route('roles.create') }}" class="mt-2 inline-block text-sm text-blue-600 hover:text-blue-800">
+                            <a href="{{ route('admin.roles.create') }}" class="mt-2 inline-block text-sm text-primary-600 hover:text-primary-800">
                                 Créer le premier rôle
                             </a>
                         </td>

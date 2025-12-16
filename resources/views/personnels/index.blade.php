@@ -2673,7 +2673,7 @@ input[type="date"]:focus + .date-info {
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('personnels.show', $personnel->id) }}" class="btn-icon btn-view" title="Voir détails">
+                                <a href="{{ route('admin.personnels.show', $personnel->id) }}" class="btn-icon btn-view" title="Voir détails">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                         <circle cx="12" cy="12" r="3"></circle>
@@ -3578,7 +3578,7 @@ document.getElementById('personnelForm').addEventListener('submit', async (e) =>
     submitBtn.innerHTML = '<svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> Enregistrement...';
 
     try {
-        const response = await fetch('{{ route("personnels.store") }}', {
+        const response = await fetch('{{ route("admin.personnels.store") }}', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,

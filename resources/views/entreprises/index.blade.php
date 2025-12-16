@@ -4,625 +4,353 @@
 
 @section('styles')
 <style>
-/* ===================================
-   ANIMATIONS & KEYFRAMES
-   =================================== */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* ==================== ENTREPRISES PAGE - RH+ DESIGN ==================== */
+
+:root {
+    --rh-primary: #4A90D9;
+    --rh-primary-dark: #2E6BB3;
+    --rh-primary-light: #E8F4FD;
+    --rh-orange: #FF9500;
+    --rh-orange-dark: #FF6B00;
+    --rh-orange-light: #FFF3E0;
+    --rh-success: #27AE60;
+    --rh-danger: #E74C3C;
+    --rh-gray: #7F8C8D;
+    --rh-text: #2C3E50;
+    --rh-text-muted: #8B9CAD;
+    --rh-border: #E8ECF0;
+    --rh-bg: #F8FAFB;
+    --rh-card: #ffffff;
+    --rh-shadow: rgba(74, 144, 217, 0.1);
+}
+
+.dark {
+    --rh-bg: #111622;
+    --rh-card: #1A1F2E;
+    --rh-text: #E8ECF0;
+    --rh-text-muted: #8B9CAD;
+    --rh-border: #2D3548;
+    --rh-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Page Container */
+.entreprises-page {
+    padding: 1.5rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
-
-@keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* ===================================
-   PAGE CONTAINER & LAYOUT
-   =================================== */
-.entreprises-page {
-    padding: 24px;
-    max-width: 1920px;
-    margin: 0 auto;
-    min-height: 100vh;
-    animation: fadeIn 0.6s ease;
-}
-
-/* ===================================
-   HERO SECTION ULTRA MODERN
-   =================================== */
-.hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 24px;
-    padding: 40px 48px;
-    margin-bottom: 24px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
-    animation: fadeInUp 0.6s ease;
-}
-
-/* Decorative Elements */
-.hero-decoration-1 {
-    position: absolute;
-    top: -100px;
-    right: -100px;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
-    border-radius: 50%;
-    animation: float 8s ease-in-out infinite;
-}
-
-.hero-decoration-2 {
-    position: absolute;
-    bottom: -150px;
-    left: -150px;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    animation: float 10s ease-in-out infinite reverse;
-}
-
-.hero-decoration-3 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: conic-gradient(from 0deg, rgba(255, 255, 255, 0.05), transparent);
-    border-radius: 50%;
-    animation: spin 30s linear infinite;
-    opacity: 0.3;
-}
-
-.hero-content {
-    position: relative;
-    z-index: 1;
+/* ==================== HEADER SECTION ==================== */
+.page-header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 32px;
-}
-
-.hero-left {
-    flex: 1;
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-}
-
-.hero-icon-wrapper {
-    position: relative;
-    flex-shrink: 0;
-}
-
-.hero-icon-inner {
-    width: 68px;
-    height: 68px;
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(20px);
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    animation: float 4s ease-in-out infinite;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-}
-
-.hero-icon-inner svg {
-    color: #ffffff;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
-}
-
-.hero-text {
-    flex: 1;
-}
-
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50px;
-    padding: 4px 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #ffffff;
-    margin-bottom: 12px;
-    animation: slideInRight 0.6s ease 0.2s both;
-}
-
-.hero-badge svg {
-    animation: spin 3s linear infinite;
-}
-
-.hero-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #ffffff;
-    margin: 0 0 12px 0;
-    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    letter-spacing: -1px;
-    line-height: 1.1;
-    animation: fadeInUp 0.6s ease 0.3s both;
-}
-
-.hero-subtitle {
-    font-size: 0.9375rem;
-    color: rgba(255, 255, 255, 0.92);
-    margin: 0 0 24px 0;
-    font-weight: 400;
-    line-height: 1.5;
-    max-width: 580px;
-    animation: fadeInUp 0.6s ease 0.4s both;
-}
-
-.hero-actions {
-    display: flex;
-    gap: 12px;
+    margin-bottom: 1.5rem;
     flex-wrap: wrap;
-    animation: fadeInUp 0.6s ease 0.5s both;
+    gap: 1rem;
 }
 
-/* ===================================
-   HERO BUTTONS MODERN
-   =================================== */
-.btn-hero {
-    position: relative;
-    display: inline-flex;
+.page-header-left {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    text-decoration: none;
+    gap: 1rem;
 }
 
-.btn-hero-primary {
-    background: #ffffff;
-    color: #667eea;
-    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25);
-}
-
-.btn-hero-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(255, 255, 255, 0.35);
-    background: #f8f9ff;
-}
-
-.btn-hero-secondary {
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(10px);
-}
-
-.btn-hero-secondary:hover {
-    background: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-2px);
-}
-
-.btn-icon {
+.page-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--rh-primary) 0%, var(--rh-primary-dark) 100%);
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: white;
+    box-shadow: 0 8px 24px rgba(74, 144, 217, 0.3);
 }
 
-.btn-text {
-    position: relative;
-    z-index: 1;
+.page-icon svg {
+    width: 28px;
+    height: 28px;
 }
 
-.btn-shine {
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
-    transition: left 0.5s ease;
+.page-title-group h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--rh-text);
+    margin: 0;
+    letter-spacing: -0.5px;
 }
 
-.btn-hero-primary:hover .btn-shine {
-    left: 100%;
+.page-title-group p {
+    font-size: 0.875rem;
+    color: var(--rh-text-muted);
+    margin: 0.25rem 0 0 0;
 }
 
-/* ===================================
-   STATS CARDS MODERN
-   =================================== */
-.stats-grid-modern {
+.page-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-primary-rh {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--rh-primary) 0%, var(--rh-primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(74, 144, 217, 0.3);
+}
+
+.btn-primary-rh:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(74, 144, 217, 0.4);
+}
+
+.btn-secondary-rh {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--rh-card);
+    color: var(--rh-text);
+    border: 2px solid var(--rh-border);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary-rh:hover {
+    border-color: var(--rh-primary);
+    color: var(--rh-primary);
+}
+
+/* ==================== STATS CARDS ==================== */
+.stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    flex-shrink: 0;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.stat-card-modern {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(20px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    padding: 18px 16px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 140px;
+@media (max-width: 1200px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-.stat-card-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+@media (max-width: 640px) {
+    .stats-grid { grid-template-columns: 1fr; }
 }
 
-.stat-card-modern:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
-    border-color: rgba(255, 255, 255, 0.35);
-}
-
-.stat-card-modern:hover .stat-card-bg {
-    opacity: 1;
-}
-
-.stat-header {
+.stat-card {
+    background: var(--rh-card);
+    border: 1px solid var(--rh-border);
+    border-radius: 14px;
+    padding: 1.25rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
-    position: relative;
-    z-index: 1;
+    gap: 1rem;
+    transition: all 0.3s ease;
 }
 
-.stat-icon-modern {
-    width: 36px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: 10px;
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px var(--rh-shadow);
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
 }
 
-.stat-trend {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.85);
-    background: rgba(255, 255, 255, 0.12);
-    padding: 4px 10px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
+.stat-icon svg {
+    width: 24px;
+    height: 24px;
 }
 
-.stat-value-modern {
-    font-size: 1.875rem;
-    font-weight: 900;
-    color: #ffffff;
-    margin: 0 0 6px 0;
+.stat-icon.primary {
+    background: var(--rh-primary-light);
+    color: var(--rh-primary);
+}
+
+.stat-icon.success {
+    background: rgba(39, 174, 96, 0.1);
+    color: var(--rh-success);
+}
+
+.stat-icon.danger {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--rh-danger);
+}
+
+.stat-icon.orange {
+    background: var(--rh-orange-light);
+    color: var(--rh-orange);
+}
+
+.stat-content h3 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--rh-text);
+    margin: 0;
     line-height: 1;
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 1;
 }
 
-.stat-label-modern {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.88);
-    margin: 0 0 10px 0;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    position: relative;
-    z-index: 1;
-}
-
-.stat-progress {
-    height: 4px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
-}
-
-.stat-progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
-    border-radius: 4px;
-    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-/* ===================================
-   PREMIUM BUTTONS
-   =================================== */
-.btn-premium {
-    padding: 14px 32px;
-    border-radius: 14px;
-    font-size: 0.938rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid transparent;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    letter-spacing: 0.3px;
-    position: relative;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.btn-premium::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: left 0.6s ease;
-}
-
-.btn-premium:hover::before {
-    left: 100%;
-}
-
-.btn-premium-primary {
-    background: rgba(255, 255, 255, 0.25);
-    color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(10px);
-}
-
-.btn-premium-primary:hover {
-    background: rgba(255, 255, 255, 0.35);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-}
-
-.btn-premium-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.25);
-}
-
-.btn-premium-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-}
-
-/* ===================================
-   TOOLBAR WITH FILTERS
-   =================================== */
-.toolbar-section {
-    margin-bottom: 24px;
-    animation: fadeInUp 0.7s ease;
-}
-
-.toolbar-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 20px 24px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-    backdrop-filter: blur(20px);
-}
-
-.toolbar-top {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-}
-
-.search-box-premium {
-    position: relative;
-    flex: 1;
-    min-width: 300px;
-}
-
-.search-icon-premium {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.search-input-premium {
-    width: 100%;
-    padding: 11px 16px 11px 44px;
-    border: 2px solid var(--card-border);
-    border-radius: 12px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    outline: none;
+.stat-content p {
+    font-size: 0.8125rem;
+    color: var(--rh-text-muted);
+    margin: 0.375rem 0 0 0;
     font-weight: 500;
 }
 
-.search-input-premium:hover {
-    border-color: rgba(102, 126, 234, 0.3);
-    background: var(--card-bg);
-}
-
-.search-input-premium:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-    background: var(--card-bg);
-    transform: translateY(-1px);
-}
-
-.search-input-premium::placeholder {
-    color: var(--text-muted);
-    font-weight: 400;
-}
-
-.view-toggle-group {
-    display: flex;
-    gap: 8px;
-    background: var(--bg-secondary);
-    padding: 6px;
-    border-radius: 12px;
-    border: 1px solid var(--card-border);
-}
-
-.view-toggle-btn {
-    padding: 8px 14px;
-    border: none;
-    background: transparent;
-    color: var(--text-muted);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* ==================== TOOLBAR ==================== */
+.toolbar {
+    background: var(--rh-card);
+    border: 1px solid var(--rh-border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-weight: 600;
-    font-size: 0.8125rem;
-}
-
-.view-toggle-btn:hover {
-    color: var(--text-primary);
-    background: rgba(102, 126, 234, 0.1);
-}
-
-.view-toggle-btn.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-/* Filter Chips */
-.filter-chips {
-    display: flex;
-    gap: 8px;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
-.filter-chip {
-    padding: 8px 16px;
-    border-radius: 20px;
-    background: var(--bg-secondary);
-    border: 2px solid var(--card-border);
-    color: var(--text-secondary);
+.search-box {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+}
+
+.search-box svg {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--rh-text-muted);
+    width: 18px;
+    height: 18px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.625rem 1rem 0.625rem 2.75rem;
+    border: 2px solid var(--rh-border);
+    border-radius: 10px;
+    background: var(--rh-bg);
+    color: var(--rh-text);
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--rh-primary);
+    box-shadow: 0 0 0 4px rgba(74, 144, 217, 0.1);
+}
+
+.filter-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--rh-border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--rh-text-muted);
     font-size: 0.8125rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-flex;
+    transition: all 0.25s ease;
+    display: flex;
     align-items: center;
-    gap: 6px;
-    text-transform: capitalize;
+    gap: 0.375rem;
 }
 
-.filter-chip:hover {
-    border-color: rgba(102, 126, 234, 0.4);
-    background: var(--card-bg);
-    transform: translateY(-1px);
+.filter-btn:hover {
+    border-color: var(--rh-primary);
+    color: var(--rh-primary);
 }
 
-.filter-chip.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
+.filter-btn.active {
+    background: linear-gradient(135deg, var(--rh-primary) 0%, var(--rh-primary-dark) 100%);
     border-color: transparent;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    color: white;
 }
 
-.filter-chip .chip-count {
+.filter-btn .count {
     background: rgba(255, 255, 255, 0.2);
-    padding: 2px 8px;
-    border-radius: 12px;
+    padding: 0.125rem 0.5rem;
+    border-radius: 10px;
     font-size: 0.75rem;
-    font-weight: 700;
 }
 
-.filter-chip.active .chip-count {
-    background: rgba(255, 255, 255, 0.3);
+.filter-btn:not(.active) .count {
+    background: var(--rh-border);
 }
 
-/* ===================================
-   COMPANIES GRID VIEW
-   =================================== */
+.view-toggle {
+    display: flex;
+    background: var(--rh-bg);
+    border-radius: 8px;
+    padding: 0.25rem;
+}
+
+.view-btn {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    background: transparent;
+    color: var(--rh-text-muted);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.view-btn:hover {
+    color: var(--rh-primary);
+}
+
+.view-btn.active {
+    background: var(--rh-card);
+    color: var(--rh-primary);
+    box-shadow: 0 2px 8px var(--rh-shadow);
+}
+
+/* ==================== COMPANIES GRID ==================== */
 .companies-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 20px;
-    animation: fadeIn 0.5s ease;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.25rem;
 }
 
 .company-card {
-    background: var(--card-bg);
-    border: 2px solid var(--card-border);
-    border-radius: 16px;
-    padding: 20px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
+    background: var(--rh-card);
+    border: 1px solid var(--rh-border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    animation: fadeInUp 0.5s ease backwards;
 }
 
 .company-card::before {
@@ -631,2939 +359,973 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    height: 3px;
+    background: linear-gradient(90deg, var(--rh-primary) 0%, var(--rh-orange) 100%);
     transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s ease;
 }
 
 .company-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-    border-color: rgba(102, 126, 234, 0.3);
-}
-
-.dark .company-card:hover {
-    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px var(--rh-shadow);
+    border-color: var(--rh-primary-light);
 }
 
 .company-card:hover::before {
     transform: scaleX(1);
 }
 
-/* Stagger animation for cards */
-.company-card:nth-child(1) { animation-delay: 0.05s; }
-.company-card:nth-child(2) { animation-delay: 0.1s; }
-.company-card:nth-child(3) { animation-delay: 0.15s; }
-.company-card:nth-child(4) { animation-delay: 0.2s; }
-.company-card:nth-child(5) { animation-delay: 0.25s; }
-.company-card:nth-child(6) { animation-delay: 0.3s; }
-
-.company-card-header {
+.company-header {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.company-logo-wrapper {
-    flex-shrink: 0;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .company-logo {
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
     border-radius: 12px;
     object-fit: cover;
-    border: 2px solid var(--card-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.company-card:hover .company-logo {
-    transform: scale(1.05) rotate(2deg);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border: 2px solid var(--rh-border);
 }
 
 .company-logo-placeholder {
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
     border-radius: 12px;
+    background: linear-gradient(135deg, var(--rh-primary) 0%, var(--rh-primary-dark) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
-    font-weight: 900;
-    font-size: 1.125rem;
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-    transition: all 0.3s ease;
-    letter-spacing: -0.5px;
-}
-
-.company-card:hover .company-logo-placeholder {
-    transform: scale(1.05) rotate(-2deg);
-    box-shadow: 0 12px 28px rgba(102, 126, 234, 0.5);
-}
-
-.company-card-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.company-card-name {
-    font-size: 1rem;
+    color: white;
     font-weight: 800;
-    color: var(--text-primary);
-    margin: 0 0 4px 0;
-    line-height: 1.3;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    letter-spacing: -0.3px;
-}
-
-.company-card-sigle {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.company-card-status {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-}
-
-.company-card-body {
-    margin-bottom: 16px;
-}
-
-.company-detail-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--card-border);
-}
-
-.company-detail-row:last-child {
-    border-bottom: none;
-}
-
-.company-detail-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: rgba(102, 126, 234, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #667eea;
-    flex-shrink: 0;
-}
-
-.company-detail-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.company-detail-label {
-    font-size: 0.6875rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 2px;
-}
-
-.company-detail-value {
-    font-size: 0.875rem;
-    color: var(--text-primary);
-    font-weight: 600;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.company-card-footer {
-    display: flex;
-    gap: 8px;
-    padding-top: 16px;
-    border-top: 2px solid var(--card-border);
-}
-
-.btn-action-card {
-    flex: 1;
-    padding: 10px 16px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 700;
-    font-size: 0.8125rem;
-    text-decoration: none;
-}
-
-.btn-action-view-card {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-    border-color: rgba(59, 130, 246, 0.2);
-}
-
-.btn-action-view-card:hover {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-}
-
-.btn-action-edit-card {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.2);
-}
-
-.btn-action-edit-card:hover {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-}
-
-.btn-action-delete-card {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.2);
-    flex: 0 0 auto;
-    padding: 10px 14px;
-}
-
-.btn-action-delete-card:hover {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-}
-
-/* ===================================
-   BADGE PREMIUM
-   =================================== */
-.badge-premium {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    white-space: nowrap;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transition: all 0.2s ease;
-}
-
-.badge-premium::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: currentColor;
-    animation: pulse 2s ease-in-out infinite;
-}
-
-.badge-premium:hover {
-    transform: translateY(-1px) scale(1.05);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-.badge-active {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #ffffff;
-}
-
-.badge-inactive {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    color: #ffffff;
-}
-
-/* ===================================
-   TABLE VIEW (PREMIUM)
-   =================================== */
-.companies-table-view {
-    animation: fadeIn 0.5s ease;
-}
-
-.table-card-premium {
-    background: var(--card-bg);
-    border: 2px solid var(--card-border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-}
-
-.table-container-premium {
-    overflow-x: auto;
-}
-
-.table-container-premium::-webkit-scrollbar {
-    height: 10px;
-}
-
-.table-container-premium::-webkit-scrollbar-track {
-    background: var(--bg-tertiary);
-    border-radius: 5px;
-}
-
-.table-container-premium::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 5px;
-}
-
-.table-container-premium::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-}
-
-.table-premium {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.table-premium thead {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.table-premium th {
-    padding: 16px 20px;
-    text-align: left;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #ffffff;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    white-space: nowrap;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.table-premium tbody tr {
-    border-bottom: 1px solid var(--card-border);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    animation: fadeInUp 0.4s ease backwards;
-}
-
-.table-premium tbody tr:nth-child(1) { animation-delay: 0.05s; }
-.table-premium tbody tr:nth-child(2) { animation-delay: 0.1s; }
-.table-premium tbody tr:nth-child(3) { animation-delay: 0.15s; }
-.table-premium tbody tr:nth-child(4) { animation-delay: 0.2s; }
-.table-premium tbody tr:nth-child(5) { animation-delay: 0.25s; }
-
-.table-premium tbody tr:hover {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transform: scale(1.01);
-}
-
-.dark .table-premium tbody tr:hover {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
-}
-
-.table-premium tbody tr:last-child {
-    border-bottom: none;
-}
-
-.table-premium td {
-    padding: 16px 20px;
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    vertical-align: middle;
-}
-
-/* Company Cell in Table */
-.company-cell {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+    font-size: 1rem;
 }
 
 .company-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex: 1;
+    min-width: 0;
 }
 
 .company-name {
-    font-weight: 800;
-    color: var(--text-primary);
-    font-size: 0.938rem;
-    letter-spacing: -0.2px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--rh-text);
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .company-sigle {
-    font-size: 0.813rem;
-    color: var(--text-muted);
+    font-size: 0.75rem;
+    color: var(--rh-text-muted);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
 }
 
-/* Contact & Location Info */
-.contact-info,
-.location-info {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+.company-status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }
 
-.contact-email,
-.location-city {
-    color: var(--text-primary);
-    font-weight: 600;
-    font-size: 0.938rem;
-}
-
-.contact-phone,
-.location-country {
-    font-size: 0.813rem;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 500;
-}
-
-/* Action Buttons in Table */
-.action-buttons-group {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.btn-action {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
+.badge {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(148, 163, 184, 0.1);
-    color: #64748b;
-}
-
-.btn-action:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.btn-action-view {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-}
-
-.btn-action-view:hover {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: #ffffff;
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
-}
-
-.btn-action-edit {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-}
-
-.btn-action-edit:hover {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #ffffff;
-    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-}
-
-.btn-action-delete {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-}
-
-.btn-action-delete:hover {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    color: #ffffff;
-    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
-}
-
-/* ===================================
-   EMPTY STATE
-   =================================== */
-.empty-state-premium {
-    text-align: center;
-    padding: 100px 40px;
-    animation: fadeInUp 0.6s ease;
-}
-
-.empty-icon-wrapper {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto 32px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: float 3s ease-in-out infinite;
-}
-
-.empty-icon-premium {
-    width: 80px;
-    height: 80px;
-    color: #667eea;
-    opacity: 0.6;
-}
-
-.empty-title-premium {
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--text-primary);
-    margin-bottom: 16px;
-    letter-spacing: -0.5px;
-}
-
-.empty-description-premium {
-    color: var(--text-muted);
-    font-size: 1.125rem;
-    margin-bottom: 32px;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
-}
-
-.empty-action {
-    margin-top: 16px;
-}
-
-/* ===================================
-   LOADING SKELETON
-   =================================== */
-.skeleton {
-    background: linear-gradient(
-        90deg,
-        var(--bg-secondary) 0%,
-        var(--bg-tertiary) 50%,
-        var(--bg-secondary) 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 8px;
-}
-
-.skeleton-card {
-    padding: 28px;
-    background: var(--card-bg);
-    border: 2px solid var(--card-border);
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
     border-radius: 20px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.skeleton-avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
+.badge-active {
+    background: rgba(39, 174, 96, 0.1);
+    color: var(--rh-success);
 }
 
-.skeleton-text {
-    height: 16px;
-    margin-bottom: 8px;
+.badge-active::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
 }
 
-.skeleton-text.large {
-    height: 24px;
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 
-/* ===================================
-   NOTIFICATIONS
-   =================================== */
-.notification-modern {
-    padding: 18px 28px;
-    border-radius: 16px;
-    margin-bottom: 24px;
+.badge-inactive {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--rh-danger);
+}
+
+.company-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-bottom: 1rem;
+}
+
+.detail-row {
     display: flex;
     align-items: center;
-    gap: 16px;
-    animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    gap: 0.75rem;
 }
 
-.notification-success {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
-    border-left: 4px solid #10b981;
-    color: #10b981;
-    border: 2px solid rgba(16, 185, 129, 0.3);
-}
-
-.notification-error {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%);
-    border-left: 4px solid #ef4444;
-    color: #ef4444;
-    border: 2px solid rgba(239, 68, 68, 0.3);
-}
-
-.notification-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+.detail-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--rh-primary-light);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.2);
+    color: var(--rh-primary);
     flex-shrink: 0;
 }
 
-.notification-content {
-    flex: 1;
-    font-weight: 600;
-    font-size: 0.938rem;
+.detail-icon svg {
+    width: 16px;
+    height: 16px;
 }
 
-/* ===================================
-   MODAL OVERLAY
-   =================================== */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
+.detail-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.detail-label {
+    font-size: 0.6875rem;
+    color: var(--rh-text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.detail-value {
+    font-size: 0.8125rem;
+    color: var(--rh-text);
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.company-footer {
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rh-border);
+}
+
+.btn-action {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.625rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: none;
+    text-decoration: none;
+}
+
+.btn-view {
+    background: var(--rh-primary-light);
+    color: var(--rh-primary);
+}
+
+.btn-view:hover {
+    background: var(--rh-primary);
+    color: white;
+}
+
+.btn-edit {
+    background: rgba(39, 174, 96, 0.1);
+    color: var(--rh-success);
+}
+
+.btn-edit:hover {
+    background: var(--rh-success);
+    color: white;
+}
+
+.btn-delete {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--rh-danger);
+    flex: 0 0 auto;
+    padding: 0.625rem 0.75rem;
+}
+
+.btn-delete:hover {
+    background: var(--rh-danger);
+    color: white;
+}
+
+/* ==================== TABLE VIEW ==================== */
+.companies-table-container {
+    background: var(--rh-card);
+    border: 1px solid var(--rh-border);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.companies-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.companies-table thead {
+    background: linear-gradient(135deg, var(--rh-primary) 0%, var(--rh-primary-dark) 100%);
+}
+
+.companies-table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.companies-table tbody tr {
+    border-bottom: 1px solid var(--rh-border);
+    transition: all 0.25s ease;
+}
+
+.companies-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.companies-table tbody tr:hover {
+    background: var(--rh-primary-light);
+}
+
+.companies-table td {
+    padding: 1rem 1.25rem;
+    color: var(--rh-text);
+    font-size: 0.875rem;
+}
+
+.table-company-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.table-company-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-company-name {
+    font-weight: 700;
+    color: var(--rh-text);
+}
+
+.table-company-sigle {
+    font-size: 0.75rem;
+    color: var(--rh-text-muted);
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.table-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: none;
+}
+
+.table-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ==================== EMPTY STATE ==================== */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    grid-column: 1 / -1;
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+    background: var(--rh-primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--rh-primary);
+}
+
+.empty-icon svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.6;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--rh-text);
+    margin: 0 0 0.5rem 0;
+}
+
+.empty-state p {
+    color: var(--rh-text-muted);
+    margin: 0 0 1.5rem 0;
+}
+
+/* ==================== NOTIFICATIONS ==================== */
+.notification {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.notification-success {
+    background: rgba(39, 174, 96, 0.1);
+    border: 1px solid rgba(39, 174, 96, 0.2);
+    color: var(--rh-success);
+}
+
+.notification-error {
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    color: var(--rh-danger);
+}
+
+.notification svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+/* ==================== MODAL - Portail RH ==================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 15, 28, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
     opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 20px;
+    transition: opacity 0.3s ease;
 }
 
 .modal-overlay.show {
+    display: flex;
     opacity: 1;
-    visibility: visible;
 }
 
-/* ===================================
-   MODAL CONTENT ULTRA-PREMIUM
-   =================================== */
-.modal-content-premium {
-    background: var(--card-bg);
-    border-radius: 24px;
+.modal {
+    background: var(--rh-card);
+    border-radius: 12px;
     width: 100%;
-    max-width: 900px;
-    max-height: 90vh;
+    max-width: 780px;
+    max-height: 88vh;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    animation: modalSlideIn 0.35s ease-out;
+    position: relative;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 30px 80px -12px rgba(0, 0, 0, 0.6);
-    transform: scale(0.9) translateY(40px);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-top: 4px solid var(--rh-primary);
 }
 
-.modal-overlay.show .modal-content-premium {
-    transform: scale(1) translateY(0);
-    opacity: 1;
+@keyframes modalSlideIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
-/* ===================================
-   MODAL HEADER ULTRA-PREMIUM
-   =================================== */
-.modal-header-premium {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 28px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 3px solid rgba(255, 255, 255, 0.15);
+/* Modal Header - Orange */
+.modal-header {
     position: relative;
-    overflow: hidden;
+    background: linear-gradient(135deg, var(--rh-orange) 0%, var(--rh-orange-dark) 100%);
+    color: white;
+    flex-shrink: 0;
 }
 
-.modal-header-premium::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-    pointer-events: none;
+.modal-header-bg {
+    display: none;
 }
 
 .modal-header-content {
     display: flex;
     align-items: center;
-    gap: 16px;
-    position: relative;
-    z-index: 1;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
 }
 
-.modal-header-icon {
-    width: 56px;
-    height: 56px;
+.modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-icon {
+    width: 44px;
+    height: 44px;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
 }
 
-.modal-title-premium {
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #ffffff;
+.modal-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.modal-header-text h2 {
+    font-size: 1.125rem;
+    font-weight: 700;
     margin: 0;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    letter-spacing: -0.5px;
 }
 
-.modal-subtitle-premium {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 4px 0 0 0;
-    font-weight: 500;
+.modal-header-text p {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    margin: 0.125rem 0 0 0;
 }
 
-.modal-close-premium {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: #ffffff;
+.modal-close {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 8px;
+    color: white;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
-    position: relative;
-    z-index: 1;
+    transition: all 0.2s ease;
 }
 
-.modal-close-premium:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: rotate(90deg) scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--rh-danger);
 }
 
-/* ===================================
-   MODAL BODY ULTRA-PREMIUM
-   =================================== */
-.modal-body-premium {
-    padding: 28px 32px;
+.modal-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 1.25rem;
+    max-height: calc(88vh - 140px);
     overflow-y: auto;
+    background: var(--rh-card);
     flex: 1;
 }
 
-.modal-body-premium::-webkit-scrollbar {
-    width: 10px;
+/* Custom Scrollbar */
+.modal-body::-webkit-scrollbar {
+    width: 5px;
 }
 
-.modal-body-premium::-webkit-scrollbar-track {
-    background: var(--bg-tertiary);
-    border-radius: 5px;
+.modal-body::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-.modal-body-premium::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 5px;
+.modal-body::-webkit-scrollbar-thumb {
+    background: var(--rh-border);
+    border-radius: 3px;
 }
 
-.modal-body-premium::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--rh-primary);
 }
 
-/* ===================================
-   FORM SECTIONS
-   =================================== */
-.form-section-premium {
-    margin-bottom: 24px;
-    padding-bottom: 24px;
-    border-bottom: 2px solid var(--card-border);
+/* Form Section */
+.form-section {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px dashed var(--rh-border);
+    position: relative;
 }
 
-.form-section-premium:last-child {
+.form-section:last-child {
     margin-bottom: 0;
     padding-bottom: 0;
     border-bottom: none;
 }
 
-.section-title-premium {
-    font-size: 1.125rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    margin: 0 0 18px 0;
+.form-section-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    letter-spacing: -0.3px;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
 }
 
-.section-title-premium svg {
-    color: #667eea;
-    flex-shrink: 0;
+.form-section-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--rh-primary-light) 0%, rgba(74, 144, 217, 0.1) 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--rh-primary);
+    transition: all 0.3s ease;
 }
 
-/* ===================================
-   FORM GRID
-   =================================== */
-.form-grid-premium {
+.form-section-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.form-section-icon.success {
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.12) 0%, rgba(39, 174, 96, 0.05) 100%);
+    color: var(--rh-success);
+}
+
+.form-section-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--rh-text);
+    margin: 0;
+}
+
+/* Form Grid */
+.form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: 1rem;
 }
 
-.form-grid-premium:last-child {
+@media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+}
+
+/* Form Group */
+.form-group {
     margin-bottom: 0;
+    position: relative;
 }
 
-.form-group-premium {
-    margin-bottom: 0;
-}
-
-.form-group-premium.full-width {
+.form-group.full-width {
     grid-column: 1 / -1;
 }
 
-/* ===================================
-   FORM LABELS & INPUTS
-   =================================== */
-.form-label-premium {
-    display: block;
+/* Form Label */
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
     font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
+    font-weight: 700;
+    color: var(--rh-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
 }
 
-.form-label-premium.required::after {
+.form-label.required::after {
     content: '*';
-    color: #ef4444;
-    margin-left: 6px;
-    font-weight: 900;
+    color: var(--rh-orange);
+    font-size: 0.875rem;
+    font-weight: 800;
 }
 
-.form-input-premium {
+/* Form Input */
+.form-input {
     width: 100%;
-    padding: 9px 12px;
-    border: 1.5px solid var(--card-border);
-    border-radius: 8px;
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    font-size: 0.8125rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    outline: none;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--rh-border);
+    border-radius: 10px;
+    background: var(--rh-bg);
+    color: var(--rh-text);
+    font-size: 0.875rem;
     font-weight: 500;
-    min-height: 38px;
+    transition: all 0.25s ease;
 }
 
-.form-input-premium:hover {
-    border-color: rgba(102, 126, 234, 0.3);
-    background: var(--card-bg);
+.form-input:hover {
+    border-color: rgba(74, 144, 217, 0.4);
 }
 
-.form-input-premium:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-    background: var(--card-bg);
-    transform: translateY(-1px);
+.form-input:focus {
+    outline: none;
+    border-color: var(--rh-orange);
+    box-shadow: 0 0 0 3px rgba(255, 149, 0, 0.12);
 }
 
-.form-input-premium::placeholder {
-    color: var(--text-muted);
+.form-input::placeholder {
+    color: var(--rh-text-muted);
     font-weight: 400;
 }
 
-textarea.form-input-premium {
+textarea.form-input {
     resize: vertical;
     min-height: 80px;
-    font-family: inherit;
+    line-height: 1.5;
 }
 
-/* Error & Success States */
-.form-input-premium.error {
-    border-color: #ef4444;
-    background: rgba(239, 68, 68, 0.05);
+/* Form Input Error State */
+.form-input.error {
+    border-color: var(--rh-danger);
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12);
 }
 
-.form-input-premium.success {
-    border-color: #10b981;
-    background: rgba(16, 185, 129, 0.05);
-}
-
-/* ===================================
-   FORM ERROR MESSAGES
-   =================================== */
-.form-error {
+.error-message {
     font-size: 0.75rem;
-    color: #ef4444;
-    font-weight: 600;
-    margin-top: 6px;
-    display: block;
-    min-height: 18px;
-}
-
-/* ===================================
-   MULTI-STEP PROGRESS INDICATOR
-   =================================== */
-.step-progress-wrapper {
-    margin-bottom: 32px;
-    padding-bottom: 24px;
-    border-bottom: 2px solid var(--card-border);
-}
-
-.step-progress-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.step-progress-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-}
-
-.step-circle {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: var(--bg-tertiary);
-    border: 3px solid var(--card-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 2;
-}
-
-.step-circle svg:not(.step-check) {
-    color: var(--text-muted);
-    transition: all 0.3s ease;
-}
-
-.step-check {
-    display: none;
-    color: #ffffff;
-}
-
-.step-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-}
-
-.step-connector {
-    width: 80px;
-    height: 3px;
-    background: var(--card-border);
-    position: relative;
-    top: -14px;
-    transition: all 0.4s ease;
-}
-
-/* Active Step */
-.step-progress-item.active .step-circle {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-    transform: scale(1.1);
-}
-
-.step-progress-item.active .step-circle svg:not(.step-check) {
-    color: #ffffff;
-    display: block;
-}
-
-.step-progress-item.active .step-label {
-    color: #667eea;
-    font-weight: 800;
-}
-
-/* Clickable steps hover effect */
-.step-progress-item[style*="cursor: pointer"]:hover .step-circle {
-    transform: scale(1.15);
-    box-shadow: 0 10px 28px rgba(102, 126, 234, 0.5);
-}
-
-.step-progress-item[style*="cursor: pointer"]:hover .step-label {
-    color: #667eea;
-}
-
-/* Completed Step */
-.step-progress-item.completed .step-circle {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    border-color: #10b981;
-}
-
-.step-progress-item.completed .step-circle svg:not(.step-check) {
-    display: none;
-}
-
-.step-progress-item.completed .step-check {
-    display: block;
-}
-
-.step-progress-item.completed .step-label {
-    color: #10b981;
-}
-
-.step-progress-item.completed ~ .step-connector {
-    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-}
-
-/* ===================================
-   FORM STEPS
-   =================================== */
-.form-step {
-    animation: stepFadeIn 0.4s ease;
-}
-
-@keyframes stepFadeIn {
-    from {
-        opacity: 0;
-        transform: translateX(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.step-header {
-    margin-bottom: 24px;
-}
-
-.step-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--text-primary);
-    margin: 0 0 8px 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    letter-spacing: -0.5px;
-}
-
-.step-title svg {
-    color: #667eea;
-    flex-shrink: 0;
-}
-
-.step-description {
-    font-size: 0.9375rem;
-    color: var(--text-muted);
-    margin: 0;
+    color: var(--rh-danger);
+    margin-top: 0.375rem;
     font-weight: 500;
 }
 
-/* ===================================
-   TOGGLE SWITCH (for Active status)
-   =================================== */
-.toggle-container-compact {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 8px;
-}
-
-.toggle-input-compact {
-    display: none;
-}
-
-.toggle-label-compact {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.toggle-switch-compact {
-    position: relative;
-    width: 52px;
-    height: 28px;
-    background: var(--card-border);
-    border-radius: 14px;
-    transition: all 0.3s ease;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.toggle-switch-compact::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 24px;
-    height: 24px;
-    background: #ffffff;
-    border-radius: 50%;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.toggle-input-compact:checked + .toggle-label-compact .toggle-switch-compact {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.toggle-input-compact:checked + .toggle-label-compact .toggle-switch-compact::after {
-    left: 26px;
-}
-
-.toggle-text-compact {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-/* ===================================
-   MODAL FOOTER
-   =================================== */
-.modal-footer-premium {
-    padding: 20px 32px;
-    background: var(--bg-tertiary);
-    border-top: 2px solid var(--card-border);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.modal-footer-multistep {
-    justify-content: space-between;
-}
-
-.step-indicator {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-    letter-spacing: 0.5px;
-}
-
-.step-indicator span {
-    color: #667eea;
-    font-weight: 900;
-    font-size: 1rem;
-}
-
-.btn-back-step,
-.btn-next-step {
-    padding: 11px 24px;
-    border-radius: 10px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-back-step {
-    border: 2px solid var(--card-border);
-    background: transparent;
-    color: var(--text-primary);
-}
-
-.btn-back-step:hover {
-    background: var(--bg-secondary);
-    border-color: var(--text-muted);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.btn-next-step {
-    border: 2px solid transparent;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-next-step::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: left 0.6s ease;
-}
-
-.btn-next-step:hover::before {
-    left: 100%;
-}
-
-.btn-next-step:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 36px rgba(102, 126, 234, 0.5);
-}
-
-.btn-cancel-premium {
-    padding: 11px 24px;
-    border-radius: 10px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid var(--card-border);
-    background: transparent;
-    color: var(--text-primary);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-cancel-premium:hover {
-    background: var(--bg-secondary);
-    border-color: var(--text-muted);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.btn-submit-premium {
-    padding: 11px 28px;
-    border-radius: 10px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid transparent;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-submit-premium::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: left 0.6s ease;
-}
-
-.btn-submit-premium:hover::before {
-    left: 100%;
-}
-
-.btn-submit-premium:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 36px rgba(102, 126, 234, 0.5);
-}
-
-.btn-submit-premium:active {
-    transform: translateY(-1px);
-}
-
-.btn-submit-premium:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+/* Loading Animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .animate-spin {
     animation: spin 1s linear infinite;
 }
 
-/* ===================================
-   COMPACT MODAL STYLES (Personnel-like)
-   =================================== */
-.modal-compact {
-    max-height: 85vh;
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: wait;
 }
 
-.modal-body-compact {
-    padding: 20px 24px;
-    max-height: calc(85vh - 140px);
-    overflow-y: auto;
-}
-
-.modal-body-compact::-webkit-scrollbar {
-    width: 5px;
-}
-
-.modal-body-compact::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-}
-
-.modal-body-compact::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 3px;
-}
-
-.form-section-compact {
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--card-border);
-}
-
-.form-section-compact:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.section-title-compact {
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 14px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.section-title-compact svg {
-    color: #667eea;
-    flex-shrink: 0;
-}
-
-.form-grid-compact {
+/* Status Cards Selection */
+.status-cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-bottom: 14px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
 }
 
-.form-grid-compact:last-child {
-    margin-bottom: 0;
-}
-
-.form-group-compact {
-    margin-bottom: 0;
-}
-
-.form-group-compact.full-width {
-    grid-column: 1 / -1;
-}
-
-.form-label-compact {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-}
-
-.form-label-compact.required::after {
-    content: '*';
-    color: #ef4444;
-    margin-left: 3px;
-}
-
-.form-input-compact {
-    width: 100%;
-    padding: 13px 16px;
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    font-size: 0.9375rem;
-    min-height: 44px;
-    transition: all 0.2s ease;
-}
-
-.form-input-compact:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.form-input-compact.error {
-    border-color: #ef4444;
-}
-
-.form-input-compact.success {
-    border-color: #10b981;
-}
-
-.status-toggle-compact {
-    background: var(--bg-secondary);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    padding: 12px;
-    transition: all 0.2s ease;
-}
-
-.status-toggle-compact:hover {
-    border-color: #667eea;
-}
-
-.toggle-input-compact {
-    display: none;
-}
-
-.toggle-label-compact {
+.status-card {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--rh-bg);
+    border: 2px solid var(--rh-border);
+    border-radius: 14px;
     cursor: pointer;
-    user-select: none;
-}
-
-.toggle-switch-compact {
-    position: relative;
-    width: 48px;
-    height: 24px;
-    background: #cbd5e1;
-    border-radius: 24px;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-.toggle-switch-compact::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 20px;
-    height: 20px;
-    background: #ffffff;
-    border-radius: 50%;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.toggle-input-compact:checked + .toggle-label-compact .toggle-switch-compact {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.toggle-input-compact:checked + .toggle-label-compact .toggle-switch-compact::after {
-    left: 26px;
-}
-
-.toggle-text-compact {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.modal-footer-compact {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 14px 24px;
-    border-top: 1px solid var(--card-border);
-    background: var(--bg-secondary);
-}
-
-.btn-compact {
-    padding: 9px 18px;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-secondary-compact {
-    background: #6b7280;
-    color: #ffffff;
-}
-
-.btn-secondary-compact:hover {
-    background: #4b5563;
-    transform: translateY(-1px);
-}
-
-.btn-primary-compact {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
-}
-
-.btn-primary-compact:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-/* ===================================
-   MULTI-STEP MODAL STYLES
-   =================================== */
-
-/* Step Progress Container */
-.steps-progress-container {
-    padding: 24px 32px 20px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-    border-bottom: 1px solid var(--card-border);
-}
-
-.steps-progress-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-/* Step Item */
-.step-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Step Circle */
-.step-circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--bg-secondary);
-    border: 3px solid #cbd5e1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    z-index: 2;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.step-circle svg {
-    width: 22px;
-    height: 22px;
-    color: #94a3b8;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.5;
-}
-
-/* Step States - Pending (Default) */
-.step-item {
-    opacity: 0.6;
-}
-
-/* Step States - Active */
-.step-item.active {
-    opacity: 1;
-}
-
-.step-item.active .step-circle {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    transform: scale(1.12);
-    box-shadow:
-        0 12px 28px rgba(102, 126, 234, 0.4),
-        0 6px 14px rgba(102, 126, 234, 0.3),
-        0 0 0 4px rgba(102, 126, 234, 0.15);
-    animation: pulseGlow 2s infinite;
-}
-
-.step-item.active .step-circle svg {
-    color: #ffffff;
-    opacity: 1;
-    transform: scale(1.05);
-}
-
-@keyframes pulseGlow {
-    0%, 100% {
-        box-shadow:
-            0 12px 28px rgba(102, 126, 234, 0.4),
-            0 6px 14px rgba(102, 126, 234, 0.3),
-            0 0 0 4px rgba(102, 126, 234, 0.15);
-    }
-    50% {
-        box-shadow:
-            0 12px 28px rgba(102, 126, 234, 0.5),
-            0 6px 14px rgba(102, 126, 234, 0.4),
-            0 0 0 6px rgba(102, 126, 234, 0.2);
-    }
-}
-
-/* Step States - Completed */
-.step-item.completed .step-circle {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    border-color: #10b981;
-    transform: scale(1.05);
-    box-shadow:
-        0 8px 20px rgba(16, 185, 129, 0.35),
-        0 4px 10px rgba(16, 185, 129, 0.25);
-}
-
-.step-item.completed .step-circle svg {
-    opacity: 0;
-    transform: scale(0);
-}
-
-.step-item.completed .step-circle::after {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 10px;
-    border-left: 3px solid #ffffff;
-    border-bottom: 3px solid #ffffff;
-    transform: rotate(-45deg);
-    top: 50%;
-    left: 50%;
-    margin-top: -7px;
-    margin-left: -9px;
-    animation: checkmarkPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes checkmarkPop {
-    0% {
-        opacity: 0;
-        transform: rotate(-45deg) scale(0);
-    }
-    50% {
-        transform: rotate(-45deg) scale(1.2);
-    }
-    100% {
-        opacity: 1;
-        transform: rotate(-45deg) scale(1);
-    }
-}
-
-.step-item.completed {
-    opacity: 1;
-}
-
-/* Step Connector Lines */
-.step-connector {
-    flex: 1;
-    height: 3px;
-    background: #cbd5e1;
-    margin: 0 -4px;
-    position: relative;
-    z-index: 1;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.step-item.completed + .step-connector {
-    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-}
-
-/* Step Info */
-.step-info {
-    text-align: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.step-label {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: #64748b;
-    margin-bottom: 2px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    letter-spacing: -0.01em;
-}
-
-.step-description {
-    font-size: 0.6875rem;
-    color: #94a3b8;
-    font-weight: 500;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.step-item.active .step-label {
-    color: #667eea;
-    font-size: 0.875rem;
-    font-weight: 800;
-}
-
-.step-item.active .step-description {
-    color: #764ba2;
-    font-weight: 600;
-}
-
-.step-item.completed .step-label {
-    color: #10b981;
-    font-weight: 700;
-}
-
-.step-item.completed .step-description {
-    color: #059669;
-}
-
-/* Form Steps Container */
-.form-step {
-    display: none;
-    opacity: 0;
-    animation: fadeInStep 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.form-step.active {
-    display: block;
-}
-
-@keyframes fadeInStep {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Multi-Step Footer */
-.modal-footer-multistep {
-    justify-content: space-between;
-    padding: 16px 24px;
-}
-
-.step-indicator-footer {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-    padding: 10px 20px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-    border-radius: 8px;
-    border: 1px solid rgba(102, 126, 234, 0.15);
-}
-
-.step-indicator-footer span {
-    color: #667eea;
-    font-weight: 900;
-    font-size: 1rem;
-}
-
-/* Modal adjustments for multi-step */
-.modal-multistep .modal-body-compact {
-    min-height: 300px;
-    max-height: 400px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .steps-progress-container {
-        padding: 16px 16px 12px;
-    }
-
-    .steps-progress-wrapper {
-        gap: 8px;
-    }
-
-    .step-circle {
-        width: 40px;
-        height: 40px;
-    }
-
-    .step-circle svg {
-        width: 18px;
-        height: 18px;
-    }
-
-    .step-label {
-        font-size: 0.7rem;
-    }
-
-    .step-description {
-        display: none;
-    }
-
-    .step-connector {
-        height: 2px;
-    }
-
-    .modal-footer-multistep {
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .step-indicator-footer {
-        order: -1;
-        width: 100%;
-        text-align: center;
-    }
-}
-
-/* ===================================
-   SUCCESS NOTIFICATION
-   =================================== */
-.success-notification-entreprise {
-    position: fixed;
-    top: 28px;
-    right: 28px;
-    z-index: 100000;
-    background: var(--card-bg);
-    border-radius: 24px;
-    box-shadow: 0 30px 80px -12px rgba(0, 0, 0, 0.6);
-    border: 3px solid rgba(16, 185, 129, 0.4);
-    overflow: hidden;
-    min-width: 450px;
-    max-width: 550px;
-    transform: translateX(120%) scale(0.8);
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.success-notification-entreprise.show {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-}
-
-.success-notification-content {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-    padding: 28px;
-}
-
-.success-icon-wrapper {
-    flex-shrink: 0;
-    width: 72px;
-    height: 72px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: successIconBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 10px 32px rgba(16, 185, 129, 0.4);
-}
-
-.success-icon {
-    color: #ffffff;
-    animation: successIconCheck 0.8s ease;
-}
-
-.success-text {
-    flex: 1;
-}
-
-.success-title {
-    font-size: 1.375rem;
-    font-weight: 900;
-    color: var(--text-primary);
-    margin: 0 0 10px 0;
-    letter-spacing: -0.4px;
-}
-
-.success-details {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin: 0 0 14px 0;
-    line-height: 1.6;
-    font-weight: 500;
-}
-
-.success-details strong {
-    color: var(--text-primary);
-    font-weight: 800;
-}
-
-.success-meta {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    font-weight: 600;
-}
-
-.success-reload {
-    font-size: 0.813rem;
-    color: var(--text-muted);
-    font-style: italic;
-    margin: 0;
-}
-
-.success-progress {
-    height: 5px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    width: 100%;
-    transition: width 1.8s linear;
-}
-
-@keyframes successIconBounce {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.15);
-    }
-}
-
-@keyframes successIconCheck {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.3);
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* ===================================
-   RESPONSIVE DESIGN
-   =================================== */
-@media (max-width: 1400px) {
-    .companies-grid {
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    }
-}
-
-@media (max-width: 1400px) {
-    .stats-grid-modern {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .hero-content {
-        flex-direction: column;
-    }
-}
-
-@media (max-width: 1024px) {
-    .hero-section {
-        padding: 44px 48px;
-    }
-
-    .hero-title {
-        font-size: 2.25rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1rem;
-    }
-
-    .stats-grid-modern {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-    }
-
-    .companies-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-    }
-}
-
-@media (max-width: 768px) {
-    .entreprises-page {
-        padding: 20px;
-    }
-
-    .hero-section {
-        padding: 32px 28px;
-        border-radius: 20px;
-    }
-
-    .hero-left {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .hero-icon-inner {
-        width: 72px;
-        height: 72px;
-    }
-
-    .hero-title {
-        font-size: 1.875rem;
-        letter-spacing: -1px;
-    }
-
-    .hero-subtitle {
-        font-size: 0.9375rem;
-        margin-bottom: 24px;
-    }
-
-    .hero-actions {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .btn-hero {
-        width: 100%;
-        justify-content: center;
-        padding: 14px 24px;
-    }
-
-    .stats-grid-modern {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-
-    .stat-card-modern {
-        padding: 20px 16px;
-    }
-
-    .stat-value-modern {
-        font-size: 2rem;
-    }
-
-    .stat-label-modern {
-        font-size: 0.75rem;
-    }
-
-    .toolbar-card {
-        padding: 20px;
-    }
-
-    .toolbar-top {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .search-box-premium {
-        min-width: 100%;
-    }
-
-    .view-toggle-group {
-        width: 100%;
-    }
-
-    .view-toggle-btn {
-        flex: 1;
-        justify-content: center;
-    }
-
-    .companies-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
-    .modal-content-premium {
-        max-width: 95%;
-        max-height: 95vh;
-        border-radius: 20px;
-    }
-
-    .modal-header-premium {
-        padding: 20px;
-    }
-
-    .modal-header-icon {
-        width: 48px;
-        height: 48px;
-    }
-
-    .modal-title-premium {
-        font-size: 1.25rem;
-    }
-
-    .modal-body-premium {
-        padding: 20px;
-    }
-
-    .form-grid-premium {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .modal-footer-premium {
-        padding: 16px 20px;
-        flex-direction: column-reverse;
-    }
-
-    .modal-footer-multistep {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .btn-cancel-premium,
-    .btn-submit-premium,
-    .btn-back-step,
-    .btn-next-step {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .step-indicator {
-        order: -1;
-        text-align: center;
-    }
-
-    .step-progress-container {
-        gap: 0;
-        max-width: 100%;
-    }
-
-    .step-connector {
-        width: 40px;
-    }
-
-    .step-circle {
-        width: 44px;
-        height: 44px;
-    }
-
-    .step-circle svg {
-        width: 18px;
-        height: 18px;
-    }
-
-    .step-label {
-        font-size: 0.625rem;
-    }
-
-    .step-title {
-        font-size: 1.25rem;
-    }
-
-    .step-description {
-        font-size: 0.8125rem;
-    }
-
-    .success-notification-entreprise {
-        top: 16px;
-        right: 16px;
-        left: 16px;
-        min-width: auto;
-    }
-
-    .table-premium th,
-    .table-premium td {
-        padding: 12px;
-        font-size: 0.8125rem;
-    }
-
-    .company-card-footer {
-        flex-direction: column;
-    }
-
-    .btn-action-delete-card {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-title {
-        font-size: 1.5rem;
-    }
-
-    .hero-icon-inner {
-        width: 52px;
-        height: 52px;
-    }
-
-    .stats-grid-modern {
-        grid-template-columns: 1fr;
-    }
-
-    .filter-chips {
-        flex-direction: column;
-    }
-
-    .filter-chip {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-/* Dark Mode Adjustments */
-.dark .hero-section {
-    background: linear-gradient(135deg, #4c51bf 0%, #553c9a 100%);
-    box-shadow: 0 20px 60px rgba(76, 81, 191, 0.4);
-}
-
-.dark .modal-header-premium {
-    background: linear-gradient(135deg, #4c51bf 0%, #553c9a 100%);
-}
-
-.dark .company-card {
-    background: rgba(255, 255, 255, 0.02);
-}
-
-.dark .notification-modern {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive styles for compact modal */
-@media (max-width: 768px) {
-    .form-grid-compact {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .form-group-compact[style*="grid-column: span 2"] {
-        grid-column: 1 !important;
-    }
-
-    .modal-compact {
-        max-width: 95%;
-    }
-
-    .modal-header-premium {
-        padding: 16px 20px;
-    }
-
-    .modal-header-icon {
-        width: 40px;
-        height: 40px;
-    }
-
-    .modal-header-icon svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .modal-title-premium {
-        font-size: 1.125rem;
-    }
-
-    .modal-subtitle-premium {
-        font-size: 0.75rem;
-    }
-
-    .modal-body-compact {
-        padding: 16px 20px;
-    }
-
-    .modal-footer-compact {
-        padding: 12px 20px;
-    }
-}
-
-/* ===================================
-   ENHANCED MODAL HEADER WITH PROGRESS
-   =================================== */
-.modal-header-premium-enhanced {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 20px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
-    position: relative;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     overflow: hidden;
 }
 
-.modal-header-premium-enhanced::before {
+.status-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background:
-        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-    pointer-events: none;
+    height: 4px;
+    background: transparent;
+    transition: all 0.3s ease;
 }
 
-.header-left-content {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    position: relative;
-    z-index: 1;
-}
-
-.modal-header-icon-large {
-    width: 52px;
-    height: 52px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-    animation: floatIcon 3s ease-in-out infinite;
-}
-
-.modal-header-icon-large svg {
-    width: 26px;
-    height: 26px;
-}
-
-@keyframes floatIcon {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-.modal-header-text-content {
-    flex: 1;
-}
-
-.modal-title-premium-large {
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 4px 0;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    letter-spacing: -0.5px;
-    line-height: 1.2;
-}
-
-.modal-subtitle-premium-large {
-    font-size: 0.8125rem;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-}
-
-.header-right-content {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    position: relative;
-    z-index: 1;
-}
-
-/* Mini Progress Indicator in Header */
-.step-progress-mini {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 180px;
-}
-
-.current-step-badge {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-    text-align: center;
-    letter-spacing: 0.02em;
-}
-
-.current-step-badge strong {
-    font-weight: 900;
-    font-size: 1rem;
-    color: #ffffff;
-}
-
-.progress-bar-mini {
-    height: 8px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
-    border-radius: 10px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
-}
-
-/* ===================================
-   COMPACT STEP PROGRESS INDICATOR
-   =================================== */
-.steps-progress-container-compact {
-    padding: 20px 32px 24px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.04) 0%, rgba(118, 75, 162, 0.04) 100%);
-    border-bottom: 1px solid var(--card-border);
-}
-
-.steps-progress-wrapper-compact {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    max-width: 700px;
-    margin: 0 auto;
-    position: relative;
-}
-
-.step-item-compact {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.5;
-    gap: 8px;
-    flex: 0 0 auto;
-}
-
-.step-item-compact:hover {
-    opacity: 0.75;
-}
-
-.step-item-compact.active,
-.step-item-compact.completed {
-    opacity: 1;
-}
-
-.step-item-compact.active {
+.status-card:hover {
     transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-.step-item-compact.completed {
-    transform: scale(0.98);
+/* Active Card Styling */
+.status-card.active {
+    border-color: rgba(39, 174, 96, 0.3);
 }
 
-.step-circle-compact {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--bg-secondary);
-    border: 2.5px solid #cbd5e1;
+.status-card.active:hover {
+    border-color: var(--rh-success);
+    background: rgba(39, 174, 96, 0.03);
+}
+
+.status-card.active.selected {
+    border-color: var(--rh-success);
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.08) 0%, rgba(39, 174, 96, 0.02) 100%);
+    box-shadow: 0 4px 20px rgba(39, 174, 96, 0.2);
+}
+
+.status-card.active.selected::before {
+    background: linear-gradient(90deg, var(--rh-success) 0%, #2ECC71 100%);
+}
+
+.status-card.active .status-card-icon {
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.15) 0%, rgba(39, 174, 96, 0.05) 100%);
+    color: var(--rh-success);
+}
+
+.status-card.active.selected .status-card-icon {
+    background: linear-gradient(135deg, var(--rh-success) 0%, #1E8449 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+}
+
+/* Inactive Card Styling */
+.status-card.inactive {
+    border-color: rgba(231, 76, 60, 0.3);
+}
+
+.status-card.inactive:hover {
+    border-color: var(--rh-danger);
+    background: rgba(231, 76, 60, 0.03);
+}
+
+.status-card.inactive.selected {
+    border-color: var(--rh-danger);
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.08) 0%, rgba(231, 76, 60, 0.02) 100%);
+    box-shadow: 0 4px 20px rgba(231, 76, 60, 0.2);
+}
+
+.status-card.inactive.selected::before {
+    background: linear-gradient(90deg, var(--rh-danger) 0%, #E74C3C 100%);
+}
+
+.status-card.inactive .status-card-icon {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.15) 0%, rgba(231, 76, 60, 0.05) 100%);
+    color: var(--rh-danger);
+}
+
+.status-card.inactive.selected .status-card-icon {
+    background: linear-gradient(135deg, var(--rh-danger) 0%, #C0392B 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
+/* Status Card Icon */
+.status-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    z-index: 2;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.step-circle-compact svg {
-    width: 18px;
-    height: 18px;
-    color: #94a3b8;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.5;
+.status-card-icon svg {
+    width: 24px;
+    height: 24px;
 }
 
-/* Active Step */
-.step-item-compact.active .step-circle-compact {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
-    transform: scale(1.08);
-    box-shadow:
-        0 8px 20px rgba(102, 126, 234, 0.35),
-        0 4px 10px rgba(102, 126, 234, 0.25),
-        0 0 0 3px rgba(102, 126, 234, 0.12);
-}
-
-.step-item-compact.active .step-circle-compact svg {
-    color: #ffffff;
-    opacity: 1;
-    transform: scale(1.03);
-}
-
-/* Completed Step */
-.step-item-compact.completed .step-circle-compact {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    border-color: #10b981;
-    transform: scale(1.02);
-    box-shadow:
-        0 6px 16px rgba(16, 185, 129, 0.3),
-        0 3px 8px rgba(16, 185, 129, 0.2);
-}
-
-.step-item-compact.completed .step-circle-compact svg {
-    opacity: 0;
-    transform: scale(0);
-}
-
-.step-item-compact.completed .step-circle-compact::after {
-    content: '';
-    position: absolute;
-    width: 16px;
-    height: 9px;
-    border-left: 2.5px solid #ffffff;
-    border-bottom: 2.5px solid #ffffff;
-    transform: rotate(-45deg);
-    top: 50%;
-    left: 50%;
-    margin-top: -6px;
-    margin-left: -8px;
-    animation: checkmarkPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Step Label */
-.step-label-compact {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: #64748b;
-    text-align: center;
-    white-space: nowrap;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    text-transform: none;
-    letter-spacing: 0.2px;
-    opacity: 0.8;
-}
-
-.step-item-compact.active .step-label-compact {
-    color: #667eea;
-    font-weight: 700;
-    opacity: 1;
-    transform: scale(1.08);
-    text-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-}
-
-.step-item-compact.completed .step-label-compact {
-    color: #10b981;
-    font-weight: 700;
-    opacity: 1;
-}
-
-/* Connector Lines - Horizontal Line Between Steps */
-.step-connector-compact {
+/* Status Card Content */
+.status-card-content {
     flex: 1;
-    height: 3px;
-    background: linear-gradient(90deg,
-        rgba(203, 213, 225, 0.3) 0%,
-        rgba(203, 213, 225, 0.8) 50%,
-        rgba(203, 213, 225, 0.3) 100%
-    );
-    position: relative;
-    z-index: 1;
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 60px;
-    max-width: 120px;
-    margin: 0 -8px;
-    align-self: flex-start;
-    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
-/* Animated Progress Line */
-.step-connector-compact::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0%;
-    height: 100%;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 12px rgba(102, 126, 234, 0.5);
-}
-
-/* Completed Connector */
-.step-item-compact.completed + .step-connector-compact {
-    background: linear-gradient(90deg,
-        rgba(16, 185, 129, 0.3) 0%,
-        rgba(16, 185, 129, 1) 50%,
-        rgba(16, 185, 129, 0.3) 100%
-    );
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
-}
-
-.step-item-compact.completed + .step-connector-compact::before {
-    width: 100%;
-    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
-}
-
-/* Active Step Connector Animation */
-.step-item-compact.active + .step-connector-compact::before {
-    width: 50%;
-    animation: progressPulse 2s ease-in-out infinite;
-}
-
-@keyframes progressPulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
-}
-
-/* ===================================
-   PROFESSIONAL FORM STYLES
-   =================================== */
-.form-section-pro {
-    background: var(--card-bg);
-    padding: 20px;
-    border-radius: 14px;
-    border: 1.5px solid var(--card-border);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-}
-
-.section-title-pro {
-    font-size: 0.9375rem;
+.status-card-title {
+    font-size: 1rem;
     font-weight: 700;
-    color: var(--text-primary);
-    margin: 0 0 16px 0;
+    color: var(--rh-text);
+    transition: color 0.3s ease;
+}
+
+.status-card.selected .status-card-title {
+    color: var(--rh-text);
+}
+
+.status-card-desc {
+    font-size: 0.75rem;
+    color: var(--rh-text-muted);
+    font-weight: 500;
+}
+
+/* Status Card Check */
+.status-card-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--rh-border);
     display: flex;
     align-items: center;
-    gap: 8px;
-    letter-spacing: -0.3px;
-    padding-bottom: 12px;
-    border-bottom: 1.5px solid var(--card-border);
-}
-
-.section-title-pro svg {
-    color: #667eea;
+    justify-content: center;
     flex-shrink: 0;
-    width: 18px;
-    height: 18px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* 4-Column Grid */
-.form-grid-4 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 16px;
+.status-card-check svg {
+    width: 14px;
+    height: 14px;
+    color: white;
 }
 
-.form-grid-4:last-child {
-    margin-bottom: 0;
+.status-card.selected .status-card-check {
+    opacity: 1;
+    transform: scale(1);
 }
 
-/* 3-Column Grid */
-.form-grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 16px;
+.status-card.active.selected .status-card-check {
+    background: linear-gradient(135deg, var(--rh-success) 0%, #1E8449 100%);
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.4);
 }
 
-.form-grid-3:last-child {
-    margin-bottom: 0;
+.status-card.inactive.selected .status-card-check {
+    background: linear-gradient(135deg, var(--rh-danger) 0%, #C0392B 100%);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.4);
 }
 
-.form-group-pro {
-    margin-bottom: 0;
+/* Responsive */
+@media (max-width: 500px) {
+    .status-cards {
+        grid-template-columns: 1fr;
+    }
 }
 
-.form-group-pro.full-width,
-.full-width {
-    grid-column: 1 / -1;
+/* Modal Footer */
+.modal-footer {
+    padding: 1rem 1.75rem;
+    background: var(--rh-bg);
+    border-top: 1px solid var(--rh-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex-shrink: 0;
 }
 
-.col-span-2 {
-    grid-column: span 2;
-}
-
-.col-span-3 {
-    grid-column: span 3;
-}
-
-.form-label-pro {
-    display: block;
-    font-size: 0.75rem;
+.btn-cancel {
+    padding: 0.625rem 1.25rem;
+    background: transparent;
+    color: var(--rh-text-muted);
+    border: 1.5px solid var(--rh-border);
+    border-radius: 10px;
     font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-}
-
-.form-label-pro.required::after {
-    content: '*';
-    color: #ef4444;
-    margin-left: 4px;
-    font-weight: 800;
-}
-
-.form-input-pro {
-    width: 100%;
-    padding: 9px 12px;
-    border: 1.5px solid var(--card-border);
-    border-radius: 8px;
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
     font-size: 0.8125rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    outline: none;
-    font-weight: 500;
-    min-height: 38px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.form-input-pro:hover {
-    border-color: rgba(102, 126, 234, 0.3);
-    background: var(--card-bg);
+.btn-cancel svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.25s ease;
 }
 
-.form-input-pro:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    background: var(--card-bg);
+.btn-cancel:hover {
+    background: rgba(231, 76, 60, 0.08);
+    border-color: var(--rh-danger);
+    color: var(--rh-danger);
+}
+
+.btn-cancel:hover svg {
+    transform: rotate(90deg);
+}
+
+.btn-submit {
+    padding: 0.625rem 1.5rem;
+    background: linear-gradient(135deg, var(--rh-orange) 0%, var(--rh-orange-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-submit svg {
+    width: 16px;
+    height: 16px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 149, 0, 0.4);
+}
+
+.btn-submit:active {
     transform: translateY(-1px);
 }
 
-.form-input-pro::placeholder {
-    color: var(--text-muted);
-    font-weight: 400;
-}
-
-textarea.form-input-pro {
-    resize: vertical;
-    min-height: 80px;
-    font-family: inherit;
-}
-
-/* Toggle Switch Pro */
-.status-toggle-pro {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-    border-radius: 10px;
-    border: 1.5px solid rgba(102, 126, 234, 0.15);
-}
-
-.toggle-input-pro {
-    display: none;
-}
-
-.toggle-label-pro {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.toggle-switch-pro {
-    position: relative;
-    width: 48px;
-    height: 26px;
-    background: #cbd5e1;
-    border-radius: 13px;
-    transition: all 0.3s ease;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
-}
-
-.toggle-switch-pro::after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 20px;
-    height: 20px;
-    background: #ffffff;
-    border-radius: 50%;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.toggle-input-pro:checked + .toggle-label-pro .toggle-switch-pro {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.toggle-input-pro:checked + .toggle-label-pro .toggle-switch-pro::after {
-    transform: translateX(22px);
-}
-
-.toggle-text-pro {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-}
-
-/* ===================================
-   RESPONSIVE DESIGN - ENHANCED
-   =================================== */
-@media (max-width: 1280px) {
-    .modal-multistep {
-        max-width: 1000px !important;
-    }
-
-    .form-grid-4 {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 1024px) {
-    .modal-multistep {
-        max-width: 900px !important;
-    }
-
-    .form-grid-4 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .form-grid-3 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .modal-title-premium-large {
-        font-size: 1.75rem;
-    }
-
-    .modal-header-icon-large {
-        width: 64px;
-        height: 64px;
-    }
-
-    .modal-header-icon-large svg {
-        width: 28px;
-        height: 28px;
-    }
-}
-
+/* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-    .modal-multistep {
-        max-width: 95% !important;
-    }
-
-    .modal-header-premium-enhanced {
-        padding: 24px 20px;
+    .page-header {
         flex-direction: column;
-        gap: 16px;
         align-items: flex-start;
     }
 
-    .header-left-content {
+    .page-actions {
         width: 100%;
     }
 
-    .header-right-content {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .step-progress-mini {
+    .page-actions .btn-primary-rh {
         flex: 1;
-        min-width: 0;
+        justify-content: center;
     }
 
-    .modal-title-premium-large {
-        font-size: 1.5rem;
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .modal-subtitle-premium-large {
-        font-size: 0.875rem;
+    .search-box {
+        min-width: auto;
     }
 
-    .modal-header-icon-large {
-        width: 56px;
-        height: 56px;
+    .filter-group {
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
     }
 
-    .modal-header-icon-large svg {
-        width: 24px;
-        height: 24px;
-    }
-
-    .form-grid-4,
-    .form-grid-3 {
+    .companies-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
-    }
-
-    .col-span-2,
-    .col-span-3 {
-        grid-column: span 1;
-    }
-
-    .form-section-pro {
-        padding: 20px;
-    }
-
-    .section-title-pro {
-        font-size: 1.125rem;
-        margin-bottom: 20px;
-    }
-
-    .steps-progress-container-compact {
-        padding: 14px 16px;
-    }
-
-    .steps-progress-wrapper-compact {
-        max-width: 100%;
-    }
-
-    .step-circle-compact {
-        width: 38px;
-        height: 38px;
-    }
-
-    .step-circle-compact svg {
-        width: 16px;
-        height: 16px;
-    }
-
-    .step-connector-compact {
-        width: 28px;
-    }
-}
-
-@media (max-width: 480px) {
-    .modal-header-premium-enhanced {
-        padding: 20px 16px;
-    }
-
-    .header-left-content {
-        gap: 14px;
-    }
-
-    .modal-title-premium-large {
-        font-size: 1.375rem;
-    }
-
-    .modal-subtitle-premium-large {
-        font-size: 0.8125rem;
-    }
-
-    .modal-header-icon-large {
-        width: 48px;
-        height: 48px;
-    }
-
-    .modal-header-icon-large svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .step-circle-compact {
-        width: 34px;
-        height: 34px;
-    }
-
-    .step-circle-compact svg {
-        width: 14px;
-        height: 14px;
-    }
-
-    .step-connector-compact {
-        width: 20px;
-    }
-
-    .form-section-pro {
-        padding: 16px;
     }
 }
 </style>
@@ -3571,800 +1333,531 @@ textarea.form-input-pro {
 
 @section('content')
 <div class="entreprises-page">
-    <!-- Hero Section with Stats - Ultra Modern -->
-    <div class="hero-section">
-        <!-- Decorative Background Elements -->
-        <div class="hero-decoration-1"></div>
-        <div class="hero-decoration-2"></div>
-        <div class="hero-decoration-3"></div>
-
-        <div class="hero-content">
-            <div class="hero-left">
-                <div class="hero-icon-wrapper">
-                    <div class="hero-icon-inner">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
-                    </div>
-                </div>
-                <div class="hero-text">
-                    <div class="hero-badge">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        Gestion en temps réel
-                    </div>
-                    <h1 class="hero-title">Entreprises Partenaires</h1>
-                    <p class="hero-subtitle">Gérez l'ensemble de vos entreprises partenaires avec une interface moderne et intuitive. Suivez les performances en temps réel.</p>
-                    <div class="hero-actions">
-                        <button type="button" onclick="openCreateEntrepriseModal()" class="btn-hero btn-hero-primary">
-                            <span class="btn-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </span>
-                            <span class="btn-text">Nouvelle Entreprise</span>
-                            <span class="btn-shine"></span>
-                        </button>
-                        <button type="button" class="btn-hero btn-hero-secondary" onclick="window.print()">
-                            <span class="btn-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                            </span>
-                            <span class="btn-text">Exporter</span>
-                        </button>
-                    </div>
-                </div>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-header-left">
+            <div class="page-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
             </div>
+            <div class="page-title-group">
+                <h1>Entreprises</h1>
+                <p>Gérez vos entreprises partenaires</p>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn-secondary-rh" onclick="window.print()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Exporter
+            </button>
+            <button type="button" class="btn-primary-rh" onclick="openCreateModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Nouvelle Entreprise
+            </button>
+        </div>
+    </div>
 
-            <!-- Stats Cards - Modern Design -->
-            <div class="stats-grid-modern">
-                <div class="stat-card-modern stat-total">
-                    <div class="stat-card-bg"></div>
-                    <div class="stat-header">
-                        <div class="stat-icon-modern">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"></path>
-                            </svg>
-                        </div>
-                        <span class="stat-trend">+{{ $entreprises->count() }}</span>
-                    </div>
-                    <div class="stat-value-modern">{{ $entreprises->count() }}</div>
-                    <div class="stat-label-modern">Total Entreprises</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: 100%"></div>
-                    </div>
-                </div>
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon primary">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <h3>{{ $entreprises->count() }}</h3>
+                <p>Total Entreprises</p>
+            </div>
+        </div>
 
-                <div class="stat-card-modern stat-active">
-                    <div class="stat-card-bg"></div>
-                    <div class="stat-header">
-                        <div class="stat-icon-modern">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                        </div>
-                        <span class="stat-trend">{{ $entreprises->count() > 0 ? round(($entreprises->where('is_active', true)->count() / $entreprises->count()) * 100) : 0 }}%</span>
-                    </div>
-                    <div class="stat-value-modern">{{ $entreprises->where('is_active', true)->count() }}</div>
-                    <div class="stat-label-modern">Entreprises Actives</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: {{ $entreprises->count() > 0 ? ($entreprises->where('is_active', true)->count() / $entreprises->count()) * 100 : 0 }}%"></div>
-                    </div>
-                </div>
+        <div class="stat-card">
+            <div class="stat-icon success">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <h3>{{ $entreprises->where('is_active', true)->count() }}</h3>
+                <p>Actives</p>
+            </div>
+        </div>
 
-                <div class="stat-card-modern stat-inactive">
-                    <div class="stat-card-bg"></div>
-                    <div class="stat-header">
-                        <div class="stat-icon-modern">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="15" y1="9" x2="9" y2="15"></line>
-                                <line x1="9" y1="9" x2="15" y2="15"></line>
-                            </svg>
-                        </div>
-                        <span class="stat-trend">{{ $entreprises->where('is_active', false)->count() }}</span>
-                    </div>
-                    <div class="stat-value-modern">{{ $entreprises->where('is_active', false)->count() }}</div>
-                    <div class="stat-label-modern">Inactives</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: {{ $entreprises->count() > 0 ? ($entreprises->where('is_active', false)->count() / $entreprises->count()) * 100 : 0 }}%"></div>
-                    </div>
-                </div>
+        <div class="stat-card">
+            <div class="stat-icon danger">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <h3>{{ $entreprises->where('is_active', false)->count() }}</h3>
+                <p>Inactives</p>
+            </div>
+        </div>
 
-                <div class="stat-card-modern stat-employees">
-                    <div class="stat-card-bg"></div>
-                    <div class="stat-header">
-                        <div class="stat-icon-modern">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </div>
-                        <span class="stat-trend">Total</span>
-                    </div>
-                    <div class="stat-value-modern">{{ number_format($entreprises->sum('nombre_employes') ?? 0) }}</div>
-                    <div class="stat-label-modern">Employés</div>
-                    <div class="stat-progress">
-                        <div class="stat-progress-bar" style="width: 85%"></div>
-                    </div>
-                </div>
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+            </div>
+            <div class="stat-content">
+                <h3>{{ number_format($entreprises->sum('nombre_employes') ?? 0) }}</h3>
+                <p>Total Employés</p>
             </div>
         </div>
     </div>
 
     <!-- Success/Error Messages -->
     @if(session('success'))
-    <div class="notification-modern notification-success">
-        <div class="notification-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-        </div>
-        <div class="notification-content">{{ session('success') }}</div>
+    <div class="notification notification-success">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span>{{ session('success') }}</span>
     </div>
     @endif
 
     @if(session('error'))
-    <div class="notification-modern notification-error">
-        <div class="notification-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-        </div>
-        <div class="notification-content">{{ session('error') }}</div>
+    <div class="notification notification-error">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>{{ session('error') }}</span>
     </div>
     @endif
 
-    <!-- Toolbar with Search & Filters -->
-    <div class="toolbar-section">
-        <div class="toolbar-card">
-            <div class="toolbar-top">
-                <div class="search-box-premium">
-                    <svg class="search-icon-premium" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                    <input type="search" class="search-input-premium" placeholder="Rechercher par nom, email, ville, pays..." id="searchInput">
-                </div>
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="search-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="search" class="search-input" placeholder="Rechercher une entreprise..." id="searchInput">
+        </div>
 
-                <div class="view-toggle-group">
-                    <button type="button" class="view-toggle-btn active" id="gridViewBtn" onclick="switchView('grid')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="14" width="7" height="7"></rect>
-                            <rect x="3" y="14" width="7" height="7"></rect>
-                        </svg>
-                        Grille
-                    </button>
-                    <button type="button" class="view-toggle-btn" id="tableViewBtn" onclick="switchView('table')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="8" y1="6" x2="21" y2="6"></line>
-                            <line x1="8" y1="12" x2="21" y2="12"></line>
-                            <line x1="8" y1="18" x2="21" y2="18"></line>
-                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                        </svg>
-                        Liste
-                    </button>
-                </div>
-            </div>
+        <div class="filter-group">
+            <button class="filter-btn active" data-filter="all" onclick="filterCompanies('all')">
+                Toutes
+                <span class="count">{{ $entreprises->count() }}</span>
+            </button>
+            <button class="filter-btn" data-filter="active" onclick="filterCompanies('active')">
+                Actives
+                <span class="count">{{ $entreprises->where('is_active', true)->count() }}</span>
+            </button>
+            <button class="filter-btn" data-filter="inactive" onclick="filterCompanies('inactive')">
+                Inactives
+                <span class="count">{{ $entreprises->where('is_active', false)->count() }}</span>
+            </button>
+        </div>
 
-            <div class="filter-chips">
-                <button class="filter-chip active" data-filter="all" onclick="filterCompanies('all')">
-                    <span>Toutes</span>
-                    <span class="chip-count">{{ $entreprises->count() }}</span>
-                </button>
-                <button class="filter-chip" data-filter="active" onclick="filterCompanies('active')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                    <span>Actives</span>
-                    <span class="chip-count">{{ $entreprises->where('is_active', true)->count() }}</span>
-                </button>
-                <button class="filter-chip" data-filter="inactive" onclick="filterCompanies('inactive')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                    </svg>
-                    <span>Inactives</span>
-                    <span class="chip-count">{{ $entreprises->where('is_active', false)->count() }}</span>
-                </button>
-            </div>
+        <div class="view-toggle">
+            <button type="button" class="view-btn active" id="gridViewBtn" onclick="switchView('grid')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+            </button>
+            <button type="button" class="view-btn" id="tableViewBtn" onclick="switchView('table')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                </svg>
+            </button>
         </div>
     </div>
 
     <!-- Companies Grid View -->
     <div class="companies-grid" id="companiesGrid">
         @forelse($entreprises as $entreprise)
-        <div class="company-card" data-status="{{ $entreprise->is_active ? 'active' : 'inactive' }}">
-            <div class="company-card-status">
+        <div class="company-card" data-status="{{ $entreprise->is_active ? 'active' : 'inactive' }}" data-name="{{ strtolower($entreprise->nom) }}" data-email="{{ strtolower($entreprise->email) }}">
+            <div class="company-status">
                 @if($entreprise->is_active)
-                <span class="badge-premium badge-active">Active</span>
+                <span class="badge badge-active">Active</span>
                 @else
-                <span class="badge-premium badge-inactive">Inactive</span>
+                <span class="badge badge-inactive">Inactive</span>
                 @endif
             </div>
 
-            <div class="company-card-header">
-                <div class="company-logo-wrapper">
-                    @if($entreprise->logo)
-                    <img src="{{ asset($entreprise->logo) }}" alt="{{ $entreprise->nom }}" class="company-logo">
-                    @else
-                    <div class="company-logo-placeholder">
-                        {{ strtoupper(substr($entreprise->nom, 0, 2)) }}
-                    </div>
-                    @endif
+            <div class="company-header">
+                @if($entreprise->logo)
+                <img src="{{ asset($entreprise->logo) }}" alt="{{ $entreprise->nom }}" class="company-logo">
+                @else
+                <div class="company-logo-placeholder">
+                    {{ strtoupper(substr($entreprise->nom, 0, 2)) }}
                 </div>
-                <div class="company-card-info">
-                    <h3 class="company-card-name">{{ $entreprise->nom }}</h3>
+                @endif
+                <div class="company-info">
+                    <h3 class="company-name">{{ $entreprise->nom }}</h3>
                     @if($entreprise->sigle)
-                    <p class="company-card-sigle">{{ $entreprise->sigle }}</p>
+                    <span class="company-sigle">{{ $entreprise->sigle }}</span>
                     @endif
                 </div>
             </div>
 
-            <div class="company-card-body">
-                <div class="company-detail-row">
-                    <div class="company-detail-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
+            <div class="company-details">
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
                         </svg>
                     </div>
-                    <div class="company-detail-content">
-                        <div class="company-detail-label">Email</div>
-                        <div class="company-detail-value">{{ $entreprise->email }}</div>
+                    <div class="detail-content">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ $entreprise->email }}</span>
                     </div>
                 </div>
 
                 @if($entreprise->telephone)
-                <div class="company-detail-row">
-                    <div class="company-detail-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                         </svg>
                     </div>
-                    <div class="company-detail-content">
-                        <div class="company-detail-label">Téléphone</div>
-                        <div class="company-detail-value">{{ $entreprise->telephone }}</div>
+                    <div class="detail-content">
+                        <span class="detail-label">Téléphone</span>
+                        <span class="detail-value">{{ $entreprise->telephone }}</span>
                     </div>
                 </div>
                 @endif
 
-                <div class="company-detail-row">
-                    <div class="company-detail-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
                         </svg>
                     </div>
-                    <div class="company-detail-content">
-                        <div class="company-detail-label">Localisation</div>
-                        <div class="company-detail-value">{{ $entreprise->ville ?? $entreprise->pays }}</div>
-                    </div>
-                </div>
-
-                <div class="company-detail-row">
-                    <div class="company-detail-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        </svg>
-                    </div>
-                    <div class="company-detail-content">
-                        <div class="company-detail-label">Employés</div>
-                        <div class="company-detail-value">{{ $entreprise->nombre_employes ?? 'N/A' }}</div>
+                    <div class="detail-content">
+                        <span class="detail-label">Localisation</span>
+                        <span class="detail-value">{{ $entreprise->ville ?? $entreprise->pays ?? 'Non spécifié' }}</span>
                     </div>
                 </div>
             </div>
 
-            <div class="company-card-footer">
-                <a href="{{ route('entreprises.show', $entreprise->id) }}" class="btn-action-card btn-action-view-card">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
+            <div class="company-footer">
+                <a href="{{ route('admin.entreprises.show', $entreprise->id) }}" class="btn-action btn-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
                     </svg>
                     Voir
                 </a>
-                <button type="button" onclick="openEditEntrepriseModal({{ $entreprise->id }})" class="btn-action-card btn-action-edit-card">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                <button type="button" onclick="openEditModal({{ $entreprise->id }})" class="btn-action btn-edit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                     </svg>
                     Modifier
                 </button>
-                <form action="{{ route('entreprises.destroy', $entreprise->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise ?');">
+                <form action="{{ route('admin.entreprises.destroy', $entreprise->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise ?');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn-action-card btn-action-delete-card">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <button type="submit" class="btn-action btn-delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                         </svg>
                     </button>
                 </form>
             </div>
         </div>
         @empty
-        <div class="empty-state-premium" style="grid-column: 1 / -1;">
-            <div class="empty-icon-wrapper">
-                <svg class="empty-icon-premium" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        <div class="empty-state">
+            <div class="empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                 </svg>
             </div>
-            <h3 class="empty-title-premium">Aucune entreprise enregistrée</h3>
-            <p class="empty-description-premium">Commencez par créer votre première entreprise pour gérer vos partenaires</p>
-            <div class="empty-action">
-                <button type="button" onclick="openCreateEntrepriseModal()" class="btn-premium btn-premium-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    Créer une entreprise
-                </button>
-            </div>
+            <h3>Aucune entreprise</h3>
+            <p>Commencez par créer votre première entreprise</p>
+            <button type="button" class="btn-primary-rh" onclick="openCreateModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Créer une entreprise
+            </button>
         </div>
         @endforelse
     </div>
 
-    <!-- Companies Table View (Hidden by default) -->
-    <div class="companies-table-view" id="companiesTable" style="display: none;">
-        <div class="table-card-premium">
-            <div class="table-container-premium">
-                <table class="table-premium">
-                    <thead>
-                        <tr>
-                            <th>Entreprise</th>
-                            <th>Contact</th>
-                            <th>Localisation</th>
-                            <th>Employés</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($entreprises as $entreprise)
-                        <tr data-status="{{ $entreprise->is_active ? 'active' : 'inactive' }}">
-                            <td>
-                                <div class="company-cell">
-                                    @if($entreprise->logo)
-                                    <img src="{{ asset($entreprise->logo) }}" alt="{{ $entreprise->nom }}" class="company-logo">
-                                    @else
-                                    <div class="company-logo-placeholder" style="width: 52px; height: 52px; font-size: 1rem;">
-                                        {{ strtoupper(substr($entreprise->nom, 0, 2)) }}
-                                    </div>
-                                    @endif
-                                    <div class="company-info">
-                                        <span class="company-name">{{ $entreprise->nom }}</span>
-                                        @if($entreprise->sigle)
-                                        <span class="company-sigle">{{ $entreprise->sigle }}</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="contact-info">
-                                    <span class="contact-email">{{ $entreprise->email }}</span>
-                                    @if($entreprise->telephone)
-                                    <span class="contact-phone">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                                        </svg>
-                                        {{ $entreprise->telephone }}
-                                    </span>
-                                    @endif
-                                </div>
-                            </td>
-                            <td>
-                                <div class="location-info">
-                                    <span class="location-city">{{ $entreprise->ville ?? '-' }}</span>
-                                    <span class="location-country">{{ $entreprise->pays }}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <strong style="font-weight: 800; font-size: 1.125rem; color: var(--text-primary);">{{ $entreprise->nombre_employes ?? 'N/A' }}</strong>
-                            </td>
-                            <td>
-                                @if($entreprise->is_active)
-                                <span class="badge-premium badge-active">Active</span>
-                                @else
-                                <span class="badge-premium badge-inactive">Inactive</span>
+    <!-- Table View (Hidden by default) -->
+    <div class="companies-table-container" id="companiesTable" style="display: none;">
+        <table class="companies-table">
+            <thead>
+                <tr>
+                    <th>Entreprise</th>
+                    <th>Contact</th>
+                    <th>Localisation</th>
+                    <th>Employés</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($entreprises as $entreprise)
+                <tr data-status="{{ $entreprise->is_active ? 'active' : 'inactive' }}" data-name="{{ strtolower($entreprise->nom) }}" data-email="{{ strtolower($entreprise->email) }}">
+                    <td>
+                        <div class="table-company-cell">
+                            @if($entreprise->logo)
+                            <img src="{{ asset($entreprise->logo) }}" alt="{{ $entreprise->nom }}" class="company-logo" style="width: 40px; height: 40px;">
+                            @else
+                            <div class="company-logo-placeholder" style="width: 40px; height: 40px; font-size: 0.875rem;">
+                                {{ strtoupper(substr($entreprise->nom, 0, 2)) }}
+                            </div>
+                            @endif
+                            <div class="table-company-info">
+                                <span class="table-company-name">{{ $entreprise->nom }}</span>
+                                @if($entreprise->sigle)
+                                <span class="table-company-sigle">{{ $entreprise->sigle }}</span>
                                 @endif
-                            </td>
-                            <td>
-                                <div class="action-buttons-group">
-                                    <a href="{{ route('entreprises.show', $entreprise->id) }}" class="btn-action btn-action-view" title="Voir les détails">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                        </svg>
-                                    </a>
-                                    <button type="button" onclick="openEditEntrepriseModal({{ $entreprise->id }})" class="btn-action btn-action-edit" title="Modifier">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                    </button>
-                                    <form action="{{ route('entreprises.destroy', $entreprise->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise ?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-action btn-action-delete" title="Supprimer">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <polyline points="3 6 5 6 21 6"></polyline>
-                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                            </svg>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6">
-                                <div class="empty-state-premium">
-                                    <div class="empty-icon-wrapper">
-                                        <svg class="empty-icon-premium" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                        </svg>
-                                    </div>
-                                    <h3 class="empty-title-premium">Aucune entreprise enregistrée</h3>
-                                    <p class="empty-description-premium">Commencez par créer votre première entreprise</p>
-                                    <div class="empty-action">
-                                        <button type="button" onclick="openCreateEntrepriseModal()" class="btn-premium btn-premium-primary">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            </svg>
-                                            Créer une entreprise
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>{{ $entreprise->email }}</div>
+                        @if($entreprise->telephone)
+                        <small style="color: var(--rh-text-muted);">{{ $entreprise->telephone }}</small>
+                        @endif
+                    </td>
+                    <td>{{ $entreprise->ville ?? $entreprise->pays ?? '-' }}</td>
+                    <td><strong>{{ $entreprise->nombre_employes ?? '-' }}</strong></td>
+                    <td>
+                        @if($entreprise->is_active)
+                        <span class="badge badge-active">Active</span>
+                        @else
+                        <span class="badge badge-inactive">Inactive</span>
+                        @endif
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <a href="{{ route('admin.entreprises.show', $entreprise->id) }}" class="table-btn btn-view" title="Voir">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </a>
+                            <button type="button" onclick="openEditModal({{ $entreprise->id }})" class="table-btn btn-edit" title="Modifier">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </button>
+                            <form action="{{ route('admin.entreprises.destroy', $entreprise->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Supprimer cette entreprise ?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="table-btn btn-delete" title="Supprimer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <h3>Aucune entreprise</h3>
+                            <p>Commencez par créer votre première entreprise</p>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 
-<!-- Create/Edit Entreprise Modal - Multi-Step Premium -->
+<!-- Create/Edit Modal -->
 <div class="modal-overlay" id="entrepriseModal">
-    <div class="modal modal-compact modal-multistep" id="entrepriseModalContent" style="max-width: 1200px;">
-        <!-- Enhanced Premium Header with Progress -->
-        <div class="modal-header-premium-enhanced">
-            <div class="header-left-content">
-                <div class="modal-header-icon-large">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                </div>
-                <div class="modal-header-text-content">
-                    <h2 class="modal-title-premium-large" id="modalTitle">Nouvelle Entreprise</h2>
-                    <p class="modal-subtitle-premium-large" id="modalSubtitle">Créez une nouvelle entreprise en 4 étapes simples</p>
-                </div>
-            </div>
-
-            <div class="header-right-content">
-                <!-- Compact step progress in header -->
-                <div class="step-progress-mini">
-                    <span class="current-step-badge">Étape <strong id="headerStepNum">1</strong>/4</span>
-                    <div class="progress-bar-mini">
-                        <div class="progress-fill" id="headerProgressFill" style="width: 25%"></div>
+    <div class="modal">
+        <div class="modal-header">
+            <!-- Decorative background element -->
+            <div class="modal-header-bg"></div>
+            <div class="modal-header-content">
+                <div class="modal-header-left">
+                    <div class="modal-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <div class="modal-header-text">
+                        <h2 id="modalTitle">Nouvelle Entreprise</h2>
+                        <p id="modalSubtitle">Remplissez les informations de l'entreprise</p>
                     </div>
                 </div>
-
-                <button type="button" class="modal-close-premium" onclick="closeEntrepriseModal()" aria-label="Fermer">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                <button type="button" class="modal-close" onclick="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
                 </button>
             </div>
         </div>
 
-        <!-- Compact Step Progress Indicator -->
-        <div class="steps-progress-container-compact">
-            <div class="steps-progress-wrapper-compact">
-                <!-- Step 1 -->
-                <div class="step-item-compact active" data-step="1" onclick="goToStep(1)">
-                    <div class="step-circle-compact">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
-                    </div>
-                    <span class="step-label-compact">Informations</span>
-                </div>
-                <div class="step-connector-compact"></div>
-
-                <!-- Step 2 -->
-                <div class="step-item-compact" data-step="2" onclick="goToStep(2)">
-                    <div class="step-circle-compact">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                        </svg>
-                    </div>
-                    <span class="step-label-compact">Contact</span>
-                </div>
-                <div class="step-connector-compact"></div>
-
-                <!-- Step 3 -->
-                <div class="step-item-compact" data-step="3" onclick="goToStep(3)">
-                    <div class="step-circle-compact">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                    </div>
-                    <span class="step-label-compact">Localisation</span>
-                </div>
-                <div class="step-connector-compact"></div>
-
-                <!-- Step 4 -->
-                <div class="step-item-compact" data-step="4" onclick="goToStep(4)">
-                    <div class="step-circle-compact">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                        </svg>
-                    </div>
-                    <span class="step-label-compact">Juridique</span>
-                </div>
-            </div>
-        </div>
-
-        <form id="entrepriseForm" novalidate>
+        <form id="entrepriseForm" method="POST" enctype="multipart/form-data">
             @csrf
-            <input type="hidden" id="entrepriseId" name="entreprise_id">
-            <input type="hidden" id="formMethod" name="_method" value="POST">
+            <input type="hidden" name="_method" id="formMethod" value="POST">
 
-            <div class="modal-body modal-body-compact">
-
-                <!-- STEP 1: Informations de base -->
-                <div class="form-step active" id="step-1">
-                    <div class="form-section-pro">
-                        <h4 class="section-title-pro">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            <div class="modal-body">
+                <!-- Informations générales -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/>
                             </svg>
-                            Informations de base
-                        </h4>
-
-                        <div class="form-grid-4">
-                            <div class="form-group-pro col-span-2">
-                                <label for="nom" class="form-label-pro required">Nom de l'entreprise</label>
-                                <input type="text" id="nom" name="nom" class="form-input-pro" placeholder="Nom complet de l'entreprise" required>
-                                <span class="form-error" id="error_nom"></span>
-                            </div>
-
-                            <div class="form-group-pro">
-                                <label for="sigle" class="form-label-pro required">Sigle</label>
-                                <input type="text" id="sigle" name="sigle" class="form-input-pro" placeholder="Ex: SARL, SA..." required>
-                                <span class="form-error" id="error_sigle"></span>
-                            </div>
-
-                            <div class="form-group-pro">
-                                <label for="secteur_activite" class="form-label-pro">Secteur</label>
-                                <input type="text" id="secteur_activite" name="secteur_activite" class="form-input-pro" placeholder="Ex: Technologie">
-                                <span class="form-error" id="error_secteur_activite"></span>
-                            </div>
                         </div>
-
-                        <div class="form-group-pro full-width">
-                            <label for="description" class="form-label-pro">Description de l'entreprise</label>
-                            <textarea id="description" name="description" class="form-input-pro" rows="3" placeholder="Description détaillée de l'entreprise et de ses activités"></textarea>
-                            <span class="form-error" id="error_description"></span>
+                        <h3 class="form-section-title">Informations générales</h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label required">Nom de l'entreprise</label>
+                            <input type="text" name="nom" id="nom" class="form-input" placeholder="Nom de l'entreprise" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sigle</label>
+                            <input type="text" name="sigle" id="sigle" class="form-input" placeholder="Ex: ABC">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Email</label>
+                            <input type="email" name="email" id="email" class="form-input" placeholder="contact@entreprise.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Téléphone</label>
+                            <input type="text" name="telephone" id="telephone" class="form-input" placeholder="+225 XX XX XX XX">
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 2: Contact -->
-                <div class="form-step" id="step-2" style="display: none;">
-                    <div class="form-section-pro">
-                        <h4 class="section-title-pro">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                <!-- Adresse -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
                             </svg>
-                            Informations de contact
-                        </h4>
-
-                        <div class="form-grid-3">
-                            <div class="form-group-pro">
-                                <label for="email" class="form-label-pro required">Email professionnel</label>
-                                <input type="email" id="email" name="email" class="form-input-pro" placeholder="contact@entreprise.com" required>
-                                <span class="form-error" id="error_email"></span>
-                            </div>
-
-                            <div class="form-group-pro">
-                                <label for="telephone" class="form-label-pro">Téléphone</label>
-                                <input type="tel" id="telephone" name="telephone" class="form-input-pro" placeholder="+237 6XX XXX XXX">
-                                <span class="form-error" id="error_telephone"></span>
-                            </div>
-
-                            <div class="form-group-pro">
-                                <label for="site_web" class="form-label-pro">Site web</label>
-                                <input type="url" id="site_web" name="site_web" class="form-input-pro" placeholder="https://www.entreprise.com">
-                                <span class="form-error" id="error_site_web"></span>
-                            </div>
+                        </div>
+                        <h3 class="form-section-title">Adresse</h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label class="form-label">Adresse</label>
+                            <input type="text" name="adresse" id="adresse" class="form-input" placeholder="Adresse complète">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ville</label>
+                            <input type="text" name="ville" id="ville" class="form-input" placeholder="Ville">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Pays</label>
+                            <input type="text" name="pays" id="pays" class="form-input" placeholder="Pays">
                         </div>
                     </div>
                 </div>
 
-                <!-- STEP 3: Localisation -->
-                <div class="form-step" id="step-3" style="display: none;">
-                    <div class="form-section-pro">
-                        <h4 class="section-title-pro">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
+                <!-- Statut -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon success">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
                             </svg>
-                            Localisation
-                        </h4>
+                        </div>
+                        <h3 class="form-section-title">Statut de l'entreprise</h3>
+                    </div>
 
-                        <div class="form-group-pro full-width">
-                            <label for="adresse" class="form-label-pro">Adresse complète</label>
-                            <input type="text" id="adresse" name="adresse" class="form-input-pro" placeholder="Numéro, rue, avenue...">
-                            <span class="form-error" id="error_adresse"></span>
+                    <!-- Status Cards Selection -->
+                    <div class="status-cards">
+                        <input type="hidden" name="is_active" id="is_active" value="1">
+
+                        <div class="status-card active selected" data-status="1" onclick="selectStatus(1)">
+                            <div class="status-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                            </div>
+                            <div class="status-card-content">
+                                <span class="status-card-title">Active</span>
+                                <span class="status-card-desc">Visible et opérationnelle</span>
+                            </div>
+                            <div class="status-card-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
                         </div>
 
-                        <div class="form-grid-4">
-                            <div class="form-group-pro">
-                                <label for="quartier" class="form-label-pro">Quartier</label>
-                                <input type="text" id="quartier" name="quartier" class="form-input-pro" placeholder="Ex: Bonanjo, Akwa">
-                                <span class="form-error" id="error_quartier"></span>
+                        <div class="status-card inactive" data-status="0" onclick="selectStatus(0)">
+                            <div class="status-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="15" y1="9" x2="9" y2="15"/>
+                                    <line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
                             </div>
-
-                            <div class="form-group-pro">
-                                <label for="ville" class="form-label-pro">Ville</label>
-                                <input type="text" id="ville" name="ville" class="form-input-pro" placeholder="Ex: Douala, Yaoundé">
-                                <span class="form-error" id="error_ville"></span>
+                            <div class="status-card-content">
+                                <span class="status-card-title">Inactive</span>
+                                <span class="status-card-desc">Suspendue temporairement</span>
                             </div>
-
-                            <div class="form-group-pro">
-                                <label for="code_postal" class="form-label-pro">Code postal</label>
-                                <input type="text" id="code_postal" name="code_postal" class="form-input-pro" placeholder="Ex: BP 1234">
-                                <span class="form-error" id="error_code_postal"></span>
-                            </div>
-
-                            <div class="form-group-pro">
-                                <label for="pays" class="form-label-pro">Pays</label>
-                                <select id="pays" name="pays" class="form-input-pro">
-                                <option value="">-- Sélectionner --</option>
-                                <optgroup label="Afrique">
-                                    <option value="Cameroun" selected>Cameroun</option>
-                                    <option value="Burkina Faso">Burkina Faso</option>
-                                    <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-                                    <option value="Sénégal">Sénégal</option>
-                                    <option value="Mali">Mali</option>
-                                    <option value="Bénin">Bénin</option>
-                                    <option value="Togo">Togo</option>
-                                    <option value="Niger">Niger</option>
-                                    <option value="Tchad">Tchad</option>
-                                    <option value="Gabon">Gabon</option>
-                                    <option value="Congo">Congo</option>
-                                    <option value="RD Congo">RD Congo</option>
-                                    <option value="Guinée">Guinée</option>
-                                    <option value="Maroc">Maroc</option>
-                                    <option value="Algérie">Algérie</option>
-                                    <option value="Tunisie">Tunisie</option>
-                                    <option value="Nigeria">Nigeria</option>
-                                    <option value="Ghana">Ghana</option>
-                                    <option value="Kenya">Kenya</option>
-                                    <option value="Afrique du Sud">Afrique du Sud</option>
-                                </optgroup>
-                                <optgroup label="Europe">
-                                    <option value="France">France</option>
-                                    <option value="Belgique">Belgique</option>
-                                    <option value="Suisse">Suisse</option>
-                                    <option value="Luxembourg">Luxembourg</option>
-                                </optgroup>
-                                <optgroup label="Amérique">
-                                    <option value="Canada">Canada</option>
-                                    <option value="États-Unis">États-Unis</option>
-                                </optgroup>
-                                <optgroup label="Autre">
-                                    <option value="Autre">Autre</option>
-                                </optgroup>
-                            </select>
-                            <span class="form-error" id="error_pays"></span>
+                            <div class="status-card-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- STEP 4: Informations légales -->
-                <div class="form-step" id="step-4" style="display: none;">
-                    <div class="form-section-pro">
-                        <h4 class="section-title-pro">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                            </svg>
-                            Informations légales
-                        </h4>
-
-                        <div class="form-grid-4">
-                            <div class="form-group-pro">
-                                <label for="numero_registre" class="form-label-pro">N° Registre</label>
-                                <input type="text" id="numero_registre" name="numero_registre" class="form-input-pro" placeholder="RC-XXX-XXXX">
-                                <span class="form-error" id="error_numero_registre"></span>
-                            </div>
-
-                            <div class="form-group-pro">
-                                <label for="numero_fiscal" class="form-label-pro">N° Fiscal</label>
-                                <input type="text" id="numero_fiscal" name="numero_fiscal" class="form-input-pro" placeholder="NIF-XXXXXXXXX">
-                                <span class="form-error" id="error_numero_fiscal"></span>
-                            </div>
-
-                            <div class="form-group-pro">
-                                <label for="numero_cnss" class="form-label-pro">N° CNSS</label>
-                                <input type="text" id="numero_cnss" name="numero_cnss" class="form-input-pro" placeholder="CNSS-XXXXX">
-                                <span class="form-error" id="error_numero_cnss"></span>
-                            </div>
-
-                            <div class="form-group-pro">
-                                <label for="nombre_employes" class="form-label-pro">Nombre d'employés</label>
-                                <input type="number" id="nombre_employes" name="nombre_employes" class="form-input-pro" placeholder="Ex: 50" min="1">
-                                <span class="form-error" id="error_nombre_employes"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group-pro full-width">
-                            <div class="status-toggle-pro">
-                                <input type="checkbox" id="is_active" name="is_active" class="toggle-input-pro" checked>
-                                <label for="is_active" class="toggle-label-pro">
-                                    <span class="toggle-switch-pro"></span>
-                                    <span class="toggle-text-pro">Statut: Entreprise Active</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
-            <!-- Premium Multi-Step Footer -->
-            <div class="modal-footer-compact modal-footer-multistep">
-                <button type="button" class="btn-compact btn-secondary-compact" id="btnPrevStep" onclick="prevStep()" style="display: none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="15 18 9 12 15 6"></polyline>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
-                    Retour
+                    Annuler
                 </button>
-
-                <div class="step-indicator-footer">
-                    Étape <span id="currentStepNum">1</span> sur 4
-                </div>
-
-                <button type="button" class="btn-compact btn-primary-compact" id="btnNextStep" onclick="nextStep()">
-                    Suivant
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"></polyline>
+                <button type="submit" class="btn-submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
                     </svg>
-                </button>
-
-                <button type="submit" class="btn-compact btn-primary-compact" id="btnSubmit" style="display: none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span id="submitBtnText">Créer l'entreprise</span>
+                    Enregistrer
                 </button>
             </div>
         </form>
@@ -4374,243 +1867,7 @@ textarea.form-input-pro {
 
 @section('scripts')
 <script>
-// ===================================
-// MULTI-STEP MODAL FUNCTIONALITY
-// ===================================
-let currentStep = 1;
-const totalSteps = 4;
-let completedSteps = [];
-
-// Initialize modal on open
-function initMultiStepModal() {
-    currentStep = 1;
-    completedSteps = [];
-    showStep(1);
-}
-
-// Navigate to specific step
-function goToStep(step) {
-    // Only allow navigation to completed steps or next step
-    if (completedSteps.includes(step) || step === currentStep + 1 || step === currentStep) {
-        if (step < currentStep || completedSteps.includes(step)) {
-            // Going backwards or to a completed step - no validation needed
-            currentStep = step;
-            showStep(step);
-        } else if (step === currentStep + 1) {
-            // Going forward - validate current step first
-            nextStep();
-        }
-    }
-}
-
-// Next step function
-function nextStep() {
-    if (!validateCurrentStep()) {
-        return;
-    }
-
-    // Mark current step as completed
-    if (!completedSteps.includes(currentStep)) {
-        completedSteps.push(currentStep);
-    }
-
-    if (currentStep < totalSteps) {
-        currentStep++;
-        showStep(currentStep);
-    }
-}
-
-// Previous step function
-function prevStep() {
-    if (currentStep > 1) {
-        currentStep--;
-        showStep(currentStep);
-    }
-}
-
-// Show specific step
-function showStep(step) {
-    // Hide all steps
-    document.querySelectorAll('.form-step').forEach(s => {
-        s.classList.remove('active');
-        s.style.display = 'none';
-    });
-
-    // Show current step
-    const currentStepElement = document.getElementById(`step-${step}`);
-    if (currentStepElement) {
-        currentStepElement.style.display = 'block';
-        setTimeout(() => currentStepElement.classList.add('active'), 10);
-    }
-
-    // Update progress indicator
-    updateProgressIndicator(step);
-
-    // Update footer buttons
-    updateFooterButtons(step);
-
-    // Update step counter
-    document.getElementById('currentStepNum').textContent = step;
-
-    // Update header progress indicator
-    const headerStepNum = document.getElementById('headerStepNum');
-    const headerProgressFill = document.getElementById('headerProgressFill');
-    if (headerStepNum) {
-        headerStepNum.textContent = step;
-    }
-    if (headerProgressFill) {
-        const progressPercent = (step / totalSteps) * 100;
-        headerProgressFill.style.width = progressPercent + '%';
-    }
-}
-
-// Update progress indicator
-function updateProgressIndicator(step) {
-    // Update old step indicators (if they exist)
-    document.querySelectorAll('.step-item').forEach((item, index) => {
-        const stepNum = index + 1;
-
-        // Remove all state classes
-        item.classList.remove('active', 'completed');
-
-        if (stepNum < step || completedSteps.includes(stepNum)) {
-            // Completed step
-            item.classList.add('completed');
-        } else if (stepNum === step) {
-            // Active step
-            item.classList.add('active');
-        }
-        // else: pending step (no class)
-    });
-
-    // Update compact step indicators
-    document.querySelectorAll('.step-item-compact').forEach((item, index) => {
-        const stepNum = index + 1;
-
-        // Remove all state classes
-        item.classList.remove('active', 'completed');
-
-        if (stepNum < step || completedSteps.includes(stepNum)) {
-            // Completed step
-            item.classList.add('completed');
-        } else if (stepNum === step) {
-            // Active step
-            item.classList.add('active');
-        }
-        // else: pending step (no class)
-    });
-}
-
-// Update footer buttons
-function updateFooterButtons(step) {
-    const btnPrevStep = document.getElementById('btnPrevStep');
-    const btnNextStep = document.getElementById('btnNextStep');
-    const btnSubmit = document.getElementById('btnSubmit');
-
-    // Previous button
-    if (step === 1) {
-        btnPrevStep.style.display = 'none';
-    } else {
-        btnPrevStep.style.display = 'inline-flex';
-    }
-
-    // Next vs Submit button
-    if (step === totalSteps) {
-        btnNextStep.style.display = 'none';
-        btnSubmit.style.display = 'inline-flex';
-    } else {
-        btnNextStep.style.display = 'inline-flex';
-        btnSubmit.style.display = 'none';
-    }
-}
-
-// Validate current step
-function validateCurrentStep() {
-    let isValid = true;
-    const currentStepElement = document.getElementById(`step-${currentStep}`);
-
-    if (!currentStepElement) return true;
-
-    // Clear previous errors
-    currentStepElement.querySelectorAll('.form-error').forEach(el => el.textContent = '');
-    currentStepElement.querySelectorAll('.form-input-compact').forEach(el => {
-        el.classList.remove('error');
-    });
-
-    // Get required fields in current step
-    const requiredFields = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
-
-    requiredFields.forEach(field => {
-        const value = field.value.trim();
-        const errorElement = document.getElementById(`error_${field.name}`);
-
-        if (!value) {
-            isValid = false;
-            field.classList.add('error');
-            if (errorElement) {
-                errorElement.textContent = 'Ce champ est requis';
-            }
-        } else if (field.type === 'email' && !isValidEmail(value)) {
-            isValid = false;
-            field.classList.add('error');
-            if (errorElement) {
-                errorElement.textContent = 'Email invalide';
-            }
-        } else if (field.type === 'url' && value && !isValidUrl(value)) {
-            isValid = false;
-            field.classList.add('error');
-            if (errorElement) {
-                errorElement.textContent = 'URL invalide';
-            }
-        }
-    });
-
-    if (!isValid) {
-        // Shake animation for error feedback
-        currentStepElement.style.animation = 'none';
-        setTimeout(() => {
-            currentStepElement.style.animation = 'shake 0.5s';
-        }, 10);
-        setTimeout(() => {
-            currentStepElement.style.animation = '';
-        }, 510);
-    }
-
-    return isValid;
-}
-
-// Email validation
-function isValidEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-// URL validation
-function isValidUrl(url) {
-    try {
-        new URL(url);
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-// Add shake animation to CSS (will be inline)
-const shakeStyle = document.createElement('style');
-shakeStyle.textContent = `
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
-    20%, 40%, 60%, 80% { transform: translateX(8px); }
-}
-`;
-document.head.appendChild(shakeStyle);
-
-// ===================================
-// END MULTI-STEP MODAL FUNCTIONALITY
-// ===================================
-
-// View switching
+// View Toggle
 function switchView(view) {
     const gridView = document.getElementById('companiesGrid');
     const tableView = document.getElementById('companiesTable');
@@ -4622,385 +1879,197 @@ function switchView(view) {
         tableView.style.display = 'none';
         gridBtn.classList.add('active');
         tableBtn.classList.remove('active');
-        localStorage.setItem('companiesView', 'grid');
     } else {
         gridView.style.display = 'none';
         tableView.style.display = 'block';
         gridBtn.classList.remove('active');
         tableBtn.classList.add('active');
-        localStorage.setItem('companiesView', 'table');
     }
 }
 
-// Restore view preference
-window.addEventListener('DOMContentLoaded', function() {
-    const savedView = localStorage.getItem('companiesView') || 'grid';
-    switchView(savedView);
-});
-
-// Filter companies by status
+// Filter Companies
 function filterCompanies(filter) {
     const cards = document.querySelectorAll('.company-card');
-    const tableRows = document.querySelectorAll('.table-premium tbody tr');
-    const chips = document.querySelectorAll('.filter-chip');
+    const rows = document.querySelectorAll('.companies-table tbody tr[data-status]');
+    const filterBtns = document.querySelectorAll('.filter-btn');
 
-    // Update active chip
-    chips.forEach(chip => {
-        if (chip.dataset.filter === filter) {
-            chip.classList.add('active');
-        } else {
-            chip.classList.remove('active');
-        }
-    });
+    filterBtns.forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
 
-    // Filter grid cards
-    cards.forEach(card => {
-        if (filter === 'all' || card.dataset.status === filter) {
-            card.style.display = '';
+    [...cards, ...rows].forEach(item => {
+        if (filter === 'all' || item.dataset.status === filter) {
+            item.style.display = '';
         } else {
-            card.style.display = 'none';
-        }
-    });
-
-    // Filter table rows
-    tableRows.forEach(row => {
-        if (row.querySelector('td[colspan]')) return; // Skip empty state row
-        if (filter === 'all' || row.dataset.status === filter) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
+            item.style.display = 'none';
         }
     });
 }
 
-// Search functionality
-document.getElementById('searchInput')?.addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
+// Search
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const search = e.target.value.toLowerCase();
     const cards = document.querySelectorAll('.company-card');
-    const tableRows = document.querySelectorAll('.table-premium tbody tr');
+    const rows = document.querySelectorAll('.companies-table tbody tr[data-status]');
 
-    // Search in grid cards
-    cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(searchTerm) ? '' : 'none';
-    });
-
-    // Search in table rows
-    tableRows.forEach(row => {
-        if (row.querySelector('td[colspan]')) return; // Skip empty state row
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    [...cards, ...rows].forEach(item => {
+        const name = item.dataset.name || '';
+        const email = item.dataset.email || '';
+        if (name.includes(search) || email.includes(search)) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
     });
 });
 
-// Modal functions
-function openCreateEntrepriseModal() {
-    const modal = document.getElementById('entrepriseModal');
-    if (modal) {
-        document.getElementById('entrepriseForm').reset();
-        document.getElementById('entrepriseId').value = '';
-        document.getElementById('formMethod').value = 'POST';
-        document.getElementById('modalTitle').textContent = 'Nouvelle Entreprise';
-        document.getElementById('modalSubtitle').textContent = 'Créez une nouvelle entreprise en 4 étapes';
-        document.getElementById('submitBtnText').textContent = 'Créer l\'entreprise';
-        clearFormErrors();
+// Status Selection
+function selectStatus(status) {
+    // Update hidden input
+    document.getElementById('is_active').value = status;
 
-        // Initialize multi-step modal
-        initMultiStepModal();
+    // Update card selection
+    document.querySelectorAll('.status-card').forEach(card => {
+        card.classList.remove('selected');
+    });
 
-        modal.classList.add('show');
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => document.getElementById('nom')?.focus(), 300);
+    const selectedCard = document.querySelector(`.status-card[data-status="${status}"]`);
+    if (selectedCard) {
+        selectedCard.classList.add('selected');
     }
 }
 
-function openEditEntrepriseModal(entrepriseId) {
-    const modal = document.getElementById('entrepriseModal');
-    if (modal) {
-        document.getElementById('entrepriseId').value = entrepriseId;
-        document.getElementById('formMethod').value = 'PUT';
-        document.getElementById('modalTitle').textContent = 'Modifier l\'Entreprise';
-        document.getElementById('modalSubtitle').textContent = 'Mettez à jour les informations en 4 étapes';
-        document.getElementById('submitBtnText').textContent = 'Enregistrer';
-        clearFormErrors();
-        loadEntrepriseData(entrepriseId);
+// Modal Functions
+function openCreateModal() {
+    document.getElementById('modalTitle').textContent = 'Nouvelle Entreprise';
+    document.getElementById('modalSubtitle').textContent = 'Remplissez les informations';
+    document.getElementById('entrepriseForm').action = '{{ route("admin.entreprises.store") }}';
+    document.getElementById('formMethod').value = 'POST';
+    document.getElementById('entrepriseForm').reset();
 
-        // Initialize multi-step modal
-        initMultiStepModal();
+    // Reset status selection to active
+    selectStatus(1);
 
-        modal.classList.add('show');
-        document.body.style.overflow = 'hidden';
-    }
+    document.getElementById('entrepriseModal').classList.add('show');
 }
 
-async function loadEntrepriseData(entrepriseId) {
-    try {
-        const response = await fetch(`/entreprises/${entrepriseId}`, {
-            headers: {
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+function openEditModal(id) {
+    document.getElementById('modalTitle').textContent = 'Modifier l\'entreprise';
+    document.getElementById('modalSubtitle').textContent = 'Modifiez les informations';
+    document.getElementById('entrepriseForm').action = `/admin/entreprises/${id}`;
+    document.getElementById('formMethod').value = 'PUT';
+
+    // Fetch company data with JSON header
+    fetch(`/admin/entreprises/${id}/edit`, {
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('nom').value = data.nom || '';
+            document.getElementById('sigle').value = data.sigle || '';
+            document.getElementById('email').value = data.email || '';
+            document.getElementById('telephone').value = data.telephone || '';
+            document.getElementById('adresse').value = data.adresse || '';
+            document.getElementById('ville').value = data.ville || '';
+            document.getElementById('pays').value = data.pays || '';
+
+            // Update status selection
+            selectStatus(data.is_active ? 1 : 0);
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Erreur lors du chargement des données');
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            const entreprise = data.entreprise || data;
-
-            document.getElementById('nom').value = entreprise.nom || '';
-            document.getElementById('sigle').value = entreprise.sigle || '';
-            document.getElementById('secteur_activite').value = entreprise.secteur_activite || '';
-            document.getElementById('description').value = entreprise.description || '';
-            document.getElementById('email').value = entreprise.email || '';
-            document.getElementById('telephone').value = entreprise.telephone || '';
-            document.getElementById('site_web').value = entreprise.site_web || '';
-            document.getElementById('adresse').value = entreprise.adresse || '';
-            document.getElementById('quartier').value = entreprise.quartier || '';
-            document.getElementById('ville').value = entreprise.ville || '';
-            document.getElementById('code_postal').value = entreprise.code_postal || '';
-            document.getElementById('pays').value = entreprise.pays || '';
-            document.getElementById('numero_registre').value = entreprise.numero_registre || '';
-            document.getElementById('numero_fiscal').value = entreprise.numero_fiscal || '';
-            document.getElementById('numero_cnss').value = entreprise.numero_cnss || '';
-            document.getElementById('nombre_employes').value = entreprise.nombre_employes || '';
-        }
-    } catch (error) {
-        console.error('Erreur lors du chargement des données:', error);
-        alert('Erreur lors du chargement des données de l\'entreprise');
-    }
+    document.getElementById('entrepriseModal').classList.add('show');
 }
 
-function closeEntrepriseModal() {
-    const modal = document.getElementById('entrepriseModal');
-    if (modal) {
-        modal.classList.remove('show');
-        document.body.style.overflow = '';
-        setTimeout(() => {
-            document.getElementById('entrepriseForm').reset();
-            clearFormErrors();
-        }, 300);
-    }
+function closeModal() {
+    document.getElementById('entrepriseModal').classList.remove('show');
+    // Clear any validation errors
+    clearValidationErrors();
 }
 
-function clearFormErrors() {
-    document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
-    document.querySelectorAll('.form-input-compact').forEach(el => {
-        el.classList.remove('error', 'success');
+function clearValidationErrors() {
+    document.querySelectorAll('.form-input.error').forEach(input => {
+        input.classList.remove('error');
+    });
+    document.querySelectorAll('.error-message').forEach(msg => {
+        msg.remove();
     });
 }
 
-// Form submission
-document.getElementById('entrepriseForm')?.addEventListener('submit', async function(e) {
+function showValidationErrors(errors) {
+    clearValidationErrors();
+    Object.keys(errors).forEach(field => {
+        const input = document.getElementById(field);
+        if (input) {
+            input.classList.add('error');
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = errors[field][0];
+            input.parentNode.appendChild(errorDiv);
+        }
+    });
+}
+
+// Form submission handling
+document.getElementById('entrepriseForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const submitBtn = document.getElementById('btnSubmit');
-    if (!submitBtn) return;
+    const form = this;
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.btn-submit');
+    const originalText = submitBtn.innerHTML;
 
-    const originalBtnHtml = submitBtn.innerHTML;
-    const entrepriseId = document.getElementById('entrepriseId').value;
-    const method = document.getElementById('formMethod').value;
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg> Enregistrement...';
 
-    try {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `
-            <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-            </svg>
-            ${method === 'PUT' ? 'Enregistrement...' : 'Création en cours...'}
-        `;
-
-        clearFormErrors();
-
-        const formData = new FormData(this);
-        const url = entrepriseId ? `/entreprises/${entrepriseId}` : '{{ route("entreprises.store") }}';
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json',
-            },
-            body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.success) {
-            closeEntrepriseModal();
-            showSuccessNotification(data.entreprise, method === 'PUT');
-            setTimeout(() => window.location.reload(), 2000);
-        } else {
-            if (data.errors) {
-                console.log('Erreurs de validation:', data.errors);
-
-                Object.keys(data.errors).forEach(field => {
-                    const errorEl = document.getElementById(`error_${field}`);
-                    const inputEl = document.getElementById(field);
-
-                    if (errorEl && data.errors[field][0]) {
-                        errorEl.textContent = data.errors[field][0];
-                    }
-
-                    if (inputEl) {
-                        inputEl.classList.add('error');
-                    }
-                });
-
-                // Trouver la première étape avec une erreur et y naviguer
-                const firstErrorField = Object.keys(data.errors)[0];
-                const firstErrorInput = document.getElementById(firstErrorField);
-                if (firstErrorInput) {
-                    const stepElement = firstErrorInput.closest('.form-step');
-                    if (stepElement) {
-                        const stepId = stepElement.id;
-                        const stepNumber = parseInt(stepId.replace('step-', ''));
-                        if (stepNumber) {
-                            goToStep(stepNumber);
-                        }
-                    }
-                }
-            } else if (data.message) {
-                alert(data.message);
-            }
-
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnHtml;
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
         }
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert('Une erreur est survenue. Veuillez réessayer.');
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnHtml;
-    }
-});
-
-function showSuccessNotification(entreprise, isEdit = false) {
-    const notification = document.createElement('div');
-    notification.className = 'success-notification-entreprise';
-    notification.innerHTML = `
-        <div class="success-notification-content">
-            <div class="success-icon-wrapper">
-                <svg class="success-icon" xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9 12l2 2 4-4"></path>
-                </svg>
-            </div>
-            <div class="success-text">
-                <h3 class="success-title">${isEdit ? 'Entreprise modifiée' : 'Entreprise créée'}</h3>
-                <p class="success-details">
-                    <strong>${entreprise.nom}</strong><br>
-                    <span class="success-meta">${entreprise.email} • ${entreprise.ville || entreprise.pays}</span>
-                </p>
-                <p class="success-reload">La page va se recharger...</p>
-            </div>
-        </div>
-        <div class="success-progress"></div>
-    `;
-
-    document.body.appendChild(notification);
-
-    setTimeout(() => notification.classList.add('show'), 10);
-    setTimeout(() => {
-        const progress = notification.querySelector('.success-progress');
-        progress.style.width = '0%';
-    }, 100);
-
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 1800);
-}
-
-// Keyboard navigation
-document.addEventListener('keydown', (e) => {
-    const modal = document.getElementById('entrepriseModal');
-    if (!modal || !modal.classList.contains('show')) return;
-
-    // Escape key - close modal
-    if (e.key === 'Escape') {
-        closeEntrepriseModal();
-    }
-});
-
-// Close modal by clicking overlay
-document.getElementById('entrepriseModal')?.addEventListener('click', (e) => {
-    if (e.target.id === 'entrepriseModal') {
-        closeEntrepriseModal();
-    }
-});
-
-// Prevent closing when clicking modal content
-document.getElementById('entrepriseModalContent')?.addEventListener('click', (e) => {
-    e.stopPropagation();
-});
-
-// Real-time validation
-document.addEventListener('DOMContentLoaded', function() {
-    // Email validation
-    const emailInput = document.getElementById('email');
-    if (emailInput) {
-        emailInput.addEventListener('blur', function() {
-            const value = this.value.trim();
-            const errorEl = document.getElementById('error_email');
-
-            if (value.length > 0 && !value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-                errorEl.textContent = 'Format d\'email invalide';
-                this.classList.add('error');
-                this.classList.remove('success');
-            } else if (value.length > 0) {
-                errorEl.textContent = '';
-                this.classList.remove('error');
-                this.classList.add('success');
-            } else {
-                errorEl.textContent = '';
-                this.classList.remove('error', 'success');
-            }
-        });
-    }
-
-    // URL validation
-    const siteWebInput = document.getElementById('site_web');
-    if (siteWebInput) {
-        siteWebInput.addEventListener('blur', function() {
-            const value = this.value.trim();
-            const errorEl = document.getElementById('error_site_web');
-
-            if (value.length > 0 && !value.match(/^https?:\/\/.+/)) {
-                errorEl.textContent = 'L\'URL doit commencer par http:// ou https://';
-                this.classList.add('error');
-                this.classList.remove('success');
-            } else if (value.length > 0) {
-                errorEl.textContent = '';
-                this.classList.remove('error');
-                this.classList.add('success');
-            } else {
-                errorEl.textContent = '';
-                this.classList.remove('error', 'success');
-            }
-        });
-    }
-
-    // Required fields validation
-    ['nom', 'email', 'pays'].forEach(fieldId => {
-        const input = document.getElementById(fieldId);
-        if (input) {
-            input.addEventListener('blur', function() {
-                const value = this.value.trim();
-                const errorEl = document.getElementById(`error_${fieldId}`);
-
-                if (value.length === 0) {
-                    errorEl.textContent = 'Ce champ est requis';
-                    this.classList.add('error');
-                    this.classList.remove('success');
-                } else {
-                    errorEl.textContent = '';
-                    this.classList.remove('error');
-                    if (fieldId !== 'email') {
-                        this.classList.add('success');
-                    }
-                }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw { status: response.status, data: data };
             });
         }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success !== false) {
+            // Success - reload page
+            window.location.reload();
+        }
+    })
+    .catch(error => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+
+        if (error.status === 422 && error.data.errors) {
+            showValidationErrors(error.data.errors);
+        } else {
+            alert(error.data?.message || 'Une erreur est survenue');
+        }
     });
+});
+
+// Close modal on outside click
+document.getElementById('entrepriseModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
 });
 </script>
 @endsection

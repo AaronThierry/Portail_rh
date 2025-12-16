@@ -1,13 +1,13 @@
 /* ==================== USERS VIEW - MODERN DESIGN ==================== */
 
-/* CSS Variables */
+/* CSS Variables - RH+ Brand Colors */
 :root {
-    --users-primary: #6366f1;
-    --users-primary-dark: #4f46e5;
-    --users-success: #10b981;
+    --users-primary: #4A90D9;
+    --users-primary-dark: #2E6BB3;
+    --users-success: #27AE60;
     --users-danger: #ef4444;
-    --users-warning: #f59e0b;
-    --users-info: #3b82f6;
+    --users-warning: #E67E22;
+    --users-info: #4A90D9;
 
     --users-radius-sm: 8px;
     --users-radius-md: 12px;

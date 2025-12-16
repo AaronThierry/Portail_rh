@@ -109,6 +109,9 @@ class UserController extends Controller
                 return redirect()->route('two-factor.show');
             }
 
+            // Déterminer la redirection selon le rôle
+            $redirectRoute = $this->getRedirectRouteByRole($user);
+
             // Si le 2FA n'est pas activé, continuer normalement
             if ($request->expectsJson()) {
                 $token = $user->createToken('auth_token')->plainTextToken;
@@ -118,12 +121,12 @@ class UserController extends Controller
                     'message' => 'Connexion réussie',
                     'user' => $user,
                     'token' => $token,
-                    'redirect' => route('dashboard')
+                    'redirect' => $redirectRoute
                 ], 200);
             }
 
-            // Sinon, redirection vers le dashboard
-            return redirect()->intended(route('dashboard'))->with('success', 'Connexion réussie !');
+            // Redirection directe selon le rôle (sans intended pour éviter les redirections non autorisées)
+            return redirect()->to($redirectRoute)->with('success', 'Connexion réussie !');
         }
 
         // Échec de l'authentification
@@ -137,6 +140,21 @@ class UserController extends Controller
         return back()->withErrors([
             'courrier' => 'E-mail ou mot de passe incorrect',
         ])->withInput();
+    }
+
+    /**
+     * Determine redirect route based on user role
+     * Superadmins vont vers le portail admin, les autres vers l'espace employe
+     */
+    protected function getRedirectRouteByRole($user): string
+    {
+        // Super Admin vont vers le portail admin
+        if ($user->hasRole('Super Admin')) {
+            return route('admin.dashboard');
+        }
+
+        // Tous les autres utilisateurs vont vers l'espace employé
+        return route('espace-employe.dashboard');
     }
 
     /**

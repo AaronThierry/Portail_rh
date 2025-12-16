@@ -7,7 +7,7 @@
     {{-- Header --}}
     <div class="mb-6">
         <div class="flex items-center mb-4">
-            <a href="{{ route('roles.index') }}" class="text-gray-600 hover:text-gray-900 mr-4">
+            <a href="{{ route('admin.roles.index') }}" class="text-gray-600 hover:text-gray-900 mr-4">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>
@@ -22,7 +22,7 @@
     {{-- Formulaire --}}
     <div class="max-w-2xl">
         <div class="bg-white rounded-lg shadow-md p-6">
-            <form action="{{ route('roles.update', $role) }}" method="POST">
+            <form action="{{ route('admin.roles.update', $role) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -35,7 +35,7 @@
                            name="name"
                            id="name"
                            value="{{ old('name', $role->name) }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('name') border-red-500 @enderror"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('name') border-red-500 @enderror"
                            required>
                     @error('name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -60,9 +60,9 @@
                 {{-- Info statistiques --}}
                 <div class="mb-6 grid grid-cols-2 gap-4">
                     <div class="bg-blue-50 rounded-lg p-4">
-                        <div class="text-sm text-blue-600 font-medium mb-1">Permissions</div>
+                        <div class="text-sm text-primary-600 font-medium mb-1">Permissions</div>
                         <div class="text-2xl font-bold text-blue-900">{{ $role->permissions()->count() }}</div>
-                        <a href="{{ route('roles.permissions', $role) }}" class="text-xs text-blue-600 hover:text-blue-800 mt-2 inline-block">
+                        <a href="{{ route('admin.roles.permissions', $role) }}" class="text-xs text-primary-600 hover:text-primary-800 mt-2 inline-block">
                             Gérer les permissions →
                         </a>
                     </div>
@@ -75,12 +75,12 @@
 
                 {{-- Boutons --}}
                 <div class="flex items-center justify-between pt-4 border-t">
-                    <a href="{{ route('roles.index') }}"
+                    <a href="{{ route('admin.roles.index') }}"
                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
                         Annuler
                     </a>
                     <button type="submit"
-                            class="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                            class="px-6 py-2 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition">
                         Mettre à Jour
                     </button>
                 </div>

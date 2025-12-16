@@ -15,20 +15,23 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Sidebar Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}?v={{ time() }}">
+
+    <!-- Modal Premium CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/modal.css') }}?v={{ time() }}">
 
     @yield('styles')
 </head>
 <body class="h-full font-sans antialiased">
-    <div class="flex h-full bg-gray-50 dark:bg-gray-900">
+    <div class="app-layout bg-gray-50 dark:bg-gray-900">
         <!-- Sidebar -->
         @include('partials.sidebar')
 
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col min-w-0 transition-all duration-300 main-content" id="mainContent">
-            <!-- Header -->
-            @include('partials.header')
+        <!-- Header -->
+        @include('partials.header')
 
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
             <!-- Page Content -->
             <main class="app-main">
                 <div class="main-container">

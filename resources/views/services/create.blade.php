@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="mb-6">
         <div class="flex items-center gap-4 mb-4">
-            <a href="{{ route('services.index') }}" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+            <a href="{{ route('admin.services.index') }}" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
@@ -32,7 +32,7 @@
     @endif
 
     <!-- Form -->
-    <form action="{{ route('services.store') }}" method="POST">
+    <form action="{{ route('admin.services.store') }}" method="POST">
         @csrf
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -144,7 +144,7 @@
                             </svg>
                             Créer le service
                         </button>
-                        <a href="{{ route('services.index') }}" class="btn btn-secondary w-full">
+                        <a href="{{ route('admin.services.index') }}" class="btn btn-secondary w-full">
                             Annuler
                         </a>
                     </div>

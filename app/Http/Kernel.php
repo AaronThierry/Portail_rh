@@ -80,5 +80,8 @@ class Kernel extends HttpKernel
 
         // Middleware 2FA
         '2fa' => \App\Http\Middleware\TwoFactorMiddleware::class,
+
+        // Middleware Admin Access
+        'admin.access' => \App\Http\Middleware\AdminAccess::class,
     ];
 }

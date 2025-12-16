@@ -8,7 +8,7 @@
     <div class="mb-6">
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-4">
-                <a href="{{ route('services.index') }}" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                <a href="{{ route('admin.services.index') }}" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="flex gap-2">
-                <a href="{{ route('services.edit', $service->id) }}" class="btn btn-primary">
+                <a href="{{ route('admin.services.edit', $service->id) }}" class="btn btn-primary">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
@@ -63,7 +63,7 @@
                     @if($service->departement)
                     <div>
                         <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">Département</p>
-                        <a href="{{ route('departements.show', $service->departement->id) }}" class="text-base text-blue-600 dark:text-blue-400 hover:underline">
+                        <a href="{{ route('admin.departements.show', $service->departement->id) }}" class="text-base text-blue-600 dark:text-blue-400 hover:underline">
                             {{ $service->departement->nom }}
                         </a>
                     </div>
@@ -72,7 +72,7 @@
                     @if($service->entreprise)
                     <div>
                         <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">Entreprise</p>
-                        <a href="{{ route('entreprises.show', $service->entreprise->id) }}" class="text-base text-blue-600 dark:text-blue-400 hover:underline">
+                        <a href="{{ route('admin.entreprises.show', $service->entreprise->id) }}" class="text-base text-blue-600 dark:text-blue-400 hover:underline">
                             {{ $service->entreprise->nom }}
                         </a>
                     </div>

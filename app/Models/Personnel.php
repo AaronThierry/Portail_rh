@@ -79,6 +79,34 @@ class Personnel extends Model
     }
 
     /**
+     * Relation avec les documents du dossier agent
+     */
+    public function documents()
+    {
+        return $this->hasMany(DocumentAgent::class, 'personnel_id');
+    }
+
+    /**
+     * Obtenir les documents actifs
+     */
+    public function documentsActifs()
+    {
+        return $this->documents()->where('statut', 'actif');
+    }
+
+    /**
+     * Obtenir les documents expirés
+     */
+    public function documentsExpires()
+    {
+        return $this->documents()->where('statut', 'expire')
+            ->orWhere(function ($query) {
+                $query->whereNotNull('date_expiration')
+                    ->where('date_expiration', '<', now());
+            });
+    }
+
+    /**
      * Accesseur pour le téléphone complet avec code pays
      */
     public function getTelephoneCompletAttribute()

@@ -18,18 +18,18 @@
         .bg-pattern {
             background-color: #f8fafc;
             background-image:
-                linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(74, 144, 217, 0.03) 0%, transparent 50%),
                 linear-gradient(225deg, rgba(147, 51, 234, 0.03) 0%, transparent 50%),
-                repeating-linear-gradient(90deg, rgba(59, 130, 246, 0.03) 0px, transparent 1px, transparent 80px, rgba(59, 130, 246, 0.03) 81px),
+                repeating-linear-gradient(90deg, rgba(74, 144, 217, 0.03) 0px, transparent 1px, transparent 80px, rgba(74, 144, 217, 0.03) 81px),
                 repeating-linear-gradient(0deg, rgba(147, 51, 234, 0.03) 0px, transparent 1px, transparent 80px, rgba(147, 51, 234, 0.03) 81px);
         }
 
         .dark .bg-pattern {
             background-color: #0f172a;
             background-image:
-                linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(74, 144, 217, 0.05) 0%, transparent 50%),
                 linear-gradient(225deg, rgba(147, 51, 234, 0.05) 0%, transparent 50%),
-                repeating-linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0px, transparent 1px, transparent 80px, rgba(59, 130, 246, 0.05) 81px),
+                repeating-linear-gradient(90deg, rgba(74, 144, 217, 0.05) 0px, transparent 1px, transparent 80px, rgba(74, 144, 217, 0.05) 81px),
                 repeating-linear-gradient(0deg, rgba(147, 51, 234, 0.05) 0px, transparent 1px, transparent 80px, rgba(147, 51, 234, 0.05) 81px);
         }
 
@@ -67,7 +67,7 @@
         <svg class="w-6 h-6 text-amber-500 hidden dark:block transition-all duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
-        <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400 block dark:hidden transition-all duration-300 group-hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg class="w-6 h-6 text-primary-600 dark:text-indigo-400 block dark:hidden transition-all duration-300 group-hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
     </button>
@@ -78,8 +78,8 @@
             <!-- Logo & Title Section -->
             <div class="text-center space-y-4">
                 <div class="inline-flex items-center justify-center relative group">
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl blur-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
-                    <div class="relative w-20 h-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl flex items-center justify-center transform group-hover:scale-105 transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 rounded-3xl blur-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
+                    <div class="relative w-20 h-20 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-3xl shadow-2xl flex items-center justify-center transform group-hover:scale-105 transition-all duration-500">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-12 h-12 text-white">
                             <path fill="currentColor" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                         </svg>
@@ -88,7 +88,7 @@
 
                 <div class="space-y-1">
                     <h1 class="text-4xl font-extrabold">
-                        <span class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        <span class="bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 bg-clip-text text-transparent">
                             Vérifier votre code
                         </span>
                     </h1>
@@ -101,7 +101,7 @@
 
             <!-- Verify Code Form Card -->
             <div class="relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500 animate-pulse"></div>
+                <div class="absolute -inset-1 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500 animate-pulse"></div>
 
                 <div class="relative glass-card rounded-3xl p-6 space-y-6">
 
@@ -144,12 +144,12 @@
                                 Code de vérification (6 chiffres)
                             </label>
                             <div class="flex justify-center gap-2" id="otp-container">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all" data-index="0">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all" data-index="1">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all" data-index="2">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all" data-index="3">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all" data-index="4">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all" data-index="5">
+                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="0">
+                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="1">
+                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="2">
+                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="3">
+                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="4">
+                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="5">
                             </div>
                             <input type="hidden" name="code" id="otp-code" required>
                         </div>
@@ -157,12 +157,12 @@
                         <!-- Timer -->
                         <div class="text-center space-y-2">
                             <p class="text-sm text-gray-600 dark:text-gray-400">
-                                Le code expire dans <span id="timer" class="font-bold text-blue-600 dark:text-blue-400">10:00</span>
+                                Le code expire dans <span id="timer" class="font-bold text-primary-600 dark:text-blue-400">10:00</span>
                             </p>
                         </div>
 
                         <!-- Submit Button -->
-                        <button type="submit" class="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-6 py-4 font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+                        <button type="submit" class="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 px-6 py-4 font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
                             <div class="absolute inset-0 bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             <span class="relative flex items-center justify-center gap-2 text-base">
                                 Vérifier le code
@@ -177,7 +177,7 @@
                         <div class="text-center">
                             <p class="text-sm text-gray-600 dark:text-gray-400">
                                 Vous n'avez pas reçu le code ?
-                                <button type="button" onclick="resendCode()" id="resend-button" class="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+                                <button type="button" onclick="resendCode()" id="resend-button" class="font-bold text-primary-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
                                     Renvoyer
                                 </button>
                             </p>
@@ -188,11 +188,11 @@
 
             <!-- Footer -->
             <div class="text-center space-y-3">
-                <a href="{{ route('password.request') }}" class="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">
+                <a href="{{ route('password.request') }}" class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-blue-400 font-medium transition-colors">
                     ← Retour à la réinitialisation
                 </a>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    © {{ date('Y') }} <span class="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Portail RH</span> • Tous droits réservés
+                    © {{ date('Y') }} <span class="font-bold bg-gradient-to-r from-primary-500 to-purple-600 bg-clip-text text-transparent">Portail RH</span> • Tous droits réservés
                 </p>
             </div>
         </div>

@@ -144,7 +144,7 @@
                     </td>
                     <td>
                         @if($user->personnel)
-                            <a href="{{ route('personnels.show', $user->personnel->id) }}" class="personnel-link">
+                            <a href="{{ route('admin.personnels.show', $user->personnel->id) }}" class="personnel-link">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
@@ -520,7 +520,7 @@
 
 /* Header */
 .modal-user-header {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #4A90D9 0%, #2E6BB3 100%);
     padding: 20px 24px;
     display: flex;
     justify-content: space-between;
@@ -560,7 +560,7 @@
 }
 
 .step-item.active .step-number {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    background: linear-gradient(135deg, #4A90D9, #2E6BB3);
     color: white;
 }
 
@@ -584,7 +584,7 @@
 }
 
 .step-item.active .step-label {
-    color: #6366f1;
+    color: #4A90D9;
 }
 
 .step-item.completed .step-label {
@@ -723,7 +723,7 @@
 }
 
 .btn-next {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    background: linear-gradient(135deg, #4A90D9, #2E6BB3);
     color: white;
 }
 
@@ -871,7 +871,7 @@
 
 .field-input:focus {
     outline: none;
-    border-color: #6366f1;
+    border-color: #4A90D9;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
@@ -1035,7 +1035,7 @@
 }
 
 .btn-submit {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    background: linear-gradient(135deg, #4A90D9, #2E6BB3);
     color: white;
 }
 
@@ -1166,7 +1166,7 @@
 }
 
 .dark-mode .field-input:focus {
-    border-color: #6366f1;
+    border-color: #4A90D9;
     background: #1f2937;
 }
 

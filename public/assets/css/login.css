@@ -1,4 +1,4 @@
-/* Light theme (default) */
+/* Light theme (default) - RH+ Brand Colors */
 :root {
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
@@ -8,24 +8,25 @@
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --primary-light: #60a5fa;
-  --primary-dark: #1e40af;
+  --primary: #4A90D9;
+  --primary-hover: #3A7BC8;
+  --primary-light: #5BA3E8;
+  --primary-dark: #2E6BB3;
   --danger: #ef4444;
-  --success: #10b981;
-  --warning: #f59e0b;
+  --success: #27AE60;
+  --warning: #E67E22;
+  --accent: #F5A623;
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.05);
   --gradient-opacity: 0.15;
-  --gradient-overlay-1: rgba(59, 130, 246, 0.08);
-  --gradient-overlay-2: rgba(139, 92, 246, 0.08);
+  --gradient-overlay-1: rgba(74, 144, 217, 0.08);
+  --gradient-overlay-2: rgba(245, 166, 35, 0.08);
   --input-bg: rgba(248, 250, 252, 0.8);
   --input-border: rgba(148, 163, 184, 0.3);
   --input-focus-bg: rgba(255, 255, 255, 1);
 }
 
-/* Dark theme */
+/* Dark theme - RH+ Brand Colors */
 [data-theme="dark"] {
   --bg-primary: #0a0e1a;
   --bg-secondary: #0f172a;
@@ -35,18 +36,19 @@
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --primary-light: #60a5fa;
-  --primary-dark: #93c5fd;
+  --primary: #5BA3E8;
+  --primary-hover: #4A90D9;
+  --primary-light: #7BB8F0;
+  --primary-dark: #4A90D9;
   --danger: #ef4444;
-  --success: #10b981;
-  --warning: #f59e0b;
+  --success: #2ECC71;
+  --warning: #F5A623;
+  --accent: #F5A623;
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
   --gradient-opacity: 0.15;
-  --gradient-overlay-1: rgba(59, 130, 246, 0.1);
-  --gradient-overlay-2: rgba(139, 92, 246, 0.1);
+  --gradient-overlay-1: rgba(74, 144, 217, 0.1);
+  --gradient-overlay-2: rgba(245, 166, 35, 0.1);
   --input-bg: rgba(15, 23, 42, 0.5);
   --input-border: rgba(71, 85, 105, 0.4);
   --input-focus-bg: rgba(15, 23, 42, 0.8);

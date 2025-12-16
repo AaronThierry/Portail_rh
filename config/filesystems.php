@@ -56,6 +56,21 @@ return [
             'throw' => false,
         ],
 
+        /*
+        |--------------------------------------------------------------------------
+        | Dossiers Agents - Stockage des documents RH
+        |--------------------------------------------------------------------------
+        |
+        | Disque dédié au stockage sécurisé des documents des employés.
+        | Les fichiers sont organisés par entreprise/personnel/année/mois
+        |
+        */
+        'dossiers_agents' => [
+            'driver' => 'local',
+            'root' => storage_path('app/dossiers_agents'),
+            'throw' => false,
+        ],
+
     ],
 
     /*

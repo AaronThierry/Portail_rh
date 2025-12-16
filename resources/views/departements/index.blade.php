@@ -10,7 +10,7 @@
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Départements</h1>
             <p class="text-gray-600 dark:text-gray-400">Gérez les départements du système</p>
         </div>
-        <a href="{{ route('departements.create') }}" class="btn btn-primary">
+        <a href="{{ route('admin.departements.create') }}" class="btn btn-primary">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
@@ -108,7 +108,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('departements.show', $departement->id) }}"
+                                <a href="{{ route('admin.departements.show', $departement->id) }}"
                                    class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                                    title="Voir les détails">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,14 +116,14 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                     </svg>
                                 </a>
-                                <a href="{{ route('departements.edit', $departement->id) }}"
+                                <a href="{{ route('admin.departements.edit', $departement->id) }}"
                                    class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300"
                                    title="Modifier">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
                                 </a>
-                                <form action="{{ route('departements.destroy', $departement->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce département ?');">
+                                <form action="{{ route('admin.departements.destroy', $departement->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce département ?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
@@ -145,7 +145,7 @@
                             </svg>
                             <p class="text-lg font-medium mb-2">Aucun département enregistré</p>
                             <p class="text-sm">Commencez par créer votre premier département</p>
-                            <a href="{{ route('departements.create') }}" class="btn btn-primary mt-4 inline-flex">
+                            <a href="{{ route('admin.departements.create') }}" class="btn btn-primary mt-4 inline-flex">
                                 Créer un département
                             </a>
                         </td>

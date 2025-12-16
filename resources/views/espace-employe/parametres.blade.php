@@ -1,0 +1,482 @@
+@extends('layouts.espace-employe')
+
+@section('title', 'Paramètres')
+@section('page-title', 'Paramètres')
+@section('breadcrumb')
+    <a href="{{ route('espace-employe.dashboard') }}">Accueil</a>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    <span>Paramètres</span>
+@endsection
+
+@section('styles')
+<style>
+.ee-parametres-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 900px;
+}
+
+/* Alert Messages */
+.ee-alert {
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ee-alert.success {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--ee-success);
+}
+
+.ee-alert.error {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: var(--ee-danger);
+}
+
+.ee-alert svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+/* Settings Card */
+.ee-settings-card {
+    background: var(--ee-card);
+    border-radius: 20px;
+    border: 1px solid var(--ee-border);
+    overflow: hidden;
+}
+
+.ee-settings-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--ee-border);
+}
+
+.ee-settings-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ee-settings-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.ee-settings-icon.blue {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%);
+    color: var(--ee-primary);
+}
+
+.ee-settings-icon.purple {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%);
+    color: #8B5CF6;
+}
+
+.ee-settings-icon.green {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+    color: var(--ee-success);
+}
+
+.ee-settings-icon.orange {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+    color: var(--ee-warning);
+}
+
+.ee-settings-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--ee-text);
+}
+
+.ee-settings-subtitle {
+    font-size: 0.8125rem;
+    color: var(--ee-text-muted);
+    margin-top: 0.25rem;
+}
+
+.ee-settings-body {
+    padding: 1.5rem;
+}
+
+/* Form Group */
+.ee-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.ee-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.ee-form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ee-text);
+    margin-bottom: 0.5rem;
+}
+
+.ee-form-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--ee-border);
+    border-radius: 12px;
+    font-size: 1rem;
+    color: var(--ee-text);
+    background: var(--ee-card);
+    transition: all 0.25s ease;
+}
+
+.ee-form-input:focus {
+    outline: none;
+    border-color: var(--ee-primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.ee-form-input::placeholder {
+    color: var(--ee-text-light);
+}
+
+.ee-form-input:disabled {
+    background: var(--ee-bg-alt);
+    cursor: not-allowed;
+}
+
+.ee-form-hint {
+    font-size: 0.75rem;
+    color: var(--ee-text-muted);
+    margin-top: 0.375rem;
+}
+
+/* Form Row */
+.ee-form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+/* Submit Button */
+.ee-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--ee-primary) 0%, var(--ee-primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.ee-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.ee-submit-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Toggle Switch */
+.ee-toggle-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--ee-border);
+}
+
+.ee-toggle-group:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.ee-toggle-info {
+    flex: 1;
+}
+
+.ee-toggle-label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ee-text);
+}
+
+.ee-toggle-desc {
+    font-size: 0.8125rem;
+    color: var(--ee-text-muted);
+    margin-top: 0.25rem;
+}
+
+.ee-toggle {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.ee-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.ee-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: var(--ee-border);
+    border-radius: 28px;
+    transition: all 0.3s ease;
+}
+
+.ee-toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 3px;
+    top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ee-toggle input:checked + .ee-toggle-slider {
+    background: var(--ee-primary);
+}
+
+.ee-toggle input:checked + .ee-toggle-slider::before {
+    transform: translateX(24px);
+}
+
+/* Info Section */
+.ee-info-section {
+    background: var(--ee-bg-alt);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.ee-info-section svg {
+    width: 20px;
+    height: 20px;
+    color: var(--ee-primary);
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+.ee-info-section p {
+    font-size: 0.875rem;
+    color: var(--ee-text-muted);
+    line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .ee-form-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+@endsection
+
+@section('content')
+<div class="ee-parametres-page">
+    <!-- Alerts -->
+    @if(session('success'))
+        <div class="ee-alert success">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="ee-alert error">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            {{ $errors->first() }}
+        </div>
+    @endif
+
+    <!-- Account Settings -->
+    <div class="ee-settings-card animate-fade-in">
+        <div class="ee-settings-header">
+            <div class="ee-settings-icon blue">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div>
+                <h2 class="ee-settings-title">Informations du compte</h2>
+                <p class="ee-settings-subtitle">Gérez vos informations de connexion</p>
+            </div>
+        </div>
+        <div class="ee-settings-body">
+            <div class="ee-form-group">
+                <label class="ee-form-label">Nom complet</label>
+                <input type="text" class="ee-form-input" value="{{ $user->name }}" disabled>
+                <p class="ee-form-hint">Contactez l'administrateur pour modifier votre nom</p>
+            </div>
+            <div class="ee-form-group">
+                <label class="ee-form-label">Adresse e-mail</label>
+                <input type="email" class="ee-form-input" value="{{ $user->email }}" disabled>
+                <p class="ee-form-hint">Contactez l'administrateur pour modifier votre e-mail</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Settings -->
+    <div class="ee-settings-card animate-fade-in" style="animation-delay: 0.1s;">
+        <div class="ee-settings-header">
+            <div class="ee-settings-icon purple">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="ee-settings-title">Mot de passe</h2>
+                <p class="ee-settings-subtitle">Modifiez votre mot de passe de connexion</p>
+            </div>
+        </div>
+        <div class="ee-settings-body">
+            <form action="{{ route('espace-employe.password.update') }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="ee-form-group">
+                    <label class="ee-form-label">Mot de passe actuel</label>
+                    <input type="password" name="current_password" class="ee-form-input" placeholder="Entrez votre mot de passe actuel" required>
+                </div>
+                <div class="ee-form-row">
+                    <div class="ee-form-group">
+                        <label class="ee-form-label">Nouveau mot de passe</label>
+                        <input type="password" name="password" class="ee-form-input" placeholder="Minimum 8 caractères" required>
+                    </div>
+                    <div class="ee-form-group">
+                        <label class="ee-form-label">Confirmer le mot de passe</label>
+                        <input type="password" name="password_confirmation" class="ee-form-input" placeholder="Confirmez le mot de passe" required>
+                    </div>
+                </div>
+                <button type="submit" class="ee-submit-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Mettre à jour le mot de passe
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notifications Settings -->
+    <div class="ee-settings-card animate-fade-in" style="animation-delay: 0.2s;">
+        <div class="ee-settings-header">
+            <div class="ee-settings-icon green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="ee-settings-title">Notifications</h2>
+                <p class="ee-settings-subtitle">Gérez vos préférences de notifications</p>
+            </div>
+        </div>
+        <div class="ee-settings-body">
+            <div class="ee-toggle-group">
+                <div class="ee-toggle-info">
+                    <div class="ee-toggle-label">Notifications par e-mail</div>
+                    <div class="ee-toggle-desc">Recevez des notifications par e-mail pour les mises à jour importantes</div>
+                </div>
+                <label class="ee-toggle">
+                    <input type="checkbox" checked>
+                    <span class="ee-toggle-slider"></span>
+                </label>
+            </div>
+            <div class="ee-toggle-group">
+                <div class="ee-toggle-info">
+                    <div class="ee-toggle-label">Rappels de congés</div>
+                    <div class="ee-toggle-desc">Rappels avant l'expiration de vos congés</div>
+                </div>
+                <label class="ee-toggle">
+                    <input type="checkbox" checked>
+                    <span class="ee-toggle-slider"></span>
+                </label>
+            </div>
+            <div class="ee-toggle-group">
+                <div class="ee-toggle-info">
+                    <div class="ee-toggle-label">Nouveaux bulletins de paie</div>
+                    <div class="ee-toggle-desc">Notification lors de la disponibilité d'un nouveau bulletin</div>
+                </div>
+                <label class="ee-toggle">
+                    <input type="checkbox" checked>
+                    <span class="ee-toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Info -->
+    <div class="ee-settings-card animate-fade-in" style="animation-delay: 0.3s;">
+        <div class="ee-settings-header">
+            <div class="ee-settings-icon orange">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="ee-settings-title">Sécurité</h2>
+                <p class="ee-settings-subtitle">Informations sur la sécurité de votre compte</p>
+            </div>
+        </div>
+        <div class="ee-settings-body">
+            <div class="ee-info-section">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <p>
+                    Pour activer l'authentification à deux facteurs (2FA) ou pour toute autre demande de sécurité avancée,
+                    veuillez contacter votre administrateur RH ou accéder aux paramètres de sécurité depuis le portail principal.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

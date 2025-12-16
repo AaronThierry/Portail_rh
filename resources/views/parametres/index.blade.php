@@ -525,7 +525,7 @@
                                     </svg>
                                 </button>
                                 @if(!in_array($role->name, ['Super Admin', 'Admin']))
-                                <form action="{{ route('roles.destroy', $role) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rôle ?');">
+                                <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rôle ?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn-icon btn-delete" title="Supprimer">
@@ -697,7 +697,7 @@ function showCreateRoleModal() {
                     <h3>Créer un Nouveau Rôle</h3>
                     <button onclick="closeModal()" class="modal-close">&times;</button>
                 </div>
-                <form action="{{ route('roles.store') }}" method="POST">
+                <form action="{{ route('admin.roles.store') }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">

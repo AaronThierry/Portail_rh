@@ -77,6 +77,16 @@ class DefaultPermissionsSeeder extends Seeder
                 'download-documents' => 'Télécharger les documents',
             ],
 
+            // Gestion des Dossiers Agents
+            'dossiers-agents' => [
+                'view-dossiers-agents' => 'Consulter les dossiers agents',
+                'create-dossiers-agents' => 'Ajouter des documents aux dossiers agents',
+                'edit-dossiers-agents' => 'Modifier les documents des dossiers agents',
+                'delete-dossiers-agents' => 'Supprimer des documents des dossiers agents',
+                'download-dossiers-agents' => 'Télécharger les documents des dossiers agents',
+                'manage-categories-dossiers' => 'Gérer les catégories de documents',
+            ],
+
             // Gestion des Demandes
             'demandes' => [
                 'view-demandes' => 'Consulter les demandes',
@@ -183,9 +193,24 @@ class DefaultPermissionsSeeder extends Seeder
             'view-demandes', 'create-demandes', 'approve-demandes',
             'view-conges', 'approve-conges',
             'view-rapports',
+            'view-dossiers-agents', 'create-dossiers-agents', 'download-dossiers-agents',
         ])->get();
         $manager->syncPermissions($managerPermissions);
         $this->command->info("  ✅ Manager : {$managerPermissions->count()} permissions");
+
+        // RH : Permissions RH complètes
+        $rh = Role::firstOrCreate(['name' => 'RH', 'guard_name' => 'web']);
+        $rhPermissions = Permission::whereIn('name', [
+            'view-users', 'edit-users', 'create-users',
+            'view-departements', 'view-services',
+            'view-documents', 'create-documents', 'edit-documents', 'delete-documents', 'download-documents',
+            'view-demandes', 'create-demandes', 'approve-demandes',
+            'view-conges', 'approve-conges',
+            'view-rapports', 'export-rapports',
+            'view-dossiers-agents', 'create-dossiers-agents', 'edit-dossiers-agents', 'delete-dossiers-agents', 'download-dossiers-agents', 'manage-categories-dossiers',
+        ])->get();
+        $rh->syncPermissions($rhPermissions);
+        $this->command->info("  ✅ RH : {$rhPermissions->count()} permissions");
 
         // Employé : Permissions de base
         $employe = Role::firstOrCreate(['name' => 'Employé', 'guard_name' => 'web']);

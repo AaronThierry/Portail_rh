@@ -1,155 +1,960 @@
 <header class="app-header">
     <div class="header-container">
-        <!-- Mobile Menu Button - Only visible on mobile -->
+        <!-- Mobile Menu Button - Premium Design -->
         <button class="mobile-menu-btn" id="mobileMenuButton" aria-label="Toggle menu">
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
+            <svg class="burger-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line class="burger-line line-top" x1="4" y1="6" x2="20" y2="6"></line>
+                <line class="burger-line line-middle" x1="4" y1="12" x2="20" y2="12"></line>
+                <line class="burger-line line-bottom" x1="4" y1="18" x2="16" y2="18"></line>
+            </svg>
         </button>
 
-        <!-- Page Title - Dynamic -->
+        <!-- Page Title - Dynamic with Animation -->
         <div class="header-title">
             <h1 class="page-title">@yield('page-title', 'Tableau de bord')</h1>
         </div>
 
+        <!-- Header Actions -->
         <div class="header-actions">
-        <!-- Theme Toggle -->
-        <button class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" data-theme-toggle aria-label="Changer le thème">
-            <svg class="w-5 h-5 hidden dark:block" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 17.5C9.5 17.5 7.5 15.5 7.5 13S9.5 8.5 12 8.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5zm0-7c-1.4 0-2.5 1.1-2.5 2.5s1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5-1.1-2.5-2.5-2.5z"/>
-            </svg>
-            <svg class="w-5 h-5 block dark:hidden" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
-            </svg>
-        </button>
-
-        <!-- Notifications -->
-        <div class="relative">
-            <button class="relative p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" id="notificationBtn" aria-label="Notifications">
-                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                </svg>
-                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            <!-- Theme Toggle - Elegant -->
+            <button class="header-action-btn theme-toggle" data-theme-toggle aria-label="Changer le thème">
+                <div class="theme-icon-wrapper">
+                    <svg class="theme-icon sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="theme-icon moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </div>
             </button>
 
-            <!-- Notification Dropdown (hidden by default) -->
-            <div class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl dark:shadow-2xl border-2 border-gray-200 dark:border-gray-600 overflow-hidden z-50" id="notificationDropdown">
-                <div class="px-4 py-3 bg-gray-50 dark:bg-gray-900 border-b-2 border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                    <h3 class="font-bold text-gray-900 dark:text-white">Notifications</h3>
-                    <button class="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 hover:underline font-medium">Tout marquer comme lu</button>
-                </div>
-                <div class="max-h-96 overflow-y-auto custom-scrollbar">
-                    <a href="/notifications/1" class="flex gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700 transition-colors">
-                        <div class="flex-shrink-0 w-8 h-8 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center">
-                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+            <!-- Notifications - Premium Design -->
+            <div class="header-dropdown-wrapper">
+                <button class="header-action-btn notification-btn" id="notificationBtn" aria-label="Notifications">
+                    <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="notification-badge pulse">3</span>
+                </button>
+
+                <!-- Notification Dropdown - Elegant -->
+                <div class="header-dropdown notification-dropdown" id="notificationDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-header-content">
+                            <h3 class="dropdown-title">Notifications</h3>
+                            <span class="notification-count">3 nouvelles</span>
+                        </div>
+                        <button class="mark-all-read">Tout marquer comme lu</button>
+                    </div>
+                    <div class="dropdown-body custom-scrollbar">
+                        <a href="/notifications/1" class="notification-item unread">
+                            <div class="notification-icon success">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-title">Nouvelle demande de congé</p>
+                                <p class="notification-text">Jean Dupont a soumis une demande</p>
+                                <span class="notification-time">Il y a 5 minutes</span>
+                            </div>
+                        </a>
+                        <a href="/notifications/2" class="notification-item unread">
+                            <div class="notification-icon info">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-title">Rappel de réunion</p>
+                                <p class="notification-text">Réunion d'équipe dans 30 minutes</p>
+                                <span class="notification-time">Il y a 25 minutes</span>
+                            </div>
+                        </a>
+                        <a href="/notifications/3" class="notification-item">
+                            <div class="notification-icon warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </div>
+                            <div class="notification-content">
+                                <p class="notification-title">Document en attente</p>
+                                <p class="notification-text">Un document nécessite votre signature</p>
+                                <span class="notification-time">Il y a 2 heures</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="dropdown-footer">
+                        <a href="/notifications" class="view-all-link">
+                            <span>Voir toutes les notifications</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
                             </svg>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Nouvelle demande de congé</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 truncate">Jean Dupont a soumis une demande</p>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 5 minutes</p>
-                        </div>
-                    </a>
-                    <a href="/notifications/2" class="flex gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700 transition-colors">
-                        <div class="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center">
-                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="16" x2="12" y2="12"></line>
-                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                            </svg>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Rappel de réunion</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 truncate">Réunion d'équipe dans 30 minutes</p>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 25 minutes</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-center">
-                    <a href="/notifications" class="text-sm text-primary-600 dark:text-primary-400 hover:underline font-medium">Voir toutes les notifications</a>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- User Profile -->
-        <div class="relative">
-            <button class="flex items-center gap-2 p-1 pr-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" id="userMenuBtn" aria-label="Menu utilisateur">
-                <img src="{{ auth()->user()->avatar ? asset(auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'User') . '&background=3b82f6&color=fff' }}" alt="Avatar" class="w-8 h-8 rounded-full">
-                <span class="hidden lg:block text-sm font-medium text-gray-700 dark:text-gray-200">{{ auth()->user()->name ?? 'Admin' }}</span>
-                <svg class="hidden lg:block w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
+            <!-- User Profile - Elegant Design -->
+            <div class="header-dropdown-wrapper">
+                <button class="user-profile-btn" id="userMenuBtn" aria-label="Menu utilisateur">
+                    <div class="user-avatar-wrapper">
+                        <img src="{{ auth()->user()->avatar ? asset(auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'User') . '&background=4A90D9&color=fff&bold=true' }}" alt="Avatar" class="user-avatar">
+                        <span class="user-status online"></span>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">{{ auth()->user()->name ?? 'Admin' }}</span>
+                        <span class="user-role">{{ auth()->user()->roles->first()->name ?? 'Utilisateur' }}</span>
+                    </div>
+                    <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
 
-            <!-- User Dropdown (hidden by default) -->
-            <div class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl dark:shadow-2xl border-2 border-gray-200 dark:border-gray-600 overflow-hidden z-50" id="userDropdown">
-                <div class="px-4 py-3 bg-gray-50 dark:bg-gray-900 border-b-2 border-gray-200 dark:border-gray-700">
-                    <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ auth()->user()->name ?? 'Utilisateur' }}</p>
-                    <p class="text-xs text-gray-600 dark:text-gray-400 truncate">{{ auth()->user()->email ?? 'admin@example.com' }}</p>
-                </div>
-                <div class="py-2">
-                    <a href="/profile" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        Mon profil
-                    </a>
-                    <a href="/settings" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M12 1v6m0 6v6m5.657-13.657l-4.243 4.243m-2.828 2.828l-4.243 4.243m16.97 1.414l-4.243-4.243m-2.828-2.828l-4.243-4.243"></path>
-                        </svg>
-                        Paramètres
-                    </a>
-                    <a href="/help" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                        Aide
-                    </a>
-                </div>
-                <div class="border-t-2 border-gray-200 dark:border-gray-700">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-colors">
-                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                <polyline points="16 17 21 12 16 7"></polyline>
-                                <line x1="21" y1="12" x2="9" y2="12"></line>
-                            </svg>
-                            Déconnexion
-                        </button>
-                    </form>
+                <!-- User Dropdown - Premium Design -->
+                <div class="header-dropdown user-dropdown" id="userDropdown">
+                    <div class="dropdown-header user-header">
+                        <div class="user-header-avatar">
+                            <img src="{{ auth()->user()->avatar ? asset(auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'User') . '&background=4A90D9&color=fff&bold=true&size=80' }}" alt="Avatar">
+                        </div>
+                        <div class="user-header-info">
+                            <p class="user-header-name">{{ auth()->user()->name ?? 'Utilisateur' }}</p>
+                            <p class="user-header-email">{{ auth()->user()->email ?? 'admin@example.com' }}</p>
+                        </div>
+                    </div>
+                    <div class="dropdown-body">
+                        <a href="/profile" class="dropdown-item">
+                            <div class="dropdown-item-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <span>Mon profil</span>
+                        </a>
+                        <a href="/settings" class="dropdown-item">
+                            <div class="dropdown-item-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                </svg>
+                            </div>
+                            <span>Paramètres</span>
+                        </a>
+                        <a href="/help" class="dropdown-item">
+                            <div class="dropdown-item-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </div>
+                            <span>Aide & Support</span>
+                        </a>
+                    </div>
+                    <div class="dropdown-footer logout-section">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="logout-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                <span>Déconnexion</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<script>
-    // Dropdown functionality
-    document.getElementById('notificationBtn')?.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const dropdown = document.getElementById('notificationDropdown');
-        dropdown.classList.toggle('hidden');
-        document.getElementById('userDropdown')?.classList.add('hidden');
-    });
+<style>
+/* ==================== HEADER PREMIUM STYLES ==================== */
 
-    document.getElementById('userMenuBtn')?.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const dropdown = document.getElementById('userDropdown');
-        dropdown.classList.toggle('hidden');
-        document.getElementById('notificationDropdown')?.classList.add('hidden');
-    });
+/* App Header - Main Container */
+.app-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: var(--sidebar-collapsed-width, 72px);
+    height: 70px;
+    background: var(--header-bg, #ffffff);
+    border-bottom: 1px solid var(--header-border, #E8ECF0);
+    z-index: 90;
+    transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Adjust when sidebar is hovered (expanded) */
+@media (min-width: 1025px) {
+    .sidebar:hover ~ .app-header {
+        left: var(--sidebar-width, 280px);
+    }
+}
+
+/* Mobile - Header takes full width */
+@media (max-width: 1024px) {
+    .app-header {
+        left: 0;
+    }
+}
+
+/* Dark mode */
+.dark .app-header {
+    --header-bg: #1F2937;
+    --header-border: #374151;
+}
+
+/* Header Container */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 1.5rem;
+    max-width: 100%;
+}
+
+/* Header Title */
+.header-title {
+    flex: 1;
+    min-width: 0;
+}
+
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary, #1F2937);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dark .page-title {
+    color: #F9FAFB;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: var(--radius-md, 12px);
+    background: var(--sidebar-hover, #F0F4F8);
+    color: var(--sidebar-text, #5A6C7D);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    margin-right: 1rem;
+}
+
+.mobile-menu-btn:hover {
+    background: var(--primary-light, #E8F4FD);
+    color: var(--primary, #4A90D9);
+}
+
+.burger-svg {
+    width: 22px;
+    height: 22px;
+}
+
+.burger-line {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center;
+}
+
+.mobile-menu-btn.active .line-top {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.mobile-menu-btn.active .line-middle {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.mobile-menu-btn.active .line-bottom {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
+@media (max-width: 1024px) {
+    .mobile-menu-btn {
+        display: flex;
+    }
+}
+
+.dark .mobile-menu-btn {
+    background: #374151;
+    color: #E5E7EB;
+}
+
+.dark .mobile-menu-btn:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+/* Header Action Button Base */
+.header-action-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: var(--radius-md, 12px);
+    background: var(--sidebar-hover, #F0F4F8);
+    color: var(--sidebar-text, #5A6C7D);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.header-action-btn:hover {
+    background: var(--primary-light, #E8F4FD);
+    color: var(--primary, #4A90D9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.15);
+}
+
+.header-action-btn:active {
+    transform: translateY(0);
+}
+
+.action-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Theme Toggle */
+.theme-toggle .theme-icon-wrapper {
+    position: relative;
+    width: 20px;
+    height: 20px;
+}
+
+.theme-icon {
+    position: absolute;
+    inset: 0;
+    width: 20px;
+    height: 20px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sun-icon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.moon-icon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+}
+
+.dark .sun-icon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+}
+
+.dark .moon-icon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* Notification Badge */
+.notification-btn {
+    position: relative;
+}
+
+/* Notification Badge - Orange Vif RH+ */
+.notification-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: linear-gradient(135deg, #FF9500 0%, #FF6B00 100%);
+    color: white;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--header-bg, #fff);
+    box-shadow: 0 2px 12px rgba(255, 149, 0, 0.5);
+}
+
+.notification-badge.pulse {
+    animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+    0%, 100% {
+        box-shadow: 0 2px 12px rgba(255, 149, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(255, 149, 0, 0.7);
+    }
+}
+
+/* User Profile Button */
+.user-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    padding-right: 1rem;
+    border: none;
+    border-radius: var(--radius-lg, 16px);
+    background: var(--sidebar-hover, #F0F4F8);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.user-profile-btn:hover {
+    background: var(--primary-light, #E8F4FD);
+    box-shadow: 0 4px 16px rgba(74, 144, 217, 0.15);
+    transform: translateY(-2px);
+}
+
+.user-avatar-wrapper {
+    position: relative;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md, 12px);
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-status {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--sidebar-hover, #F0F4F8);
+}
+
+.user-status.online {
+    background: var(--accent-green, #27AE60);
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+    animation: status-glow-green 2s ease-in-out infinite;
+}
+
+@keyframes status-glow-green {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2); }
+    50% { box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.3); }
+}
+
+.user-status.away {
+    background: linear-gradient(135deg, #FF9500 0%, #FF6B00 100%);
+    box-shadow: 0 0 0 2px rgba(255, 149, 0, 0.3);
+    animation: status-glow-orange 2s ease-in-out infinite;
+}
+
+@keyframes status-glow-orange {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(255, 149, 0, 0.3); }
+    50% { box-shadow: 0 0 0 4px rgba(255, 149, 0, 0.5); }
+}
+
+.user-status.offline {
+    background: var(--neutral-gray, #7F8C8D);
+}
+
+.user-info {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+@media (min-width: 768px) {
+    .user-info {
+        display: flex;
+    }
+}
+
+.user-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--sidebar-text, #5A6C7D);
+    line-height: 1.2;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: var(--sidebar-text-muted, #8B9CAD);
+    line-height: 1.2;
+}
+
+.dropdown-arrow {
+    width: 16px;
+    height: 16px;
+    color: var(--sidebar-text-muted, #8B9CAD);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .dropdown-arrow {
+        display: block;
+    }
+}
+
+.user-profile-btn:hover .dropdown-arrow,
+.user-profile-btn.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Header Dropdown Wrapper */
+.header-dropdown-wrapper {
+    position: relative;
+}
+
+/* Header Dropdown Base */
+.header-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    background: var(--card-bg, #fff);
+    border-radius: var(--radius-lg, 16px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12),
+                0 2px 10px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--sidebar-border, #E8ECF0);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 100;
+}
+
+.header-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+    width: 380px;
+    max-width: calc(100vw - 2rem);
+}
+
+/* User Dropdown */
+.user-dropdown {
+    width: 280px;
+}
+
+/* Dropdown Header */
+.dropdown-header {
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, var(--primary-lighter, #F0F8FF) 0%, var(--primary-light, #E8F4FD) 100%);
+    border-bottom: 1px solid var(--sidebar-border, #E8ECF0);
+}
+
+.dropdown-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.dropdown-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-dark, #2E6BB3);
+    margin: 0;
+}
+
+.notification-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary, #4A90D9);
+    background: white;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-sm, 8px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mark-all-read {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--primary, #4A90D9);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.mark-all-read:hover {
+    color: var(--primary-dark, #2E6BB3);
+    text-decoration: underline;
+}
+
+/* User Header */
+.user-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    padding: 1.25rem;
+}
+
+.user-header-avatar img {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md, 12px);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.user-header-info {
+    flex: 1;
+}
+
+.user-header-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 0.25rem 0;
+}
+
+.user-header-email {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+/* Dropdown Body */
+.dropdown-body {
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+/* Notification Item */
+.notification-item {
+    display: flex;
+    gap: 0.875rem;
+    padding: 1rem 1.25rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border-bottom: 1px solid var(--sidebar-border, #E8ECF0);
+    position: relative;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background: var(--sidebar-hover, #F0F4F8);
+}
+
+.notification-item.unread {
+    background: var(--primary-lighter, #F0F8FF);
+}
+
+.notification-item.unread::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--primary, #4A90D9);
+}
+
+.notification-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md, 12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.notification-icon.success {
+    background: var(--accent-green-light, #D5F5E3);
+    color: var(--accent-green, #27AE60);
+}
+
+.notification-icon.info {
+    background: var(--primary-light, #E8F4FD);
+    color: var(--primary, #4A90D9);
+}
+
+.notification-icon.warning {
+    background: linear-gradient(135deg, #FFF3E0 0%, #FFE5BF 100%);
+    color: #FF9500;
+    box-shadow: 0 2px 8px rgba(255, 149, 0, 0.15);
+}
+
+.notification-icon.danger {
+    background: var(--accent-red-light, #FADBD8);
+    color: var(--accent-red, #E74C3C);
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--sidebar-text, #5A6C7D);
+    margin: 0 0 0.25rem 0;
+}
+
+.notification-text {
+    font-size: 0.8125rem;
+    color: var(--sidebar-text-muted, #8B9CAD);
+    margin: 0 0 0.375rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notification-time {
+    font-size: 0.75rem;
+    color: var(--sidebar-text-muted, #8B9CAD);
+}
+
+/* Dropdown Item */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1.25rem;
+    text-decoration: none;
+    color: var(--sidebar-text, #5A6C7D);
+    transition: all 0.2s;
+}
+
+.dropdown-item:hover {
+    background: var(--sidebar-hover, #F0F4F8);
+    color: var(--primary, #4A90D9);
+}
+
+.dropdown-item:hover .dropdown-item-icon {
+    background: var(--primary-light, #E8F4FD);
+    color: var(--primary, #4A90D9);
+    transform: scale(1.1);
+}
+
+.dropdown-item-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm, 8px);
+    background: var(--sidebar-hover, #F0F4F8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dropdown-item-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.dropdown-item span {
+    font-size: 0.9375rem;
+    font-weight: 500;
+}
+
+/* Dropdown Footer */
+.dropdown-footer {
+    padding: 0.875rem 1.25rem;
+    border-top: 1px solid var(--sidebar-border, #E8ECF0);
+    background: var(--sidebar-hover, #F0F4F8);
+}
+
+.view-all-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--primary, #4A90D9);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.view-all-link:hover {
+    color: var(--primary-dark, #2E6BB3);
+}
+
+.view-all-link svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s;
+}
+
+.view-all-link:hover svg {
+    transform: translateX(4px);
+}
+
+/* Logout Section */
+.logout-section {
+    background: var(--accent-red-light, #FADBD8);
+}
+
+.dark .logout-section {
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    width: 100%;
+    padding: 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm, 8px);
+    color: var(--accent-red, #E74C3C);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    background: var(--accent-red, #E74C3C);
+    color: white;
+}
+
+.logout-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Dark Mode Adjustments */
+.dark .header-action-btn {
+    background: var(--sidebar-hover);
+    color: var(--sidebar-text);
+}
+
+.dark .header-action-btn:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.dark .user-profile-btn {
+    background: var(--sidebar-hover);
+}
+
+.dark .user-profile-btn:hover {
+    background: var(--primary-light);
+}
+
+.dark .header-dropdown {
+    background: var(--card-bg);
+    border-color: var(--sidebar-border);
+}
+
+.dark .notification-item.unread {
+    background: var(--primary-light);
+}
+
+.dark .dropdown-header {
+    background: var(--primary-light);
+}
+
+.dark .dropdown-footer {
+    background: var(--sidebar-hover);
+}
+
+.dark .notification-badge {
+    border-color: var(--header-bg);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Notification Dropdown
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+
+    if (notificationBtn && notificationDropdown) {
+        notificationBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('show');
+            userDropdown?.classList.remove('show');
+        });
+    }
+
+    // User Dropdown
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (userMenuBtn && userDropdown) {
+        userMenuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+            userMenuBtn.classList.toggle('active');
+            notificationDropdown?.classList.remove('show');
+        });
+    }
 
     // Close dropdowns when clicking outside
-    document.addEventListener('click', function() {
-        document.getElementById('notificationDropdown')?.classList.add('hidden');
-        document.getElementById('userDropdown')?.classList.add('hidden');
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.header-dropdown-wrapper')) {
+            notificationDropdown?.classList.remove('show');
+            userDropdown?.classList.remove('show');
+            userMenuBtn?.classList.remove('active');
+        }
     });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            notificationDropdown?.classList.remove('show');
+            userDropdown?.classList.remove('show');
+            userMenuBtn?.classList.remove('active');
+        }
+    });
+});
 </script>

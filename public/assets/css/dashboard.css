@@ -4,7 +4,7 @@
    Light & Dark Mode Support
    =================================== */
 
-/* Light theme (default) */
+/* Light theme (default) - RH+ Brand Colors */
 :root {
   /* Colors */
   --bg-primary: #f8fafc;
@@ -23,21 +23,22 @@
   --text-muted: #64748b;
   --text-light: #94a3b8;
 
-  /* Brand */
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --primary-light: #60a5fa;
-  --primary-dark: #1e40af;
+  /* Brand - RH+ Colors */
+  --primary: #4A90D9;
+  --primary-hover: #3A7BC8;
+  --primary-light: #5BA3E8;
+  --primary-dark: #2E6BB3;
+  --accent: #F5A623;
 
-  /* Status Colors */
-  --success: #10b981;
+  /* Status Colors - RH+ */
+  --success: #27AE60;
   --success-light: #d1fae5;
   --danger: #ef4444;
   --danger-light: #fee2e2;
-  --warning: #f59e0b;
+  --warning: #E67E22;
   --warning-light: #fef3c7;
-  --info: #06b6d4;
-  --info-light: #cffafe;
+  --info: #4A90D9;
+  --info-light: #E8F4FD;
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

@@ -1,9 +1,26 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Vérification 2FA - Portail RH</title>
 
-@section('title', 'Vérification 2FA')
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-@section('styles')
-<style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 /* Two Factor Challenge Styles */
 .two-factor-challenge-page {
     min-height: 100vh;
@@ -496,10 +513,9 @@
     background-size: 1000px 100%;
     animation: shimmer 2s infinite;
 }
-</style>
-@endsection
-
-@section('content')
+    </style>
+</head>
+<body>
 <div class="two-factor-challenge-page">
     <!-- Animated Background Shapes -->
     <div class="bg-shape bg-shape-1"></div>
@@ -721,4 +737,5 @@
     });
 })();
 </script>
-@endsection
+</body>
+</html>

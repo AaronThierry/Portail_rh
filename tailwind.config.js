@@ -9,18 +9,61 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Portail RH Brand Colors
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          50: '#E8F4FD',
+          100: '#D1E9FB',
+          200: '#A3D3F7',
+          300: '#75BDF3',
+          400: '#5BA3E8',
+          500: '#4A90D9',  // Couleur principale Portail RH
+          600: '#3A7BC8',
+          700: '#2E6BB3',  // Couleur foncée Portail RH
+          800: '#235A9E',
+          900: '#1A4A89',
+          950: '#0F2F5A',
+        },
+        // Orange Vif Portail RH - Couleur d'accent principale
+        accent: {
+          50: '#FFF8F0',
+          100: '#FFE5BF',
+          200: '#FFD699',
+          300: '#FFC266',
+          400: '#FF9500',  // Orange Vif Portail RH - Principal
+          500: '#FF6B00',  // Orange Vif Portail RH - Foncé
+          600: '#E65C00',
+          700: '#CC4D00',
+          800: '#993A00',
+          900: '#662600',
+          950: '#331300',
+        },
+        // Vert succès Portail RH
+        success: {
+          50: '#E8F8EF',
+          100: '#D1F1DF',
+          200: '#A3E3BF',
+          300: '#75D59F',
+          400: '#2ECC71',
+          500: '#27AE60',  // Vert Portail RH
+          600: '#1E8449',
+          700: '#186A3B',
+          800: '#145A32',
+          900: '#0E4023',
+          950: '#072615',
+        },
+        // Gris neutre Portail RH
+        neutral: {
+          50: '#F8FAFA',
+          100: '#F1F5F5',
+          200: '#E3EBEB',
+          300: '#C7D6D6',
+          400: '#95A5A6',
+          500: '#7F8C8D',  // Gris Portail RH
+          600: '#6B7B7C',
+          700: '#566566',
+          800: '#424F50',
+          900: '#2D3939',
+          950: '#1A2222',
         },
       },
       fontFamily: {

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Personnel;
 use App\Models\DocumentAgent;
+use App\Models\CategorieDocument;
 
 class EspaceEmployeController extends Controller
 {
@@ -132,16 +133,65 @@ class EspaceEmployeController extends Controller
     }
 
     /**
-     * Affiche les documents de l'employé
+     * Affiche les documents de l'employé organisés par catégorie
      */
-    public function documents()
+    public function documents(Request $request)
     {
         $user = Auth::user();
         $personnel = $user->personnel;
 
-        $documents = $personnel ? $personnel->documents()->with('categorie')->orderBy('created_at', 'desc')->get() : collect([]);
+        // Récupérer tous les documents visibles par l'employé
+        $allDocuments = $personnel
+            ? $personnel->documents()
+                ->where('visible_employe', true)
+                ->with('categorie')
+                ->orderBy('created_at', 'desc')
+                ->get()
+            : collect([]);
 
-        return view('espace-employe.documents', compact('personnel', 'documents'));
+        // Grouper les documents par catégorie
+        $documentsByCategory = $allDocuments->groupBy(function($doc) {
+            return $doc->categorie_id ?? 0;
+        });
+
+        // Récupérer toutes les catégories qui ont des documents
+        $categoriesWithDocs = CategorieDocument::whereIn('id', $documentsByCategory->keys()->filter())
+            ->ordered()
+            ->get()
+            ->keyBy('id');
+
+        // Catégorie sélectionnée (null = vue d'ensemble des dossiers)
+        $selectedCategory = $request->get('categorie');
+        $currentCategory = null;
+        $documents = collect([]);
+
+        if ($selectedCategory) {
+            $currentCategory = CategorieDocument::find($selectedCategory);
+            $documents = $documentsByCategory->get((int)$selectedCategory, collect([]));
+        }
+
+        // Statistiques
+        $stats = [
+            'total' => $allDocuments->count(),
+            'categories' => $categoriesWithDocs->count(),
+            'recent' => $allDocuments->where('created_at', '>=', now()->subDays(30))->count(),
+            'this_year' => $allDocuments->where('created_at', '>=', now()->startOfYear())->count(),
+        ];
+
+        // Documents sans catégorie
+        $uncategorizedDocs = $documentsByCategory->get(0, collect([]));
+
+        return view('espace-employe.documents', compact(
+            'personnel',
+            'allDocuments',
+            'documents',
+            'documentsByCategory',
+            'categoriesWithDocs',
+            'currentCategory',
+            'selectedCategory',
+            'uncategorizedDocs',
+            'stats'
+        ));
     }
 
     /**
@@ -227,23 +277,37 @@ class EspaceEmployeController extends Controller
 
         $document = DocumentAgent::where('id', $id)
             ->where('personnel_id', $personnel->id)
+            ->where('visible_employe', true)
             ->firstOrFail();
 
-        if (empty($document->fichier)) {
+        if (empty($document->chemin)) {
             abort(404, 'Aucun fichier associé à ce document');
         }
 
-        $path = storage_path('app/public/' . $document->fichier);
+        // Essayer plusieurs chemins possibles (dossiers_agents est le disk utilisé)
+        $possiblePaths = [
+            storage_path('app/dossiers_agents/' . $document->chemin),
+            storage_path('app/public/dossiers_agents/' . $document->chemin),
+            storage_path('app/' . $document->chemin),
+        ];
 
-        if (!file_exists($path)) {
+        $path = null;
+        foreach ($possiblePaths as $possiblePath) {
+            if (file_exists($possiblePath)) {
+                $path = $possiblePath;
+                break;
+            }
+        }
+
+        if (!$path) {
             abort(404, 'Fichier non trouvé sur le serveur');
         }
 
-        $mimeType = mime_content_type($path);
+        $mimeType = $document->mime_type ?? mime_content_type($path);
 
         return response()->file($path, [
             'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="' . $document->nom . '"'
+            'Content-Disposition' => 'inline; filename="' . $document->titre . '.' . $document->extension . '"'
         ]);
     }
 
@@ -261,20 +325,33 @@ class EspaceEmployeController extends Controller
 
         $document = DocumentAgent::where('id', $id)
             ->where('personnel_id', $personnel->id)
+            ->where('visible_employe', true)
             ->firstOrFail();
 
-        if (empty($document->fichier)) {
+        if (empty($document->chemin)) {
             abort(404, 'Aucun fichier associé à ce document');
         }
 
-        $path = storage_path('app/public/' . $document->fichier);
+        // Essayer plusieurs chemins possibles (dossiers_agents est le disk utilisé)
+        $possiblePaths = [
+            storage_path('app/dossiers_agents/' . $document->chemin),
+            storage_path('app/public/dossiers_agents/' . $document->chemin),
+            storage_path('app/' . $document->chemin),
+        ];
 
-        if (!file_exists($path)) {
+        $path = null;
+        foreach ($possiblePaths as $possiblePath) {
+            if (file_exists($possiblePath)) {
+                $path = $possiblePath;
+                break;
+            }
+        }
+
+        if (!$path) {
             abort(404, 'Fichier non trouvé sur le serveur');
         }
 
-        $extension = pathinfo($document->fichier, PATHINFO_EXTENSION);
-        $filename = $document->nom . '.' . $extension;
+        $filename = $document->titre . '.' . $document->extension;
 
         return response()->download($path, $filename);
     }

@@ -94,7 +94,27 @@
                     </a>
                     @endcan
 
-                    @endif
+                    <a href="{{ route('admin.dossiers-agents.index') }}" class="nav-link {{ Request::is('admin/dossiers-agents*') || Request::is('admin/dossier-agent*') ? 'active' : '' }}" data-tooltip="Dossiers Agents">
+                        <span class="nav-link-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                            </svg>
+                        </span>
+                        <span class="nav-link-text">Dossiers Agents</span>
+                        <span class="nav-link-indicator"></span>
+                    </a>
+
+                    <a href="{{ route('admin.utilisateurs.index') }}" class="nav-link {{ Request::is('admin/utilisateurs*') ? 'active' : '' }}" data-tooltip="Comptes Utilisateurs">
+                        <span class="nav-link-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </span>
+                        <span class="nav-link-text">Comptes Utilisateurs</span>
+                        <span class="nav-link-indicator"></span>
+                    </a>
+
+                @endif
             </div>
         </div>
         @endif

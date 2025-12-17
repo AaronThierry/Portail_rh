@@ -11,7 +11,17 @@
 
         <!-- Page Title - Dynamic with Animation -->
         <div class="header-title">
-            <h1 class="page-title">@yield('page-title', 'Tableau de bord')</h1>
+            <div class="page-title-wrapper">
+                <div class="page-title-icon">
+                    @yield('page-icon')
+                </div>
+                <div class="page-title-content">
+                    <h1 class="page-title">@yield('page-title', 'Tableau de bord')</h1>
+                    @hasSection('page-subtitle')
+                    <p class="page-subtitle">@yield('page-subtitle')</p>
+                    @endif
+                </div>
+            </div>
         </div>
 
         <!-- Header Actions -->
@@ -56,7 +66,7 @@
                         <button class="mark-all-read">Tout marquer comme lu</button>
                     </div>
                     <div class="dropdown-body custom-scrollbar">
-                        <a href="/notifications/1" class="notification-item unread">
+                        <a href="#" class="notification-item unread">
                             <div class="notification-icon success">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -68,7 +78,7 @@
                                 <span class="notification-time">Il y a 5 minutes</span>
                             </div>
                         </a>
-                        <a href="/notifications/2" class="notification-item unread">
+                        <a href="#" class="notification-item unread">
                             <div class="notification-icon info">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -82,7 +92,7 @@
                                 <span class="notification-time">Il y a 25 minutes</span>
                             </div>
                         </a>
-                        <a href="/notifications/3" class="notification-item">
+                        <a href="#" class="notification-item">
                             <div class="notification-icon warning">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
@@ -98,7 +108,7 @@
                         </a>
                     </div>
                     <div class="dropdown-footer">
-                        <a href="/notifications" class="view-all-link">
+                        <a href="#" class="view-all-link">
                             <span>Voir toutes les notifications</span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -113,7 +123,7 @@
             <div class="header-dropdown-wrapper">
                 <button class="user-profile-btn" id="userMenuBtn" aria-label="Menu utilisateur">
                     <div class="user-avatar-wrapper">
-                        <img src="{{ auth()->user()->avatar ? asset(auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'User') . '&background=4A90D9&color=fff&bold=true' }}" alt="Avatar" class="user-avatar">
+                        <img src="{{ auth()->user()->avatar ? asset(str_starts_with(auth()->user()->avatar, 'storage/') ? auth()->user()->avatar : 'storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'User') . '&background=4A90D9&color=fff&bold=true' }}" alt="Avatar" class="user-avatar">
                         <span class="user-status online"></span>
                     </div>
                     <div class="user-info">
@@ -125,52 +135,69 @@
                     </svg>
                 </button>
 
-                <!-- User Dropdown - Premium Design -->
+                <!-- User Dropdown - Elegant Pro Design -->
                 <div class="header-dropdown user-dropdown" id="userDropdown">
-                    <div class="dropdown-header user-header">
-                        <div class="user-header-avatar">
-                            <img src="{{ auth()->user()->avatar ? asset(auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'User') . '&background=4A90D9&color=fff&bold=true&size=80' }}" alt="Avatar">
-                        </div>
-                        <div class="user-header-info">
-                            <p class="user-header-name">{{ auth()->user()->name ?? 'Utilisateur' }}</p>
-                            <p class="user-header-email">{{ auth()->user()->email ?? 'admin@example.com' }}</p>
+                    <!-- User Card Header -->
+                    <div class="ud-card">
+                        <div class="ud-card-bg"></div>
+                        <div class="ud-card-content">
+                            <div class="ud-avatar-section">
+                                <img src="{{ auth()->user()->avatar ? asset(str_starts_with(auth()->user()->avatar, 'storage/') ? auth()->user()->avatar : 'storage/' . auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'User') . '&background=4A90D9&color=fff&bold=true&size=96' }}" alt="Avatar" class="ud-avatar">
+                                <span class="ud-status-dot"></span>
+                            </div>
+                            <div class="ud-user-details">
+                                <h4 class="ud-name">{{ auth()->user()->name ?? 'Utilisateur' }}</h4>
+                                <p class="ud-email">{{ auth()->user()->email ?? 'admin@example.com' }}</p>
+                                <span class="ud-role-badge">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    </svg>
+                                    {{ auth()->user()->roles->first()->name ?? 'Utilisateur' }}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="dropdown-body">
-                        <a href="/profile" class="dropdown-item">
-                            <div class="dropdown-item-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+                    <!-- Quick Actions -->
+                    <div class="ud-actions">
+                        <a href="{{ route('admin.profile.index') }}" class="ud-action-item">
+                            <div class="ud-action-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="12" cy="7" r="4"></circle>
                                 </svg>
                             </div>
-                            <span>Mon profil</span>
+                            <div class="ud-action-text">
+                                <span class="ud-action-title">Mon Profil</span>
+                                <span class="ud-action-desc">Gérer mon compte</span>
+                            </div>
+                            <svg class="ud-action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
                         </a>
-                        <a href="/settings" class="dropdown-item">
-                            <div class="dropdown-item-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <a href="{{ route('admin.settings.index') }}" class="ud-action-item">
+                            <div class="ud-action-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="3"></circle>
                                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                                 </svg>
                             </div>
-                            <span>Paramètres</span>
-                        </a>
-                        <a href="/help" class="dropdown-item">
-                            <div class="dropdown-item-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
+                            <div class="ud-action-text">
+                                <span class="ud-action-title">Paramètres</span>
+                                <span class="ud-action-desc">Configuration système</span>
                             </div>
-                            <span>Aide & Support</span>
+                            <svg class="ud-action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
                         </a>
                     </div>
-                    <div class="dropdown-footer logout-section">
+
+                    <!-- Logout Section -->
+                    <div class="ud-logout-section">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="logout-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <button type="submit" class="ud-logout-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                                     <polyline points="16 17 21 12 16 7"></polyline>
                                     <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -237,11 +264,55 @@
     min-width: 0;
 }
 
+.page-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+}
+
+.page-title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 4px 14px rgba(74, 144, 217, 0.3);
+    flex-shrink: 0;
+}
+
+.page-title-icon:empty {
+    display: none;
+}
+
+.page-title-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.page-title-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
 .page-title {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
     font-weight: 700;
     color: var(--text-primary, #1F2937);
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.3px;
+}
+
+.page-subtitle {
+    font-size: 0.8125rem;
+    color: var(--text-muted, #6B7280);
+    margin: 0.125rem 0 0 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -249,6 +320,34 @@
 
 .dark .page-title {
     color: #F9FAFB;
+}
+
+.dark .page-subtitle {
+    color: #9CA3AF;
+}
+
+.dark .page-title-icon {
+    box-shadow: 0 4px 14px rgba(74, 144, 217, 0.2);
+}
+
+@media (max-width: 640px) {
+    .page-title-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .page-title-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .page-title {
+        font-size: 1.125rem;
+    }
+
+    .page-subtitle {
+        display: none;
+    }
 }
 
 /* Header Actions */
@@ -572,9 +671,267 @@
     max-width: calc(100vw - 2rem);
 }
 
-/* User Dropdown */
+/* User Dropdown - Elegant Pro Design */
 .user-dropdown {
-    width: 280px;
+    width: 300px;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* User Card */
+.ud-card {
+    position: relative;
+    padding: 1.25rem;
+    overflow: hidden;
+}
+
+.ud-card-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    opacity: 0.08;
+}
+
+.ud-card-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ud-avatar-section {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.ud-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ud-status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background: #22C55E;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(34, 197, 94, 0.4);
+}
+
+.ud-user-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.ud-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary, #1F2937);
+    margin: 0 0 0.125rem 0;
+    line-height: 1.3;
+}
+
+.ud-email {
+    font-size: 0.8125rem;
+    color: var(--text-muted, #6B7280);
+    margin: 0 0 0.5rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ud-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    color: white;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.ud-role-badge svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Actions */
+.ud-actions {
+    padding: 0.5rem;
+    border-top: 1px solid var(--sidebar-border, #E8ECF0);
+}
+
+.ud-action-item {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.75rem;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.ud-action-item:hover {
+    background: var(--sidebar-hover, #F3F4F6);
+}
+
+.ud-action-item:hover .ud-action-icon {
+    background: var(--primary, #4A90D9);
+    color: white;
+    transform: scale(1.05);
+}
+
+.ud-action-item:hover .ud-action-arrow {
+    transform: translateX(3px);
+    opacity: 1;
+}
+
+.ud-action-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--sidebar-hover, #F3F4F6);
+    border-radius: 10px;
+    color: var(--text-muted, #6B7280);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.ud-action-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.ud-action-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.ud-action-title {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary, #374151);
+    line-height: 1.3;
+}
+
+.ud-action-desc {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted, #9CA3AF);
+    margin-top: 0.125rem;
+}
+
+.ud-action-arrow {
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted, #9CA3AF);
+    opacity: 0;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+/* Logout Section */
+.ud-logout-section {
+    padding: 0.5rem;
+    border-top: 1px solid var(--sidebar-border, #E8ECF0);
+    background: linear-gradient(180deg, transparent 0%, rgba(239, 68, 68, 0.03) 100%);
+}
+
+.ud-logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    width: 100%;
+    padding: 0.75rem;
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #EF4444;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ud-logout-btn:hover {
+    background: #EF4444;
+    border-color: #EF4444;
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.ud-logout-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Dark Mode - User Dropdown */
+.dark .ud-card-bg {
+    opacity: 0.15;
+}
+
+.dark .ud-avatar {
+    border-color: var(--card-bg, #1F2937);
+}
+
+.dark .ud-status-dot {
+    border-color: var(--card-bg, #1F2937);
+}
+
+.dark .ud-name {
+    color: #F9FAFB;
+}
+
+.dark .ud-email {
+    color: #9CA3AF;
+}
+
+.dark .ud-action-icon {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .ud-action-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .ud-action-item:hover .ud-action-icon {
+    background: var(--primary, #4A90D9);
+}
+
+.dark .ud-action-title {
+    color: #E5E7EB;
+}
+
+.dark .ud-action-desc {
+    color: #6B7280;
+}
+
+.dark .ud-logout-section {
+    background: linear-gradient(180deg, transparent 0%, rgba(239, 68, 68, 0.05) 100%);
+}
+
+.dark .ud-logout-btn {
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.dark .ud-logout-btn:hover {
+    background: #EF4444;
+    border-color: #EF4444;
 }
 
 /* Dropdown Header */

@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('title', 'Gestion des Entreprises')
+@section('page-title', 'Entreprises')
+@section('page-subtitle', 'Gérez vos entreprises partenaires')
+@section('page-icon')
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+</svg>
+@endsection
 
 @section('styles')
 <style>
@@ -46,56 +53,12 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ==================== HEADER SECTION ==================== */
-.page-header {
+/* ==================== PAGE ACTIONS BAR ==================== */
+.page-actions-bar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.page-header-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.page-icon {
-    width: 56px;
-    height: 56px;
-    background: linear-gradient(135deg, var(--rh-primary) 0%, var(--rh-primary-dark) 100%);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    box-shadow: 0 8px 24px rgba(74, 144, 217, 0.3);
-}
-
-.page-icon svg {
-    width: 28px;
-    height: 28px;
-}
-
-.page-title-group h1 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: var(--rh-text);
-    margin: 0;
-    letter-spacing: -0.5px;
-}
-
-.page-title-group p {
-    font-size: 0.875rem;
-    color: var(--rh-text-muted);
-    margin: 0.25rem 0 0 0;
-}
-
-.page-actions {
-    display: flex;
+    justify-content: flex-end;
     gap: 0.75rem;
+    margin-bottom: 1.5rem;
 }
 
 .btn-primary-rh {
@@ -1296,17 +1259,13 @@ textarea.form-input {
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-    .page-header {
+    .page-actions-bar {
         flex-direction: column;
-        align-items: flex-start;
     }
 
-    .page-actions {
+    .page-actions-bar .btn-primary-rh,
+    .page-actions-bar .btn-secondary-rh {
         width: 100%;
-    }
-
-    .page-actions .btn-primary-rh {
-        flex: 1;
         justify-content: center;
     }
 
@@ -1333,36 +1292,23 @@ textarea.form-input {
 
 @section('content')
 <div class="entreprises-page">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="page-header-left">
-            <div class="page-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                </svg>
-            </div>
-            <div class="page-title-group">
-                <h1>Entreprises</h1>
-                <p>Gérez vos entreprises partenaires</p>
-            </div>
-        </div>
-        <div class="page-actions">
-            <button type="button" class="btn-secondary-rh" onclick="window.print()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                Exporter
-            </button>
-            <button type="button" class="btn-primary-rh" onclick="openCreateModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Nouvelle Entreprise
-            </button>
-        </div>
+    <!-- Page Actions -->
+    <div class="page-actions-bar">
+        <button type="button" class="btn-secondary-rh" onclick="window.print()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Exporter
+        </button>
+        <button type="button" class="btn-primary-rh" onclick="openCreateModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Nouvelle Entreprise
+        </button>
     </div>
 
     <!-- Stats Cards -->

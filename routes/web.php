@@ -15,6 +15,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DossierAgentController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,8 +126,22 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
 
-    // Dossiers agents
-    Route::get('dossier-agent/{personnel}', [DossierAgentController::class, 'index'])->name('dossier-agent.index');
+    // Gestion des utilisateurs (comptes)
+    Route::get('utilisateurs', [UserController::class, 'index'])->name('utilisateurs.index');
+    Route::get('utilisateurs/{user}', [UserController::class, 'show'])->name('utilisateurs.show');
+    Route::get('utilisateurs/{user}/edit', [UserController::class, 'edit'])->name('utilisateurs.edit');
+    Route::put('utilisateurs/{user}', [UserController::class, 'update'])->name('utilisateurs.update');
+    Route::delete('utilisateurs/{user}', [UserController::class, 'destroy'])->name('utilisateurs.destroy');
+
+    // Liste globale des dossiers agents
+    Route::get('dossiers-agents', [DossierAgentController::class, 'index'])->name('dossiers-agents.index');
+
+    // Catégories et alertes dossiers agents
+    Route::get('dossier-agent/categories', [DossierAgentController::class, 'categories'])->name('dossier-agent.categories');
+    Route::get('dossier-agent/alertes', [DossierAgentController::class, 'alertes'])->name('dossier-agent.alertes');
+
+    // Dossier d'un agent spécifique
+    Route::get('dossier-agent/{personnel}', [DossierAgentController::class, 'show'])->name('dossier-agent.index');
     Route::post('dossier-agent/{personnel}', [DossierAgentController::class, 'store'])->name('dossier-agent.store');
     Route::get('dossier-agent/document/{document}/preview', [DossierAgentController::class, 'preview'])->name('dossier-agent.preview');
     Route::get('dossier-agent/document/{document}/download', [DossierAgentController::class, 'download'])->name('dossier-agent.download');
@@ -134,6 +149,18 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
 
     // Paramètres
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
+
+    // Profil utilisateur
+    Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+    Route::delete('profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
+    Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // 2FA pour admin
+    Route::post('two-factor/enable', [TwoFactorController::class, 'enable'])->name('two-factor.enable');
+    Route::post('two-factor/verify', [TwoFactorController::class, 'verify'])->name('two-factor.verify');
+    Route::delete('two-factor/disable', [TwoFactorController::class, 'disable'])->name('two-factor.disable');
 });
 
 // Redirection racine selon le rôle

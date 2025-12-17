@@ -1,15 +1,18 @@
 @extends('layouts.app')
 
 @section('title', 'Gestion des Rôles')
+@section('page-title', 'Rôles')
+@section('page-subtitle', 'Créez et gérez les rôles utilisateurs')
+@section('page-icon')
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg>
+@endsection
 
 @section('content')
 <div class="container mx-auto px-4 py-6">
-    {{-- Header --}}
-    <div class="flex justify-between items-center mb-6">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">Gestion des Rôles</h1>
-            <p class="text-sm text-gray-600 mt-1">Créez et gérez les rôles utilisateurs</p>
-        </div>
+    {{-- Page Actions --}}
+    <div class="flex justify-end mb-6">
         <a href="{{ route('admin.roles.create') }}"
            class="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-lg transition duration-150">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

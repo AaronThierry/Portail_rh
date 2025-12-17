@@ -232,7 +232,7 @@ class DocumentAgent extends Model
      */
     public function getUrlTelechargementAttribute(): string
     {
-        return route('dossier-agent.download', $this->id);
+        return route('admin.dossier-agent.download', $this->id);
     }
 
     /**

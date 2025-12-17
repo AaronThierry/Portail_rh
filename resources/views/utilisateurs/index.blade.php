@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
 @section('title', 'Gestion des Utilisateurs')
-
-@section('page-title', 'Comptes Utilisateurs')
+@section('page-title', 'Utilisateurs')
+@section('page-subtitle', 'Gérez les accès et permissions')
+@section('page-icon')
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+    <circle cx="12" cy="7" r="4"></circle>
+</svg>
+@endsection
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('assets/css/users.css') }}">
@@ -10,12 +16,8 @@
 
 @section('content')
 <div class="users-page">
-    {{-- Page Header --}}
-    <div class="users-header">
-        <div class="users-header-content">
-            <h1>Comptes Utilisateurs</h1>
-            <p>Gérez les accès et permissions pour votre personnel</p>
-        </div>
+    {{-- Page Actions --}}
+    <div class="flex justify-end mb-6">
         @can('create-users')
         <button class="btn btn-primary" id="btnAddUser">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -182,7 +184,7 @@
                     <td>{{ $user->created_at->format('d/m/Y') }}</td>
                     <td>
                         <div class="action-buttons">
-                            <a href="{{ route('utilisateurs.show', $user->id) }}" class="btn-icon btn-view" title="Voir">
+                            <a href="{{ route('admin.utilisateurs.show', $user->id) }}" class="btn-icon btn-view" title="Voir">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                     <circle cx="12" cy="12" r="3"></circle>
@@ -273,7 +275,7 @@
             </div>
         </div>
 
-        <form id="userForm" action="{{ route('utilisateurs.store') }}">
+        <form id="userForm" action="{{ route('admin.utilisateurs.index') }}">
             @csrf
             <input type="hidden" id="userId" name="user_id">
 

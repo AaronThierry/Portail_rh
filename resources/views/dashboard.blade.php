@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('title', 'Tableau de bord')
+@section('page-title', 'Tableau de bord')
+@section('page-subtitle', 'Vue d\'ensemble de votre activité')
+@section('page-icon')
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+    <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+    <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+    <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+</svg>
+@endsection
 
 @section('styles')
 <style>

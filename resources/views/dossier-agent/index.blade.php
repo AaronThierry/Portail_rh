@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('title', 'Dossiers Agents')
+@section('page-title', 'Dossiers Agents')
+@section('page-subtitle', 'Gérez les documents du personnel')
+@section('page-icon')
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+</svg>
+@endsection
 
 @section('styles')
 <style>
@@ -1274,7 +1281,7 @@
 
     <!-- Recherche et filtres -->
     <div class="da-search-section">
-        <form action="{{ route('admin.dossier-agent.index') }}" method="GET" class="da-search-form">
+        <form action="{{ route('admin.dossiers-agents.index') }}" method="GET" class="da-search-form">
             <div class="da-search-input-wrapper">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -1303,7 +1310,7 @@
                 Filtrer
             </button>
             @if(request('search') || request('departement'))
-            <a href="{{ route('admin.dossier-agent.index') }}" class="btn-reset" title="Réinitialiser">
+            <a href="{{ route('admin.dossiers-agents.index') }}" class="btn-reset" title="Réinitialiser">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M6 18L18 6M6 6l12 12"/>
                 </svg>
@@ -1387,7 +1394,7 @@
                     @endif
 
                     <div class="da-employee-actions">
-                        <a href="{{ route('admin.dossier-agent.show', $personnel) }}" class="btn-view-folder">
+                        <a href="{{ route('admin.dossier-agent.index', $personnel) }}" class="btn-view-folder">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"/>
                             </svg>
@@ -1424,7 +1431,7 @@
             @endif
         </p>
         @if(request('search') || request('departement'))
-        <a href="{{ route('admin.dossier-agent.index') }}" class="btn-action btn-action-secondary">
+        <a href="{{ route('admin.dossiers-agents.index') }}" class="btn-action btn-action-secondary">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M6 18L18 6M6 6l12 12"/>
             </svg>

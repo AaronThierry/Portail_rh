@@ -75,7 +75,12 @@ class TwoFactorController extends Controller
             $user->google2fa_verified_at = now();
             $user->save();
 
-            return redirect()->route('profile')->with('success', 'Authentification à deux facteurs activée avec succès!');
+            // Rediriger selon le rôle
+            if ($user->hasRole('Super Admin')) {
+                return redirect()->route('admin.profile.index')->with('success', 'Authentification à deux facteurs activée avec succès!');
+            }
+
+            return redirect()->route('espace-employe.parametres')->with('success', 'Authentification à deux facteurs activée avec succès!');
         }
 
         return back()->with('error', 'Code de vérification invalide. Veuillez réessayer.');
@@ -84,18 +89,9 @@ class TwoFactorController extends Controller
     /**
      * Désactiver le 2FA
      */
-    public function disable(Request $request)
+    public function disable()
     {
-        $request->validate([
-            'password' => 'required'
-        ]);
-
         $user = auth()->user();
-
-        // Vérifier le mot de passe
-        if (!password_verify($request->password, $user->password)) {
-            return back()->with('error', 'Mot de passe incorrect.');
-        }
 
         // Désactiver le 2FA
         $user->google2fa_enabled = false;
@@ -103,7 +99,12 @@ class TwoFactorController extends Controller
         $user->google2fa_verified_at = null;
         $user->save();
 
-        return redirect()->route('profile')->with('success', 'Authentification à deux facteurs désactivée.');
+        // Rediriger selon le rôle
+        if ($user->hasRole('Super Admin')) {
+            return redirect()->route('admin.profile.index')->with('success', 'Authentification à deux facteurs désactivée.');
+        }
+
+        return redirect()->route('espace-employe.parametres')->with('success', 'Authentification à deux facteurs désactivée.');
     }
 
     /**

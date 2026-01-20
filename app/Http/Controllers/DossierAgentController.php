@@ -43,12 +43,16 @@ class DossierAgentController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $entrepriseId = $this->getEntrepriseId();
+        $isSuperAdmin = $user->hasRole('Super Admin');
 
         // Récupérer les personnels avec compteur de documents
         $query = Personnel::with(['departement', 'service'])
-            ->withCount('documents')
-            ->where('entreprise_id', $entrepriseId);
+            ->withCount('documents');
+
+        // Filtrer par entreprise sauf pour Super Admin
+        if (!$isSuperAdmin) {
+            $query->where('entreprise_id', $user->entreprise_id);
+        }
 
         // Filtres
         if ($request->filled('search')) {
@@ -71,24 +75,35 @@ class DossierAgentController extends Controller
         $personnels = $query->orderBy('nom')->paginate(20);
 
         // Statistiques globales
-        $stats = [
-            'total_personnels' => Personnel::where('entreprise_id', $entrepriseId)->count(),
-            'total_documents' => DocumentAgent::whereHas('personnel', function ($q) use ($entrepriseId) {
-                $q->where('entreprise_id', $entrepriseId);
-            })->count(),
-            'documents_expires' => DocumentAgent::whereHas('personnel', function ($q) use ($entrepriseId) {
-                $q->where('entreprise_id', $entrepriseId);
-            })->expires()->count(),
-            'documents_expirent_bientot' => DocumentAgent::whereHas('personnel', function ($q) use ($entrepriseId) {
-                $q->where('entreprise_id', $entrepriseId);
-            })->expirentBientot(30)->count(),
-        ];
-
-        // Catégories disponibles
-        $categories = CategorieDocument::forEntreprise($entrepriseId)
-            ->actives()
-            ->ordered()
-            ->get();
+        if ($isSuperAdmin) {
+            $stats = [
+                'total_personnels' => Personnel::count(),
+                'total_documents' => DocumentAgent::count(),
+                'documents_expires' => DocumentAgent::expires()->count(),
+                'documents_expirent_bientot' => DocumentAgent::expirentBientot(30)->count(),
+            ];
+            // Catégories de toutes les entreprises pour Super Admin
+            $categories = CategorieDocument::actives()->ordered()->get();
+        } else {
+            $entrepriseId = $user->entreprise_id;
+            $stats = [
+                'total_personnels' => Personnel::where('entreprise_id', $entrepriseId)->count(),
+                'total_documents' => DocumentAgent::whereHas('personnel', function ($q) use ($entrepriseId) {
+                    $q->where('entreprise_id', $entrepriseId);
+                })->count(),
+                'documents_expires' => DocumentAgent::whereHas('personnel', function ($q) use ($entrepriseId) {
+                    $q->where('entreprise_id', $entrepriseId);
+                })->expires()->count(),
+                'documents_expirent_bientot' => DocumentAgent::whereHas('personnel', function ($q) use ($entrepriseId) {
+                    $q->where('entreprise_id', $entrepriseId);
+                })->expirentBientot(30)->count(),
+            ];
+            // Catégories disponibles
+            $categories = CategorieDocument::forEntreprise($entrepriseId)
+                ->actives()
+                ->ordered()
+                ->get();
+        }
 
         return view('dossier-agent.index', compact('personnels', 'stats', 'categories'));
     }

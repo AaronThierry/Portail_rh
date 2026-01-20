@@ -607,13 +607,67 @@
 
 /* ==================== SIDEBAR FOOTER ==================== */
 .sidebar-footer {
-    padding: 1rem 1.25rem;
+    padding: 0;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     background: var(--sidebar-bg-secondary);
     border-top: 1px solid var(--sidebar-border);
     flex-shrink: 0;
+    overflow: hidden;
+}
+
+/* Tagline Section - Premium Design */
+.sidebar-tagline {
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(74, 144, 217, 0.08) 0%, rgba(255, 149, 0, 0.05) 100%);
+    border-bottom: 1px solid var(--sidebar-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-tagline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--primary) 0%, var(--accent-orange) 100%);
+}
+
+.sidebar-tagline::after {
+    content: '"';
+    position: absolute;
+    top: 4px;
+    right: 12px;
+    font-size: 2.5rem;
+    font-family: Georgia, serif;
+    color: var(--primary);
+    opacity: 0.15;
+    line-height: 1;
+}
+
+.tagline-text {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--sidebar-text);
+    opacity: 0.9;
+    line-height: 1.5;
+    display: block;
+    text-align: left;
+    padding-left: 0.5rem;
+    position: relative;
+    letter-spacing: 0.2px;
+}
+
+/* Footer Bottom Section */
+.sidebar-footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    background: rgba(0, 0, 0, 0.15);
 }
 
 .sidebar-version {
@@ -628,17 +682,20 @@
     background: var(--accent-green);
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(39, 174, 96, 0.5);
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.9); }
 }
 
 .version-text {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 600;
     color: var(--sidebar-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .sidebar-help {
@@ -647,27 +704,29 @@
 }
 
 .help-link {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--sidebar-hover);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--sidebar-border);
     border-radius: var(--radius-sm);
     color: var(--sidebar-text-muted);
     transition: all 0.3s var(--ease-smooth);
 }
 
 .help-link svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }
 
 .help-link:hover {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-color: var(--primary);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.4);
 }
 
 /* ==================== COLLAPSED STATE - DESKTOP ==================== */
@@ -784,13 +843,27 @@
 
     /* Footer collapsed */
     .sidebar:not(:hover) .sidebar-footer {
+        padding: 0;
+    }
+
+    .sidebar:not(:hover) .sidebar-tagline {
+        display: none;
+    }
+
+    .sidebar:not(:hover) .sidebar-footer-bottom {
         flex-direction: column;
-        gap: 0.75rem;
-        padding: 1rem 0.5rem;
+        gap: 0.5rem;
+        padding: 0.75rem 0.5rem;
+        justify-content: center;
     }
 
     .sidebar:not(:hover) .version-text {
         display: none;
+    }
+
+    .sidebar:not(:hover) .help-link {
+        width: 36px;
+        height: 36px;
     }
 
     /* Tooltips when collapsed */
@@ -893,6 +966,14 @@
     }
 
     .sidebar-footer {
+        flex-direction: column !important;
+    }
+
+    .sidebar-tagline {
+        display: block !important;
+    }
+
+    .sidebar-footer-bottom {
         flex-direction: row !important;
     }
 }

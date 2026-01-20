@@ -84,7 +84,7 @@ class DepartementController extends Controller
 
             Departement::create($data);
 
-            return redirect()->route('departements.index')
+            return redirect()->route('admin.departements.index')
                 ->with('success', 'Département créé avec succès');
         } catch (\Exception $e) {
             return back()->with('error', 'Erreur lors de la création du département: ' . $e->getMessage())
@@ -97,7 +97,7 @@ class DepartementController extends Controller
      */
     public function show($id)
     {
-        $departement = Departement::with(['entreprise', 'services'])->findOrFail($id);
+        $departement = Departement::with(['entreprise', 'services.personnels'])->findOrFail($id);
 
         // Vérifier les permissions
         if (auth()->user()->role !== 'super_admin' &&
@@ -177,7 +177,7 @@ class DepartementController extends Controller
 
             $departement->update($data);
 
-            return redirect()->route('departements.index')
+            return redirect()->route('admin.departements.index')
                 ->with('success', 'Département mis à jour avec succès');
         } catch (\Exception $e) {
             return back()->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage())
@@ -207,7 +207,7 @@ class DepartementController extends Controller
 
             $departement->delete();
 
-            return redirect()->route('departements.index')
+            return redirect()->route('admin.departements.index')
                 ->with('success', 'Département supprimé avec succès');
         } catch (\Exception $e) {
             return back()->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());

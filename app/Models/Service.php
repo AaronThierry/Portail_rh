@@ -41,6 +41,14 @@ class Service extends Model
     }
 
     /**
+     * Relation avec le personnel (employés du service)
+     */
+    public function personnels()
+    {
+        return $this->hasMany(Personnel::class);
+    }
+
+    /**
      * Scope pour récupérer les services globaux
      */
     public function scopeGlobal($query)

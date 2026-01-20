@@ -13,7 +13,6 @@
             </div>
             <div class="sidebar-logo-content">
                 <span class="sidebar-logo-text">Portail RH</span>
-                <span class="sidebar-logo-badge">PRO</span>
             </div>
         </div>
         <!-- Close Button for Mobile -->
@@ -134,6 +133,18 @@
                 <span class="nav-section-title">Documents & Demandes</span>
             </div>
             <div class="nav-items">
+                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH']))
+                <a href="{{ route('admin.bulletins-paie.index') }}" class="nav-link {{ Request::is('admin/bulletins-paie*') ? 'active' : '' }}" data-tooltip="Bulletins de Paie">
+                    <span class="nav-link-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </span>
+                    <span class="nav-link-text">Bulletins de Paie</span>
+                    <span class="nav-link-indicator"></span>
+                </a>
+                @endif
+
                 @can('view-documents')
                 <a href="#" class="nav-link disabled" data-tooltip="Documents" onclick="event.preventDefault();">
                     <span class="nav-link-icon">
@@ -271,18 +282,23 @@
 
     <!-- Sidebar Footer -->
     <div class="sidebar-footer">
-        <div class="sidebar-version">
-            <span class="version-dot"></span>
-            <span class="version-text">v1.0.0</span>
+        <div class="sidebar-tagline">
+            <span class="tagline-text">Valoriser l'humain, optimiser la performance</span>
         </div>
-        <div class="sidebar-help">
-            <a href="#" class="help-link" title="Centre d'aide">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                    <line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-            </a>
+        <div class="sidebar-footer-bottom">
+            <div class="sidebar-version">
+                <span class="version-dot"></span>
+                <span class="version-text">v1.0.0</span>
+            </div>
+            <div class="sidebar-help">
+                <a href="#" class="help-link" title="Centre d'aide">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </a>
+            </div>
         </div>
     </div>
 </aside>

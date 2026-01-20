@@ -1,240 +1,1092 @@
-<!-- MODALE PERSONNEL - VERSION FINALE GARANTIE -->
+<!-- ========================================
+     MODALE CRÉATION PERSONNEL - DESIGN PREMIUM
+     Inspiré du modal entreprise avec wizard 3 étapes
+======================================== -->
+
 <style>
-#personnelModalV3 input[type="text"],
-#personnelModalV3 input[type="date"],
-#personnelModalV3 select,
-#personnelModalV3 textarea {
+/* Variables Modal Personnel */
+:root {
+    --pm-orange: #FF9500;
+    --pm-orange-dark: #E68600;
+    --pm-primary: #667eea;
+    --pm-primary-dark: #5a67d8;
+    --pm-success: #10b981;
+    --pm-danger: #ef4444;
+    --pm-bg: #ffffff;
+    --pm-bg-secondary: #f8fafc;
+    --pm-text: #1e293b;
+    --pm-text-muted: #64748b;
+    --pm-border: #e2e8f0;
+}
+
+/* Modal Overlay */
+.pm-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(102, 126, 234, 0.3) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.pm-modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+/* Modal Container */
+.pm-modal {
+    background: var(--pm-bg);
+    border-radius: 20px;
     width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e2e8f0;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+        0 25px 80px rgba(102, 126, 234, 0.35),
+        0 15px 40px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+}
+
+.pm-modal form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.pm-modal-overlay.show .pm-modal {
+    transform: scale(1) translateY(0);
+}
+
+/* Modal Header - Orange Gradient */
+.pm-modal-header {
+    background: linear-gradient(135deg, var(--pm-orange) 0%, var(--pm-orange-dark) 100%);
+    padding: 1.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    border-radius: 20px 20px 0 0;
+}
+
+.pm-modal-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.pm-modal-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+}
+
+.pm-modal-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+}
+
+.pm-modal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pm-modal-icon {
+    width: 52px;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pm-modal-icon svg {
+    width: 26px;
+    height: 26px;
+    color: white;
+}
+
+.pm-modal-header-text h2 {
+    margin: 0;
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pm-modal-header-text p {
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.pm-modal-close {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+}
+
+.pm-modal-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: rotate(90deg);
+}
+
+.pm-modal-close svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Step Indicator - Compact Design */
+.pm-step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1.5rem;
+    background: var(--pm-bg-secondary);
+    border-bottom: 1px solid var(--pm-border);
+    gap: 0.5rem;
+}
+
+.pm-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    cursor: pointer;
+    padding: 0.375rem 0.75rem;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+.pm-step:hover {
+    background: rgba(255, 149, 0, 0.05);
+}
+
+.pm-step:not(:last-child)::after {
+    content: '';
+    width: 40px;
+    height: 2px;
+    background: var(--pm-border);
+    margin-left: 0.5rem;
+    transition: all 0.3s ease;
+    border-radius: 1px;
+}
+
+.pm-step.active:not(:last-child)::after,
+.pm-step.completed:not(:last-child)::after {
+    background: var(--pm-orange);
+}
+
+.pm-step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    background: var(--pm-bg);
+    border: 2px solid var(--pm-border);
+    color: var(--pm-text-muted);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.pm-step.active .pm-step-circle {
+    background: linear-gradient(135deg, var(--pm-orange) 0%, var(--pm-orange-dark) 100%);
+    border-color: var(--pm-orange);
+    color: white;
+    box-shadow: 0 3px 10px rgba(255, 149, 0, 0.35);
+}
+
+.pm-step.completed .pm-step-circle {
+    background: var(--pm-success);
+    border-color: var(--pm-success);
+    color: white;
+}
+
+.pm-step-circle svg {
+    width: 16px;
+    height: 16px;
+}
+
+.pm-step-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--pm-text-muted);
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.pm-step.active .pm-step-label {
+    color: var(--pm-orange);
+    font-weight: 700;
+}
+
+.pm-step.completed .pm-step-label {
+    color: var(--pm-success);
+}
+
+/* Modal Body */
+.pm-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 1.75rem;
+    min-height: 0;
+}
+
+.pm-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.pm-modal-body::-webkit-scrollbar-track {
+    background: var(--pm-bg-secondary);
+    border-radius: 3px;
+}
+
+.pm-modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--pm-orange) 0%, var(--pm-orange-dark) 100%);
+    border-radius: 3px;
+}
+
+/* Form Sections */
+.pm-form-section {
+    margin-bottom: 1.5rem;
+}
+
+.pm-form-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--pm-border);
+}
+
+.pm-form-section-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, rgba(255, 149, 0, 0.15) 0%, rgba(255, 149, 0, 0.05) 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pm-orange);
+}
+
+.pm-form-section-icon.purple {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(102, 126, 234, 0.05) 100%);
+    color: var(--pm-primary);
+}
+
+.pm-form-section-icon.green {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+    color: var(--pm-success);
+}
+
+.pm-form-section-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.pm-form-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--pm-text);
+    margin: 0;
+}
+
+/* Form Grid */
+.pm-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.pm-form-grid.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.pm-form-group {
+    margin-bottom: 0;
+}
+
+.pm-form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.pm-form-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--pm-text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.pm-form-label.required::after {
+    content: '*';
+    color: var(--pm-danger);
+    margin-left: 4px;
+}
+
+.pm-form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--pm-border);
     border-radius: 10px;
     font-size: 0.9375rem;
-    transition: all 0.2s;
-    background: white;
+    color: var(--pm-text);
+    background: var(--pm-bg);
+    transition: all 0.25s ease;
 }
 
-#personnelModalV3 input[type="text"]:focus,
-#personnelModalV3 input[type="date"]:focus,
-#personnelModalV3 select:focus,
-#personnelModalV3 textarea:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-#personnelModalV3 input[type="text"]:hover,
-#personnelModalV3 input[type="date"]:hover,
-#personnelModalV3 select:hover,
-#personnelModalV3 textarea:hover {
+.pm-form-input:hover {
     border-color: #cbd5e1;
+}
+
+.pm-form-input:focus {
+    outline: none;
+    border-color: var(--pm-orange);
+    box-shadow: 0 0 0 4px rgba(255, 149, 0, 0.1);
+}
+
+.pm-form-input::placeholder {
+    color: #94a3b8;
+}
+
+.pm-form-hint {
+    font-size: 0.75rem;
+    color: var(--pm-text-muted);
+    margin-top: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Contract Type Cards */
+.pm-contract-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.pm-contract-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--pm-bg);
+    border: 2px solid var(--pm-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pm-contract-card:hover {
+    border-color: var(--pm-orange);
+    background: rgba(255, 149, 0, 0.03);
+}
+
+.pm-contract-card.selected {
+    border-color: var(--pm-orange);
+    background: linear-gradient(135deg, rgba(255, 149, 0, 0.08) 0%, rgba(255, 149, 0, 0.02) 100%);
+    box-shadow: 0 4px 16px rgba(255, 149, 0, 0.15);
+}
+
+.pm-contract-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pm-orange) 0%, var(--pm-orange-dark) 100%);
+    border-radius: 12px 12px 0 0;
+}
+
+.pm-contract-card input[type="radio"] {
+    display: none;
+}
+
+.pm-contract-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 149, 0, 0.1);
+    color: var(--pm-orange);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.pm-contract-card.selected .pm-contract-card-icon {
+    background: linear-gradient(135deg, var(--pm-orange) 0%, var(--pm-orange-dark) 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+}
+
+.pm-contract-card-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.pm-contract-card-content {
+    flex: 1;
+}
+
+.pm-contract-card-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--pm-text);
+    margin-bottom: 2px;
+}
+
+.pm-contract-card-desc {
+    font-size: 0.75rem;
+    color: var(--pm-text-muted);
+}
+
+.pm-contract-card-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--pm-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s ease;
+}
+
+.pm-contract-card.selected .pm-contract-card-check {
+    opacity: 1;
+    transform: scale(1);
+    background: linear-gradient(135deg, var(--pm-success) 0%, #059669 100%);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.pm-contract-card-check svg {
+    width: 14px;
+    height: 14px;
+    color: white;
+}
+
+/* Step Content */
+.pm-step-content {
+    display: none;
+    animation: pmSlideIn 0.4s ease-out;
+}
+
+.pm-step-content.active {
+    display: block;
+}
+
+@keyframes pmSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Modal Footer */
+.pm-modal-footer {
+    padding: 1rem 1.75rem;
+    background: var(--pm-bg);
+    border-top: 1px solid var(--pm-border);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.pm-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pm-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.pm-btn-secondary {
+    background: transparent;
+    color: var(--pm-text-muted);
+    border: 1.5px solid var(--pm-border);
+}
+
+.pm-btn-secondary:hover {
+    border-color: var(--pm-orange);
+    color: var(--pm-orange);
+    background: rgba(255, 149, 0, 0.05);
+}
+
+.pm-btn-cancel {
+    background: transparent;
+    color: var(--pm-text-muted);
+    border: 1.5px solid var(--pm-border);
+}
+
+.pm-btn-cancel:hover {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: var(--pm-danger);
+    color: var(--pm-danger);
+}
+
+.pm-btn-cancel:hover svg {
+    transform: rotate(90deg);
+}
+
+.pm-btn-cancel svg {
+    transition: transform 0.25s ease;
+}
+
+.pm-btn-primary {
+    background: linear-gradient(135deg, var(--pm-orange) 0%, var(--pm-orange-dark) 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+    border: none;
+}
+
+.pm-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 149, 0, 0.4);
+}
+
+.pm-btn-success {
+    background: linear-gradient(135deg, var(--pm-success) 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    border: none;
+}
+
+.pm-btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.pm-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.pm-footer-left {
+    margin-right: auto;
+}
+
+.pm-footer-right {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Field Error */
+.pm-field-error {
+    color: var(--pm-danger);
+    font-size: 0.8125rem;
+    margin-top: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.pm-form-input.error {
+    border-color: var(--pm-danger);
+}
+
+/* CDD Date Group */
+.pm-cdd-group {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 149, 0, 0.05);
+    border: 2px dashed rgba(255, 149, 0, 0.3);
+    border-radius: 12px;
+    display: none;
+}
+
+.pm-cdd-group.show {
+    display: block;
+    animation: pmSlideIn 0.3s ease-out;
+}
+
+/* Dark Mode Support */
+.dark .pm-modal {
+    --pm-bg: #1e293b;
+    --pm-bg-secondary: #0f172a;
+    --pm-text: #f1f5f9;
+    --pm-text-muted: #94a3b8;
+    --pm-border: #334155;
+}
+
+.dark .pm-modal-body {
+    background: var(--pm-bg);
+}
+
+.dark .pm-form-input {
+    background: var(--pm-bg-secondary);
+    color: var(--pm-text);
+}
+
+.dark .pm-contract-card {
+    background: var(--pm-bg-secondary);
+}
+
+.dark .pm-modal-footer {
+    background: var(--pm-bg);
+    border-top-color: var(--pm-border);
+}
+
+.dark .pm-btn-cancel,
+.dark .pm-btn-secondary {
+    background: var(--pm-bg-secondary);
+    border-color: var(--pm-border);
+    color: var(--pm-text-muted);
+}
+
+.dark .pm-step-indicator {
+    background: linear-gradient(180deg, rgba(255, 149, 0, 0.1) 0%, var(--pm-bg-secondary) 100%);
+}
+
+.dark .pm-step-circle {
+    background: var(--pm-bg-secondary);
+    border-color: var(--pm-border);
+}
+
+.dark .pm-form-section-header {
+    border-bottom-color: var(--pm-border);
+}
+
+.dark .pm-form-section-title {
+    color: var(--pm-text);
+}
+
+.dark .pm-contract-card-title {
+    color: var(--pm-text);
+}
+
+.dark .pm-cdd-group {
+    background: rgba(255, 149, 0, 0.08);
+    border-color: rgba(255, 149, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pm-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pm-contract-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .pm-step-label {
+        font-size: 0.6875rem;
+    }
+
+    .pm-modal-footer {
+        flex-direction: column;
+    }
+
+    .pm-footer-left,
+    .pm-footer-right {
+        width: 100%;
+    }
+
+    .pm-footer-right {
+        justify-content: flex-end;
+    }
 }
 </style>
 
-<div id="personnelModalV3" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: white; border-radius: 16px; width: 100%; max-width: 900px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 75px rgba(102, 126, 234, 0.4), 0 10px 40px rgba(0,0,0,0.2);">
-
-        <!-- HEADER -->
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px 28px; border-radius: 16px 16px 0 0; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
-            <h2 style="margin: 0; color: white; font-size: 1.375rem; font-weight: 700; letter-spacing: -0.02em;">📋 Nouveau Personnel</h2>
-            <button type="button" onclick="closePersonnelModalV3()" style="background: rgba(255,255,255,0.2); border: none; border-radius: 8px; width: 40px; height: 40px; cursor: pointer; color: white; font-size: 24px; font-weight: 300; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='rotate(90deg)';" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='rotate(0)';">×</button>
+<!-- Modal Structure -->
+<div class="pm-modal-overlay" id="personnelModalV3">
+    <div class="pm-modal">
+        <!-- Header -->
+        <div class="pm-modal-header">
+            <div class="pm-modal-header-content">
+                <div class="pm-modal-header-left">
+                    <div class="pm-modal-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                    </div>
+                    <div class="pm-modal-header-text">
+                        <h2>Nouveau Personnel</h2>
+                        <p>Enregistrer un nouvel employé dans le système</p>
+                    </div>
+                </div>
+                <button type="button" class="pm-modal-close" onclick="closePersonnelModalV3()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
         </div>
 
-        <!-- PROGRESS -->
-        <div style="padding: 20px 24px; background: #f8fafc; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-            <div class="progress-item" data-step="1" style="flex: 1; text-align: center;">
-                <div class="progress-num" style="width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); color: white;">1</div>
-                <div style="font-size: 0.75rem; font-weight: 600; color: #667eea;">Identité</div>
+        <!-- Step Indicator -->
+        <div class="pm-step-indicator">
+            <div class="pm-step active" data-step="1" onclick="goToStepV3(1)">
+                <div class="pm-step-circle">1</div>
+                <span class="pm-step-label">Identité</span>
             </div>
-            <div style="flex: 1; height: 2px; background: #e2e8f0; margin-bottom: 20px;"></div>
-            <div class="progress-item" data-step="2" style="flex: 1; text-align: center;">
-                <div class="progress-num" style="width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; background: #e2e8f0; color: #64748b;">2</div>
-                <div style="font-size: 0.75rem; font-weight: 600; color: #64748b;">Contact</div>
+            <div class="pm-step" data-step="2" onclick="goToStepV3(2)">
+                <div class="pm-step-circle">2</div>
+                <span class="pm-step-label">Contact</span>
             </div>
-            <div style="flex: 1; height: 2px; background: #e2e8f0; margin-bottom: 20px;"></div>
-            <div class="progress-item" data-step="3" style="flex: 1; text-align: center;">
-                <div class="progress-num" style="width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; background: #e2e8f0; color: #64748b;">3</div>
-                <div style="font-size: 0.75rem; font-weight: 600; color: #64748b;">Contrat</div>
+            <div class="pm-step" data-step="3" onclick="goToStepV3(3)">
+                <div class="pm-step-circle">3</div>
+                <span class="pm-step-label">Contrat</span>
             </div>
         </div>
 
-        <!-- FORM -->
-        <form id="personnelFormV3" enctype="multipart/form-data" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+        <!-- Form -->
+        <form id="personnelFormV3" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="personnel_id">
 
-            <!-- BODY - ZONE DE SCROLL -->
-            <div style="padding: 24px; overflow-y: auto; flex: 1 1 auto; min-height: 300px; max-height: 400px;">
-
-                <!-- ÉTAPE 1 -->
-                <div class="form-step" data-step="1">
-                    <h3 style="margin: 0 0 24px; font-size: 1.125rem; font-weight: 700; color: #1e293b;">👤 Informations Personnelles</h3>
-
+            <div class="pm-modal-body">
+                <!-- ÉTAPE 1: Identité -->
+                <div class="pm-step-content active" data-step="1">
                     @if(auth()->user()->hasRole('Super Admin'))
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Entreprise <span style="color: #ef4444;">*</span></label>
-                        <select name="entreprise_id" required style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.9375rem; transition: all 0.2s; background: white;" onfocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
-                            <option value="">Sélectionner une entreprise</option>
-                            @foreach($entreprises as $entreprise)
-                            <option value="{{ $entreprise->id }}" {{ $entreprise->id == auth()->user()->entreprise_id ? 'selected' : '' }}>{{ $entreprise->nom }}</option>
-                            @endforeach
-                        </select>
+                    <div class="pm-form-section">
+                        <div class="pm-form-section-header">
+                            <div class="pm-form-section-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/>
+                                </svg>
+                            </div>
+                            <h3 class="pm-form-section-title">Entreprise</h3>
+                        </div>
+                        <div class="pm-form-group">
+                            <label class="pm-form-label required">Entreprise d'affectation</label>
+                            <select name="entreprise_id" class="pm-form-input" required>
+                                <option value="">Sélectionner une entreprise</option>
+                                @foreach($entreprises as $entreprise)
+                                <option value="{{ $entreprise->id }}" {{ $entreprise->id == auth()->user()->entreprise_id ? 'selected' : '' }}>{{ $entreprise->nom }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     @else
                     <input type="hidden" name="entreprise_id" value="{{ auth()->user()->entreprise_id }}">
                     @endif
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Civilité</label>
-                            <select name="civilite" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                                <option value="">Sélectionner</option>
-                                <option value="M.">M.</option>
-                                <option value="Mme">Mme</option>
-                                <option value="Mlle">Mlle</option>
-                                <option value="Dr">Dr</option>
-                                <option value="Pr">Pr</option>
-                            </select>
+                    <div class="pm-form-section">
+                        <div class="pm-form-section-header">
+                            <div class="pm-form-section-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <h3 class="pm-form-section-title">Informations personnelles</h3>
                         </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Nom <span style="color: #ef4444;">*</span></label>
-                            <input type="text" name="nom" required style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Prénom(s) <span style="color: #ef4444;">*</span></label>
-                            <input type="text" name="prenoms" required style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Sexe</label>
-                            <select name="sexe" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                                <option value="">Sélectionner</option>
-                                <option value="M">Masculin</option>
-                                <option value="F">Féminin</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Matricule</label>
-                            <input type="text" name="matricule" placeholder="Laissez vide pour auto" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                            <small style="color: #64748b; font-size: 0.75rem;">PER{{ date('Y') }}####</small>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Date de naissance</label>
-                            <input type="date" name="date_naissance" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ÉTAPE 2 -->
-                <div class="form-step" data-step="2" style="display: none;">
-                    <h3 style="margin: 0 0 24px; font-size: 1.125rem; font-weight: 700; color: #1e293b;">📞 Coordonnées & Documents</h3>
-
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Adresse</label>
-                        <textarea name="adresse" rows="3" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;"></textarea>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 16px; margin-bottom: 20px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Code pays</label>
-                            <select name="telephone_code_pays" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                                <option value="+226" selected>🇧🇫 +226</option>
-                                <option value="+225">🇨🇮 +225</option>
-                                <option value="+221">🇸🇳 +221</option>
-                                <option value="+33">🇫🇷 +33</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Téléphone</label>
-                            <input type="text" name="telephone" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" name="telephone_whatsapp" value="1" style="width: 18px; height: 18px;">
-                            <span style="font-size: 0.9375rem; color: #475569;">📱 Ce numéro est sur WhatsApp</span>
-                        </label>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Numéro identification</label>
-                            <input type="text" name="numero_identification" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Photo</label>
-                            <input type="file" name="photo" accept="image/*" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <div class="pm-form-grid">
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Civilité</label>
+                                <select name="civilite" class="pm-form-input">
+                                    <option value="">Sélectionner</option>
+                                    <option value="M.">M.</option>
+                                    <option value="Mme">Mme</option>
+                                    <option value="Mlle">Mlle</option>
+                                    <option value="Dr">Dr</option>
+                                    <option value="Pr">Pr</option>
+                                </select>
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label required">Nom</label>
+                                <input type="text" name="nom" class="pm-form-input" placeholder="Nom de famille" required>
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label required">Prénom(s)</label>
+                                <input type="text" name="prenoms" class="pm-form-input" placeholder="Prénom(s)" required>
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Sexe</label>
+                                <select name="sexe" class="pm-form-input">
+                                    <option value="">Sélectionner</option>
+                                    <option value="M">Masculin</option>
+                                    <option value="F">Féminin</option>
+                                </select>
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Matricule</label>
+                                <input type="text" name="matricule" class="pm-form-input" placeholder="Laissez vide pour auto">
+                                <span class="pm-form-hint">Format: PER{{ date('Y') }}XXXX</span>
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Date de naissance</label>
+                                <input type="date" name="date_naissance" class="pm-form-input">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ÉTAPE 3 -->
-                <div class="form-step" data-step="3" style="display: none;">
-                    <h3 style="margin: 0 0 24px; font-size: 1.125rem; font-weight: 700; color: #1e293b;">💼 Poste & Contrat</h3>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Poste</label>
-                            <input type="text" name="poste" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                <!-- ÉTAPE 2: Contact -->
+                <div class="pm-step-content" data-step="2">
+                    <div class="pm-form-section">
+                        <div class="pm-form-section-header">
+                            <div class="pm-form-section-icon purple">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="pm-form-section-title">Coordonnées</h3>
                         </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Date d'embauche</label>
-                            <input type="date" name="date_embauche" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <div class="pm-form-grid">
+                            <div class="pm-form-group full-width">
+                                <label class="pm-form-label">Adresse</label>
+                                <textarea name="adresse" class="pm-form-input" rows="2" placeholder="Adresse complète"></textarea>
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Code pays</label>
+                                <select name="telephone_code_pays" class="pm-form-input">
+                                    <option value="+226" selected>🇧🇫 Burkina Faso (+226)</option>
+                                    <option value="+225">🇨🇮 Côte d'Ivoire (+225)</option>
+                                    <option value="+221">🇸🇳 Sénégal (+221)</option>
+                                    <option value="+223">🇲🇱 Mali (+223)</option>
+                                    <option value="+227">🇳🇪 Niger (+227)</option>
+                                    <option value="+228">🇹🇬 Togo (+228)</option>
+                                    <option value="+229">🇧🇯 Bénin (+229)</option>
+                                    <option value="+33">🇫🇷 France (+33)</option>
+                                </select>
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Téléphone</label>
+                                <input type="tel" name="telephone" class="pm-form-input" placeholder="XX XX XX XX">
+                            </div>
                         </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Département</label>
-                            <select id="departement_select_v3" name="departement_id" onchange="window.loadServices(this.value)" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                                <option value="">Sélectionner</option>
-                                @foreach($departements as $dept)
-                                <option value="{{ $dept->id }}">{{ $dept->nom }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Service</label>
-                            <select id="service_select_v3" name="service_id" disabled style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
-                                <option value="">Choisir d'abord un département</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 0.875rem; color: #475569;">Type de contrat <span style="color: #ef4444;">*</span></label>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                            <label style="padding: 16px; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px;">
-                                <input type="radio" name="type_contrat" value="CDI" checked onchange="toggleCDD()">
-                                <div><strong>CDI</strong><br><small style="color: #64748b;">Contrat Indéterminé</small></div>
-                            </label>
-                            <label style="padding: 16px; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px;">
-                                <input type="radio" name="type_contrat" value="CDD" onchange="toggleCDD()">
-                                <div><strong>CDD</strong><br><small style="color: #64748b;">Contrat Déterminé</small></div>
+                        <div class="pm-form-group" style="margin-top: 0.75rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.875rem; color: var(--pm-text-muted);">
+                                <input type="checkbox" name="telephone_whatsapp" value="1" style="width: 18px; height: 18px; accent-color: var(--pm-orange);">
+                                Ce numéro est disponible sur WhatsApp
                             </label>
                         </div>
                     </div>
 
-                    <div id="cddDateGroup" style="display: none;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.875rem; color: #475569;">Date fin contrat (CDD) <span style="color: #ef4444;">*</span></label>
-                        <input type="date" name="date_fin_contrat" style="width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                    <div class="pm-form-section">
+                        <div class="pm-form-section-header">
+                            <div class="pm-form-section-icon green">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
+                            <h3 class="pm-form-section-title">Documents</h3>
+                        </div>
+                        <div class="pm-form-grid">
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Numéro d'identification</label>
+                                <input type="text" name="numero_identification" class="pm-form-input" placeholder="CNI, Passeport, etc.">
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Photo</label>
+                                <input type="file" name="photo" class="pm-form-input" accept="image/*">
+                                <span class="pm-form-hint">JPG, PNG - Max 2 Mo</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- ÉTAPE 3: Contrat -->
+                <div class="pm-step-content" data-step="3">
+                    <div class="pm-form-section">
+                        <div class="pm-form-section-header">
+                            <div class="pm-form-section-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                </svg>
+                            </div>
+                            <h3 class="pm-form-section-title">Poste et affectation</h3>
+                        </div>
+                        <div class="pm-form-grid">
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Poste</label>
+                                <input type="text" name="poste" class="pm-form-input" placeholder="Ex: Développeur, Comptable...">
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Date d'embauche</label>
+                                <input type="date" name="date_embauche" class="pm-form-input">
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Département</label>
+                                <select id="pm_departement_id" name="departement_id" class="pm-form-input" onchange="loadServicesV3(this.value)">
+                                    <option value="">Sélectionner un département</option>
+                                    @foreach($departements as $dept)
+                                    <option value="{{ $dept->id }}">{{ $dept->nom }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="pm-form-group">
+                                <label class="pm-form-label">Service</label>
+                                <select id="pm_service_id" name="service_id" class="pm-form-input" disabled>
+                                    <option value="">Choisir d'abord un département</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pm-form-section">
+                        <div class="pm-form-section-header">
+                            <div class="pm-form-section-icon purple">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                            </div>
+                            <h3 class="pm-form-section-title">Type de contrat</h3>
+                        </div>
+
+                        <input type="hidden" name="type_contrat" id="pm_type_contrat" value="CDI">
+
+                        <div class="pm-contract-cards">
+                            <label class="pm-contract-card selected" data-type="CDI" onclick="selectContractType('CDI')">
+                                <input type="radio" name="type_contrat_radio" value="CDI" checked>
+                                <div class="pm-contract-card-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="pm-contract-card-content">
+                                    <span class="pm-contract-card-title">CDI</span>
+                                    <span class="pm-contract-card-desc">Contrat à Durée Indéterminée</span>
+                                </div>
+                                <div class="pm-contract-card-check">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </div>
+                            </label>
+
+                            <label class="pm-contract-card" data-type="CDD" onclick="selectContractType('CDD')">
+                                <input type="radio" name="type_contrat_radio" value="CDD">
+                                <div class="pm-contract-card-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="pm-contract-card-content">
+                                    <span class="pm-contract-card-title">CDD</span>
+                                    <span class="pm-contract-card-desc">Contrat à Durée Déterminée</span>
+                                </div>
+                                <div class="pm-contract-card-check">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="pm-cdd-group" id="pm_cdd_group">
+                            <div class="pm-form-group">
+                                <label class="pm-form-label required">Date de fin de contrat</label>
+                                <input type="date" name="date_fin_contrat" id="pm_date_fin_contrat" class="pm-form-input">
+                                <span class="pm-form-hint">Obligatoire pour un CDD</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- FOOTER - TOUJOURS VISIBLE -->
-            <div style="padding: 20px 24px; border-top: 2px solid #e2e8f0; background: #f8fafc; border-radius: 0 0 12px 12px; display: flex; justify-content: space-between; flex-shrink: 0;">
-                <button type="button" id="btnPrevV3" onclick="prevStepV3()" style="display: none; padding: 10px 20px; background: #64748b; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">← Précédent</button>
-                <div style="display: flex; gap: 12px; margin-left: auto;">
-                    <button type="button" onclick="closePersonnelModalV3()" style="padding: 10px 20px; background: white; color: #64748b; border: 2px solid #e2e8f0; border-radius: 8px; font-weight: 600; cursor: pointer;">Annuler</button>
-                    <button type="button" id="btnNextV3" onclick="nextStepV3()" style="padding: 10px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Suivant →</button>
-                    <button type="submit" id="btnSubmitV3" style="display: none; padding: 10px 20px; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">✓ Enregistrer</button>
+            <!-- Footer -->
+            <div class="pm-modal-footer">
+                <div class="pm-footer-left">
+                    <button type="button" class="pm-btn pm-btn-secondary" id="pm_btn_prev" onclick="prevStepV3()" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        Précédent
+                    </button>
+                </div>
+                <div class="pm-footer-right">
+                    <button type="button" class="pm-btn pm-btn-cancel" onclick="closePersonnelModalV3()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Annuler
+                    </button>
+                    <button type="button" class="pm-btn pm-btn-primary" id="pm_btn_next" onclick="nextStepV3()">
+                        Suivant
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                    <button type="submit" class="pm-btn pm-btn-success" id="pm_btn_submit" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Enregistrer
+                    </button>
                 </div>
             </div>
         </form>
@@ -242,156 +1094,162 @@
 </div>
 
 <script>
+// Variables
 let currentStepV3 = 1;
+const totalStepsV3 = 3;
 
+// Open Modal
 function openPersonnelModalV3() {
     const modal = document.getElementById('personnelModalV3');
-    modal.style.display = 'flex';
-    document.getElementById('personnelFormV3').reset();
-    showStepV3(1);
-
-    // Apply dark mode based on site theme
-    if (document.documentElement.classList.contains('dark')) {
-        modal.classList.add('dark-mode');
-    }
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    resetFormV3();
 }
 
+// Close Modal
 function closePersonnelModalV3() {
-    document.getElementById('personnelModalV3').style.display = 'none';
+    const modal = document.getElementById('personnelModalV3');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
 }
 
+// Reset Form
+function resetFormV3() {
+    document.getElementById('personnelFormV3').reset();
+    currentStepV3 = 1;
+    showStepV3(1);
+    selectContractType('CDI');
+}
+
+// Show Step
 function showStepV3(step) {
     currentStepV3 = step;
 
-    // Hide all steps
-    document.querySelectorAll('.form-step').forEach(el => el.style.display = 'none');
+    // Update step content
+    document.querySelectorAll('.pm-step-content').forEach(el => el.classList.remove('active'));
+    const activeContent = document.querySelector(`.pm-step-content[data-step="${step}"]`);
+    if (activeContent) activeContent.classList.add('active');
 
-    // Show current step
-    const currentStepEl = document.querySelector(`.form-step[data-step="${step}"]`);
-    if (currentStepEl) currentStepEl.style.display = 'block';
+    // Update step indicator
+    document.querySelectorAll('.pm-step').forEach((el, idx) => {
+        const stepNum = idx + 1;
+        el.classList.remove('active', 'completed');
 
-    // Update progress
-    document.querySelectorAll('.progress-item').forEach((item, idx) => {
-        const num = item.querySelector('.progress-num');
-        const label = item.nextElementSibling?.nextElementSibling;
-
-        if (idx + 1 === step) {
-            num.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
-            num.style.color = 'white';
-            item.querySelector('div:last-child').style.color = '#667eea';
-        } else if (idx + 1 < step) {
-            num.style.background = '#10b981';
-            num.style.color = 'white';
+        if (stepNum === step) {
+            el.classList.add('active');
+            el.querySelector('.pm-step-circle').innerHTML = stepNum;
+        } else if (stepNum < step) {
+            el.classList.add('completed');
+            el.querySelector('.pm-step-circle').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
         } else {
-            num.style.background = '#e2e8f0';
-            num.style.color = '#64748b';
-            item.querySelector('div:last-child').style.color = '#64748b';
+            el.querySelector('.pm-step-circle').innerHTML = stepNum;
         }
     });
 
     // Update buttons
-    document.getElementById('btnPrevV3').style.display = step === 1 ? 'none' : 'block';
-    document.getElementById('btnNextV3').style.display = step === 3 ? 'none' : 'block';
-    document.getElementById('btnSubmitV3').style.display = step === 3 ? 'block' : 'none';
+    document.getElementById('pm_btn_prev').style.display = step === 1 ? 'none' : 'inline-flex';
+    document.getElementById('pm_btn_next').style.display = step === totalStepsV3 ? 'none' : 'inline-flex';
+    document.getElementById('pm_btn_submit').style.display = step === totalStepsV3 ? 'inline-flex' : 'none';
 }
 
+// Next Step
 function nextStepV3() {
-    // Validation avant de passer à l'étape suivante
-    if (!validateStepV3(currentStepV3)) {
-        return false;
+    if (validateStepV3(currentStepV3)) {
+        if (currentStepV3 < totalStepsV3) {
+            showStepV3(currentStepV3 + 1);
+        }
     }
-    if (currentStepV3 < 3) showStepV3(currentStepV3 + 1);
 }
 
-function showError(field, message) {
-    // Remove existing error
-    const existingError = field.parentElement.querySelector('.field-error');
-    if (existingError) existingError.remove();
-
-    // Add error message
-    const error = document.createElement('div');
-    error.className = 'field-error';
-    error.style.cssText = 'color: #ef4444; font-size: 0.875rem; margin-top: 6px; display: flex; align-items: center; gap: 4px;';
-    error.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>${message}`;
-    field.parentElement.appendChild(error);
-    field.style.borderColor = '#ef4444';
-    field.focus();
+// Previous Step
+function prevStepV3() {
+    if (currentStepV3 > 1) {
+        showStepV3(currentStepV3 - 1);
+    }
 }
 
-function clearError(field) {
-    const error = field.parentElement.querySelector('.field-error');
-    if (error) error.remove();
-    field.style.borderColor = '#e2e8f0';
+// Go to specific step
+function goToStepV3(targetStep) {
+    if (targetStep < currentStepV3) {
+        showStepV3(targetStep);
+    } else if (targetStep > currentStepV3) {
+        // Validate all steps before
+        for (let i = currentStepV3; i < targetStep; i++) {
+            if (!validateStepV3(i)) return;
+        }
+        showStepV3(targetStep);
+    }
 }
 
+// Validate Step
 function validateStepV3(step) {
     const form = document.getElementById('personnelFormV3');
+    clearErrorsV3();
 
     if (step === 1) {
-        // Étape 1: Validation Identité
         const nom = form.querySelector('[name="nom"]');
         const prenoms = form.querySelector('[name="prenoms"]');
         let isValid = true;
 
-        // Clear previous errors
-        clearError(nom);
-        clearError(prenoms);
-
         if (!nom.value.trim()) {
-            showError(nom, 'Le nom est obligatoire');
+            showFieldError(nom, 'Le nom est obligatoire');
             isValid = false;
         }
-
         if (!prenoms.value.trim()) {
-            showError(prenoms, 'Le(s) prénom(s) est/sont obligatoire(s)');
+            showFieldError(prenoms, 'Le(s) prénom(s) sont obligatoires');
             isValid = false;
         }
-
         return isValid;
     }
 
-    if (step === 2) {
-        // Étape 2: Pas de champs obligatoires
-        return true;
-    }
-
     if (step === 3) {
-        // Étape 3: Validation Type de contrat
-        const typeContrat = form.querySelector('input[name="type_contrat"]:checked');
-
-        if (!typeContrat) {
-            alert('❌ Veuillez sélectionner un type de contrat');
-            return false;
-        }
-
-        if (typeContrat.value === 'CDD') {
-            const dateFin = form.querySelector('[name="date_fin_contrat"]');
-            clearError(dateFin);
-
+        const typeContrat = document.getElementById('pm_type_contrat').value;
+        if (typeContrat === 'CDD') {
+            const dateFin = document.getElementById('pm_date_fin_contrat');
             if (!dateFin.value) {
-                showError(dateFin, 'La date de fin est obligatoire pour un CDD');
+                showFieldError(dateFin, 'La date de fin est obligatoire pour un CDD');
                 return false;
             }
         }
-
-        return true;
     }
 
     return true;
 }
 
-function prevStepV3() {
-    if (currentStepV3 > 1) showStepV3(currentStepV3 - 1);
+// Show Field Error
+function showFieldError(field, message) {
+    field.classList.add('error');
+    const error = document.createElement('div');
+    error.className = 'pm-field-error';
+    error.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>${message}`;
+    field.parentNode.appendChild(error);
+    field.focus();
 }
 
-function toggleCDD() {
-    const cdd = document.querySelector('input[name="type_contrat"][value="CDD"]').checked;
-    document.getElementById('cddDateGroup').style.display = cdd ? 'block' : 'none';
+// Clear Errors
+function clearErrorsV3() {
+    document.querySelectorAll('.pm-field-error').forEach(e => e.remove());
+    document.querySelectorAll('.pm-form-input.error').forEach(e => e.classList.remove('error'));
 }
 
-async function loadServices(departementId) {
-    const serviceSelect = document.getElementById('service_select_v3');
-    if (!serviceSelect) return;
+// Select Contract Type
+function selectContractType(type) {
+    document.getElementById('pm_type_contrat').value = type;
+
+    document.querySelectorAll('.pm-contract-card').forEach(card => {
+        card.classList.toggle('selected', card.dataset.type === type);
+    });
+
+    const cddGroup = document.getElementById('pm_cdd_group');
+    cddGroup.classList.toggle('show', type === 'CDD');
+
+    const dateFin = document.getElementById('pm_date_fin_contrat');
+    dateFin.required = type === 'CDD';
+}
+
+// Load Services
+async function loadServicesV3(departementId) {
+    const serviceSelect = document.getElementById('pm_service_id');
 
     if (!departementId) {
         serviceSelect.disabled = true;
@@ -412,34 +1270,27 @@ async function loadServices(departementId) {
         });
         serviceSelect.disabled = false;
     } catch (error) {
-        serviceSelect.innerHTML = '<option value="">Erreur</option>';
-        serviceSelect.disabled = true;
+        serviceSelect.innerHTML = '<option value="">Erreur de chargement</option>';
     }
 }
 
-window.loadServices = loadServices;
-
-// Form submission with improved error handling
+// Form Submit
 document.getElementById('personnelFormV3').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    // Clear all previous errors
-    document.querySelectorAll('.field-error').forEach(e => e.remove());
-    document.querySelectorAll('input, select, textarea').forEach(field => {
-        field.style.borderColor = '#e2e8f0';
-    });
+    if (!validateStepV3(currentStepV3)) return;
+
+    clearErrorsV3();
 
     const formData = new FormData(this);
-    const submitBtn = document.getElementById('btnSubmitV3');
-    const originalText = submitBtn.textContent;
+    const submitBtn = document.getElementById('pm_btn_submit');
+    const originalHTML = submitBtn.innerHTML;
 
-    // Show loading state
     submitBtn.disabled = true;
-    submitBtn.textContent = '⏳ Enregistrement...';
-    submitBtn.style.opacity = '0.6';
+    submitBtn.innerHTML = '<svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Enregistrement...';
 
     try {
-        const response = await fetch('/personnels', {
+        const response = await fetch('{{ route("admin.personnels.store") }}', {
             method: 'POST',
             body: formData,
             headers: {
@@ -450,252 +1301,61 @@ document.getElementById('personnelFormV3').addEventListener('submit', async func
 
         const data = await response.json();
 
-        if (response.ok) {
-            // Success
-            submitBtn.textContent = '✓ Personnel créé!';
-            submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-            submitBtn.style.opacity = '1';
+        if (response.ok && data.success !== false) {
+            submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Créé avec succès!';
 
             setTimeout(() => {
                 closePersonnelModalV3();
                 window.location.reload();
             }, 1000);
         } else {
-            // Handle validation errors
             if (data.errors) {
-                let firstErrorField = null;
-
                 Object.keys(data.errors).forEach(fieldName => {
                     const field = document.querySelector(`[name="${fieldName}"]`);
                     if (field) {
-                        showError(field, data.errors[fieldName][0]);
-                        if (!firstErrorField) firstErrorField = field;
+                        const stepEl = field.closest('.pm-step-content');
+                        if (stepEl) {
+                            const stepNum = parseInt(stepEl.dataset.step);
+                            showStepV3(stepNum);
+                        }
+                        showFieldError(field, data.errors[fieldName][0]);
                     }
                 });
-
-                // Scroll to first error and focus
-                if (firstErrorField) {
-                    const stepEl = firstErrorField.closest('.form-step');
-                    if (stepEl) {
-                        const stepNum = parseInt(stepEl.getAttribute('data-step'));
-                        showStepV3(stepNum);
-                    }
-                }
-
-                // Show error notification
-                const errorMsg = document.createElement('div');
-                errorMsg.style.cssText = 'position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ef4444, #dc2626); color: white; padding: 16px 24px; border-radius: 12px; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3); z-index: 999999; display: flex; align-items: center; gap: 12px; font-weight: 600;';
-                errorMsg.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>Veuillez corriger les erreurs dans le formulaire`;
-                document.body.appendChild(errorMsg);
-                setTimeout(() => errorMsg.remove(), 4000);
-
             } else {
-                // Generic error
-                alert('❌ Erreur: ' + (data.message || 'Erreur lors de la création du personnel'));
+                alert('Erreur: ' + (data.message || 'Une erreur est survenue'));
             }
 
-            // Reset button
             submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
-            submitBtn.style.opacity = '1';
+            submitBtn.innerHTML = originalHTML;
         }
     } catch (error) {
         console.error('Error:', error);
-
-        // Show network error
-        const errorMsg = document.createElement('div');
-        errorMsg.style.cssText = 'position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ef4444, #dc2626); color: white; padding: 16px 24px; border-radius: 12px; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3); z-index: 999999; display: flex; align-items: center; gap: 12px; font-weight: 600;';
-        errorMsg.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>Erreur de connexion au serveur`;
-        document.body.appendChild(errorMsg);
-        setTimeout(() => errorMsg.remove(), 4000);
-
-        // Reset button
+        alert('Erreur de connexion au serveur');
         submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-        submitBtn.style.opacity = '1';
+        submitBtn.innerHTML = originalHTML;
     }
 });
 
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    const modal = document.getElementById('personnelModalV3');
+    if (!modal.classList.contains('show')) return;
+
+    if (e.key === 'Escape') {
+        closePersonnelModalV3();
+    }
+});
+
+// Close on overlay click
+document.getElementById('personnelModalV3').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closePersonnelModalV3();
+    }
+});
+
+// Init button
 document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById('btnAddPersonnel');
     if (btn) btn.onclick = openPersonnelModalV3;
 });
-
-// Dark Mode Detection for Personnel Modal - Sync with site theme
-function applyPersonnelDarkMode() {
-    const isDark = document.documentElement.classList.contains('dark');
-    const modal = document.getElementById('personnelModalV3');
-
-    if (modal && isDark) {
-        modal.classList.add('dark-mode');
-    } else if (modal) {
-        modal.classList.remove('dark-mode');
-    }
-}
-
-// Apply on page load
-document.addEventListener('DOMContentLoaded', applyPersonnelDarkMode);
-
-// Listen for dark mode changes via MutationObserver
-const personnelObserver = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-            applyPersonnelDarkMode();
-        }
-    });
-});
-
-// Observe the <html> element for class changes
-personnelObserver.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class']
-});
 </script>
-
-<style>
-/* Dark Mode pour Modale Personnel */
-#personnelModalV3.dark-mode > div:first-child {
-    background: #1f2937 !important;
-}
-
-#personnelModalV3.dark-mode > div:first-child > div:first-child {
-    /* Header - keep gradient */
-}
-
-#personnelModalV3.dark-mode > div:first-child > div:nth-child(2),
-#personnelModalV3.dark-mode div[style*="background: #f8fafc"][style*="padding: 20px 24px"] {
-    /* Progress bar and footer */
-    background: #111827 !important;
-}
-
-/* Body/Content area */
-#personnelModalV3.dark-mode > div > div:nth-child(3) {
-    background: #1f2937 !important;
-}
-
-#personnelModalV3.dark-mode input[type="text"],
-#personnelModalV3.dark-mode input[type="date"],
-#personnelModalV3.dark-mode input[type="file"],
-#personnelModalV3.dark-mode select,
-#personnelModalV3.dark-mode textarea,
-#personnelModalV3.dark-mode input[type="radio"] + label,
-#personnelModalV3.dark-mode label[style*="border: 2px solid #e2e8f0"] {
-    background: #111827 !important;
-    border-color: #374151 !important;
-    color: #f9fafb !important;
-}
-
-#personnelModalV3.dark-mode input[type="text"]:hover,
-#personnelModalV3.dark-mode input[type="date"]:hover,
-#personnelModalV3.dark-mode select:hover,
-#personnelModalV3.dark-mode textarea:hover,
-#personnelModalV3.dark-mode label[style*="border: 2px solid #e2e8f0"]:hover {
-    border-color: #4b5563 !important;
-}
-
-#personnelModalV3.dark-mode input[type="text"]:focus,
-#personnelModalV3.dark-mode input[type="date"]:focus,
-#personnelModalV3.dark-mode select:focus,
-#personnelModalV3.dark-mode textarea:focus {
-    border-color: #667eea !important;
-    background: #1f2937 !important;
-}
-
-#personnelModalV3.dark-mode label {
-    color: #d1d5db !important;
-}
-
-#personnelModalV3.dark-mode small {
-    color: #9ca3af !important;
-}
-
-#personnelModalV3.dark-mode .form-step {
-    background: transparent !important;
-}
-
-#personnelModalV3.dark-mode .form-step > div {
-    background: transparent !important;
-}
-
-#personnelModalV3.dark-mode h3 {
-    color: #f9fafb !important;
-}
-
-#personnelModalV3.dark-mode h2 {
-    color: #f9fafb !important;
-}
-
-#personnelModalV3.dark-mode p {
-    color: #9ca3af !important;
-}
-
-/* Footer buttons area */
-#personnelModalV3.dark-mode > div:first-child > form > div:last-child,
-#personnelModalV3.dark-mode div[style*="background: #f8fafc"] {
-    background: #111827 !important;
-    border-top-color: #374151 !important;
-}
-
-/* Button "Annuler" - white background button */
-#personnelModalV3.dark-mode button[style*="background: white"] {
-    background: #374151 !important;
-    color: #d1d5db !important;
-    border-color: #4b5563 !important;
-}
-
-#personnelModalV3.dark-mode button[style*="background: white"]:hover {
-    background: #4b5563 !important;
-}
-
-/* Button "Précédent" - gray background button */
-#personnelModalV3.dark-mode button[style*="background: #64748b"] {
-    background: #374151 !important;
-    color: #d1d5db !important;
-}
-
-#personnelModalV3.dark-mode button[style*="background: #64748b"]:hover {
-    background: #4b5563 !important;
-}
-
-/* Progress indicators */
-#personnelModalV3.dark-mode .progress-num {
-    background: #374151 !important;
-    color: #9ca3af !important;
-}
-
-#personnelModalV3.dark-mode .progress-item[data-step="1"] .progress-num {
-    background: linear-gradient(135deg, #667eea, #764ba2) !important;
-    color: white !important;
-}
-
-#personnelModalV3.dark-mode .progress-item div:last-child {
-    color: #6b7280 !important;
-}
-
-#personnelModalV3.dark-mode .progress-item[data-step="1"] div:last-child {
-    color: #818cf8 !important;
-}
-
-/* Lignes de séparation de la barre de progression */
-#personnelModalV3.dark-mode div[style*="height: 2px; background: #e2e8f0"] {
-    background: #374151 !important;
-}
-
-/* Strong elements */
-#personnelModalV3.dark-mode strong {
-    color: #f9fafb !important;
-}
-
-/* Span elements dans les labels */
-#personnelModalV3.dark-mode span[style*="color: #ef4444"] {
-    color: #ef4444 !important;
-}
-
-#personnelModalV3.dark-mode span[style*="color: #475569"] {
-    color: #d1d5db !important;
-}
-
-#personnelModalV3.dark-mode span[style*="color: #64748b"] {
-    color: #9ca3af !important;
-}
-</style>

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Personnel;
 use App\Models\DocumentAgent;
 use App\Models\CategorieDocument;
+use App\Models\BulletinPaie;
 
 class EspaceEmployeController extends Controller
 {
@@ -195,17 +196,134 @@ class EspaceEmployeController extends Controller
     }
 
     /**
-     * Affiche les bulletins de paie
+     * Affiche les bulletins de paie organisés par année/mois (style dossiers)
      */
-    public function bulletins()
+    public function bulletins(Request $request)
     {
         $user = Auth::user();
         $personnel = $user->personnel;
 
-        // À personnaliser selon votre système de bulletins
-        $bulletins = collect([]);
+        if (!$personnel) {
+            return redirect()->route('espace-employe.dashboard')
+                ->with('error', 'Profil non trouvé. Veuillez contacter l\'administrateur.');
+        }
 
-        return view('espace-employe.bulletins', compact('personnel', 'bulletins'));
+        // Récupérer tous les bulletins visibles de l'employé
+        $allBulletins = BulletinPaie::where('personnel_id', $personnel->id)
+            ->visibleEmploye()
+            ->orderBy('annee', 'desc')
+            ->orderBy('mois', 'desc')
+            ->get();
+
+        // Statistiques globales
+        $totalBulletins = $allBulletins->count();
+
+        // Années disponibles
+        $anneesDisponibles = $allBulletins->pluck('annee')->unique()->sort()->reverse()->values();
+
+        // Grouper par année
+        $bulletinsParAnnee = $allBulletins->groupBy('annee');
+
+        // Année sélectionnée (par défaut: année courante ou première année disponible)
+        $anneeSelectionnee = $request->get('annee', $anneesDisponibles->first() ?? now()->year);
+
+        // Mois sélectionné (optionnel - pour voir un bulletin spécifique)
+        $moisSelectionne = $request->get('mois');
+
+        // Bulletins de l'année sélectionnée
+        $bulletinsAnnee = $bulletinsParAnnee->get((int)$anneeSelectionnee, collect([]));
+
+        // Construire les données des mois pour l'affichage en grille
+        $moisData = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $bulletin = $bulletinsAnnee->firstWhere('mois', $m);
+            $moisData[$m] = [
+                'mois' => $m,
+                'nom' => BulletinPaie::MOIS_NOMS[$m],
+                'nom_court' => BulletinPaie::MOIS_COURTS[$m],
+                'bulletin' => $bulletin,
+                'disponible' => $bulletin !== null,
+            ];
+        }
+
+        // Bulletin sélectionné pour prévisualisation
+        $bulletinSelectionne = null;
+        if ($moisSelectionne && isset($moisData[(int)$moisSelectionne])) {
+            $bulletinSelectionne = $moisData[(int)$moisSelectionne]['bulletin'];
+        }
+
+        return view('espace-employe.bulletins', compact(
+            'personnel',
+            'totalBulletins',
+            'anneesDisponibles',
+            'bulletinsParAnnee',
+            'anneeSelectionnee',
+            'moisSelectionne',
+            'moisData',
+            'bulletinSelectionne'
+        ));
+    }
+
+    /**
+     * Prévisualise un bulletin de paie (PDF inline)
+     */
+    public function previewBulletin(BulletinPaie $bulletin)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        // Vérifier que le bulletin appartient bien à l'employé connecté
+        if (!$personnel || $bulletin->personnel_id !== $personnel->id) {
+            abort(403, 'Accès non autorisé');
+        }
+
+        // Vérifier que le bulletin est visible pour l'employé
+        if (!$bulletin->visible_employe || $bulletin->statut !== 'publie') {
+            abort(403, 'Ce bulletin n\'est pas accessible');
+        }
+
+        // Vérifier que le fichier existe
+        if (!Storage::disk('public')->exists($bulletin->fichier_path)) {
+            abort(404, 'Fichier non trouvé');
+        }
+
+        return response()->file(
+            Storage::disk('public')->path($bulletin->fichier_path),
+            ['Content-Type' => 'application/pdf']
+        );
+    }
+
+    /**
+     * Télécharge un bulletin de paie
+     */
+    public function downloadBulletin(BulletinPaie $bulletin)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        // Vérifier que le bulletin appartient bien à l'employé connecté
+        if (!$personnel || $bulletin->personnel_id !== $personnel->id) {
+            abort(403, 'Accès non autorisé');
+        }
+
+        // Vérifier que le bulletin est visible pour l'employé
+        if (!$bulletin->visible_employe || $bulletin->statut !== 'publie') {
+            abort(403, 'Ce bulletin n\'est pas accessible');
+        }
+
+        // Vérifier que le fichier existe
+        if (!Storage::disk('public')->exists($bulletin->fichier_path)) {
+            abort(404, 'Fichier non trouvé');
+        }
+
+        // Nom du fichier pour le téléchargement
+        $nomFichier = sprintf(
+            'Bulletin_Paie_%s_%d.pdf',
+            BulletinPaie::MOIS_COURTS[$bulletin->mois],
+            $bulletin->annee
+        );
+
+        return Storage::disk('public')->download($bulletin->fichier_path, $nomFichier);
     }
 
     /**

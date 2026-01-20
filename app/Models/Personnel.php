@@ -5,10 +5,83 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Personnel extends Model
 {
     use HasFactory, SoftDeletes;
+
+    /**
+     * Boot du modèle - Événements automatiques
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Créer automatiquement le dossier agent lors de la création d'un personnel
+        static::created(function ($personnel) {
+            $personnel->creerDossierAgent();
+        });
+    }
+
+    /**
+     * Créer le dossier agent pour ce personnel
+     * Structure: {entreprise_id}/{personnel_id}/
+     * Avec sous-dossiers par année
+     */
+    public function creerDossierAgent(): bool
+    {
+        try {
+            $basePath = $this->getCheminDossierAgent();
+
+            // Créer le dossier principal du personnel
+            if (!Storage::disk('dossiers_agents')->exists($basePath)) {
+                Storage::disk('dossiers_agents')->makeDirectory($basePath);
+            }
+
+            // Créer le sous-dossier pour l'année en cours
+            $annee = now()->format('Y');
+            $pathAnnee = "{$basePath}/{$annee}";
+            if (!Storage::disk('dossiers_agents')->exists($pathAnnee)) {
+                Storage::disk('dossiers_agents')->makeDirectory($pathAnnee);
+            }
+
+            // Créer un fichier .gitkeep pour préserver le dossier
+            $gitkeepPath = "{$basePath}/.gitkeep";
+            if (!Storage::disk('dossiers_agents')->exists($gitkeepPath)) {
+                Storage::disk('dossiers_agents')->put($gitkeepPath, '');
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            \Log::error("Erreur création dossier agent pour personnel {$this->id}: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Obtenir le chemin du dossier agent
+     */
+    public function getCheminDossierAgent(): string
+    {
+        return "{$this->entreprise_id}/{$this->id}";
+    }
+
+    /**
+     * Vérifier si le dossier agent existe
+     */
+    public function dossierAgentExiste(): bool
+    {
+        return Storage::disk('dossiers_agents')->exists($this->getCheminDossierAgent());
+    }
+
+    /**
+     * Obtenir le chemin complet du dossier agent sur le système de fichiers
+     */
+    public function getCheminCompletDossierAgent(): string
+    {
+        return storage_path('app/dossiers_agents/' . $this->getCheminDossierAgent());
+    }
 
     protected $fillable = [
         'entreprise_id',
@@ -84,6 +157,26 @@ class Personnel extends Model
     public function documents()
     {
         return $this->hasMany(DocumentAgent::class, 'personnel_id');
+    }
+
+    /**
+     * Relation avec les bulletins de paie
+     */
+    public function bulletinsPaie()
+    {
+        return $this->hasMany(BulletinPaie::class, 'personnel_id');
+    }
+
+    /**
+     * Obtenir les bulletins de paie visibles par l'employé
+     */
+    public function bulletinsPaieVisibles()
+    {
+        return $this->bulletinsPaie()
+            ->where('visible_employe', true)
+            ->where('statut', 'publie')
+            ->orderBy('annee', 'desc')
+            ->orderBy('mois', 'desc');
     }
 
     /**

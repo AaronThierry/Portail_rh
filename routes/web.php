@@ -16,6 +16,8 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DossierAgentController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BulletinPaieController;
+use App\Http\Controllers\EvaluationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,7 +83,12 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
     Route::get('/documents', [EspaceEmployeController::class, 'documents'])->name('documents');
     Route::get('/documents/{id}/preview', [EspaceEmployeController::class, 'previewDocument'])->name('documents.preview');
     Route::get('/documents/{id}/download', [EspaceEmployeController::class, 'downloadDocument'])->name('documents.download');
+
+    // Mes bulletins de paie
     Route::get('/bulletins', [EspaceEmployeController::class, 'bulletins'])->name('bulletins');
+    Route::get('/bulletins/{bulletin}/preview', [EspaceEmployeController::class, 'previewBulletin'])->name('bulletins.preview');
+    Route::get('/bulletins/{bulletin}/download', [EspaceEmployeController::class, 'downloadBulletin'])->name('bulletins.download');
+
     Route::get('/attestations', [EspaceEmployeController::class, 'attestations'])->name('attestations');
 
     // Congés et demandes
@@ -128,10 +135,22 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
 
     // Gestion des utilisateurs (comptes)
     Route::get('utilisateurs', [UserController::class, 'index'])->name('utilisateurs.index');
+    Route::post('utilisateurs', [UserController::class, 'store'])->name('utilisateurs.store');
     Route::get('utilisateurs/{user}', [UserController::class, 'show'])->name('utilisateurs.show');
     Route::get('utilisateurs/{user}/edit', [UserController::class, 'edit'])->name('utilisateurs.edit');
     Route::put('utilisateurs/{user}', [UserController::class, 'update'])->name('utilisateurs.update');
     Route::delete('utilisateurs/{user}', [UserController::class, 'destroy'])->name('utilisateurs.destroy');
+
+    // Gestion des accompagnements collaborateurs
+    Route::get('accompagnements', [AccompagnementController::class, 'index'])->name('accompagnements.index');
+    Route::get('accompagnements/create', [AccompagnementController::class, 'create'])->name('accompagnements.create');
+    Route::post('accompagnements', [AccompagnementController::class, 'store'])->name('accompagnements.store');
+    Route::get('accompagnements/{accompagnement}', [AccompagnementController::class, 'show'])->name('accompagnements.show');
+    Route::get('accompagnements/{accompagnement}/edit', [AccompagnementController::class, 'edit'])->name('accompagnements.edit');
+    Route::put('accompagnements/{accompagnement}', [AccompagnementController::class, 'update'])->name('accompagnements.update');
+    Route::delete('accompagnements/{accompagnement}', [AccompagnementController::class, 'destroy'])->name('accompagnements.destroy');
+    Route::post('accompagnements/{accompagnement}/sessions', [AccompagnementController::class, 'storeSession'])->name('accompagnements.sessions.store');
+    Route::get('accompagnements/personnel/{personnel}/info', [AccompagnementController::class, 'getPersonnelInfo'])->name('accompagnements.personnel.info');
 
     // Liste globale des dossiers agents
     Route::get('dossiers-agents', [DossierAgentController::class, 'index'])->name('dossiers-agents.index');
@@ -161,6 +180,18 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     Route::post('two-factor/enable', [TwoFactorController::class, 'enable'])->name('two-factor.enable');
     Route::post('two-factor/verify', [TwoFactorController::class, 'verify'])->name('two-factor.verify');
     Route::delete('two-factor/disable', [TwoFactorController::class, 'disable'])->name('two-factor.disable');
+
+    // Gestion des bulletins de paie
+    Route::get('bulletins-paie', [BulletinPaieController::class, 'index'])->name('bulletins-paie.index');
+    Route::post('bulletins-paie', [BulletinPaieController::class, 'store'])->name('bulletins-paie.store');
+    Route::post('bulletins-paie/bulk', [BulletinPaieController::class, 'storeBulk'])->name('bulletins-paie.store-bulk');
+    Route::get('bulletins-paie/export', [BulletinPaieController::class, 'export'])->name('bulletins-paie.export');
+    Route::get('bulletins-paie/{bulletin}', [BulletinPaieController::class, 'show'])->name('bulletins-paie.show');
+    Route::put('bulletins-paie/{bulletin}', [BulletinPaieController::class, 'update'])->name('bulletins-paie.update');
+    Route::delete('bulletins-paie/{bulletin}', [BulletinPaieController::class, 'destroy'])->name('bulletins-paie.destroy');
+    Route::get('bulletins-paie/{bulletin}/download', [BulletinPaieController::class, 'download'])->name('bulletins-paie.download');
+    Route::get('bulletins-paie/{bulletin}/preview', [BulletinPaieController::class, 'preview'])->name('bulletins-paie.preview');
+    Route::post('bulletins-paie/{bulletin}/replace', [BulletinPaieController::class, 'replaceFichier'])->name('bulletins-paie.replace');
 });
 
 // Redirection racine selon le rôle

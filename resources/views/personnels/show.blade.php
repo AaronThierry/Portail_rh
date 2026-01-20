@@ -3354,7 +3354,7 @@ document.getElementById('editPersonnelForm').addEventListener('submit', async (e
     console.log('📦 Données à envoyer:', data);
 
     try {
-        const response = await fetch('/personnels/{{ $personnel->id }}', {
+        const response = await fetch('/admin/personnels/{{ $personnel->id }}', {
             method: 'PUT',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,

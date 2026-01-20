@@ -387,14 +387,14 @@ class UserController extends Controller
         $users = $query->get();
 
         // Récupérer les personnels sans compte utilisateur
-        $personnels_query = Personnel::whereDoesntHave('user');
+        $personnels_query = Personnel::with('departement')->whereDoesntHave('user');
 
         // Filtrer par entreprise si nécessaire
         if (!auth()->user()->hasRole('Super Admin') && auth()->user()->entreprise_id) {
             $personnels_query->where('entreprise_id', auth()->user()->entreprise_id);
         }
 
-        $personnels_sans_compte = $personnels_query->get();
+        $personnels_sans_compte = $personnels_query->orderBy('nom')->get();
 
         return view('utilisateurs.index', compact('users', 'personnels_sans_compte'));
     }
@@ -547,7 +547,7 @@ class UserController extends Controller
                 ], 201);
             }
 
-            return redirect()->route('utilisateurs.index')
+            return redirect()->route('admin.utilisateurs.index')
                 ->with('success', 'Compte utilisateur créé avec succès pour ' . $personnel->nom_complet);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -671,7 +671,7 @@ class UserController extends Controller
                 ], 200);
             }
 
-            return redirect()->route('utilisateurs.index')
+            return redirect()->route('admin.utilisateurs.index')
                 ->with('success', 'Utilisateur mis à jour avec succès');
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
@@ -713,7 +713,7 @@ class UserController extends Controller
                 ], 200);
             }
 
-            return redirect()->route('utilisateurs.index')
+            return redirect()->route('admin.utilisateurs.index')
                 ->with('success', 'Utilisateur supprimé avec succès');
         } catch (\Exception $e) {
             if (request()->expectsJson()) {

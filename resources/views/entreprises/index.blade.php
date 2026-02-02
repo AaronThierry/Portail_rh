@@ -1690,7 +1690,11 @@ function openEditModal(id) {
     document.getElementById('entrepriseForm').action = `/admin/entreprises/${id}`;
     document.getElementById('formMethod').value = 'PUT';
     fetch(`/admin/entreprises/${id}/edit`, {
-        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
     })
     .then(r => r.json())
     .then(data => {
@@ -1742,7 +1746,11 @@ document.getElementById('entrepriseForm').addEventListener('submit', function(e)
     fetch(form.action, {
         method: 'POST',
         body: formData,
-        headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
     })
     .then(response => {
         if (!response.ok) return response.json().then(data => { throw { status: response.status, data }; });

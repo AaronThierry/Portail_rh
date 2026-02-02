@@ -219,7 +219,7 @@ class DossierAgentController extends Controller
             }
 
             return redirect()
-                ->route('dossier-agent.show', $personnel)
+                ->route('admin.dossier-agent.show', $personnel)
                 ->with('success', 'Document uploadé avec succès');
 
         } catch (\Exception $e) {
@@ -316,7 +316,7 @@ class DossierAgentController extends Controller
             }
 
             return redirect()
-                ->route('dossier-agent.show', $document->personnel_id)
+                ->route('admin.dossier-agent.show', $document->personnel_id)
                 ->with('success', 'Document mis à jour avec succès');
 
         } catch (\Exception $e) {
@@ -403,7 +403,7 @@ class DossierAgentController extends Controller
         }
 
         return redirect()
-            ->route('dossier-agent.show', $personnelId)
+            ->route('admin.dossier-agent.show', $personnelId)
             ->with('success', 'Document supprimé avec succès');
     }
 

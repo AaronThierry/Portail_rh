@@ -141,16 +141,16 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     Route::put('utilisateurs/{user}', [UserController::class, 'update'])->name('utilisateurs.update');
     Route::delete('utilisateurs/{user}', [UserController::class, 'destroy'])->name('utilisateurs.destroy');
 
-    // Gestion des accompagnements collaborateurs
-    Route::get('accompagnements', [AccompagnementController::class, 'index'])->name('accompagnements.index');
-    Route::get('accompagnements/create', [AccompagnementController::class, 'create'])->name('accompagnements.create');
-    Route::post('accompagnements', [AccompagnementController::class, 'store'])->name('accompagnements.store');
-    Route::get('accompagnements/{accompagnement}', [AccompagnementController::class, 'show'])->name('accompagnements.show');
-    Route::get('accompagnements/{accompagnement}/edit', [AccompagnementController::class, 'edit'])->name('accompagnements.edit');
-    Route::put('accompagnements/{accompagnement}', [AccompagnementController::class, 'update'])->name('accompagnements.update');
-    Route::delete('accompagnements/{accompagnement}', [AccompagnementController::class, 'destroy'])->name('accompagnements.destroy');
-    Route::post('accompagnements/{accompagnement}/sessions', [AccompagnementController::class, 'storeSession'])->name('accompagnements.sessions.store');
-    Route::get('accompagnements/personnel/{personnel}/info', [AccompagnementController::class, 'getPersonnelInfo'])->name('accompagnements.personnel.info');
+    // Gestion des accompagnements collaborateurs (désactivé — controller non implémenté)
+    // Route::get('accompagnements', [AccompagnementController::class, 'index'])->name('accompagnements.index');
+    // Route::get('accompagnements/create', [AccompagnementController::class, 'create'])->name('accompagnements.create');
+    // Route::post('accompagnements', [AccompagnementController::class, 'store'])->name('accompagnements.store');
+    // Route::get('accompagnements/{accompagnement}', [AccompagnementController::class, 'show'])->name('accompagnements.show');
+    // Route::get('accompagnements/{accompagnement}/edit', [AccompagnementController::class, 'edit'])->name('accompagnements.edit');
+    // Route::put('accompagnements/{accompagnement}', [AccompagnementController::class, 'update'])->name('accompagnements.update');
+    // Route::delete('accompagnements/{accompagnement}', [AccompagnementController::class, 'destroy'])->name('accompagnements.destroy');
+    // Route::post('accompagnements/{accompagnement}/sessions', [AccompagnementController::class, 'storeSession'])->name('accompagnements.sessions.store');
+    // Route::get('accompagnements/personnel/{personnel}/info', [AccompagnementController::class, 'getPersonnelInfo'])->name('accompagnements.personnel.info');
 
     // Liste globale des dossiers agents
     Route::get('dossiers-agents', [DossierAgentController::class, 'index'])->name('dossiers-agents.index');

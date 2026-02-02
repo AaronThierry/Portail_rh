@@ -120,11 +120,11 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     // Gestion des personnels
     Route::resource('personnels', PersonnelController::class);
 
-    // Gestion des départements
-    Route::resource('departements', DepartementController::class);
+    // Gestion des départements (désactivé)
+    // Route::resource('departements', DepartementController::class);
 
-    // Gestion des services
-    Route::resource('services', ServiceController::class);
+    // Gestion des services (désactivé)
+    // Route::resource('services', ServiceController::class);
 
     // Gestion des entreprises
     Route::resource('entreprises', EntrepriseController::class);

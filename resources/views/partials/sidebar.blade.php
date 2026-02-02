@@ -81,7 +81,6 @@
             </div>
             <div class="nav-items">
                 @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH']))
-                    @can('view-personnel')
                     <a href="{{ route('admin.personnels.index') }}" class="nav-link {{ Request::is('admin/personnels*') ? 'active' : '' }}" data-tooltip="Personnel">
                         <span class="nav-link-icon">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,7 +90,6 @@
                         <span class="nav-link-text">Gestion du Personnel</span>
                         <span class="nav-link-indicator"></span>
                     </a>
-                    @endcan
 
                     <a href="{{ route('admin.dossiers-agents.index') }}" class="nav-link {{ Request::is('admin/dossiers-agents*') || Request::is('admin/dossier-agent*') ? 'active' : '' }}" data-tooltip="Dossiers Agents">
                         <span class="nav-link-icon">

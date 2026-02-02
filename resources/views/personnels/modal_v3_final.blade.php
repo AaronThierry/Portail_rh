@@ -973,21 +973,6 @@
                                 <label class="pm-form-label">Date d'embauche</label>
                                 <input type="date" name="date_embauche" class="pm-form-input">
                             </div>
-                            <div class="pm-form-group">
-                                <label class="pm-form-label">Département</label>
-                                <select id="pm_departement_id" name="departement_id" class="pm-form-input" onchange="loadServicesV3(this.value)">
-                                    <option value="">Sélectionner un département</option>
-                                    @foreach($departements as $dept)
-                                    <option value="{{ $dept->id }}">{{ $dept->nom }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="pm-form-group">
-                                <label class="pm-form-label">Service</label>
-                                <select id="pm_service_id" name="service_id" class="pm-form-input" disabled>
-                                    <option value="">Choisir d'abord un département</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
 
@@ -1245,33 +1230,6 @@ function selectContractType(type) {
 
     const dateFin = document.getElementById('pm_date_fin_contrat');
     dateFin.required = type === 'CDD';
-}
-
-// Load Services
-async function loadServicesV3(departementId) {
-    const serviceSelect = document.getElementById('pm_service_id');
-
-    if (!departementId) {
-        serviceSelect.disabled = true;
-        serviceSelect.innerHTML = '<option value="">Choisir d\'abord un département</option>';
-        return;
-    }
-
-    serviceSelect.disabled = true;
-    serviceSelect.innerHTML = '<option value="">Chargement...</option>';
-
-    try {
-        const response = await fetch(`/api/departements/${departementId}/services`);
-        const services = await response.json();
-
-        serviceSelect.innerHTML = '<option value="">Sélectionner un service</option>';
-        services.forEach(service => {
-            serviceSelect.innerHTML += `<option value="${service.id}">${service.nom}</option>`;
-        });
-        serviceSelect.disabled = false;
-    } catch (error) {
-        serviceSelect.innerHTML = '<option value="">Erreur de chargement</option>';
-    }
 }
 
 // Form Submit

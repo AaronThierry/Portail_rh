@@ -160,8 +160,9 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     Route::get('dossier-agent/alertes', [DossierAgentController::class, 'alertes'])->name('dossier-agent.alertes');
 
     // Dossier d'un agent spécifique
-    Route::get('dossier-agent/{personnel}', [DossierAgentController::class, 'show'])->name('dossier-agent.index');
+    Route::get('dossier-agent/{personnel}', [DossierAgentController::class, 'show'])->name('dossier-agent.show');
     Route::post('dossier-agent/{personnel}', [DossierAgentController::class, 'store'])->name('dossier-agent.store');
+    Route::post('dossier-agent/{personnel}/upload-multiple', [DossierAgentController::class, 'uploadMultiple'])->name('dossier-agent.upload-multiple');
     Route::get('dossier-agent/document/{document}/preview', [DossierAgentController::class, 'preview'])->name('dossier-agent.preview');
     Route::get('dossier-agent/document/{document}/download', [DossierAgentController::class, 'download'])->name('dossier-agent.download');
     Route::delete('dossier-agent/document/{document}', [DossierAgentController::class, 'destroy'])->name('dossier-agent.destroy');

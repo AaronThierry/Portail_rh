@@ -11,1435 +11,1323 @@
 
 @section('styles')
 <style>
-/* ========================================
-   VARIABLES - Light & Dark Mode (RH+ Brand)
-   ======================================== */
+/* ============================================================
+   DOSSIERS AGENTS — Swiss Corporate Editorial Design System
+   Geometric precision · Warm accents · Editorial typography
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap');
+
 :root {
-    /* RH+ Brand Colors */
-    --da-primary: #4A90D9;
-    --da-primary-dark: #2E6BB3;
-    --da-primary-light: #5BA3E8;
-    --da-secondary: #F5A623;
-    --da-success: #27AE60;
-    --da-danger: #ef4444;
-    --da-warning: #E67E22;
-    --da-info: #4A90D9;
-
-    /* Light Mode Theme */
-    --da-bg: #f8fafc;
-    --da-bg-secondary: #f1f5f9;
-    --da-card-bg: #ffffff;
-    --da-card-border: #e2e8f0;
-    --da-text-primary: #1e293b;
-    --da-text-secondary: #64748b;
-    --da-text-muted: #94a3b8;
-    --da-shadow: rgba(0, 0, 0, 0.04);
-    --da-shadow-lg: rgba(0, 0, 0, 0.08);
-    --da-hover-bg: rgba(74, 144, 217, 0.05);
-    --da-input-bg: #f8fafc;
-    --da-input-border: #e2e8f0;
-    --da-divider: #e2e8f0;
+    --e-slate-50: #f8fafc;
+    --e-slate-100: #f1f5f9;
+    --e-slate-200: #e2e8f0;
+    --e-slate-300: #cbd5e1;
+    --e-slate-400: #94a3b8;
+    --e-slate-500: #64748b;
+    --e-slate-600: #475569;
+    --e-slate-700: #334155;
+    --e-slate-800: #1e293b;
+    --e-slate-900: #0f172a;
+    --e-slate-950: #020617;
+    --e-blue: #3b7dd8;
+    --e-blue-deep: #2563a0;
+    --e-blue-pale: #dbeafe;
+    --e-blue-wash: #eff6ff;
+    --e-amber: #e8850c;
+    --e-amber-bright: #f59e0b;
+    --e-amber-pale: #fef3c7;
+    --e-amber-wash: #fffbeb;
+    --e-emerald: #059669;
+    --e-emerald-pale: #d1fae5;
+    --e-red: #dc2626;
+    --e-red-pale: #fee2e2;
+    --e-surface: #ffffff;
+    --e-bg: var(--e-slate-50);
+    --e-text: var(--e-slate-900);
+    --e-text-secondary: var(--e-slate-500);
+    --e-text-tertiary: var(--e-slate-400);
+    --e-border: var(--e-slate-200);
+    --e-border-light: var(--e-slate-100);
+    --e-shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --e-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --e-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+    --e-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+    --e-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
+    --e-radius: 12px;
+    --e-radius-lg: 16px;
+    --e-radius-xl: 20px;
+    --e-font-body: 'DM Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
+    --e-font-display: 'DM Serif Display', Georgia, serif;
 }
 
-/* Dark Mode Colors */
 .dark {
-    --da-bg: #0f172a;
-    --da-bg-secondary: #1e293b;
-    --da-card-bg: #1e293b;
-    --da-card-border: #334155;
-    --da-text-primary: #f1f5f9;
-    --da-text-secondary: #94a3b8;
-    --da-text-muted: #64748b;
-    --da-shadow: rgba(0, 0, 0, 0.3);
-    --da-shadow-lg: rgba(0, 0, 0, 0.5);
-    --da-hover-bg: rgba(74, 144, 217, 0.15);
-    --da-input-bg: #0f172a;
-    --da-input-border: #334155;
-    --da-divider: #334155;
+    --e-surface: var(--e-slate-800);
+    --e-bg: var(--e-slate-900);
+    --e-text: var(--e-slate-100);
+    --e-text-secondary: var(--e-slate-400);
+    --e-text-tertiary: var(--e-slate-500);
+    --e-border: var(--e-slate-700);
+    --e-border-light: var(--e-slate-800);
+    --e-blue-pale: rgba(59, 125, 216, 0.15);
+    --e-blue-wash: rgba(59, 125, 216, 0.08);
+    --e-amber-pale: rgba(232, 133, 12, 0.15);
+    --e-amber-wash: rgba(232, 133, 12, 0.08);
+    --e-emerald-pale: rgba(5, 150, 105, 0.15);
+    --e-red-pale: rgba(220, 38, 38, 0.15);
+    --e-shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+    --e-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    --e-shadow-md: 0 4px 6px rgba(0,0,0,0.25);
+    --e-shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+    --e-shadow-xl: 0 20px 25px rgba(0,0,0,0.35);
 }
 
-/* ========================================
-   BASE STYLES
-   ======================================== */
-.dossier-agent-page {
-    padding: 1.5rem;
-    min-height: 100vh;
-    background: var(--da-bg);
-    transition: background-color 0.3s ease;
+/* ==================== ANIMATIONS ==================== */
+@keyframes da-fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* ========================================
-   HEADER
-   ======================================== */
+@keyframes da-countUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes da-slideDown {
+    from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes da-scaleIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes da-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .6; }
+}
+
+@keyframes da-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ==================== PAGE ==================== */
+.da-page {
+    font-family: var(--e-font-body);
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+    color: var(--e-text);
+    animation: da-fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==================== HEADER ==================== */
 .da-header {
-    background: var(--da-card-bg);
-    border-radius: 24px;
-    padding: 2rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 20px var(--da-shadow);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 2rem 0 1.75rem;
+    border-bottom: 1px solid var(--e-border);
+    margin-bottom: 1.75rem;
+    gap: 1rem;
+    animation: da-fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.da-header-left h1 {
+    font-family: var(--e-font-display);
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--e-text);
+    margin: 0;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+.da-header-left p {
+    font-size: 0.875rem;
+    color: var(--e-text-secondary);
+    margin: 0.375rem 0 0 0;
+    font-weight: 500;
+}
+
+.da-header-actions {
+    display: flex;
+    gap: 0.625rem;
+    flex-shrink: 0;
+}
+
+/* ==================== BUTTONS ==================== */
+.da-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--e-radius);
+    font-family: var(--e-font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid transparent;
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+.da-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+.da-btn-primary {
+    background: var(--e-blue);
+    color: #fff;
+    border-color: var(--e-blue);
+    box-shadow: 0 1px 3px rgba(59, 125, 216, 0.3);
+}
+
+.da-btn-primary:hover {
+    background: var(--e-blue-deep);
+    border-color: var(--e-blue-deep);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 125, 216, 0.35);
+}
+
+.da-btn-outline {
+    background: var(--e-surface);
+    color: var(--e-text-secondary);
+    border-color: var(--e-border);
+}
+
+.da-btn-outline:hover {
+    color: var(--e-text);
+    border-color: var(--e-slate-300);
+    background: var(--e-slate-50);
+}
+
+.dark .da-btn-outline { background: var(--e-slate-800); }
+.dark .da-btn-outline:hover { background: var(--e-slate-700); border-color: var(--e-slate-600); }
+
+.da-btn-warning {
+    background: var(--e-amber-wash);
+    color: var(--e-amber);
+    border-color: var(--e-amber-pale);
+}
+
+.da-btn-warning:hover {
+    background: var(--e-amber-pale);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(232, 133, 12, 0.2);
+}
+
+.da-btn-warning .da-badge-count {
+    background: var(--e-amber);
+    color: #fff;
+    padding: 0.1rem 0.45rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* ==================== STATS STRIP ==================== */
+.da-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+}
+
+.da-stat {
+    background: var(--e-surface);
+    border: 1px solid var(--e-border);
+    border-radius: var(--e-radius-lg);
+    padding: 1.25rem 1.375rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--e-shadow-sm);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--da-card-border);
-    transition: all 0.3s ease;
+    animation: da-fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
-.da-header::before {
+.da-stat:nth-child(1) { animation-delay: 0.05s; }
+.da-stat:nth-child(2) { animation-delay: 0.1s; }
+.da-stat:nth-child(3) { animation-delay: 0.15s; }
+.da-stat:nth-child(4) { animation-delay: 0.2s; }
+
+.da-stat::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--da-primary), var(--da-secondary), var(--da-info));
+    height: 3px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.da-header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
+.da-stat:nth-child(1)::after { background: linear-gradient(90deg, var(--e-blue), var(--e-blue-deep)); }
+.da-stat:nth-child(2)::after { background: linear-gradient(90deg, var(--e-emerald), #047857); }
+.da-stat:nth-child(3)::after { background: linear-gradient(90deg, var(--e-red), #b91c1c); }
+.da-stat:nth-child(4)::after { background: linear-gradient(90deg, var(--e-amber), #d97706); }
 
-.da-header-title {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.da-header-icon {
-    width: 56px;
-    height: 56px;
-    background: linear-gradient(135deg, var(--da-primary) 0%, var(--da-primary-dark) 100%);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    box-shadow: 0 8px 20px rgba(74, 144, 217, 0.3);
-}
-
-.da-header-text h1 {
-    margin: 0 0 0.25rem 0;
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--da-text-primary);
-}
-
-.da-header-text p {
-    margin: 0;
-    color: var(--da-text-secondary);
-    font-size: 0.938rem;
-}
-
-.da-header-actions {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-/* ========================================
-   BUTTONS
-   ======================================== */
-.btn-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.875rem;
-    text-decoration: none;
-    transition: all 0.2s;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-action-primary {
-    background: linear-gradient(135deg, var(--da-primary), var(--da-primary-dark));
-    color: white;
-    box-shadow: 0 4px 15px rgba(74, 144, 217, 0.3);
-}
-
-.btn-action-primary:hover {
+.da-stat:hover {
+    box-shadow: var(--e-shadow-md);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(74, 144, 217, 0.4);
-    color: white;
 }
 
-.btn-action-secondary {
-    background: var(--da-card-bg);
-    color: var(--da-text-primary);
-    border: 2px solid var(--da-card-border);
-}
-
-.btn-action-secondary:hover {
-    border-color: var(--da-primary);
-    color: var(--da-primary);
-    background: var(--da-hover-bg);
-}
-
-.btn-action-warning {
-    background: rgba(245, 158, 11, 0.15);
-    color: var(--da-warning);
-    border: 2px solid rgba(245, 158, 11, 0.3);
-}
-
-.dark .btn-action-warning {
-    background: rgba(245, 158, 11, 0.2);
-}
-
-.btn-action-warning:hover {
-    background: rgba(245, 158, 11, 0.25);
-}
-
-/* ========================================
-   STATS GRID
-   ======================================== */
-.da-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.da-stat-item {
-    background: var(--da-bg-secondary);
-    border-radius: 16px;
-    padding: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    transition: all 0.2s;
-    border: 1px solid transparent;
-}
-
-.da-stat-item:hover {
-    border-color: var(--da-primary);
-    background: var(--da-card-bg);
-}
+.da-stat:hover::after { opacity: 1; }
 
 .da-stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 46px; height: 46px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.da-stat-icon.primary {
-    background: rgba(74, 144, 217, 0.15);
-    color: var(--da-primary);
-}
+.da-stat:hover .da-stat-icon { transform: scale(1.05); }
 
-.da-stat-icon.success {
-    background: rgba(39, 174, 96, 0.15);
-    color: var(--da-success);
-}
+.da-stat-icon svg { width: 20px; height: 20px; }
 
-.da-stat-icon.danger {
-    background: rgba(239, 68, 68, 0.15);
-    color: var(--da-danger);
-}
+.da-stat-icon.blue { background: var(--e-blue-pale); color: var(--e-blue); }
+.da-stat-icon.emerald { background: var(--e-emerald-pale); color: var(--e-emerald); }
+.da-stat-icon.red { background: var(--e-red-pale); color: var(--e-red); }
+.da-stat-icon.amber { background: var(--e-amber-pale); color: var(--e-amber); }
 
-.da-stat-icon.warning {
-    background: rgba(230, 126, 34, 0.15);
-    color: var(--da-warning);
-}
-
-.da-stat-content {
-    flex: 1;
-}
+.da-stat-content { flex: 1; min-width: 0; }
 
 .da-stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--da-text-primary);
+    font-family: var(--e-font-display);
+    font-size: 1.75rem;
+    font-weight: 400;
     line-height: 1;
+    color: var(--e-text);
+    animation: da-countUp .6s cubic-bezier(0.16, 1, 0.3, 1) .3s both;
 }
 
 .da-stat-label {
-    font-size: 0.813rem;
-    color: var(--da-text-secondary);
-    margin-top: 0.25rem;
+    font-size: 0.6875rem;
+    color: var(--e-text-secondary);
+    margin-top: 0.3rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
 }
 
-/* ========================================
-   ALERTS SECTION
-   ======================================== */
-.da-alerts-section {
+/* ==================== ALERT BANNERS ==================== */
+.da-alerts {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 0.875rem;
+    margin-bottom: 1.75rem;
+    animation: da-fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
 }
 
-.da-alert-banner {
-    background: var(--da-card-bg);
-    border-radius: 16px;
-    padding: 1.25rem 1.5rem;
+.da-alert {
+    background: var(--e-surface);
+    border: 1px solid var(--e-border);
+    border-radius: var(--e-radius-lg);
+    padding: 1rem 1.25rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    box-shadow: 0 4px 15px var(--da-shadow);
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--da-card-border);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--e-shadow-sm);
 }
 
-.da-alert-banner::before {
+.da-alert::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    left: 0; top: 0; bottom: 0;
     width: 4px;
 }
 
-.da-alert-banner.danger::before {
-    background: linear-gradient(180deg, var(--da-danger), #dc2626);
-}
+.da-alert.danger::before { background: linear-gradient(180deg, var(--e-red), #b91c1c); }
+.da-alert.warning::before { background: linear-gradient(180deg, var(--e-amber), #d97706); }
 
-.da-alert-banner.warning::before {
-    background: linear-gradient(180deg, var(--da-warning), #d97706);
-}
+.da-alert:hover { box-shadow: var(--e-shadow-md); transform: translateY(-1px); }
 
-.da-alert-banner .alert-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+.da-alert-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 }
 
-.da-alert-banner.danger .alert-icon {
-    background: rgba(239, 68, 68, 0.15);
-    color: var(--da-danger);
+.da-alert-icon svg { width: 20px; height: 20px; }
+
+.da-alert.danger .da-alert-icon { background: var(--e-red-pale); color: var(--e-red); }
+.da-alert.warning .da-alert-icon { background: var(--e-amber-pale); color: var(--e-amber); }
+
+.da-alert-body { flex: 1; }
+.da-alert-title { font-size: 0.875rem; font-weight: 600; color: var(--e-text); margin: 0; }
+.da-alert-desc { font-size: 0.75rem; color: var(--e-text-secondary); margin: 0.125rem 0 0; }
+
+.da-alert-count {
+    font-family: var(--e-font-display);
+    font-size: 1.5rem;
+    font-weight: 400;
+    padding: 0 0.75rem;
 }
 
-.da-alert-banner.warning .alert-icon {
-    background: rgba(230, 126, 34, 0.15);
-    color: var(--da-warning);
-}
+.da-alert.danger .da-alert-count { color: var(--e-red); }
+.da-alert.warning .da-alert-count { color: var(--e-amber); }
 
-.da-alert-banner .alert-content {
-    flex: 1;
-}
-
-.da-alert-banner .alert-title {
-    font-weight: 600;
-    color: var(--da-text-primary);
-    margin: 0 0 0.125rem 0;
-    font-size: 0.938rem;
-}
-
-.da-alert-banner .alert-text {
-    font-size: 0.813rem;
-    color: var(--da-text-secondary);
-    margin: 0;
-}
-
-.da-alert-banner .alert-count {
-    font-size: 1.75rem;
-    font-weight: 700;
-    padding: 0 1rem;
-}
-
-.da-alert-banner.danger .alert-count { color: var(--da-danger); }
-.da-alert-banner.warning .alert-count { color: var(--da-warning); }
-
-.da-alert-banner .alert-action {
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-size: 0.813rem;
+.da-alert-link {
+    font-size: 0.75rem;
     font-weight: 600;
     text-decoration: none;
-    transition: all 0.2s;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
 }
 
-.da-alert-banner.danger .alert-action {
-    background: rgba(239, 68, 68, 0.15);
-    color: var(--da-danger);
-}
+.da-alert.danger .da-alert-link { background: var(--e-red-pale); color: var(--e-red); }
+.da-alert.warning .da-alert-link { background: var(--e-amber-pale); color: var(--e-amber); }
+.da-alert-link:hover { transform: translateX(3px); }
 
-.da-alert-banner.warning .alert-action {
-    background: rgba(230, 126, 34, 0.15);
-    color: var(--da-warning);
-}
-
-.dark .da-alert-banner.warning .alert-action {
-    color: var(--da-warning);
-}
-
-.da-alert-banner .alert-action:hover {
-    transform: translateX(4px);
-}
-
-/* ========================================
-   SEARCH SECTION
-   ======================================== */
-.da-search-section {
-    background: var(--da-card-bg);
-    border-radius: 16px;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 15px var(--da-shadow);
-    border: 1px solid var(--da-card-border);
-}
-
-.da-search-form {
+/* ==================== TOOLBAR ==================== */
+.da-toolbar {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
     align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    animation: da-fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
 }
 
-.da-search-input-wrapper {
+.da-search-wrap {
     flex: 1;
-    min-width: 280px;
     position: relative;
+    max-width: 480px;
 }
 
-.da-search-input-wrapper svg {
+.da-search-wrap svg {
     position: absolute;
     left: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--da-text-muted);
+    width: 18px; height: 18px;
+    color: var(--e-text-tertiary);
     pointer-events: none;
+    transition: color 0.2s ease;
 }
+
+.da-search-wrap:focus-within svg { color: var(--e-blue); }
 
 .da-search-input {
     width: 100%;
-    padding: 0.875rem 1rem 0.875rem 3rem;
-    border: 2px solid var(--da-input-border);
-    border-radius: 12px;
-    font-size: 0.938rem;
-    transition: all 0.2s;
-    background: var(--da-input-bg);
-    color: var(--da-text-primary);
+    padding: 0.7rem 1rem 0.7rem 2.75rem;
+    border: 1.5px solid var(--e-border);
+    border-radius: var(--e-radius);
+    font-family: var(--e-font-body);
+    font-size: 0.875rem;
+    background: var(--e-surface);
+    color: var(--e-text);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.da-search-input:focus {
-    outline: none;
-    border-color: var(--da-primary);
-    background: var(--da-card-bg);
-    box-shadow: 0 0 0 4px rgba(74, 144, 217, 0.15);
-}
+.da-search-input::placeholder { color: var(--e-text-tertiary); }
 
-.da-search-input::placeholder {
-    color: var(--da-text-muted);
-}
+.da-search-input:hover { border-color: var(--e-slate-300); }
+.da-search-input:focus { outline: none; border-color: var(--e-blue); box-shadow: 0 0 0 3px rgba(59, 125, 216, 0.1); }
 
-.da-filter-dropdown {
-    padding: 0.875rem 1rem;
-    border: 2px solid var(--da-input-border);
-    border-radius: 12px;
-    font-size: 0.938rem;
-    background: var(--da-card-bg);
-    color: var(--da-text-primary);
-    min-width: 200px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.da-filter-dropdown:focus {
-    outline: none;
-    border-color: var(--da-primary);
-}
-
-.da-filter-dropdown option {
-    background: var(--da-card-bg);
-    color: var(--da-text-primary);
-}
-
-.btn-search {
-    padding: 0.875rem 1.5rem;
-    background: var(--da-primary);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
+.da-toolbar-right {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: all 0.2s;
+    margin-left: auto;
 }
 
-.btn-search:hover {
-    background: var(--da-primary-dark);
+.da-count-label {
+    font-size: 0.8125rem;
+    color: var(--e-text-secondary);
+    font-weight: 500;
 }
 
-.btn-reset {
-    padding: 0.875rem 1rem;
-    background: var(--da-bg-secondary);
-    color: var(--da-text-secondary);
-    border: 2px solid var(--da-card-border);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
+.da-count-label strong {
+    color: var(--e-text);
+    font-weight: 700;
 }
 
-.btn-reset:hover {
-    border-color: var(--da-danger);
-    color: var(--da-danger);
-}
-
-/* ========================================
-   EMPLOYEES SECTION
-   ======================================== */
-.da-employees-section {
+/* ==================== EMPLOYEES GRID ==================== */
+.da-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1.125rem;
     margin-bottom: 2rem;
 }
 
-.da-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.25rem;
-}
-
-.da-section-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--da-text-primary);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.da-section-title .count-badge {
-    background: var(--da-primary);
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 20px;
-    font-weight: 600;
-}
-
-.da-employees-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.25rem;
-}
-
-/* ========================================
-   EMPLOYEE CARD
-   ======================================== */
-.da-employee-card {
-    background: var(--da-card-bg);
-    border-radius: 20px;
+/* ==================== EMPLOYEE CARD ==================== */
+.da-card {
+    background: var(--e-surface);
+    border: 1px solid var(--e-border);
+    border-radius: var(--e-radius-lg);
     overflow: hidden;
-    box-shadow: 0 4px 15px var(--da-shadow);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid transparent;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    box-shadow: var(--e-shadow-sm);
+    animation: da-scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
-.da-employee-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px var(--da-shadow-lg);
-    border-color: var(--da-primary);
+.da-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--e-blue), var(--e-blue-deep));
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.da-employee-card-header {
-    padding: 1.5rem;
+.da-card:hover {
+    border-color: var(--e-blue);
+    box-shadow: var(--e-shadow-lg);
+    transform: translateY(-3px);
+}
+
+.da-card:hover::after { opacity: 1; }
+
+.da-card-head {
+    padding: 1.25rem 1.25rem 1rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    background: var(--da-bg-secondary);
-    border-bottom: 1px solid var(--da-divider);
+    gap: 0.875rem;
+    border-bottom: 1px solid var(--e-border-light);
 }
 
-.da-employee-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--da-primary) 0%, var(--da-primary-dark) 100%);
+.da-avatar {
+    width: 52px; height: 52px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-size: 1.375rem;
+    font-family: var(--e-font-body);
     font-weight: 700;
+    font-size: 1rem;
     flex-shrink: 0;
     position: relative;
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--e-blue) 0%, var(--e-blue-deep) 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(59, 125, 216, 0.25);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.da-employee-avatar img {
-    width: 100%;
-    height: 100%;
+.da-card:hover .da-avatar { transform: scale(1.04); }
+
+.da-avatar img {
+    width: 100%; height: 100%;
     object-fit: cover;
-    border-radius: 16px;
+    border-radius: var(--e-radius);
 }
 
-.da-employee-avatar .status-dot {
+.da-avatar-dot {
     position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 16px;
-    height: 16px;
+    bottom: -1px; right: -1px;
+    width: 14px; height: 14px;
     border-radius: 50%;
-    border: 3px solid var(--da-card-bg);
+    border: 2.5px solid var(--e-surface);
+    transition: transform 0.2s ease;
 }
 
-.da-employee-avatar .status-dot.active {
-    background: var(--da-success);
-}
+.da-card:hover .da-avatar-dot { transform: scale(1.15); }
 
-.da-employee-avatar .status-dot.warning {
-    background: var(--da-warning);
-}
+.da-avatar-dot.ok { background: var(--e-emerald); }
+.da-avatar-dot.warn { background: var(--e-amber); }
+.da-avatar-dot.err { background: var(--e-red); }
 
-.da-employee-avatar .status-dot.danger {
-    background: var(--da-danger);
-}
+.da-card-identity { flex: 1; min-width: 0; }
 
-.da-employee-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.da-employee-name {
-    font-size: 1.125rem;
+.da-card-name {
+    font-size: 0.9375rem;
     font-weight: 700;
-    color: var(--da-text-primary);
-    margin: 0 0 0.375rem 0;
+    color: var(--e-text);
+    margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.3;
 }
 
-.da-employee-details {
+.da-card-meta {
     display: flex;
+    gap: 0.375rem;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
+    margin-top: 0.3rem;
 }
 
-.da-employee-badge {
+.da-card-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    background: var(--da-bg);
-    color: var(--da-text-secondary);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 100px;
+    background: var(--e-slate-100);
+    color: var(--e-text-secondary);
+    letter-spacing: 0.15px;
 }
 
-.da-employee-badge svg {
-    width: 12px;
-    height: 12px;
+.dark .da-card-badge { background: var(--e-slate-700); }
+
+.da-card-badge svg { width: 11px; height: 11px; }
+
+.da-card-badge.blue {
+    background: var(--e-blue-wash);
+    color: var(--e-blue);
+}
+.dark .da-card-badge.blue { background: var(--e-blue-pale); }
+
+/* Card Body */
+.da-card-body {
+    padding: 1rem 1.25rem 1.25rem;
 }
 
-.da-employee-badge.dept {
-    background: rgba(74, 144, 217, 0.15);
-    color: var(--da-primary-light);
-}
-
-.dark .da-employee-badge.dept {
-    color: var(--da-primary-light);
-}
-
-.da-employee-card-body {
-    padding: 1.25rem 1.5rem;
-}
-
-/* ========================================
-   DOCUMENT STATS
-   ======================================== */
-.da-doc-stats {
+.da-doc-row {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.875rem;
 }
 
-.da-doc-stat {
+.da-doc-pill {
     flex: 1;
     text-align: center;
-    padding: 0.875rem 0.5rem;
-    border-radius: 12px;
-    background: var(--da-bg-secondary);
-    transition: all 0.2s;
+    padding: 0.625rem 0.375rem;
+    border-radius: 10px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.da-doc-stat:hover {
-    transform: translateY(-2px);
+.da-doc-pill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
-.da-doc-stat.total {
-    background: rgba(74, 144, 217, 0.12);
-}
+.da-doc-pill:hover { transform: translateY(-2px); }
+.da-doc-pill:hover::before { opacity: 1; }
 
-.da-doc-stat.valid {
-    background: rgba(39, 174, 96, 0.12);
-}
+.da-doc-pill.total { background: var(--e-blue-wash); }
+.da-doc-pill.valid { background: var(--e-emerald-pale); }
+.da-doc-pill.expired { background: var(--e-red-pale); }
 
-.da-doc-stat.expired {
-    background: rgba(239, 68, 68, 0.12);
-}
-
-.da-doc-stat-value {
-    font-size: 1.375rem;
-    font-weight: 700;
+.da-doc-pill-val {
+    font-family: var(--e-font-display);
+    font-size: 1.25rem;
+    font-weight: 400;
     line-height: 1;
+    position: relative;
 }
 
-.da-doc-stat.total .da-doc-stat-value { color: var(--da-primary); }
-.da-doc-stat.valid .da-doc-stat-value { color: var(--da-success); }
-.da-doc-stat.expired .da-doc-stat-value { color: var(--da-danger); }
+.da-doc-pill.total .da-doc-pill-val { color: var(--e-blue); }
+.da-doc-pill.valid .da-doc-pill-val { color: var(--e-emerald); }
+.da-doc-pill.expired .da-doc-pill-val { color: var(--e-red); }
 
-.da-doc-stat-label {
-    font-size: 0.688rem;
-    color: var(--da-text-secondary);
+.da-doc-pill-lbl {
+    font-size: 0.625rem;
+    color: var(--e-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-top: 0.375rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+    position: relative;
 }
 
-/* ========================================
-   PROGRESS BAR
-   ======================================== */
-.da-progress-bar {
-    height: 6px;
-    background: var(--da-divider);
-    border-radius: 3px;
+/* Progress */
+.da-progress {
+    height: 4px;
+    background: var(--e-border-light);
+    border-radius: 2px;
     overflow: hidden;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
 }
 
-.da-progress-fill {
+.dark .da-progress { background: var(--e-slate-700); }
+
+.da-progress-bar {
     height: 100%;
-    border-radius: 3px;
-    transition: width 0.3s ease;
+    border-radius: 2px;
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
 }
 
-.da-progress-fill.good {
-    background: linear-gradient(90deg, var(--da-success), #34d399);
+.da-progress-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    background-size: 200% 100%;
+    animation: da-shimmer 2s ease-in-out infinite;
 }
 
-.da-progress-fill.warning {
-    background: linear-gradient(90deg, var(--da-warning), #fbbf24);
-}
+.da-progress-bar.good { background: var(--e-emerald); }
+.da-progress-bar.mid { background: var(--e-amber); }
+.da-progress-bar.low { background: var(--e-red); }
 
-.da-progress-fill.danger {
-    background: linear-gradient(90deg, var(--da-danger), #f87171);
-}
-
-/* ========================================
-   EMPLOYEE ACTIONS
-   ======================================== */
-.da-employee-actions {
+/* Card Actions */
+.da-card-actions {
     display: flex;
-    gap: 0.625rem;
+    gap: 0.5rem;
 }
 
-.btn-view-folder {
+.da-card-link {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.875rem 1rem;
-    background: linear-gradient(135deg, var(--da-primary) 0%, var(--da-primary-dark) 100%);
-    color: white;
+    gap: 0.4rem;
+    padding: 0.625rem 0.75rem;
+    background: var(--e-blue);
+    color: #fff;
     border: none;
-    border-radius: 12px;
+    border-radius: var(--e-radius);
+    font-family: var(--e-font-body);
+    font-size: 0.8rem;
     font-weight: 600;
-    font-size: 0.875rem;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.25);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(59, 125, 216, 0.25);
 }
 
-.btn-view-folder:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(74, 144, 217, 0.35);
-    color: white;
+.da-card-link svg { width: 15px; height: 15px; }
+
+.da-card-link:hover {
+    background: var(--e-blue-deep);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 125, 216, 0.3);
 }
 
-.btn-quick-action {
-    width: 44px;
-    height: 44px;
+.da-card-upload {
+    width: 40px; height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
-    border: none;
+    border-radius: var(--e-radius);
+    border: 1.5px solid var(--e-border);
+    background: var(--e-surface);
+    color: var(--e-emerald);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
 }
 
-.btn-quick-action.upload {
-    background: rgba(39, 174, 96, 0.15);
-    color: var(--da-success);
+.da-card-upload svg { width: 18px; height: 18px; }
+
+.da-card-upload:hover {
+    background: var(--e-emerald-pale);
+    border-color: var(--e-emerald);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
 }
 
-.btn-quick-action.upload:hover {
-    background: var(--da-success);
-    color: white;
-}
-
-/* ========================================
-   EMPTY STATE
-   ======================================== */
-.da-empty-state {
+/* ==================== EMPTY STATE ==================== */
+.da-empty {
     text-align: center;
     padding: 4rem 2rem;
-    background: var(--da-card-bg);
-    border-radius: 24px;
-    border: 2px dashed var(--da-card-border);
+    background: var(--e-surface);
+    border: 2px dashed var(--e-border);
+    border-radius: var(--e-radius-xl);
+    animation: da-fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
 }
 
-.da-empty-illustration {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 2rem;
-    background: linear-gradient(135deg, var(--da-primary) 0%, var(--da-primary-dark) 100%);
+.da-empty-icon {
+    width: 72px; height: 72px;
+    margin: 0 auto 1.5rem;
+    background: var(--e-blue-wash);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.15;
+    color: var(--e-blue);
 }
 
-.da-empty-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--da-text-primary);
-    margin: 0 0 0.5rem 0;
+.da-empty-icon svg { width: 32px; height: 32px; }
+
+.da-empty h3 {
+    font-family: var(--e-font-display);
+    font-size: 1.375rem;
+    font-weight: 400;
+    color: var(--e-text);
+    margin: 0 0 0.5rem;
 }
 
-.da-empty-text {
-    color: var(--da-text-secondary);
-    margin: 0 0 2rem 0;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
+.da-empty p {
+    font-size: 0.875rem;
+    color: var(--e-text-secondary);
+    margin: 0 auto 1.5rem;
+    max-width: 420px;
 }
 
-/* ========================================
-   PAGINATION
-   ======================================== */
+/* ==================== PAGINATION ==================== */
 .da-pagination {
-    margin-top: 2rem;
     display: flex;
     justify-content: center;
+    padding: 1.5rem 0;
+    animation: da-fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
 }
 
-.da-pagination nav {
+.da-pagination nav { display: flex; gap: 0.25rem; }
+
+.da-pagination .pagination {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-/* ========================================
-   MODAL
-   ======================================== */
+.da-pagination .page-item .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 0.5rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-family: var(--e-font-body);
+    color: var(--e-text-secondary);
+    background: var(--e-surface);
+    border: 1px solid var(--e-border);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.da-pagination .page-item .page-link:hover {
+    border-color: var(--e-blue);
+    color: var(--e-blue);
+    background: var(--e-blue-wash);
+    transform: translateY(-1px);
+}
+
+.da-pagination .page-item.active .page-link {
+    background: var(--e-blue);
+    border-color: var(--e-blue);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(59, 125, 216, 0.3);
+}
+
+.da-pagination .page-item.disabled .page-link {
+    opacity: .4;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ==================== MODAL ==================== */
 .da-modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(4px);
-    z-index: 10000;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
     align-items: center;
     justify-content: center;
     padding: 1rem;
 }
 
-.dark .da-modal-overlay {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-.da-modal-overlay.show {
-    display: flex;
-}
+.da-modal-overlay.show { display: flex; }
 
 .da-modal {
-    background: var(--da-card-bg);
-    border-radius: 24px;
+    background: var(--e-surface);
+    border-radius: var(--e-radius-xl);
     width: 100%;
-    max-width: 480px;
+    max-width: 540px;
     max-height: 90vh;
     overflow: hidden;
-    animation: modalSlideIn 0.3s ease;
-    border: 1px solid var(--da-card-border);
+    box-shadow: var(--e-shadow-xl), 0 0 0 1px rgba(0,0,0,0.05);
+    animation: da-slideDown .35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+/* Dark Gradient Modal Header — matches entreprises/personnels pattern */
+.da-modal-head {
+    background: linear-gradient(135deg, var(--e-slate-800) 0%, var(--e-slate-900) 100%);
+    padding: 1.375rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
 }
 
-.da-modal-header {
-    background: linear-gradient(135deg, var(--da-primary) 0%, var(--da-primary-dark) 100%);
-    color: white;
-    padding: 1.5rem;
+.da-modal-head::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(59, 125, 216, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.da-modal-head-left { display: flex; align-items: center; gap: 0.875rem; position: relative; }
+
+.da-modal-icon {
+    width: 44px; height: 44px;
+    background: rgba(59, 125, 216, 0.2);
+    color: #93bbeb;
+    border-radius: var(--e-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.da-modal-icon svg { width: 22px; height: 22px; }
+
+.da-modal-title {
+    font-family: var(--e-font-display);
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: #fff;
+    margin: 0;
+}
+
+.da-modal-subtitle { font-size: 0.75rem; color: rgba(255,255,255,0.6); margin: 0.125rem 0 0; }
+
+.da-modal-close {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
     position: relative;
 }
 
-.da-modal-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-}
-
-.da-modal-header p {
-    margin: 0.5rem 0 0 0;
-    opacity: 0.9;
-    font-size: 0.875rem;
-}
-
-.da-modal-close {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.da-modal-close:hover {
-    background: rgba(255,255,255,0.3);
-    transform: rotate(90deg);
-}
+.da-modal-close svg { width: 18px; height: 18px; }
+.da-modal-close:hover { border-color: rgba(220, 38, 38, 0.4); color: #fca5a5; background: rgba(220, 38, 38, 0.15); }
 
 .da-modal-body {
-    padding: 1.5rem;
-    max-height: 60vh;
+    padding: 1.5rem 1.75rem;
     overflow-y: auto;
+    max-height: calc(90vh - 200px);
 }
 
-.da-form-group {
-    margin-bottom: 1.25rem;
-}
+.da-form-group { margin-bottom: 1.25rem; }
 
 .da-form-label {
     display: block;
-    font-weight: 600;
-    color: var(--da-text-primary);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--e-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
     margin-bottom: 0.5rem;
-    font-size: 0.875rem;
 }
 
-.da-form-control {
+.da-form-select,
+.da-form-input {
     width: 100%;
-    padding: 0.875rem 1rem;
-    border: 2px solid var(--da-input-border);
-    border-radius: 12px;
-    font-size: 0.938rem;
-    transition: all 0.2s;
-    background: var(--da-input-bg);
-    color: var(--da-text-primary);
+    padding: 0.625rem 1rem;
+    border: 1.5px solid var(--e-border);
+    border-radius: var(--e-radius);
+    font-family: var(--e-font-body);
+    font-size: 0.8125rem;
+    background: var(--e-bg);
+    color: var(--e-text);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.da-form-control:focus {
+.da-form-select:hover,
+.da-form-input:hover { border-color: var(--e-slate-300); }
+
+.da-form-select:focus,
+.da-form-input:focus {
     outline: none;
-    border-color: var(--da-primary);
-    box-shadow: 0 0 0 4px rgba(74, 144, 217, 0.15);
+    border-color: var(--e-blue);
+    box-shadow: 0 0 0 3px rgba(59, 125, 216, 0.1);
+    background: var(--e-surface);
 }
 
-.da-form-control option {
-    background: var(--da-card-bg);
-    color: var(--da-text-primary);
-}
+.da-form-select option { background: var(--e-surface); color: var(--e-text); }
 
-.da-file-upload {
-    border: 2px dashed var(--da-card-border);
-    border-radius: 12px;
-    padding: 2rem;
+/* File Upload Zone */
+.da-file-zone {
+    border: 2px dashed var(--e-border);
+    border-radius: var(--e-radius-lg);
+    padding: 2rem 1.5rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s;
-    background: var(--da-bg-secondary);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    background: var(--e-bg);
+    position: relative;
 }
 
-.da-file-upload:hover {
-    border-color: var(--da-primary);
-    background: var(--da-hover-bg);
+.da-file-zone:hover,
+.da-file-zone.dragover {
+    border-color: var(--e-blue);
+    background: var(--e-blue-wash);
 }
 
-.da-file-upload input {
-    display: none;
-}
+.da-file-zone:hover .da-file-zone-icon { transform: scale(1.08) translateY(-2px); }
 
-.da-file-upload-icon {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 1rem;
-    background: rgba(74, 144, 217, 0.15);
-    border-radius: 12px;
+.da-file-zone input { display: none; }
+
+.da-file-zone-icon {
+    width: 52px; height: 52px;
+    margin: 0 auto 0.875rem;
+    background: var(--e-blue-pale);
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--da-primary);
+    color: var(--e-blue);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.da-file-upload-text {
-    color: var(--da-text-primary);
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
+.da-file-zone-icon svg { width: 24px; height: 24px; }
 
-.da-file-upload-hint {
-    font-size: 0.813rem;
-    color: var(--da-text-secondary);
-}
-
-.da-modal-footer {
-    padding: 1rem 1.5rem;
-    background: var(--da-bg-secondary);
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-    border-top: 1px solid var(--da-divider);
-}
-
-.btn-modal {
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    font-weight: 600;
+.da-file-zone-text {
     font-size: 0.875rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
+    font-weight: 600;
+    color: var(--e-text);
+    margin: 0 0 0.25rem;
 }
 
-.btn-modal-cancel {
-    background: var(--da-card-bg);
-    color: var(--da-text-secondary);
-    border: 2px solid var(--da-card-border);
+.da-file-zone-hint {
+    font-size: 0.75rem;
+    color: var(--e-text-tertiary);
+    margin: 0;
 }
 
-.btn-modal-cancel:hover {
-    border-color: var(--da-text-secondary);
+.da-selected-files {
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--e-emerald);
+    font-weight: 600;
 }
 
-.btn-modal-submit {
-    background: linear-gradient(135deg, var(--da-primary), var(--da-primary-dark));
-    color: white;
+/* Modal Footer */
+.da-modal-foot {
+    padding: 1rem 1.75rem;
+    border-top: 1px solid var(--e-border);
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    justify-content: flex-end;
+    gap: 0.625rem;
+    background: var(--e-bg);
 }
 
-.btn-modal-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
-}
-
-/* ========================================
-   TOAST NOTIFICATIONS
-   ======================================== */
+/* ==================== TOAST ==================== */
 .da-toast {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    padding: 1rem 1.5rem;
-    background: var(--da-text-primary);
-    color: var(--da-card-bg);
-    border-radius: 12px;
-    box-shadow: 0 10px 40px var(--da-shadow-lg);
+    padding: 0.875rem 1.25rem;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    z-index: 10001;
-    animation: toastSlideIn 0.3s ease;
+    gap: 0.625rem;
+    font-family: var(--e-font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    z-index: 100000;
+    box-shadow: var(--e-shadow-xl);
+    animation: da-slideDown .3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes toastSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+.da-toast svg { width: 18px; height: 18px; flex-shrink: 0; }
+.da-toast.success { background: var(--e-emerald); color: #fff; }
+.da-toast.error { background: var(--e-red); color: #fff; }
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1024px) {
+    .da-stats { grid-template-columns: repeat(2, 1fr); }
+    .da-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
 }
 
-.da-toast.success {
-    background: var(--da-success);
-    color: white;
-}
-
-.da-toast.error {
-    background: var(--da-danger);
-    color: white;
-}
-
-/* ========================================
-   SELECTED FILES
-   ======================================== */
-#selectedFiles {
-    color: var(--da-success);
-}
-
-/* ========================================
-   RESPONSIVE
-   ======================================== */
 @media (max-width: 768px) {
-    .dossier-agent-page {
-        padding: 1rem;
-    }
+    .da-page { padding: 0 1rem 2rem; }
+    .da-header { flex-direction: column; align-items: flex-start; }
+    .da-header-actions { width: 100%; }
+    .da-header-actions .da-btn { flex: 1; justify-content: center; }
+    .da-stats { grid-template-columns: 1fr 1fr; }
+    .da-toolbar { flex-direction: column; }
+    .da-search-wrap { max-width: none; }
+    .da-toolbar-right { width: 100%; justify-content: space-between; }
+    .da-grid { grid-template-columns: 1fr; }
+    .da-alerts { grid-template-columns: 1fr; }
+    .da-alert { flex-wrap: wrap; }
+}
 
-    .da-header {
-        padding: 1.5rem;
-    }
-
-    .da-header-top {
-        flex-direction: column;
-    }
-
-    .da-header-actions {
-        width: 100%;
-    }
-
-    .da-header-actions .btn-action {
-        flex: 1;
-        justify-content: center;
-    }
-
-    .da-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .da-employees-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .da-search-form {
-        flex-direction: column;
-    }
-
-    .da-search-input-wrapper,
-    .da-filter-dropdown {
-        width: 100%;
-        min-width: auto;
-    }
-
-    .da-alert-banner {
-        flex-wrap: wrap;
-    }
-
-    .da-alert-banner .alert-count {
-        order: -1;
-        width: 100%;
-        text-align: left;
-        padding: 0 0 0.5rem 0;
-    }
+@media (max-width: 480px) {
+    .da-stats { grid-template-columns: 1fr; }
+    .da-header-left h1 { font-size: 1.5rem; }
 }
 </style>
 @endsection
 
 @section('content')
-<div class="dossier-agent-page">
+<div class="da-page">
     <!-- Header -->
     <div class="da-header">
-        <div class="da-header-top">
-            <div class="da-header-title">
-                <div class="da-header-icon">
-                    <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
-                    </svg>
-                </div>
-                <div class="da-header-text">
-                    <h1>Dossiers Agents</h1>
-                    <p>Gestion centralisée des documents de vos collaborateurs</p>
-                </div>
+        <div class="da-header-left">
+            <h1>Dossiers Agents</h1>
+            <p>Gestion centralisée des documents de vos collaborateurs</p>
+        </div>
+        <div class="da-header-actions">
+            @if($stats['documents_expires'] + $stats['documents_expirent_bientot'] > 0)
+            <a href="{{ route('admin.dossier-agent.alertes') }}" class="da-btn da-btn-warning">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                Alertes
+                <span class="da-badge-count">{{ $stats['documents_expires'] + $stats['documents_expirent_bientot'] }}</span>
+            </a>
+            @endif
+            <a href="{{ route('admin.personnels.index') }}" class="da-btn da-btn-outline">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                Personnel
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="da-stats">
+        <div class="da-stat">
+            <div class="da-stat-icon blue">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
             </div>
-            <div class="da-header-actions">
-                @can('manage-categories-dossiers')
-                <a href="{{ route('admin.dossier-agent.categories') }}" class="btn-action btn-action-secondary">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
-                    </svg>
-                    Répertoires
-                </a>
-                @endcan
-                @if($stats['documents_expires'] + $stats['documents_expirent_bientot'] > 0)
-                <a href="{{ route('admin.dossier-agent.alertes') }}" class="btn-action btn-action-warning">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                    </svg>
-                    {{ $stats['documents_expires'] + $stats['documents_expirent_bientot'] }} Alertes
-                </a>
-                @endif
+            <div class="da-stat-content">
+                <div class="da-stat-value" data-count="{{ $stats['total_personnels'] }}">{{ $stats['total_personnels'] }}</div>
+                <div class="da-stat-label">Employés</div>
             </div>
         </div>
-
-        <!-- Stats -->
-        <div class="da-stats-grid">
-            <div class="da-stat-item">
-                <div class="da-stat-icon primary">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                </div>
-                <div class="da-stat-content">
-                    <div class="da-stat-value">{{ $stats['total_personnels'] }}</div>
-                    <div class="da-stat-label">Employés</div>
-                </div>
+        <div class="da-stat">
+            <div class="da-stat-icon emerald">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
             </div>
-            <div class="da-stat-item">
-                <div class="da-stat-icon success">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                </div>
-                <div class="da-stat-content">
-                    <div class="da-stat-value">{{ $stats['total_documents'] }}</div>
-                    <div class="da-stat-label">Documents</div>
-                </div>
+            <div class="da-stat-content">
+                <div class="da-stat-value" data-count="{{ $stats['total_documents'] }}">{{ $stats['total_documents'] }}</div>
+                <div class="da-stat-label">Documents</div>
             </div>
-            <div class="da-stat-item">
-                <div class="da-stat-icon danger">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <div class="da-stat-content">
-                    <div class="da-stat-value">{{ $stats['documents_expires'] }}</div>
-                    <div class="da-stat-label">Expirés</div>
-                </div>
+        </div>
+        <div class="da-stat">
+            <div class="da-stat-icon red">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
             </div>
-            <div class="da-stat-item">
-                <div class="da-stat-icon warning">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <div class="da-stat-content">
-                    <div class="da-stat-value">{{ $stats['documents_expirent_bientot'] }}</div>
-                    <div class="da-stat-label">Expirent bientôt</div>
-                </div>
+            <div class="da-stat-content">
+                <div class="da-stat-value" data-count="{{ $stats['documents_expires'] }}">{{ $stats['documents_expires'] }}</div>
+                <div class="da-stat-label">Expirés</div>
+            </div>
+        </div>
+        <div class="da-stat">
+            <div class="da-stat-icon amber">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div class="da-stat-content">
+                <div class="da-stat-value" data-count="{{ $stats['documents_expirent_bientot'] }}">{{ $stats['documents_expirent_bientot'] }}</div>
+                <div class="da-stat-label">Expirent bientôt</div>
             </div>
         </div>
     </div>
 
-    <!-- Alertes -->
+    <!-- Alert Banners -->
     @if($stats['documents_expires'] > 0 || $stats['documents_expirent_bientot'] > 0)
-    <div class="da-alerts-section">
+    <div class="da-alerts">
         @if($stats['documents_expires'] > 0)
-        <div class="da-alert-banner danger">
-            <div class="alert-icon">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <div class="da-alert danger">
+            <div class="da-alert-icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
             </div>
-            <div class="alert-content">
-                <h4 class="alert-title">Documents expirés</h4>
-                <p class="alert-text">Action requise immédiatement</p>
+            <div class="da-alert-body">
+                <p class="da-alert-title">Documents expirés</p>
+                <p class="da-alert-desc">Action requise immédiatement</p>
             </div>
-            <div class="alert-count">{{ $stats['documents_expires'] }}</div>
-            <a href="{{ route('admin.dossier-agent.alertes') }}?type=expires" class="alert-action">
-                Voir les détails →
-            </a>
+            <div class="da-alert-count">{{ $stats['documents_expires'] }}</div>
+            <a href="{{ route('admin.dossier-agent.alertes') }}?type=expires" class="da-alert-link">Voir détails →</a>
         </div>
         @endif
-
         @if($stats['documents_expirent_bientot'] > 0)
-        <div class="da-alert-banner warning">
-            <div class="alert-icon">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <div class="da-alert warning">
+            <div class="da-alert-icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
             </div>
-            <div class="alert-content">
-                <h4 class="alert-title">Expirent dans 30 jours</h4>
-                <p class="alert-text">Prévoir le renouvellement</p>
+            <div class="da-alert-body">
+                <p class="da-alert-title">Expirent dans 30 jours</p>
+                <p class="da-alert-desc">Prévoir le renouvellement</p>
             </div>
-            <div class="alert-count">{{ $stats['documents_expirent_bientot'] }}</div>
-            <a href="{{ route('admin.dossier-agent.alertes') }}?type=bientot" class="alert-action">
-                Voir les détails →
-            </a>
+            <div class="da-alert-count">{{ $stats['documents_expirent_bientot'] }}</div>
+            <a href="{{ route('admin.dossier-agent.alertes') }}?type=bientot" class="da-alert-link">Voir détails →</a>
         </div>
         @endif
     </div>
     @endif
 
-    <!-- Recherche et filtres -->
-    <div class="da-search-section">
-        <form action="{{ route('admin.dossiers-agents.index') }}" method="GET" class="da-search-form">
-            <div class="da-search-input-wrapper">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-                <input type="text" name="search" class="da-search-input" placeholder="Rechercher par nom, prénom ou matricule..." value="{{ request('search') }}">
-            </div>
-            <select name="departement" class="da-filter-dropdown" onchange="this.form.submit()">
-                <option value="">Tous les départements</option>
-                @php
-                    $entrepriseId = auth()->user()->entreprise_id;
-                    if (!$entrepriseId) {
-                        $entreprise = \App\Models\Entreprise::first();
-                        $entrepriseId = $entreprise?->id;
-                    }
-                @endphp
-                @if($entrepriseId)
-                @foreach(\App\Models\Departement::where('entreprise_id', $entrepriseId)->orderBy('nom')->get() as $dept)
-                <option value="{{ $dept->id }}" {{ request('departement') == $dept->id ? 'selected' : '' }}>{{ $dept->nom }}</option>
-                @endforeach
-                @endif
-            </select>
-            <button type="submit" class="btn-search">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-                </svg>
-                Filtrer
-            </button>
-            @if(request('search') || request('departement'))
-            <a href="{{ route('admin.dossiers-agents.index') }}" class="btn-reset" title="Réinitialiser">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <!-- Toolbar -->
+    <div class="da-toolbar">
+        <form action="{{ route('admin.dossiers-agents.index') }}" method="GET" class="da-search-wrap" id="searchForm">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" name="search" class="da-search-input" placeholder="Rechercher par nom, prénom ou matricule..." value="{{ request('search') }}" id="daSearchInput">
+        </form>
+        <div class="da-toolbar-right">
+            @if(request('search'))
+            <a href="{{ route('admin.dossiers-agents.index') }}" class="da-btn da-btn-outline" style="padding: 0.55rem 0.75rem;">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M6 18L18 6M6 6l12 12"/>
                 </svg>
+                Réinitialiser
             </a>
             @endif
-        </form>
+            <span class="da-count-label"><strong>{{ $personnels->total() }}</strong> employé{{ $personnels->total() > 1 ? 's' : '' }}</span>
+        </div>
     </div>
 
-    <!-- Liste des employés -->
+    <!-- Grid -->
     @if($personnels->count() > 0)
-    <div class="da-employees-section">
-        <div class="da-section-header">
-            <h2 class="da-section-title">
-                Employés
-                <span class="count-badge">{{ $personnels->total() }}</span>
-            </h2>
-        </div>
-
-        <div class="da-employees-grid">
-            @foreach($personnels as $personnel)
-            @php
-                $totalDocs = $personnel->documents_count;
-                $activeDocs = $personnel->documents()->actifs()->count();
-                $expiredDocs = $personnel->documents()->expires()->count();
-                $validPercent = $totalDocs > 0 ? round($activeDocs / $totalDocs * 100) : 100;
-                $statusClass = $expiredDocs > 0 ? 'danger' : ($activeDocs < $totalDocs ? 'warning' : 'active');
-                $progressClass = $validPercent >= 80 ? 'good' : ($validPercent >= 50 ? 'warning' : 'danger');
-            @endphp
-            <div class="da-employee-card">
-                <div class="da-employee-card-header">
-                    <div class="da-employee-avatar">
-                        @if($personnel->photo)
-                            <img src="{{ asset('storage/' . $personnel->photo) }}" alt="{{ $personnel->nom }}">
-                        @else
-                            {{ strtoupper(substr($personnel->nom, 0, 1) . substr($personnel->prenoms ?? '', 0, 1)) }}
-                        @endif
-                        <span class="status-dot {{ $statusClass }}"></span>
-                    </div>
-                    <div class="da-employee-info">
-                        <h3 class="da-employee-name">{{ $personnel->nom }} {{ $personnel->prenoms }}</h3>
-                        <div class="da-employee-details">
-                            @if($personnel->matricule)
-                            <span class="da-employee-badge">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
-                                </svg>
-                                {{ $personnel->matricule }}
-                            </span>
-                            @endif
-                            @if($personnel->departement)
-                            <span class="da-employee-badge dept">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                                </svg>
-                                {{ $personnel->departement->nom }}
-                            </span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                <div class="da-employee-card-body">
-                    <div class="da-doc-stats">
-                        <div class="da-doc-stat total">
-                            <div class="da-doc-stat-value">{{ $totalDocs }}</div>
-                            <div class="da-doc-stat-label">Total</div>
-                        </div>
-                        <div class="da-doc-stat valid">
-                            <div class="da-doc-stat-value">{{ $activeDocs }}</div>
-                            <div class="da-doc-stat-label">Valides</div>
-                        </div>
-                        <div class="da-doc-stat expired">
-                            <div class="da-doc-stat-value">{{ $expiredDocs }}</div>
-                            <div class="da-doc-stat-label">Expirés</div>
-                        </div>
-                    </div>
-
-                    @if($totalDocs > 0)
-                    <div class="da-progress-bar">
-                        <div class="da-progress-fill {{ $progressClass }}" style="width: {{ $validPercent }}%"></div>
-                    </div>
+    <div class="da-grid">
+        @foreach($personnels as $personnel)
+        @php
+            $totalDocs = $personnel->documents_count;
+            $activeDocs = $personnel->documents()->actifs()->count();
+            $expiredDocs = $personnel->documents()->expires()->count();
+            $validPercent = $totalDocs > 0 ? round($activeDocs / $totalDocs * 100) : 100;
+            $statusClass = $expiredDocs > 0 ? 'err' : ($activeDocs < $totalDocs ? 'warn' : 'ok');
+            $progressClass = $validPercent >= 80 ? 'good' : ($validPercent >= 50 ? 'mid' : 'low');
+        @endphp
+        <div class="da-card" style="animation-delay: {{ $loop->index * 0.04 }}s">
+            <div class="da-card-head">
+                <div class="da-avatar">
+                    @if($personnel->photo)
+                        <img src="{{ asset('storage/' . $personnel->photo) }}" alt="{{ $personnel->nom }}">
+                    @else
+                        {{ strtoupper(substr($personnel->nom, 0, 1) . substr($personnel->prenoms ?? '', 0, 1)) }}
                     @endif
-
-                    <div class="da-employee-actions">
-                        <a href="{{ route('admin.dossier-agent.index', $personnel) }}" class="btn-view-folder">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"/>
+                    <span class="da-avatar-dot {{ $statusClass }}"></span>
+                </div>
+                <div class="da-card-identity">
+                    <h3 class="da-card-name">{{ $personnel->nom }} {{ $personnel->prenoms }}</h3>
+                    <div class="da-card-meta">
+                        @if($personnel->matricule)
+                        <span class="da-card-badge">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
                             </svg>
-                            Ouvrir le dossier
-                        </a>
-                        <button type="button" class="btn-quick-action upload" onclick="openQuickUpload({{ $personnel->id }}, '{{ addslashes($personnel->nom . ' ' . $personnel->prenoms) }}')" title="Upload rapide">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                            {{ $personnel->matricule }}
+                        </span>
+                        @endif
+                        @if($personnel->poste)
+                        <span class="da-card-badge blue">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                             </svg>
-                        </button>
+                            {{ $personnel->poste }}
+                        </span>
+                        @endif
                     </div>
                 </div>
             </div>
-            @endforeach
-        </div>
+            <div class="da-card-body">
+                <div class="da-doc-row">
+                    <div class="da-doc-pill total">
+                        <div class="da-doc-pill-val">{{ $totalDocs }}</div>
+                        <div class="da-doc-pill-lbl">Total</div>
+                    </div>
+                    <div class="da-doc-pill valid">
+                        <div class="da-doc-pill-val">{{ $activeDocs }}</div>
+                        <div class="da-doc-pill-lbl">Valides</div>
+                    </div>
+                    <div class="da-doc-pill expired">
+                        <div class="da-doc-pill-val">{{ $expiredDocs }}</div>
+                        <div class="da-doc-pill-lbl">Expirés</div>
+                    </div>
+                </div>
 
-        <div class="da-pagination">
-            {{ $personnels->withQueryString()->links() }}
+                @if($totalDocs > 0)
+                <div class="da-progress">
+                    <div class="da-progress-bar {{ $progressClass }}" style="width: {{ $validPercent }}%"></div>
+                </div>
+                @endif
+
+                <div class="da-card-actions">
+                    <a href="{{ route('admin.dossier-agent.show', $personnel) }}" class="da-card-link">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"/>
+                        </svg>
+                        Ouvrir le dossier
+                    </a>
+                    <button type="button" class="da-card-upload" onclick="openQuickUpload({{ $personnel->id }}, '{{ addslashes($personnel->nom . ' ' . $personnel->prenoms) }}')" title="Upload rapide">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
+        @endforeach
     </div>
+
+    @if($personnels->hasPages())
+    <div class="da-pagination">
+        {{ $personnels->withQueryString()->links() }}
+    </div>
+    @endif
+
     @else
-    <div class="da-empty-state">
-        <div class="da-empty-illustration">
-            <svg width="56" height="56" fill="white" viewBox="0 0 24 24">
+    <div class="da-empty">
+        <div class="da-empty-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
         </div>
-        <h3 class="da-empty-title">Aucun employé trouvé</h3>
-        <p class="da-empty-text">
-            @if(request('search') || request('departement'))
-                Aucun résultat ne correspond à vos critères de recherche. Essayez d'autres filtres.
+        <h3>Aucun employé trouvé</h3>
+        <p>
+            @if(request('search'))
+                Aucun résultat ne correspond à votre recherche. Essayez d'autres termes.
             @else
                 Commencez par ajouter des employés pour gérer leurs dossiers documentaires.
             @endif
         </p>
-        @if(request('search') || request('departement'))
-        <a href="{{ route('admin.dossiers-agents.index') }}" class="btn-action btn-action-secondary">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        @if(request('search'))
+        <a href="{{ route('admin.dossiers-agents.index') }}" class="da-btn da-btn-outline">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M6 18L18 6M6 6l12 12"/>
             </svg>
-            Réinitialiser les filtres
+            Réinitialiser
         </a>
         @else
-        <a href="{{ route('admin.personnels.index') }}" class="btn-action btn-action-primary">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <a href="{{ route('admin.personnels.index') }}" class="da-btn da-btn-primary">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
             </svg>
             Gérer les employés
@@ -1449,13 +1337,27 @@
     @endif
 </div>
 
-<!-- Modal Upload Rapide -->
+<!-- Quick Upload Modal -->
 <div class="da-modal-overlay" id="quickUploadModal">
     <div class="da-modal">
-        <div class="da-modal-header">
-            <h3>Upload rapide</h3>
-            <p id="modalEmployeeName">Ajouter des documents</p>
-            <button class="da-modal-close" onclick="closeQuickUpload()">&times;</button>
+        <div class="da-modal-head">
+            <div class="da-modal-head-left">
+                <div class="da-modal-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="da-modal-title">Upload rapide</h3>
+                    <p class="da-modal-subtitle" id="modalEmployeeName">Ajouter des documents</p>
+                </div>
+            </div>
+            <button class="da-modal-close" onclick="closeQuickUpload()">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
         <form id="quickUploadForm" enctype="multipart/form-data">
             @csrf
@@ -1463,33 +1365,32 @@
             <div class="da-modal-body">
                 <div class="da-form-group">
                     <label class="da-form-label">Catégorie du document</label>
-                    <select name="categorie_id" class="da-form-control">
+                    <select name="categorie_id" class="da-form-select">
                         <option value="">Sélectionner une catégorie...</option>
                         @foreach($categories as $cat)
                         <option value="{{ $cat->id }}">{{ $cat->nom }}</option>
                         @endforeach
                     </select>
                 </div>
-
                 <div class="da-form-group">
-                    <label class="da-form-label">Document(s) à uploader</label>
-                    <label class="da-file-upload" id="fileUploadLabel">
+                    <label class="da-form-label">Document(s)</label>
+                    <label class="da-file-zone" id="fileUploadLabel">
                         <input type="file" name="documents[]" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.webp">
-                        <div class="da-file-upload-icon">
-                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <div class="da-file-zone-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                             </svg>
                         </div>
-                        <div class="da-file-upload-text">Cliquez ou glissez-déposez vos fichiers</div>
-                        <div class="da-file-upload-hint">PDF, DOC, XLS, Images (max. 10 Mo par fichier)</div>
+                        <p class="da-file-zone-text">Cliquez ou glissez-déposez vos fichiers</p>
+                        <p class="da-file-zone-hint">PDF, DOC, XLS, Images — max 10 Mo par fichier</p>
                     </label>
-                    <div id="selectedFiles" style="margin-top: 0.75rem; font-size: 0.875rem;"></div>
+                    <div class="da-selected-files" id="selectedFiles"></div>
                 </div>
             </div>
-            <div class="da-modal-footer">
-                <button type="button" class="btn-modal btn-modal-cancel" onclick="closeQuickUpload()">Annuler</button>
-                <button type="submit" class="btn-modal btn-modal-submit">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <div class="da-modal-foot">
+                <button type="button" class="da-btn da-btn-outline" onclick="closeQuickUpload()">Annuler</button>
+                <button type="submit" class="da-btn da-btn-primary" id="uploadSubmitBtn">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                     </svg>
                     Uploader
@@ -1502,10 +1403,14 @@
 
 @section('scripts')
 <script>
+console.log('[Dossiers Agents] Init');
+
+/* ==================== MODAL ==================== */
 const quickUploadModal = document.getElementById('quickUploadModal');
 const quickUploadForm = document.getElementById('quickUploadForm');
 const fileInput = document.getElementById('fileInput');
 const selectedFilesDiv = document.getElementById('selectedFiles');
+const fileUploadLabel = document.getElementById('fileUploadLabel');
 
 function openQuickUpload(personnelId, employeeName) {
     document.getElementById('quickUploadPersonnelId').value = personnelId;
@@ -1519,68 +1424,58 @@ function closeQuickUpload() {
     document.body.style.overflow = '';
     quickUploadForm.reset();
     selectedFilesDiv.textContent = '';
+    fileUploadLabel.classList.remove('dragover');
 }
 
-// Afficher les fichiers sélectionnés
+/* ==================== FILE INPUT ==================== */
 fileInput.addEventListener('change', function() {
     const files = Array.from(this.files);
     if (files.length > 0) {
-        selectedFilesDiv.innerHTML = files.map(f => `<div style="color: var(--da-success);">✓ ${f.name}</div>`).join('');
+        selectedFilesDiv.innerHTML = files.map(f => `<div>✓ ${f.name}</div>`).join('');
     } else {
         selectedFilesDiv.textContent = '';
     }
 });
 
-// Drag & Drop
-const fileUploadLabel = document.getElementById('fileUploadLabel');
-
-['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-    fileUploadLabel.addEventListener(eventName, preventDefaults, false);
+/* ==================== DRAG & DROP ==================== */
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
+    fileUploadLabel.addEventListener(evt, function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }, false);
 });
 
-function preventDefaults(e) {
-    e.preventDefault();
-    e.stopPropagation();
-}
-
-['dragenter', 'dragover'].forEach(eventName => {
-    fileUploadLabel.addEventListener(eventName, () => {
-        fileUploadLabel.style.borderColor = 'var(--da-primary)';
-        fileUploadLabel.style.background = 'var(--da-hover-bg)';
-    });
+['dragenter', 'dragover'].forEach(evt => {
+    fileUploadLabel.addEventListener(evt, () => fileUploadLabel.classList.add('dragover'));
 });
 
-['dragleave', 'drop'].forEach(eventName => {
-    fileUploadLabel.addEventListener(eventName, () => {
-        fileUploadLabel.style.borderColor = '';
-        fileUploadLabel.style.background = '';
-    });
+['dragleave', 'drop'].forEach(evt => {
+    fileUploadLabel.addEventListener(evt, () => fileUploadLabel.classList.remove('dragover'));
 });
 
 fileUploadLabel.addEventListener('drop', function(e) {
-    const dt = e.dataTransfer;
-    fileInput.files = dt.files;
+    fileInput.files = e.dataTransfer.files;
     fileInput.dispatchEvent(new Event('change'));
 });
 
-// Submit
+/* ==================== UPLOAD SUBMIT ==================== */
 quickUploadForm.addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const submitBtn = this.querySelector('.btn-modal-submit');
+    const submitBtn = document.getElementById('uploadSubmitBtn');
     const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<svg class="animate-spin" width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Upload...';
+    submitBtn.innerHTML = '<svg style="animation: da-pulse 1s infinite" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> Upload...';
     submitBtn.disabled = true;
 
     const personnelId = document.getElementById('quickUploadPersonnelId').value;
     const formData = new FormData(this);
 
     try {
-        const response = await fetch(`/dossier-agent/${personnelId}/upload-multiple`, {
+        const response = await fetch(`/admin/dossier-agent/${personnelId}/upload-multiple`, {
             method: 'POST',
             body: formData,
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 'Accept': 'application/json'
             }
         });
@@ -1603,21 +1498,29 @@ quickUploadForm.addEventListener('submit', async function(e) {
     }
 });
 
-// Fermer modal
+/* ==================== MODAL CLOSE ==================== */
 quickUploadModal.addEventListener('click', function(e) {
     if (e.target === this) closeQuickUpload();
 });
 
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeQuickUpload();
+    if (e.key === 'Escape' && quickUploadModal.classList.contains('show')) closeQuickUpload();
 });
 
-// Toast notification
+/* ==================== SEARCH ==================== */
+document.getElementById('daSearchInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('searchForm').submit();
+    }
+});
+
+/* ==================== TOAST ==================== */
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `da-toast ${type}`;
     toast.innerHTML = `
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             ${type === 'success'
                 ? '<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>'
                 : '<path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'}
@@ -1625,12 +1528,30 @@ function showToast(message, type = 'success') {
         ${message}
     `;
     document.body.appendChild(toast);
-
     setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(20px)';
         setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
+
+/* ==================== COUNTER ANIMATION ==================== */
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.da-stat-value[data-count]').forEach(el => {
+        const target = parseInt(el.dataset.count);
+        if (target === 0) return;
+        el.textContent = '0';
+        const duration = 600;
+        const start = performance.now();
+        function tick(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.round(eased * target);
+            if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    });
+});
 </script>
 @endsection

@@ -1,9 +1,21 @@
 import './bootstrap';
 
+// Safe localStorage helper
+function safeStorage(action, key, value) {
+    try {
+        if (action === 'get') return localStorage.getItem(key);
+        if (action === 'set') localStorage.setItem(key, value);
+        if (action === 'has') return key in localStorage;
+        if (action === 'prop') return localStorage[key];
+    } catch (e) {
+        return null;
+    }
+}
+
 // Dark mode toggle
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize dark mode from localStorage
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (safeStorage('prop', 'theme') === 'dark' || (!safeStorage('has', 'theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
     } else {
         document.documentElement.classList.remove('dark');
@@ -15,10 +27,10 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', () => {
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.classList.remove('dark');
-                localStorage.theme = 'light';
+                safeStorage('set', 'theme', 'light');
             } else {
                 document.documentElement.classList.add('dark');
-                localStorage.theme = 'dark';
+                safeStorage('set', 'theme', 'dark');
             }
         });
     });
@@ -102,13 +114,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     openSubmenus.push(submenuId);
                 }
             });
-            localStorage.setItem('openSubmenus', JSON.stringify(openSubmenus));
+            safeStorage('set', 'openSubmenus', JSON.stringify(openSubmenus));
         });
     });
 
     // Restore opened submenus from localStorage
     try {
-        const openSubmenus = JSON.parse(localStorage.getItem('openSubmenus') || '[]');
+        const openSubmenus = JSON.parse(safeStorage('get', 'openSubmenus') || '[]');
         openSubmenus.forEach(submenuId => {
             const button = document.querySelector(`[data-submenu="${submenuId}"]`);
             const navItem = button?.closest('.nav-item');

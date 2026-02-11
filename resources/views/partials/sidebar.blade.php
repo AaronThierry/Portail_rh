@@ -91,13 +91,23 @@
                         <span class="nav-link-indicator"></span>
                     </a>
 
-                    <a href="{{ route('admin.dossiers-agents.index') }}" class="nav-link {{ Request::is('admin/dossiers-agents*') || Request::is('admin/dossier-agent*') ? 'active' : '' }}" data-tooltip="Dossiers Agents">
+                    <a href="{{ route('admin.dossiers-agents.index') }}" class="nav-link {{ Request::is('admin/dossiers-agents') ? 'active' : '' }}" data-tooltip="Dossiers Agents">
                         <span class="nav-link-icon">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                             </svg>
                         </span>
                         <span class="nav-link-text">Dossiers Agents</span>
+                        <span class="nav-link-indicator"></span>
+                    </a>
+
+                    <a href="{{ route('admin.dossier-agent.categories') }}" class="nav-link {{ Request::is('admin/dossier-agent/categories*') ? 'active' : '' }}" data-tooltip="Répertoires Documents">
+                        <span class="nav-link-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                            </svg>
+                        </span>
+                        <span class="nav-link-text">Répertoires Documents</span>
                         <span class="nav-link-indicator"></span>
                     </a>
 

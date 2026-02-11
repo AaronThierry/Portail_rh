@@ -156,6 +156,10 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
 
     // Catégories et alertes dossiers agents
     Route::get('dossier-agent/categories', [DossierAgentController::class, 'categories'])->name('dossier-agent.categories');
+    Route::post('dossier-agent/categories', [DossierAgentController::class, 'storeCategorie'])->name('dossier-agent.categories.store');
+    Route::post('dossier-agent/categories/init', [DossierAgentController::class, 'initCategories'])->name('dossier-agent.categories.init');
+    Route::put('dossier-agent/categories/{categorie}', [DossierAgentController::class, 'updateCategorie'])->name('dossier-agent.categories.update');
+    Route::delete('dossier-agent/categories/{categorie}', [DossierAgentController::class, 'destroyCategorie'])->name('dossier-agent.categories.destroy');
     Route::get('dossier-agent/alertes', [DossierAgentController::class, 'alertes'])->name('dossier-agent.alertes');
 
     // Dossier d'un agent spécifique

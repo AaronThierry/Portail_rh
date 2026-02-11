@@ -599,6 +599,7 @@ class DossierAgentController extends Controller
             'description' => 'nullable|string|max:500',
             'icone' => 'nullable|string|max:50',
             'couleur' => 'nullable|string|max:20',
+            'ordre' => 'nullable|integer|min:1',
             'obligatoire' => 'boolean',
         ]);
 
@@ -612,7 +613,7 @@ class DossierAgentController extends Controller
             'icone' => $request->icone ?? 'folder',
             'couleur' => $request->couleur ?? '#667eea',
             'obligatoire' => $request->boolean('obligatoire'),
-            'ordre' => CategorieDocument::forEntreprise($entrepriseId)->max('ordre') + 1,
+            'ordre' => $request->ordre ?? (CategorieDocument::forEntreprise($entrepriseId)->max('ordre') + 1),
         ]);
 
         if ($request->ajax()) {
@@ -632,22 +633,31 @@ class DossierAgentController extends Controller
     public function updateCategorie(Request $request, CategorieDocument $categorie)
     {
         $request->validate([
-            'nom' => 'required|string|max:255',
+            'nom' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string|max:500',
             'icone' => 'nullable|string|max:50',
             'couleur' => 'nullable|string|max:20',
+            'ordre' => 'nullable|integer|min:1',
             'obligatoire' => 'boolean',
             'actif' => 'boolean',
         ]);
 
-        $categorie->update([
-            'nom' => $request->nom,
-            'description' => $request->description,
+        $data = [
             'icone' => $request->icone ?? $categorie->icone,
             'couleur' => $request->couleur ?? $categorie->couleur,
             'obligatoire' => $request->boolean('obligatoire'),
             'actif' => $request->boolean('actif', true),
-        ]);
+        ];
+
+        if ($request->has('nom')) {
+            $data['nom'] = $request->nom;
+            $data['description'] = $request->description;
+        }
+        if ($request->filled('ordre')) {
+            $data['ordre'] = $request->ordre;
+        }
+
+        $categorie->update($data);
 
         if ($request->ajax()) {
             return response()->json([

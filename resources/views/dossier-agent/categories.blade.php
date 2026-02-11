@@ -719,7 +719,7 @@ const categorieForm = document.getElementById('categorieForm');
 function openCreateModal() {
     document.getElementById('modalTitle').textContent = 'Nouveau Répertoire';
     document.getElementById('formMethod').value = 'POST';
-    categorieForm.action = '{{ route("dossier-agent.categories.store") }}';
+    categorieForm.action = '{{ route("admin.dossier-agent.categories.store") }}';
     categorieForm.reset();
     selectColor('#667eea');
     selectIcon('folder');
@@ -730,7 +730,7 @@ function openCreateModal() {
 function openEditModal(categorie) {
     document.getElementById('modalTitle').textContent = 'Modifier le Répertoire';
     document.getElementById('formMethod').value = 'PUT';
-    categorieForm.action = '/dossier-agent/categories/' + categorie.id;
+    categorieForm.action = '{{ url("admin/dossier-agent/categories") }}/' + categorie.id;
 
     document.getElementById('categorie_nom').value = categorie.nom;
     document.getElementById('categorie_description').value = categorie.description || '';
@@ -762,7 +762,7 @@ function selectIcon(icon) {
 }
 
 function toggleCategorie(id, newState) {
-    fetch('/dossier-agent/categories/' + id, {
+    fetch('{{ url("admin/dossier-agent/categories") }}/' + id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -781,7 +781,7 @@ function toggleCategorie(id, newState) {
 
 function deleteCategorie(id, nom) {
     if (confirm(`Êtes-vous sûr de vouloir supprimer le répertoire "${nom}" ?`)) {
-        fetch('/dossier-agent/categories/' + id, {
+        fetch('{{ url("admin/dossier-agent/categories") }}/' + id, {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -799,7 +799,7 @@ function deleteCategorie(id, nom) {
 
 function initDefaultCategories() {
     if (confirm('Voulez-vous créer les répertoires par défaut (Contrats, Fiches de poste, Pièces d\'identité, etc.) ?')) {
-        fetch('{{ route("dossier-agent.categories.init") }}', {
+        fetch('{{ route("admin.dossier-agent.categories.init") }}', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,

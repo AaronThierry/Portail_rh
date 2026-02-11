@@ -17,7 +17,6 @@ use App\Http\Controllers\DossierAgentController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BulletinPaieController;
-use App\Http\Controllers\EvaluationController;
 
 /*
 |--------------------------------------------------------------------------

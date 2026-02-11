@@ -18,23 +18,13 @@
 
 /* Request Card */
 .ee-request-card {
-    background: linear-gradient(135deg, var(--ee-gradient-start) 0%, var(--ee-gradient-end) 100%);
-    border-radius: 24px;
+    background: var(--e-slate-800);
+    border-radius: var(--e-radius-xl);
+    border-top: 3px solid var(--e-amber);
     padding: 2.5rem;
     color: white;
     position: relative;
     overflow: hidden;
-}
-
-.ee-request-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    border-radius: 50%;
 }
 
 .ee-request-content {
@@ -43,8 +33,9 @@
 }
 
 .ee-request-title {
+    font-family: var(--e-font-display);
     font-size: 1.75rem;
-    font-weight: 800;
+    font-weight: 400;
     margin-bottom: 0.75rem;
 }
 
@@ -69,9 +60,8 @@
     gap: 1rem;
     padding: 1.5rem;
     background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
+    border-radius: var(--e-radius-lg);
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
@@ -86,7 +76,7 @@
     width: 60px;
     height: 60px;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
+    border-radius: var(--e-radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -109,9 +99,9 @@
 
 /* History Section */
 .ee-history-section {
-    background: var(--ee-card);
-    border-radius: 20px;
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    border-radius: var(--e-radius-xl);
+    border: 1px solid var(--e-border);
     overflow: hidden;
 }
 
@@ -120,13 +110,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.5rem;
-    border-bottom: 1px solid var(--ee-border);
+    border-bottom: 1px solid var(--e-border);
 }
 
 .ee-history-title {
     font-size: 1.125rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
 }
 
 /* History List */
@@ -139,13 +129,13 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    border-radius: 14px;
+    border-radius: var(--e-radius);
     margin-bottom: 0.5rem;
     transition: all 0.3s ease;
 }
 
 .ee-history-item:hover {
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
 }
 
 .ee-history-item:last-child {
@@ -155,7 +145,7 @@
 .ee-history-icon {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -168,17 +158,17 @@
 }
 
 .ee-history-icon.work {
-    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    background: var(--e-blue);
     color: white;
 }
 
 .ee-history-icon.salary {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    background: var(--e-emerald);
     color: white;
 }
 
 .ee-history-icon.presence {
-    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    background: #7c3aed;
     color: white;
 }
 
@@ -190,13 +180,13 @@
 .ee-history-name {
     font-size: 0.9375rem;
     font-weight: 600;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin-bottom: 0.25rem;
 }
 
 .ee-history-date {
     font-size: 0.8125rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
 }
 
 .ee-history-status {
@@ -210,13 +200,13 @@
 }
 
 .ee-history-status.ready {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--ee-success);
+    background: var(--e-emerald-pale);
+    color: var(--e-emerald);
 }
 
 .ee-history-status.processing {
-    background: rgba(245, 158, 11, 0.1);
-    color: var(--ee-warning);
+    background: var(--e-amber-pale);
+    color: var(--e-amber);
 }
 
 .ee-history-status svg {
@@ -234,8 +224,8 @@
     height: 40px;
     border: none;
     border-radius: 10px;
-    background: var(--ee-bg-alt);
-    color: var(--ee-text-muted);
+    background: var(--e-bg);
+    color: var(--e-text-secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -244,7 +234,7 @@
 }
 
 .ee-history-btn:hover {
-    background: var(--ee-primary);
+    background: var(--e-blue);
     color: white;
 }
 
@@ -263,12 +253,12 @@
     width: 80px;
     height: 80px;
     margin: 0 auto 1.5rem;
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
 }
 
 .ee-empty-icon svg {
@@ -279,13 +269,13 @@
 .ee-empty-title {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin-bottom: 0.5rem;
 }
 
 .ee-empty-text {
     font-size: 0.9375rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
 }
 
 /* Responsive */

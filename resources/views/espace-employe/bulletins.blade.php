@@ -18,40 +18,19 @@
 <style>
 /* ========================================
    BULLETINS DE PAIE - ESPACE EMPLOYE
-   Design Répertoires Premium
+   Swiss Corporate Editorial Design System
    ======================================== */
 
 /* Header Banner */
 .bp-banner {
-    background: linear-gradient(135deg, var(--ee-primary) 0%, var(--ee-primary-dark) 100%);
-    border-radius: 24px;
+    background: var(--e-slate-800);
+    border-top: 3px solid var(--e-amber);
+    border-radius: var(--e-radius-xl);
     padding: 2rem 2.5rem;
     margin-bottom: 2rem;
     color: white;
     position: relative;
     overflow: hidden;
-}
-
-.bp-banner::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-    border-radius: 50%;
-}
-
-.bp-banner::after {
-    content: '';
-    position: absolute;
-    bottom: -30%;
-    left: 20%;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    border-radius: 50%;
 }
 
 .bp-banner-content {
@@ -65,8 +44,9 @@
 }
 
 .bp-banner-left h1 {
+    font-family: var(--e-font-display);
     font-size: 1.75rem;
-    font-weight: 800;
+    font-weight: 400;
     margin: 0 0 0.5rem 0;
     display: flex;
     align-items: center;
@@ -96,7 +76,7 @@
 
 .bp-banner-stat-value {
     font-size: 2.25rem;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1;
 }
 
@@ -116,12 +96,12 @@
 
 .bp-year-btn {
     padding: 0.75rem 1.5rem;
-    background: var(--ee-card);
-    border: 2px solid var(--ee-border);
-    border-radius: 12px;
+    background: var(--e-surface);
+    border: 2px solid var(--e-border);
+    border-radius: var(--e-radius);
     font-weight: 700;
     font-size: 0.95rem;
-    color: var(--ee-text-secondary);
+    color: var(--e-text-secondary);
     cursor: pointer;
     transition: all 0.25s ease;
     text-decoration: none;
@@ -131,16 +111,16 @@
 }
 
 .bp-year-btn:hover {
-    border-color: var(--ee-primary);
-    color: var(--ee-primary);
+    border-color: var(--e-blue);
+    color: var(--e-blue);
     transform: translateY(-2px);
 }
 
 .bp-year-btn.active {
-    background: var(--ee-primary);
-    border-color: var(--ee-primary);
+    background: var(--e-blue);
+    border-color: var(--e-blue);
     color: white;
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 12px rgba(59, 125, 216, 0.3);
 }
 
 .bp-year-btn .count {
@@ -162,9 +142,10 @@
 }
 
 .bp-month-folder {
-    background: var(--ee-card);
-    border: 1px solid var(--ee-border);
-    border-radius: 18px;
+    background: var(--e-surface);
+    border: 1px solid var(--e-border);
+    border-top: 3px solid var(--e-blue);
+    border-radius: var(--e-radius-lg);
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
@@ -173,9 +154,9 @@
 }
 
 .bp-month-folder:hover:not(.empty) {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px var(--ee-shadow);
-    border-color: var(--ee-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px var(--e-shadow);
+    border-color: var(--e-blue);
 }
 
 .bp-month-folder.empty {
@@ -206,14 +187,14 @@
 }
 
 .bp-month-icon.available {
-    background: linear-gradient(135deg, var(--ee-primary) 0%, var(--ee-primary-dark) 100%);
+    background: var(--e-blue);
     color: white;
-    box-shadow: 0 6px 20px rgba(74, 144, 217, 0.35);
+    box-shadow: 0 4px 12px rgba(59, 125, 216, 0.25);
 }
 
 .bp-month-icon.pending {
-    background: var(--ee-bg);
-    color: var(--ee-text-muted);
+    background: var(--e-bg);
+    color: var(--e-text-secondary);
 }
 
 .bp-month-icon svg {
@@ -229,13 +210,13 @@
 .bp-month-name {
     font-size: 1.15rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin: 0 0 0.35rem 0;
 }
 
 .bp-month-status {
     font-size: 0.85rem;
-    color: var(--ee-text-secondary);
+    color: var(--e-text-secondary);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -246,8 +227,8 @@
     align-items: center;
     gap: 0.3rem;
     padding: 0.3rem 0.6rem;
-    background: rgba(34, 197, 94, 0.15);
-    color: #16a34a;
+    background: var(--e-emerald-pale);
+    color: var(--e-emerald);
     border-radius: 8px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -260,17 +241,17 @@
 
 .bp-month-footer {
     padding: 0.85rem 1.5rem;
-    background: var(--ee-bg);
-    border-top: 1px solid var(--ee-border);
+    background: var(--e-bg);
+    border-top: 1px solid var(--e-border);
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 0.8rem;
-    color: var(--ee-text-secondary);
+    color: var(--e-text-secondary);
 }
 
 .bp-month-footer .action {
-    color: var(--ee-primary);
+    color: var(--e-blue);
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -284,19 +265,19 @@
 
 /* Vue Détail Bulletin */
 .bp-detail-card {
-    background: var(--ee-card);
-    border: 1px solid var(--ee-border);
-    border-radius: 24px;
+    background: var(--e-surface);
+    border: 1px solid var(--e-border);
+    border-radius: var(--e-radius-xl);
     overflow: hidden;
 }
 
 .bp-detail-header {
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.08) 0%, rgba(74, 144, 217, 0.03) 100%);
+    background: var(--e-blue-wash);
     padding: 1.75rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--ee-border);
+    border-bottom: 1px solid var(--e-border);
     flex-wrap: wrap;
     gap: 1rem;
 }
@@ -310,13 +291,13 @@
 .bp-detail-icon {
     width: 56px;
     height: 56px;
-    background: linear-gradient(135deg, var(--ee-primary) 0%, var(--ee-primary-dark) 100%);
+    background: var(--e-blue);
     border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    box-shadow: 0 4px 16px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 16px rgba(59, 125, 216, 0.3);
 }
 
 .bp-detail-icon svg {
@@ -327,13 +308,13 @@
 .bp-detail-title-text h2 {
     font-size: 1.35rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin: 0;
 }
 
 .bp-detail-title-text p {
     font-size: 0.9rem;
-    color: var(--ee-text-secondary);
+    color: var(--e-text-secondary);
     margin: 0.25rem 0 0 0;
 }
 
@@ -347,7 +328,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.85rem 1.5rem;
-    border-radius: 12px;
+    border-radius: var(--e-radius);
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
@@ -362,25 +343,25 @@
 }
 
 .bp-btn-primary {
-    background: linear-gradient(135deg, var(--ee-primary) 0%, var(--ee-primary-dark) 100%);
+    background: var(--e-blue);
     color: white;
-    box-shadow: 0 4px 16px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 16px rgba(59, 125, 216, 0.3);
 }
 
 .bp-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(74, 144, 217, 0.4);
+    box-shadow: 0 8px 24px rgba(59, 125, 216, 0.4);
 }
 
 .bp-btn-secondary {
-    background: var(--ee-card);
-    color: var(--ee-text);
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    color: var(--e-text);
+    border: 1px solid var(--e-border);
 }
 
 .bp-btn-secondary:hover {
-    border-color: var(--ee-primary);
-    color: var(--ee-primary);
+    border-color: var(--e-blue);
+    color: var(--e-blue);
 }
 
 .bp-detail-body {
@@ -411,7 +392,7 @@
 }
 
 .bp-info-card {
-    background: var(--ee-bg);
+    background: var(--e-bg);
     border-radius: 14px;
     padding: 1.25rem;
     display: flex;
@@ -422,22 +403,22 @@
 
 .bp-info-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--ee-shadow);
+    box-shadow: 0 4px 12px var(--e-shadow);
 }
 
 .bp-info-icon {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 }
 
-.bp-info-icon.blue { background: rgba(74, 144, 217, 0.15); color: var(--ee-primary); }
-.bp-info-icon.green { background: rgba(34, 197, 94, 0.15); color: #16a34a; }
-.bp-info-icon.orange { background: rgba(249, 115, 22, 0.15); color: #ea580c; }
+.bp-info-icon.blue { background: var(--e-blue-wash); color: var(--e-blue); }
+.bp-info-icon.green { background: var(--e-emerald-pale); color: var(--e-emerald); }
+.bp-info-icon.orange { background: var(--e-amber-wash); color: var(--e-amber); }
 
 .bp-info-icon svg {
     width: 22px;
@@ -447,7 +428,7 @@
 .bp-info-text h4 {
     font-size: 0.7rem;
     font-weight: 700;
-    color: var(--ee-text-secondary);
+    color: var(--e-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin: 0 0 0.3rem 0;
@@ -456,7 +437,7 @@
 .bp-info-text p {
     font-size: 1.1rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin: 0;
 }
 
@@ -464,16 +445,16 @@
 .bp-empty {
     text-align: center;
     padding: 5rem 2rem;
-    background: var(--ee-card);
-    border-radius: 24px;
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    border-radius: var(--e-radius-xl);
+    border: 1px solid var(--e-border);
 }
 
 .bp-empty-icon {
     width: 120px;
     height: 120px;
     margin: 0 auto 2rem;
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.1) 0%, rgba(74, 144, 217, 0.05) 100%);
+    background: var(--e-blue-wash);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -483,19 +464,19 @@
 .bp-empty-icon svg {
     width: 56px;
     height: 56px;
-    color: var(--ee-primary);
+    color: var(--e-blue);
     opacity: 0.6;
 }
 
 .bp-empty h3 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin: 0 0 0.75rem 0;
 }
 
 .bp-empty p {
-    color: var(--ee-text-secondary);
+    color: var(--e-text-secondary);
     margin: 0;
     max-width: 450px;
     margin: 0 auto;

@@ -20,7 +20,7 @@
 /* Alert Messages */
 .ee-alert {
     padding: 1rem 1.25rem;
-    border-radius: 12px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -33,15 +33,15 @@
 }
 
 .ee-alert.success {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: var(--ee-success);
+    background: var(--e-emerald-pale);
+    border: 1px solid var(--e-emerald);
+    color: var(--e-emerald);
 }
 
 .ee-alert.error {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: var(--ee-danger);
+    background: var(--e-red-pale);
+    border: 1px solid var(--e-red);
+    color: var(--e-red);
 }
 
 .ee-alert svg {
@@ -52,10 +52,11 @@
 
 /* Settings Card */
 .ee-settings-card {
-    background: var(--ee-card);
-    border-radius: 20px;
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    border-radius: var(--e-radius-xl);
+    border: 1px solid var(--e-border);
     overflow: hidden;
+    border-top: 3px solid var(--e-blue);
 }
 
 .ee-settings-header {
@@ -63,13 +64,13 @@
     align-items: center;
     gap: 1rem;
     padding: 1.5rem;
-    border-bottom: 1px solid var(--ee-border);
+    border-bottom: 1px solid var(--e-border);
 }
 
 .ee-settings-icon {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -81,34 +82,35 @@
 }
 
 .ee-settings-icon.blue {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%);
-    color: var(--ee-primary);
+    background: var(--e-blue-wash);
+    color: var(--e-blue);
 }
 
 .ee-settings-icon.purple {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 100%);
-    color: #8B5CF6;
+    background: rgba(124, 58, 237, 0.08);
+    color: #7c3aed;
 }
 
 .ee-settings-icon.green {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
-    color: var(--ee-success);
+    background: var(--e-emerald-pale);
+    color: var(--e-emerald);
 }
 
 .ee-settings-icon.orange {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
-    color: var(--ee-warning);
+    background: var(--e-amber-wash);
+    color: var(--e-amber);
 }
 
 .ee-settings-title {
     font-size: 1.125rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
 }
 
 .ee-settings-subtitle {
     font-size: 0.8125rem;
-    color: var(--ee-text-muted);
+    font-weight: 600;
+    color: var(--e-text-secondary);
     margin-top: 0.25rem;
 }
 
@@ -129,39 +131,39 @@
     display: block;
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin-bottom: 0.5rem;
 }
 
 .ee-form-input {
     width: 100%;
     padding: 0.875rem 1rem;
-    border: 2px solid var(--ee-border);
-    border-radius: 12px;
+    border: 2px solid var(--e-border);
+    border-radius: var(--e-radius);
     font-size: 1rem;
-    color: var(--ee-text);
-    background: var(--ee-card);
+    color: var(--e-text);
+    background: var(--e-surface);
     transition: all 0.25s ease;
 }
 
 .ee-form-input:focus {
     outline: none;
-    border-color: var(--ee-primary);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    border-color: var(--e-blue);
+    box-shadow: 0 0 0 4px var(--e-blue-wash);
 }
 
 .ee-form-input::placeholder {
-    color: var(--ee-text-light);
+    color: var(--e-text-tertiary);
 }
 
 .ee-form-input:disabled {
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
     cursor: not-allowed;
 }
 
 .ee-form-hint {
     font-size: 0.75rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     margin-top: 0.375rem;
 }
 
@@ -180,10 +182,10 @@
     gap: 0.5rem;
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(135deg, var(--ee-primary) 0%, var(--ee-primary-dark) 100%);
+    background: var(--e-blue);
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: var(--e-radius);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -193,7 +195,8 @@
 
 .ee-submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+    background: var(--e-blue-deep);
+    box-shadow: var(--e-shadow-md);
 }
 
 .ee-submit-btn svg {
@@ -207,7 +210,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem 0;
-    border-bottom: 1px solid var(--ee-border);
+    border-bottom: 1px solid var(--e-border);
 }
 
 .ee-toggle-group:last-child {
@@ -222,12 +225,12 @@
 .ee-toggle-label {
     font-size: 0.9375rem;
     font-weight: 600;
-    color: var(--ee-text);
+    color: var(--e-text);
 }
 
 .ee-toggle-desc {
     font-size: 0.8125rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     margin-top: 0.25rem;
 }
 
@@ -248,7 +251,7 @@
     position: absolute;
     cursor: pointer;
     inset: 0;
-    background: var(--ee-border);
+    background: var(--e-border);
     border-radius: 28px;
     transition: all 0.3s ease;
 }
@@ -267,7 +270,7 @@
 }
 
 .ee-toggle input:checked + .ee-toggle-slider {
-    background: var(--ee-primary);
+    background: var(--e-blue);
 }
 
 .ee-toggle input:checked + .ee-toggle-slider::before {
@@ -276,8 +279,8 @@
 
 /* Info Section */
 .ee-info-section {
-    background: var(--ee-bg-alt);
-    border-radius: 12px;
+    background: var(--e-bg);
+    border-radius: var(--e-radius);
     padding: 1rem;
     display: flex;
     align-items: flex-start;
@@ -287,14 +290,14 @@
 .ee-info-section svg {
     width: 20px;
     height: 20px;
-    color: var(--ee-primary);
+    color: var(--e-blue);
     flex-shrink: 0;
     margin-top: 0.125rem;
 }
 
 .ee-info-section p {
     font-size: 0.875rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     line-height: 1.5;
 }
 

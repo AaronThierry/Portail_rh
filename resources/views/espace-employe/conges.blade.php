@@ -24,9 +24,9 @@
 }
 
 .ee-solde-card {
-    background: var(--ee-card);
-    border-radius: 20px;
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    border-radius: var(--e-radius-xl);
+    border: 1px solid var(--e-border);
     padding: 1.5rem;
     position: relative;
     overflow: hidden;
@@ -38,19 +38,19 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 3px;
 }
 
 .ee-solde-card.total::before {
-    background: linear-gradient(90deg, var(--ee-primary) 0%, var(--ee-secondary) 100%);
+    background: var(--e-blue);
 }
 
 .ee-solde-card.pris::before {
-    background: linear-gradient(90deg, var(--ee-warning) 0%, #D97706 100%);
+    background: var(--e-amber);
 }
 
 .ee-solde-card.restants::before {
-    background: linear-gradient(90deg, var(--ee-success) 0%, #059669 100%);
+    background: var(--e-emerald);
 }
 
 .ee-solde-header {
@@ -63,7 +63,7 @@
 .ee-solde-icon {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -75,44 +75,45 @@
 }
 
 .ee-solde-icon.total {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.05) 100%);
-    color: var(--ee-primary);
+    background: var(--e-blue-wash);
+    color: var(--e-blue);
 }
 
 .ee-solde-icon.pris {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
-    color: var(--ee-warning);
+    background: var(--e-amber-wash);
+    color: var(--e-amber);
 }
 
 .ee-solde-icon.restants {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
-    color: var(--ee-success);
+    background: var(--e-emerald-pale);
+    color: var(--e-emerald);
 }
 
 .ee-solde-label {
     font-size: 0.875rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     font-weight: 500;
 }
 
 .ee-solde-value {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--ee-text);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--e-text);
     line-height: 1;
 }
 
 .ee-solde-unit {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     margin-left: 0.5rem;
 }
 
 /* Action Button */
 .ee-action-card {
-    background: linear-gradient(135deg, var(--ee-gradient-start) 0%, var(--ee-gradient-end) 100%);
-    border-radius: 20px;
+    background: var(--e-slate-800);
+    border-radius: var(--e-radius-xl);
+    border-top: 3px solid var(--e-amber);
     padding: 2rem;
     display: flex;
     align-items: center;
@@ -136,10 +137,10 @@
     align-items: center;
     gap: 0.5rem;
     padding: 1rem 1.5rem;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    color: white;
+    background: var(--e-surface);
+    border: 1px solid var(--e-border);
+    border-radius: var(--e-radius);
+    color: var(--e-text);
     font-size: 0.9375rem;
     font-weight: 600;
     cursor: pointer;
@@ -149,7 +150,7 @@
 
 .ee-action-btn:hover {
     background: white;
-    color: var(--ee-primary);
+    color: var(--e-blue);
 }
 
 .ee-action-btn svg {
@@ -159,9 +160,9 @@
 
 /* History Card */
 .ee-history-card {
-    background: var(--ee-card);
-    border-radius: 20px;
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    border-radius: var(--e-radius-xl);
+    border: 1px solid var(--e-border);
     overflow: hidden;
 }
 
@@ -170,13 +171,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.5rem;
-    border-bottom: 1px solid var(--ee-border);
+    border-bottom: 1px solid var(--e-border);
 }
 
 .ee-history-title {
     font-size: 1.125rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
 }
 
 .ee-history-filters {
@@ -186,11 +187,11 @@
 
 .ee-year-select {
     padding: 0.5rem 1rem;
-    background: var(--ee-bg-alt);
-    border: 1px solid var(--ee-border);
-    border-radius: 10px;
+    background: var(--e-bg);
+    border: 1px solid var(--e-border);
+    border-radius: var(--e-radius);
     font-size: 0.875rem;
-    color: var(--ee-text);
+    color: var(--e-text);
     cursor: pointer;
 }
 
@@ -204,17 +205,17 @@
     text-align: left;
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
 }
 
 .ee-history-table td {
     padding: 1rem 1.5rem;
     font-size: 0.9375rem;
-    color: var(--ee-text);
-    border-bottom: 1px solid var(--ee-border);
+    color: var(--e-text);
+    border-bottom: 1px solid var(--e-border);
 }
 
 .ee-history-table tr:last-child td {
@@ -222,7 +223,7 @@
 }
 
 .ee-history-table tr:hover td {
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
 }
 
 .ee-conge-type {
@@ -234,7 +235,7 @@
 .ee-conge-type-icon {
     width: 36px;
     height: 36px;
-    border-radius: 10px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -246,17 +247,17 @@
 }
 
 .ee-conge-type-icon.annual {
-    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    background: var(--e-blue);
     color: white;
 }
 
 .ee-conge-type-icon.sick {
-    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    background: var(--e-red);
     color: white;
 }
 
 .ee-conge-type-icon.special {
-    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    background: #7c3aed;
     color: white;
 }
 
@@ -271,18 +272,18 @@
 }
 
 .ee-status-badge.approved {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--ee-success);
+    background: var(--e-emerald-pale);
+    color: var(--e-emerald);
 }
 
 .ee-status-badge.pending {
-    background: rgba(245, 158, 11, 0.1);
-    color: var(--ee-warning);
+    background: var(--e-amber-pale);
+    color: var(--e-amber);
 }
 
 .ee-status-badge.rejected {
-    background: rgba(239, 68, 68, 0.1);
-    color: var(--ee-danger);
+    background: var(--e-red-pale);
+    color: var(--e-red);
 }
 
 .ee-status-badge svg {
@@ -300,12 +301,12 @@
     width: 80px;
     height: 80px;
     margin: 0 auto 1.5rem;
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
 }
 
 .ee-empty-icon svg {
@@ -316,13 +317,13 @@
 .ee-empty-title {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin-bottom: 0.5rem;
 }
 
 .ee-empty-text {
     font-size: 0.9375rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
 }
 
 /* Responsive */

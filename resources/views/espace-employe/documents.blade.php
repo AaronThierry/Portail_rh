@@ -25,31 +25,14 @@
 
 /* ==================== HEADER BANNER ==================== */
 .ee-docs-banner {
-    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
-    border-radius: 24px;
+    background: var(--e-slate-800);
+    border-radius: var(--e-radius-xl);
     padding: 2rem;
     color: white;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(67, 56, 202, 0.3);
-}
-
-.ee-docs-banner::before {
-    content: '';
-    position: absolute;
-    top: -80px;
-    right: -80px;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
-    border-radius: 50%;
-}
-
-.ee-docs-banner-pattern {
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    pointer-events: none;
+    box-shadow: var(--e-shadow-lg);
+    border-top: 3px solid var(--e-amber);
 }
 
 .ee-docs-banner-content {
@@ -69,8 +52,7 @@
     width: 56px;
     height: 56px;
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,7 +67,7 @@
 
 .ee-docs-banner-title {
     font-size: 1.75rem;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 0.5rem;
     letter-spacing: -0.5px;
 }
@@ -104,9 +86,8 @@
 
 .ee-banner-stat {
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
     padding: 1.25rem 1.5rem;
-    border-radius: 16px;
+    border-radius: var(--e-radius);
     border: 1px solid rgba(255, 255, 255, 0.15);
     text-align: center;
     min-width: 90px;
@@ -114,12 +95,9 @@
 
 .ee-banner-stat-value {
     font-size: 1.75rem;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1;
-    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: white;
 }
 
 .ee-banner-stat-label {
@@ -133,14 +111,14 @@
 
 /* ==================== NAVIGATION BAR ==================== */
 .ee-nav-bar {
-    background: var(--ee-card);
-    border-radius: 16px;
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    border-radius: var(--e-radius-lg);
+    border: 1px solid var(--e-border);
     padding: 1rem 1.25rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    box-shadow: 0 2px 12px var(--ee-shadow);
+    box-shadow: var(--e-shadow-sm);
 }
 
 .ee-nav-back {
@@ -148,10 +126,10 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 1rem;
-    background: var(--ee-bg-alt);
-    border: 2px solid var(--ee-border);
-    border-radius: 12px;
-    color: var(--ee-text);
+    background: var(--e-bg);
+    border: 2px solid var(--e-border);
+    border-radius: var(--e-radius);
+    color: var(--e-text);
     font-size: 0.875rem;
     font-weight: 600;
     text-decoration: none;
@@ -159,9 +137,9 @@
 }
 
 .ee-nav-back:hover {
-    border-color: var(--ee-primary);
-    color: var(--ee-primary);
-    background: var(--ee-primary-light);
+    border-color: var(--e-blue);
+    color: var(--e-blue);
+    background: var(--e-blue-wash);
 }
 
 .ee-nav-back svg {
@@ -186,23 +164,23 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 0.875rem;
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
     border-radius: 10px;
     font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--ee-text);
+    color: var(--e-text);
     text-decoration: none;
     white-space: nowrap;
     transition: all 0.3s ease;
 }
 
 .ee-path-item:hover {
-    background: var(--ee-primary-light);
-    color: var(--ee-primary);
+    background: var(--e-blue-wash);
+    color: var(--e-blue);
 }
 
 .ee-path-item.current {
-    background: var(--ee-primary);
+    background: var(--e-blue);
     color: white;
 }
 
@@ -212,7 +190,7 @@
 }
 
 .ee-path-separator {
-    color: var(--ee-text-light);
+    color: var(--e-text-tertiary);
 }
 
 .ee-path-separator svg {
@@ -232,38 +210,38 @@
     transform: translateY(-50%);
     width: 18px;
     height: 18px;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     pointer-events: none;
 }
 
 .ee-nav-search input {
     width: 100%;
     padding: 0.625rem 1rem 0.625rem 2.5rem;
-    background: var(--ee-bg-alt);
-    border: 2px solid var(--ee-border);
-    border-radius: 12px;
+    background: var(--e-bg);
+    border: 2px solid var(--e-border);
+    border-radius: var(--e-radius);
     font-size: 0.875rem;
-    color: var(--ee-text);
+    color: var(--e-text);
     transition: all 0.3s ease;
 }
 
 .ee-nav-search input::placeholder {
-    color: var(--ee-text-light);
+    color: var(--e-text-tertiary);
 }
 
 .ee-nav-search input:focus {
     outline: none;
-    border-color: var(--ee-primary);
-    box-shadow: 0 0 0 4px var(--ee-primary-light);
+    border-color: var(--e-blue);
+    box-shadow: 0 0 0 4px var(--e-blue-wash);
 }
 
 /* ==================== FOLDERS GRID ==================== */
 .ee-folders-section {
-    background: var(--ee-card);
-    border-radius: 20px;
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    border-radius: var(--e-radius-lg);
+    border: 1px solid var(--e-border);
     overflow: hidden;
-    box-shadow: 0 4px 24px var(--ee-shadow);
+    box-shadow: var(--e-shadow);
 }
 
 .ee-folders-header {
@@ -271,8 +249,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--ee-border);
-    background: var(--ee-bg-alt);
+    border-bottom: 1px solid var(--e-border);
+    background: var(--e-bg);
 }
 
 .ee-folders-title {
@@ -281,14 +259,14 @@
     gap: 0.75rem;
     font-size: 1rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
 }
 
 .ee-folders-title-icon {
     width: 36px;
     height: 36px;
     border-radius: 10px;
-    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    background: var(--e-blue);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -303,8 +281,8 @@
 .ee-folders-count {
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--ee-text-muted);
-    background: var(--ee-bg-alt);
+    color: var(--e-text-secondary);
+    background: var(--e-bg);
     padding: 0.375rem 0.75rem;
     border-radius: 8px;
 }
@@ -322,33 +300,21 @@
     flex-direction: column;
     align-items: center;
     padding: 1.5rem 1rem;
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
     border: 2px solid transparent;
-    border-radius: 16px;
+    border-radius: var(--e-radius-lg);
     text-decoration: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     position: relative;
-}
-
-.ee-folder-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    background: var(--folder-color, var(--ee-primary));
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    border-top: 3px solid var(--folder-color, var(--e-blue));
 }
 
 .ee-folder-card:hover {
-    border-color: var(--folder-color, var(--ee-primary));
-    transform: translateY(-6px);
-    box-shadow: 0 16px 40px var(--ee-shadow-lg);
-}
-
-.ee-folder-card:hover::before {
-    opacity: 0.05;
+    border-color: var(--folder-color, var(--e-blue));
+    border-top-color: var(--folder-color, var(--e-blue));
+    transform: translateY(-2px);
+    box-shadow: var(--e-shadow-lg);
 }
 
 .ee-folder-icon {
@@ -362,8 +328,8 @@
 .ee-folder-icon-bg {
     width: 100%;
     height: 100%;
-    border-radius: 16px;
-    background: var(--folder-color, #6366F1);
+    border-radius: var(--e-radius);
+    background: var(--folder-color, var(--e-blue));
     opacity: 0.15;
     position: absolute;
     top: 0;
@@ -373,10 +339,9 @@
 .ee-folder-icon svg {
     width: 100%;
     height: 100%;
-    color: var(--folder-color, #6366F1);
+    color: var(--folder-color, var(--e-blue));
     position: relative;
     z-index: 1;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
 }
 
 .ee-folder-info {
@@ -389,7 +354,7 @@
 .ee-folder-name {
     font-size: 0.9375rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin-bottom: 0.375rem;
     white-space: nowrap;
     overflow: hidden;
@@ -398,7 +363,7 @@
 
 .ee-folder-count {
     font-size: 0.75rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -414,7 +379,7 @@
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
-    background: var(--folder-color, var(--ee-primary));
+    background: var(--folder-color, var(--e-blue));
     color: white;
     font-size: 0.6875rem;
     font-weight: 700;
@@ -425,11 +390,11 @@
 
 /* ==================== FILES LIST ==================== */
 .ee-files-section {
-    background: var(--ee-card);
-    border-radius: 20px;
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    border-radius: var(--e-radius-lg);
+    border: 1px solid var(--e-border);
     overflow: hidden;
-    box-shadow: 0 4px 24px var(--ee-shadow);
+    box-shadow: var(--e-shadow);
 }
 
 .ee-files-header {
@@ -437,8 +402,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--ee-border);
-    background: var(--ee-bg-alt);
+    border-bottom: 1px solid var(--e-border);
+    background: var(--e-bg);
 }
 
 .ee-files-title {
@@ -465,13 +430,13 @@
 
 .ee-files-count {
     font-size: 0.8125rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
 }
 
 .ee-view-toggle {
     display: flex;
     gap: 0.25rem;
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
     padding: 0.25rem;
     border-radius: 10px;
 }
@@ -481,19 +446,19 @@
     border: none;
     background: transparent;
     border-radius: 8px;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .ee-view-btn:hover {
-    color: var(--ee-primary);
+    color: var(--e-blue);
 }
 
 .ee-view-btn.active {
-    background: var(--ee-card);
-    color: var(--ee-primary);
-    box-shadow: 0 2px 8px var(--ee-shadow);
+    background: var(--e-surface);
+    color: var(--e-blue);
+    box-shadow: var(--e-shadow-sm);
 }
 
 .ee-view-btn svg {
@@ -520,7 +485,7 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--ee-border);
+    border-bottom: 1px solid var(--e-border);
     transition: all 0.3s ease;
 }
 
@@ -529,13 +494,13 @@
 }
 
 .ee-file-row:hover {
-    background: var(--ee-bg-alt);
+    background: var(--e-bg);
 }
 
 /* File Card (Grid) */
 .ee-file-card {
-    background: var(--ee-bg-alt);
-    border-radius: 16px;
+    background: var(--e-bg);
+    border-radius: var(--e-radius);
     padding: 1.25rem;
     border: 2px solid transparent;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -543,9 +508,9 @@
 }
 
 .ee-file-card:hover {
-    border-color: var(--file-color, var(--ee-primary));
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px var(--ee-shadow-lg);
+    border-color: var(--file-color, var(--e-blue));
+    transform: translateY(-2px);
+    box-shadow: var(--e-shadow-lg);
 }
 
 .ee-file-card-header {
@@ -558,23 +523,12 @@
 .ee-file-icon {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     position: relative;
-}
-
-.ee-file-icon::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    background: inherit;
-    filter: blur(8px);
-    opacity: 0.4;
-    z-index: -1;
 }
 
 .ee-file-icon svg {
@@ -620,7 +574,7 @@
 .ee-file-name {
     font-size: 0.9375rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -630,9 +584,9 @@
 .ee-file-ext {
     font-size: 0.6875rem;
     font-weight: 700;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     text-transform: uppercase;
-    background: var(--ee-card);
+    background: var(--e-surface);
     padding: 0.125rem 0.5rem;
     border-radius: 4px;
 }
@@ -649,7 +603,7 @@
     align-items: center;
     gap: 0.25rem;
     font-size: 0.75rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
 }
 
 .ee-file-meta-item svg {
@@ -685,24 +639,24 @@
 }
 
 .ee-file-btn.primary {
-    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    background: var(--e-blue);
     color: white;
 }
 
 .ee-file-btn.primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+    box-shadow: var(--e-shadow);
 }
 
 .ee-file-btn.secondary {
-    background: var(--ee-card);
-    color: var(--ee-text);
-    border: 1px solid var(--ee-border);
+    background: var(--e-surface);
+    color: var(--e-text);
+    border: 1px solid var(--e-border);
 }
 
 .ee-file-btn.secondary:hover {
-    border-color: var(--ee-primary);
-    color: var(--ee-primary);
+    border-color: var(--e-blue);
+    color: var(--e-blue);
 }
 
 /* ==================== EMPTY STATES ==================== */
@@ -715,7 +669,7 @@
     width: 120px;
     height: 120px;
     margin: 0 auto 1.5rem;
-    background: linear-gradient(135deg, var(--ee-bg-alt) 0%, var(--ee-border) 100%);
+    background: var(--e-bg);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -723,37 +677,23 @@
     position: relative;
 }
 
-.ee-empty-illustration::before {
-    content: '';
-    position: absolute;
-    inset: -10px;
-    border-radius: 50%;
-    border: 2px dashed var(--ee-border);
-    animation: spin 20s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
 .ee-empty-illustration svg {
     width: 56px;
     height: 56px;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     opacity: 0.5;
 }
 
 .ee-empty-title {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--ee-text);
+    color: var(--e-text);
     margin-bottom: 0.5rem;
 }
 
 .ee-empty-text {
     font-size: 0.9375rem;
-    color: var(--ee-text-muted);
+    color: var(--e-text-secondary);
     max-width: 320px;
     margin: 0 auto;
     line-height: 1.6;
@@ -846,7 +786,6 @@
 <div class="ee-documents-page">
     <!-- Header Banner -->
     <div class="ee-docs-banner animate-fade-in">
-        <div class="ee-docs-banner-pattern"></div>
         <div class="ee-docs-banner-content">
             <div class="ee-docs-banner-left">
                 <div class="ee-docs-banner-icon">

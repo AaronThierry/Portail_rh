@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         // Créer les départements et services globaux
         $this->call([
+            RolesAndPermissionsSeeder::class,
             GlobalDepartementServiceSeeder::class,
             EntrepriseSeeder::class,
             SuperAdminSeeder::class,

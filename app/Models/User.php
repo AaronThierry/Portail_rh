@@ -64,6 +64,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'force_password_change' => 'boolean',
         'google2fa_enabled' => 'boolean',
         'google2fa_verified_at' => 'datetime',
     ];

@@ -207,14 +207,14 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    if (Auth::check() && Auth::user()->hasRole('superadmin')) {
+    if (Auth::check() && Auth::user()->hasRole('Super Admin')) {
         return redirect()->route('admin.dashboard');
     }
     return redirect()->route('espace-employe.dashboard');
 })->name('dashboard')->middleware(['auth']);
 
 Route::get('/home', function () {
-    if (Auth::check() && Auth::user()->hasRole('superadmin')) {
+    if (Auth::check() && Auth::user()->hasRole('Super Admin')) {
         return redirect()->route('admin.dashboard');
     }
     return redirect()->route('espace-employe.dashboard');

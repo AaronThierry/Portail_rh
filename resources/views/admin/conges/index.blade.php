@@ -650,7 +650,7 @@
         <div class="cg-filter-group">
             <span class="cg-filter-label">Ann&eacute;e</span>
             <select name="annee" class="cg-filter-select">
-                @foreach($annees as $a)
+                @foreach($anneesDisponibles as $a)
                     <option value="{{ $a }}" {{ request('annee', date('Y')) == $a ? 'selected' : '' }}>{{ $a }}</option>
                 @endforeach
             </select>

@@ -397,6 +397,20 @@ class EspaceEmployeController extends Controller
             ->ordered()
             ->get();
 
+        // Auto-seed des types par défaut si aucun n'existe pour cette entreprise
+        if ($typesConge->isEmpty()) {
+            foreach (TypeConge::getDefaultTypes() as $type) {
+                TypeConge::firstOrCreate(
+                    ['entreprise_id' => $personnel->entreprise_id, 'code' => $type['code']],
+                    array_merge($type, ['entreprise_id' => $personnel->entreprise_id])
+                );
+            }
+            $typesConge = TypeConge::forEntreprise($personnel->entreprise_id)
+                ->actif()
+                ->ordered()
+                ->get();
+        }
+
         $anneesDisponibles = Conge::getAnneesDisponibles($personnel->id, $personnel->entreprise_id);
 
         return view('espace-employe.conges', compact(

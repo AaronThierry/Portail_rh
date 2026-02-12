@@ -160,6 +160,14 @@ class Personnel extends Model
     }
 
     /**
+     * Relation avec les conges
+     */
+    public function conges()
+    {
+        return $this->hasMany(Conge::class, 'personnel_id');
+    }
+
+    /**
      * Relation avec les bulletins de paie
      */
     public function bulletinsPaie()

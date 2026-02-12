@@ -46,70 +46,31 @@
                 </div>
             </button>
 
-            <!-- Notifications - Premium Design -->
+            <!-- Notifications - Premium Design (AJAX) -->
             <div class="header-dropdown-wrapper">
                 <button class="header-action-btn notification-btn" id="notificationBtn" aria-label="Notifications">
                     <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                     </svg>
-                    <span class="notification-badge pulse">3</span>
+                    <span class="notification-badge pulse" id="adminNotifBadge" style="display:none;">0</span>
                 </button>
 
-                <!-- Notification Dropdown - Elegant -->
+                <!-- Notification Dropdown -->
                 <div class="header-dropdown notification-dropdown" id="notificationDropdown">
                     <div class="dropdown-header">
                         <div class="dropdown-header-content">
                             <h3 class="dropdown-title">Notifications</h3>
-                            <span class="notification-count">3 nouvelles</span>
+                            <span class="notification-count" id="adminNotifCount">0 nouvelles</span>
                         </div>
-                        <button class="mark-all-read">Tout marquer comme lu</button>
+                        <button class="mark-all-read" id="adminMarkAllRead">Tout marquer comme lu</button>
                     </div>
-                    <div class="dropdown-body custom-scrollbar">
-                        <a href="#" class="notification-item unread">
-                            <div class="notification-icon success">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                            <div class="notification-content">
-                                <p class="notification-title">Nouvelle demande de congé</p>
-                                <p class="notification-text">Jean Dupont a soumis une demande</p>
-                                <span class="notification-time">Il y a 5 minutes</span>
-                            </div>
-                        </a>
-                        <a href="#" class="notification-item unread">
-                            <div class="notification-icon info">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                </svg>
-                            </div>
-                            <div class="notification-content">
-                                <p class="notification-title">Rappel de réunion</p>
-                                <p class="notification-text">Réunion d'équipe dans 30 minutes</p>
-                                <span class="notification-time">Il y a 25 minutes</span>
-                            </div>
-                        </a>
-                        <a href="#" class="notification-item">
-                            <div class="notification-icon warning">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                                    <line x1="12" y1="9" x2="12" y2="13"></line>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                </svg>
-                            </div>
-                            <div class="notification-content">
-                                <p class="notification-title">Document en attente</p>
-                                <p class="notification-text">Un document nécessite votre signature</p>
-                                <span class="notification-time">Il y a 2 heures</span>
-                            </div>
-                        </a>
+                    <div class="dropdown-body custom-scrollbar" id="adminNotifList">
+                        <div style="padding: 2rem; text-align: center; color: var(--text-muted, #6B7280); font-size: 0.875rem;">Aucune notification</div>
                     </div>
                     <div class="dropdown-footer">
-                        <a href="#" class="view-all-link">
-                            <span>Voir toutes les notifications</span>
+                        <a href="{{ route('admin.conges.index') }}" class="view-all-link">
+                            <span>Voir les demandes de congés</span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -1313,5 +1274,82 @@ document.addEventListener('DOMContentLoaded', function() {
             userMenuBtn?.classList.remove('active');
         }
     });
+
+    // === ADMIN NOTIFICATIONS AJAX ===
+    const adminBadge = document.getElementById('adminNotifBadge');
+    const adminCount = document.getElementById('adminNotifCount');
+    const adminList = document.getElementById('adminNotifList');
+    const adminMarkAll = document.getElementById('adminMarkAllRead');
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfVal = csrfMeta ? csrfMeta.content : '';
+
+    function fetchAdminNotifications() {
+        fetch('/api/notifications', { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(r => r.json())
+            .then(data => {
+                const c = data.count || 0;
+                if (c > 0) {
+                    adminBadge.textContent = c > 9 ? '9+' : c;
+                    adminBadge.style.display = '';
+                    adminBadge.classList.add('pulse');
+                } else {
+                    adminBadge.style.display = 'none';
+                    adminBadge.classList.remove('pulse');
+                }
+                adminCount.textContent = c + ' nouvelle' + (c > 1 ? 's' : '');
+                renderAdminNotifs(data.notifications || []);
+            })
+            .catch(() => {});
+    }
+
+    function renderAdminNotifs(items) {
+        if (!items.length) {
+            adminList.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted,#6B7280);font-size:0.875rem;">Aucune notification</div>';
+            return;
+        }
+        adminList.innerHTML = items.map(n => {
+            let iconClass = 'info', iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+            if (n.type === 'nouvelle_demande_conge') {
+                iconClass = 'warning';
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>';
+            } else if (n.status === 'approuve') {
+                iconClass = 'success';
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+            } else if (n.status === 'refuse') {
+                iconClass = 'danger';
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            }
+            return `<a href="#" class="notification-item unread" onclick="markAdminNotifRead('${n.id}',this);return false;">
+                <div class="notification-icon ${iconClass}">${iconSvg}</div>
+                <div class="notification-content">
+                    <p class="notification-title">${n.message}</p>
+                    <p class="notification-text">${n.employe || ''} ${n.date_debut ? n.date_debut + ' - ' + n.date_fin : ''}</p>
+                    <span class="notification-time">${n.created_at}</span>
+                </div>
+            </a>`;
+        }).join('');
+    }
+
+    window.markAdminNotifRead = function(id, el) {
+        fetch('/api/notifications/' + id + '/read', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrfVal, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+        }).then(() => {
+            if (el) el.remove();
+            fetchAdminNotifications();
+        }).catch(() => {});
+    };
+
+    if (adminMarkAll) {
+        adminMarkAll.addEventListener('click', function() {
+            fetch('/api/notifications/read-all', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfVal, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+            }).then(() => fetchAdminNotifications()).catch(() => {});
+        });
+    }
+
+    fetchAdminNotifications();
+    setInterval(fetchAdminNotifications, 30000);
 });
 </script>

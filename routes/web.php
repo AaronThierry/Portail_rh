@@ -17,6 +17,8 @@ use App\Http\Controllers\DossierAgentController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BulletinPaieController;
+use App\Http\Controllers\CongeAdminController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,8 +95,8 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
     // Congés et demandes
     Route::get('/conges', [EspaceEmployeController::class, 'conges'])->name('conges');
     Route::post('/conges', [EspaceEmployeController::class, 'storeConge'])->name('conges.store');
+    Route::post('/conges/{conge}/annuler', [EspaceEmployeController::class, 'annulerConge'])->name('conges.annuler');
     Route::get('/demandes', [EspaceEmployeController::class, 'demandes'])->name('demandes');
-    Route::post('/demandes', [EspaceEmployeController::class, 'storeDemande'])->name('demandes.store');
 
     // Paramètres du compte
     Route::get('/parametres', [EspaceEmployeController::class, 'parametres'])->name('parametres');
@@ -185,6 +187,12 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     Route::post('two-factor/verify', [TwoFactorController::class, 'verify'])->name('two-factor.verify');
     Route::delete('two-factor/disable', [TwoFactorController::class, 'disable'])->name('two-factor.disable');
 
+    // Gestion des congés
+    Route::get('conges', [CongeAdminController::class, 'index'])->name('conges.index');
+    Route::get('conges/{conge}', [CongeAdminController::class, 'show'])->name('conges.show');
+    Route::post('conges/{conge}/approuver', [CongeAdminController::class, 'approve'])->name('conges.approve');
+    Route::post('conges/{conge}/refuser', [CongeAdminController::class, 'reject'])->name('conges.reject');
+
     // Gestion des bulletins de paie
     Route::get('bulletins-paie', [BulletinPaieController::class, 'index'])->name('bulletins-paie.index');
     Route::post('bulletins-paie', [BulletinPaieController::class, 'store'])->name('bulletins-paie.store');
@@ -196,6 +204,15 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     Route::get('bulletins-paie/{bulletin}/download', [BulletinPaieController::class, 'download'])->name('bulletins-paie.download');
     Route::get('bulletins-paie/{bulletin}/preview', [BulletinPaieController::class, 'preview'])->name('bulletins-paie.preview');
     Route::post('bulletins-paie/{bulletin}/replace', [BulletinPaieController::class, 'replaceFichier'])->name('bulletins-paie.replace');
+});
+
+// ============================================================================
+// API Notifications (partagé admin + employé)
+// ============================================================================
+Route::middleware(['auth'])->prefix('api')->group(function () {
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 });
 
 // Redirection racine selon le rôle

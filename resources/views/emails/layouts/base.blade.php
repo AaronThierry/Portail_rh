@@ -44,8 +44,8 @@
         }
     </style>
 </head>
-<body style="margin: 0; padding: 0; word-spacing: normal; background-color: #F1F5F9;">
-    <div role="article" aria-roledescription="email" lang="fr" style="text-size-adjust: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #F1F5F9;">
+<body style="margin: 0; padding: 0; word-spacing: normal; background-color: #E8E0D4;">
+    <div role="article" aria-roledescription="email" lang="fr" style="text-size-adjust: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #E8E0D4;">
 
         <!-- Visually Hidden Preheader Text : BEGIN -->
         <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all;">
@@ -53,47 +53,68 @@
         </div>
         <!-- Visually Hidden Preheader Text : END -->
 
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #F1F5F9;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #E8E0D4;">
             <tr>
                 <td style="padding: 40px 10px;">
 
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" class="email-container" style="margin: 0 auto; max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" class="email-container" style="margin: 0 auto; max-width: 600px; background-color: #ffffff; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+
+                        <!-- Gold Top Accent Line -->
+                        <tr>
+                            <td style="height: 4px; background: linear-gradient(90deg, #B8976A 0%, #D4B88C 50%, #B8976A 100%); font-size: 0; line-height: 0;">&nbsp;</td>
+                        </tr>
 
                         <!-- Header : BEGIN -->
                         <tr>
-                            <td style="background: linear-gradient(135deg, #4A90D9 0%, #2E6BB3 100%); padding: 0;">
+                            <td style="background-color: #0F172A; padding: 0;">
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                     <tr>
-                                        <td style="padding: 40px 40px 45px; text-align: center;">
-                                            <!-- Logo -->
-                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                                        <td style="padding: 36px 44px 40px;">
+                                            <!-- Logo Row -->
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                                 <tr>
-                                                    <td style="background-color: rgba(255, 255, 255, 0.15); width: 70px; height: 70px; border-radius: 18px; text-align: center; vertical-align: middle;">
-                                                        @yield('header-icon')
+                                                    <td>
+                                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                                            <tr>
+                                                                <td style="width: 42px; height: 42px; background-color: #B8976A; border-radius: 10px; text-align: center; vertical-align: middle;">
+                                                                    @yield('header-icon')
+                                                                </td>
+                                                                <td style="padding-left: 14px; vertical-align: middle;">
+                                                                    <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;">Portail</span>
+                                                                    <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; color: #B8976A; letter-spacing: 0.5px;">RH+</span>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                     </td>
                                                 </tr>
                                             </table>
+
+                                            <!-- Thin Separator -->
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 24px 0 28px;">
+                                                <tr>
+                                                    <td style="height: 1px; background-color: rgba(184, 151, 106, 0.3); font-size: 0; line-height: 0;">&nbsp;</td>
+                                                </tr>
+                                            </table>
+
                                             <!-- Title -->
-                                            <h1 style="margin: 24px 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 26px; font-weight: 700; color: #ffffff; line-height: 1.3;">
+                                            <h1 style="margin: 0; font-family: Georgia, 'Times New Roman', Times, serif; font-size: 28px; font-weight: 400; color: #ffffff; line-height: 1.3; letter-spacing: -0.3px;">
                                                 @yield('header-title')
                                             </h1>
                                             @hasSection('header-subtitle')
-                                            <p style="margin: 12px 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 15px; color: rgba(255, 255, 255, 0.9); line-height: 1.5;">
+                                            <p style="margin: 10px 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: rgba(255, 255, 255, 0.55); line-height: 1.5; letter-spacing: 0.3px;">
                                                 @yield('header-subtitle')
                                             </p>
                                             @endif
                                         </td>
                                     </tr>
                                 </table>
-                                <!-- Decorative Wave -->
-                                <div style="height: 20px; background: #ffffff; border-radius: 20px 20px 0 0;"></div>
                             </td>
                         </tr>
                         <!-- Header : END -->
 
                         <!-- Body : BEGIN -->
                         <tr>
-                            <td style="padding: 35px 40px 40px;" class="padding-mobile">
+                            <td style="padding: 40px 44px 44px;" class="padding-mobile">
                                 @yield('content')
                             </td>
                         </tr>
@@ -101,19 +122,28 @@
 
                         <!-- Footer : BEGIN -->
                         <tr>
-                            <td style="background-color: #F8FAFC; padding: 30px 40px; border-top: 1px solid #E2E8F0;">
+                            <td style="padding: 0 44px;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="height: 1px; background-color: #E2E8F0; font-size: 0; line-height: 0;">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 28px 44px 32px;">
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                     <!-- Logo Footer -->
                                     <tr>
-                                        <td align="center" style="padding-bottom: 20px;">
+                                        <td style="padding-bottom: 20px;">
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                                                 <tr>
-                                                    <td style="background: linear-gradient(135deg, #4A90D9 0%, #2E6BB3 100%); width: 36px; height: 36px; border-radius: 10px; text-align: center; vertical-align: middle;">
-                                                        <img src="{{ asset('assets/images/logo-icon-white.png') }}" alt="" width="20" height="20" style="display: block; margin: 0 auto;">
+                                                    <td style="width: 28px; height: 28px; background-color: #0F172A; border-radius: 6px; text-align: center; vertical-align: middle;">
+                                                        <img src="{{ asset('assets/images/logo-icon-white.png') }}" alt="" width="16" height="16" style="display: block; margin: 0 auto;">
                                                     </td>
-                                                    <td style="padding-left: 12px;">
-                                                        <span style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 700; color: #1F2937;">Portail</span>
-                                                        <span style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 700; color: #4A90D9;">RH+</span>
+                                                    <td style="padding-left: 10px;">
+                                                        <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 13px; font-weight: 700; color: #334155;">Portail</span>
+                                                        <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 13px; font-weight: 700; color: #B8976A;">RH+</span>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -121,19 +151,17 @@
                                     </tr>
                                     <!-- Links -->
                                     <tr>
-                                        <td align="center" style="padding-bottom: 16px;">
+                                        <td style="padding-bottom: 16px;">
                                             <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                                                 <tr>
-                                                    <td style="padding: 0 12px;">
-                                                        <a href="{{ url('/') }}" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #64748B; text-decoration: none;">Accueil</a>
+                                                    <td style="padding-right: 20px;">
+                                                        <a href="{{ url('/') }}" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; color: #64748B; text-decoration: none; letter-spacing: 0.3px;">Accueil</a>
                                                     </td>
-                                                    <td style="color: #CBD5E1;">|</td>
-                                                    <td style="padding: 0 12px;">
-                                                        <a href="{{ url('/aide') }}" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #64748B; text-decoration: none;">Aide</a>
+                                                    <td style="padding-right: 20px;">
+                                                        <a href="{{ url('/aide') }}" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; color: #64748B; text-decoration: none; letter-spacing: 0.3px;">Aide</a>
                                                     </td>
-                                                    <td style="color: #CBD5E1;">|</td>
-                                                    <td style="padding: 0 12px;">
-                                                        <a href="{{ url('/contact') }}" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #64748B; text-decoration: none;">Contact</a>
+                                                    <td>
+                                                        <a href="{{ url('/contact') }}" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; color: #64748B; text-decoration: none; letter-spacing: 0.3px;">Contact</a>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -141,12 +169,12 @@
                                     </tr>
                                     <!-- Copyright -->
                                     <tr>
-                                        <td align="center">
-                                            <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; color: #94A3B8; line-height: 1.6;">
-                                                &copy; {{ date('Y') }} {{ config('app.name', 'Portail RH+') }}. Tous droits réservés.
+                                        <td>
+                                            <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; color: #94A3B8; line-height: 1.6;">
+                                                &copy; {{ date('Y') }} {{ config('app.name', 'Portail RH+') }}. Tous droits r&eacute;serv&eacute;s.
                                             </p>
-                                            <p style="margin: 8px 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; color: #CBD5E1; line-height: 1.5;">
-                                                Ce message a été envoyé automatiquement. Merci de ne pas y répondre directement.
+                                            <p style="margin: 6px 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; color: #CBD5E1; line-height: 1.5;">
+                                                Ce message a &eacute;t&eacute; envoy&eacute; automatiquement. Merci de ne pas y r&eacute;pondre directement.
                                             </p>
                                         </td>
                                     </tr>
@@ -154,6 +182,11 @@
                             </td>
                         </tr>
                         <!-- Footer : END -->
+
+                        <!-- Gold Bottom Accent Line -->
+                        <tr>
+                            <td style="height: 3px; background: linear-gradient(90deg, #B8976A 0%, #D4B88C 50%, #B8976A 100%); font-size: 0; line-height: 0;">&nbsp;</td>
+                        </tr>
 
                     </table>
 

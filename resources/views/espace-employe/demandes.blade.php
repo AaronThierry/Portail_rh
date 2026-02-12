@@ -414,8 +414,8 @@
                 </svg>
             </div>
             <div>
-                <div class="ee-stat-box-value">{{ $demandes->where('statut', 'approuvee')->count() }}</div>
-                <div class="ee-stat-box-label">Approuvées</div>
+                <div class="ee-stat-box-value">{{ $demandes->where('statut', 'approuve')->count() }}</div>
+                <div class="ee-stat-box-label">Approuv&eacute;es</div>
             </div>
         </div>
         <div class="ee-stat-box">
@@ -427,8 +427,8 @@
                 </svg>
             </div>
             <div>
-                <div class="ee-stat-box-value">{{ $demandes->where('statut', 'refusee')->count() }}</div>
-                <div class="ee-stat-box-label">Refusées</div>
+                <div class="ee-stat-box-value">{{ $demandes->where('statut', 'refuse')->count() }}</div>
+                <div class="ee-stat-box-label">Refus&eacute;es</div>
             </div>
         </div>
     </div>
@@ -439,7 +439,7 @@
             <h2 class="ee-new-request-title">Nouvelle demande</h2>
         </div>
         <div class="ee-request-types-grid">
-            <button class="ee-request-type-btn" onclick="newRequest('conge')">
+            <a href="{{ route('espace-employe.conges') }}" class="ee-request-type-btn">
                 <div class="ee-request-type-icon purple">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -448,9 +448,9 @@
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
                 </div>
-                <span class="ee-request-type-label">Congé / Absence</span>
-            </button>
-            <button class="ee-request-type-btn" onclick="newRequest('attestation')">
+                <span class="ee-request-type-label">Cong&eacute; / Absence</span>
+            </a>
+            <button class="ee-request-type-btn" onclick="alert('Fonctionnalit&eacute; bient&ocirc;t disponible.')">
                 <div class="ee-request-type-icon blue">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -459,7 +459,7 @@
                 </div>
                 <span class="ee-request-type-label">Attestation</span>
             </button>
-            <button class="ee-request-type-btn" onclick="newRequest('avance')">
+            <button class="ee-request-type-btn" onclick="alert('Fonctionnalit&eacute; bient&ocirc;t disponible.')">
                 <div class="ee-request-type-icon green">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="12" y1="1" x2="12" y2="23"></line>
@@ -468,7 +468,7 @@
                 </div>
                 <span class="ee-request-type-label">Avance sur salaire</span>
             </button>
-            <button class="ee-request-type-btn" onclick="newRequest('autre')">
+            <button class="ee-request-type-btn" onclick="alert('Fonctionnalit&eacute; bient&ocirc;t disponible.')">
                 <div class="ee-request-type-icon orange">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
@@ -486,33 +486,53 @@
         <div class="ee-demandes-header">
             <h2 class="ee-demandes-title">Historique des demandes</h2>
             <div class="ee-demandes-filters">
-                <button class="ee-filter-pill active">Toutes</button>
-                <button class="ee-filter-pill">En attente</button>
-                <button class="ee-filter-pill">Approuvées</button>
-                <button class="ee-filter-pill">Refusées</button>
+                <button class="ee-filter-pill active" data-filter="all">Toutes</button>
+                <button class="ee-filter-pill" data-filter="en_attente">En attente</button>
+                <button class="ee-filter-pill" data-filter="approuve">Approuv&eacute;es</button>
+                <button class="ee-filter-pill" data-filter="refuse">Refus&eacute;es</button>
             </div>
         </div>
 
         <div class="ee-demandes-list">
             @if($demandes->count() > 0)
                 @foreach($demandes as $demande)
-                    <div class="ee-demande-item">
-                        <div class="ee-demande-icon" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); color: white;">
+                    <div class="ee-demande-item" data-statut="{{ $demande->statut }}">
+                        <div class="ee-demande-icon" style="background: {{ $demande->typeConge->couleur ?? '#7c3aed' }}; color: white;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
                             </svg>
                         </div>
                         <div class="ee-demande-content">
-                            <div class="ee-demande-type">{{ $demande->type ?? 'Demande' }}</div>
-                            <div class="ee-demande-date">{{ $demande->created_at ?? now() }}</div>
+                            <div class="ee-demande-type">{{ $demande->typeConge->nom ?? 'Cong&eacute;' }} &mdash; {{ $demande->nombre_jours }} {{ $demande->nombre_jours > 1 ? 'jours' : 'jour' }}</div>
+                            <div class="ee-demande-date">{{ $demande->date_debut->format('d/m/Y') }} &rarr; {{ $demande->date_fin->format('d/m/Y') }} &middot; {{ $demande->created_at->diffForHumans() }}</div>
                         </div>
-                        <div class="ee-demande-status pending">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
-                            En attente
-                        </div>
+                        @switch($demande->statut)
+                            @case('en_attente')
+                                <div class="ee-demande-status pending">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    En attente
+                                </div>
+                                @break
+                            @case('approuve')
+                                <div class="ee-demande-status approved">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Approuv&eacute;
+                                </div>
+                                @break
+                            @case('refuse')
+                                <div class="ee-demande-status rejected">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    Refus&eacute;
+                                </div>
+                                @break
+                            @case('annule')
+                                <div class="ee-demande-status" style="background: #f1f5f9; color: #64748b;">
+                                    Annul&eacute;
+                                </div>
+                                @break
+                        @endswitch
                     </div>
                 @endforeach
             @else
@@ -523,7 +543,7 @@
                         </svg>
                     </div>
                     <h3 class="ee-empty-title">Aucune demande</h3>
-                    <p class="ee-empty-text">Vous n'avez pas encore effectué de demande.</p>
+                    <p class="ee-empty-text">Vous n'avez pas encore effectu&eacute; de demande.</p>
                 </div>
             @endif
         </div>
@@ -531,14 +551,20 @@
 </div>
 
 <script>
-function newRequest(type) {
-    const types = {
-        'conge': 'Congé / Absence',
-        'attestation': 'Attestation',
-        'avance': 'Avance sur salaire',
-        'autre': 'Autre demande'
-    };
-    alert(`Formulaire de "${types[type]}" en cours de développement.`);
-}
+// Filter pills
+document.querySelectorAll('.ee-filter-pill').forEach(pill => {
+    pill.addEventListener('click', function() {
+        document.querySelectorAll('.ee-filter-pill').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.ee-demande-item').forEach(item => {
+            if (filter === 'all' || item.dataset.statut === filter) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+});
 </script>
 @endsection

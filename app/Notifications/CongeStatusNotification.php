@@ -53,11 +53,14 @@ class CongeStatusNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
+            'type' => 'statut_conge',
             'conge_id' => $this->conge->id,
             'status' => $this->status,
+            'type_conge' => $this->conge->typeConge->nom ?? 'Congé',
             'date_debut' => $this->conge->date_debut->format('d/m/Y'),
             'date_fin' => $this->conge->date_fin->format('d/m/Y'),
-            'message' => $this->getMessage()
+            'nombre_jours' => $this->conge->nombre_jours,
+            'message' => $this->getMessage(),
         ];
     }
 

@@ -589,6 +589,80 @@
             .ee-breadcrumb { display: none; }
         }
 
+        /* ==================== NOTIFICATION DROPDOWN ==================== */
+        .ee-notif-wrapper { position: relative; }
+
+        .ee-notif-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 360px;
+            max-width: calc(100vw - 2rem);
+            background: var(--e-surface);
+            border: 1px solid var(--e-border);
+            border-radius: var(--e-radius-lg);
+            box-shadow: var(--e-shadow-xl);
+            z-index: 200;
+            overflow: hidden;
+        }
+        .ee-notif-dropdown.open { display: block; animation: ee-slideDown 0.2s ease; }
+
+        .ee-notif-dropdown-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--e-border);
+        }
+        .ee-notif-dropdown-title { font-size: 0.9375rem; font-weight: 700; color: var(--e-text); }
+        .ee-notif-mark-all {
+            font-size: 0.8125rem; font-weight: 500; color: var(--e-blue);
+            background: none; border: none; cursor: pointer; padding: 0;
+        }
+        .ee-notif-mark-all:hover { text-decoration: underline; }
+
+        .ee-notif-dropdown-body {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .ee-notif-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.875rem 1.25rem;
+            border-bottom: 1px solid var(--e-border-light);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .ee-notif-item:hover { background: var(--e-bg); }
+        .ee-notif-item:last-child { border-bottom: none; }
+
+        .ee-notif-item-icon {
+            width: 36px; height: 36px; border-radius: var(--e-radius);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .ee-notif-item-icon svg { width: 18px; height: 18px; }
+        .ee-notif-item-icon.success { background: var(--e-emerald-pale); color: var(--e-emerald); }
+        .ee-notif-item-icon.info { background: var(--e-blue-wash); color: var(--e-blue); }
+        .ee-notif-item-icon.warning { background: var(--e-amber-pale); color: var(--e-amber); }
+        .ee-notif-item-icon.danger { background: var(--e-red-pale); color: var(--e-red); }
+
+        .ee-notif-item-content { flex: 1; min-width: 0; }
+        .ee-notif-item-msg {
+            font-size: 0.875rem; font-weight: 500; color: var(--e-text);
+            margin-bottom: 0.25rem;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .ee-notif-item-time { font-size: 0.75rem; color: var(--e-text-secondary); }
+
+        .ee-notif-empty {
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--e-text-secondary);
+        }
+
         /* ==================== SCROLLBAR ==================== */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -741,13 +815,24 @@
                     </div>
                 </div>
                 <div class="ee-header-right">
-                    <button class="ee-header-btn" title="Notifications">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                        </svg>
-                        <span class="badge">3</span>
-                    </button>
+                    <div class="ee-notif-wrapper">
+                        <button class="ee-header-btn" id="eeNotifBtn" title="Notifications">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span class="badge" id="eeNotifBadge" style="display:none;">0</span>
+                        </button>
+                        <div class="ee-notif-dropdown" id="eeNotifDropdown">
+                            <div class="ee-notif-dropdown-header">
+                                <span class="ee-notif-dropdown-title">Notifications</span>
+                                <button class="ee-notif-mark-all" id="eeMarkAllRead">Tout marquer lu</button>
+                            </div>
+                            <div class="ee-notif-dropdown-body" id="eeNotifList">
+                                <div class="ee-notif-empty">Aucune notification</div>
+                            </div>
+                        </div>
+                    </div>
                     <button class="ee-theme-toggle" onclick="toggleTheme()" title="Changer le th&egrave;me">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sun-icon">
                             <circle cx="12" cy="12" r="5"></circle>
@@ -810,6 +895,93 @@
                 document.body.style.overflow = '';
             }
         });
+
+        // === NOTIFICATIONS AJAX ===
+        (function() {
+            const btn = document.getElementById('eeNotifBtn');
+            const dropdown = document.getElementById('eeNotifDropdown');
+            const badge = document.getElementById('eeNotifBadge');
+            const list = document.getElementById('eeNotifList');
+            const markAllBtn = document.getElementById('eeMarkAllRead');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+            function fetchNotifications() {
+                fetch('/api/notifications', { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 9 ? '9+' : data.count;
+                            badge.style.display = '';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                        renderNotifications(data.notifications || []);
+                    })
+                    .catch(() => {});
+            }
+
+            function renderNotifications(items) {
+                if (!items.length) {
+                    list.innerHTML = '<div class="ee-notif-empty">Aucune notification</div>';
+                    return;
+                }
+                list.innerHTML = items.map(n => {
+                    let iconClass = 'info';
+                    let iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+                    if (n.status === 'approuve') {
+                        iconClass = 'success';
+                        iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+                    } else if (n.status === 'refuse') {
+                        iconClass = 'danger';
+                        iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+                    } else if (n.type === 'nouvelle_demande_conge') {
+                        iconClass = 'warning';
+                        iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>';
+                    }
+                    return `<div class="ee-notif-item" data-id="${n.id}" onclick="markNotifRead('${n.id}', this)">
+                        <div class="ee-notif-item-icon ${iconClass}">${iconSvg}</div>
+                        <div class="ee-notif-item-content">
+                            <div class="ee-notif-item-msg">${n.message}</div>
+                            <div class="ee-notif-item-time">${n.created_at}</div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            window.markNotifRead = function(id, el) {
+                fetch(`/api/notifications/${id}/read`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                }).then(() => {
+                    if (el) el.remove();
+                    fetchNotifications();
+                }).catch(() => {});
+            };
+
+            if (btn && dropdown) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('open');
+                });
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.ee-notif-wrapper')) dropdown.classList.remove('open');
+                });
+            }
+
+            if (markAllBtn) {
+                markAllBtn.addEventListener('click', function() {
+                    fetch('/api/notifications/read-all', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                    }).then(() => {
+                        fetchNotifications();
+                    }).catch(() => {});
+                });
+            }
+
+            fetchNotifications();
+            setInterval(fetchNotifications, 30000);
+        })();
     </script>
     @yield('scripts')
 </body>

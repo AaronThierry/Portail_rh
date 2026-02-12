@@ -6,10 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
+use Carbon\Carbon;
 use App\Models\Personnel;
 use App\Models\DocumentAgent;
 use App\Models\CategorieDocument;
 use App\Models\BulletinPaie;
+use App\Models\Conge;
+use App\Models\TypeConge;
+use App\Models\User;
+use App\Http\Requests\StoreCongeRequest;
+use App\Notifications\NouvelleDemandeCongeNotification;
 
 class EspaceEmployeController extends Controller
 {
@@ -22,34 +29,59 @@ class EspaceEmployeController extends Controller
         $personnel = $user->personnel;
 
         // Statistiques pour le dashboard
+        $soldeConges = $personnel
+            ? Conge::getSolde($personnel->id, now()->year, $personnel->entreprise_id)
+            : ['annuels' => 0, 'pris' => 0, 'restants' => 0, 'en_attente' => 0];
+
         $stats = [
             'documents' => $personnel ? $personnel->documents()->count() : 0,
-            'conges_restants' => 25, // À personnaliser selon votre système
-            'demandes_en_cours' => 0,
+            'conges_restants' => $soldeConges['restants'],
+            'demandes_en_cours' => $personnel ? Conge::forPersonnel($personnel->id)->enAttente()->count() : 0,
             'anciennete' => $personnel ? $personnel->anciennete : 0,
         ];
 
-        // Dernières activités (à personnaliser)
-        $activities = collect([
-            [
-                'type' => 'document',
-                'title' => 'Contrat de travail ajouté',
-                'date' => now()->subDays(2),
-                'icon' => 'file'
-            ],
-            [
-                'type' => 'conge',
-                'title' => 'Demande de congé approuvée',
-                'date' => now()->subDays(5),
-                'icon' => 'calendar'
-            ],
-            [
-                'type' => 'profil',
-                'title' => 'Photo de profil mise à jour',
-                'date' => now()->subWeek(),
-                'icon' => 'user'
-            ],
-        ]);
+        // Dernières activités réelles depuis les congés
+        $activities = collect([]);
+        if ($personnel) {
+            $recentConges = Conge::forPersonnel($personnel->id)
+                ->with('typeConge')
+                ->orderBy('updated_at', 'desc')
+                ->take(5)
+                ->get();
+
+            foreach ($recentConges as $conge) {
+                $activities->push([
+                    'type' => 'conge',
+                    'title' => match($conge->statut) {
+                        'en_attente' => 'Demande de ' . ($conge->typeConge->nom ?? 'congé') . ' soumise',
+                        'approuve' => 'Demande de ' . ($conge->typeConge->nom ?? 'congé') . ' approuvée',
+                        'refuse' => 'Demande de ' . ($conge->typeConge->nom ?? 'congé') . ' refusée',
+                        'annule' => 'Demande de ' . ($conge->typeConge->nom ?? 'congé') . ' annulée',
+                        default => 'Demande de congé',
+                    },
+                    'date' => $conge->updated_at,
+                    'icon' => 'calendar',
+                ]);
+            }
+
+            // Ajouter les documents récents
+            $recentDocs = $personnel->documents()
+                ->where('visible_employe', true)
+                ->orderBy('created_at', 'desc')
+                ->take(3)
+                ->get();
+
+            foreach ($recentDocs as $doc) {
+                $activities->push([
+                    'type' => 'document',
+                    'title' => ($doc->titre ?? 'Document') . ' ajouté',
+                    'date' => $doc->created_at,
+                    'icon' => 'file',
+                ]);
+            }
+
+            $activities = $activities->sortByDesc('date')->take(5)->values();
+        }
 
         return view('espace-employe.dashboard', compact('personnel', 'stats', 'activities'));
     }
@@ -345,15 +377,120 @@ class EspaceEmployeController extends Controller
         $user = Auth::user();
         $personnel = $user->personnel;
 
-        // À personnaliser selon votre système de congés
-        $conges = collect([]);
-        $soldeConges = [
-            'annuels' => 25,
-            'pris' => 5,
-            'restants' => 20,
-        ];
+        if (!$personnel) {
+            return redirect()->route('espace-employe.dashboard')
+                ->with('error', 'Profil non trouvé.');
+        }
 
-        return view('espace-employe.conges', compact('personnel', 'conges', 'soldeConges'));
+        $annee = request('annee', now()->year);
+
+        $soldeConges = Conge::getSolde($personnel->id, $annee, $personnel->entreprise_id);
+
+        $conges = Conge::forPersonnel($personnel->id)
+            ->annee($annee)
+            ->with('typeConge')
+            ->orderBy('date_debut', 'desc')
+            ->get();
+
+        $typesConge = TypeConge::forEntreprise($personnel->entreprise_id)
+            ->actif()
+            ->ordered()
+            ->get();
+
+        $anneesDisponibles = Conge::getAnneesDisponibles($personnel->id, $personnel->entreprise_id);
+
+        return view('espace-employe.conges', compact(
+            'personnel', 'conges', 'soldeConges', 'typesConge', 'annee', 'anneesDisponibles'
+        ));
+    }
+
+    /**
+     * Enregistre une nouvelle demande de congé
+     */
+    public function storeConge(StoreCongeRequest $request)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        if (!$personnel) {
+            return back()->with('error', 'Profil non trouvé.');
+        }
+
+        $nombreJours = Conge::calculerNombreJours(
+            $request->date_debut,
+            $request->date_fin,
+            $request->boolean('demi_journee_debut'),
+            $request->boolean('demi_journee_fin')
+        );
+
+        $typeConge = TypeConge::findOrFail($request->type_conge_id);
+        $annee = Carbon::parse($request->date_debut)->year;
+
+        // Vérifier le solde si le type est déductible
+        if ($typeConge->deductible) {
+            $solde = Conge::getSolde($personnel->id, $annee, $personnel->entreprise_id);
+            if ($nombreJours > $solde['restants']) {
+                return back()->withErrors(['date_debut' => 'Solde de congés insuffisant. Il vous reste ' . $solde['restants'] . ' jours.'])->withInput();
+            }
+        }
+
+        // Upload pièce jointe
+        $pieceJointe = null;
+        if ($request->hasFile('piece_jointe')) {
+            $pieceJointe = $request->file('piece_jointe')
+                ->store("conges/{$personnel->entreprise_id}/{$personnel->id}", 'public');
+        }
+
+        $conge = Conge::create([
+            'entreprise_id' => $personnel->entreprise_id,
+            'personnel_id' => $personnel->id,
+            'type_conge_id' => $request->type_conge_id,
+            'user_id' => $user->id,
+            'date_debut' => $request->date_debut,
+            'date_fin' => $request->date_fin,
+            'nombre_jours' => $nombreJours,
+            'demi_journee_debut' => $request->boolean('demi_journee_debut'),
+            'demi_journee_fin' => $request->boolean('demi_journee_fin'),
+            'motif' => $request->motif,
+            'piece_jointe' => $pieceJointe,
+            'statut' => 'en_attente',
+            'annee' => $annee,
+        ]);
+
+        // Notifier les admins/RH
+        $conge->load('personnel', 'typeConge');
+        $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
+            ->where('id', '!=', $user->id)
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager']))
+            ->get();
+
+        if ($adminsRH->isNotEmpty()) {
+            Notification::send($adminsRH, new NouvelleDemandeCongeNotification($conge));
+        }
+
+        return redirect()->route('espace-employe.conges')
+            ->with('success', 'Votre demande de congé a été soumise avec succès.');
+    }
+
+    /**
+     * Annule une demande de congé en attente
+     */
+    public function annulerConge(Conge $conge)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        if (!$personnel || $conge->personnel_id !== $personnel->id) {
+            abort(403, 'Accès non autorisé');
+        }
+
+        if ($conge->statut !== 'en_attente') {
+            return back()->with('error', 'Seules les demandes en attente peuvent être annulées.');
+        }
+
+        $conge->update(['statut' => 'annule']);
+
+        return back()->with('success', 'La demande de congé a été annulée.');
     }
 
     /**
@@ -364,8 +501,15 @@ class EspaceEmployeController extends Controller
         $user = Auth::user();
         $personnel = $user->personnel;
 
-        // À personnaliser selon votre système de demandes
-        $demandes = collect([]);
+        if (!$personnel) {
+            return redirect()->route('espace-employe.dashboard')
+                ->with('error', 'Profil non trouvé.');
+        }
+
+        $demandes = Conge::forPersonnel($personnel->id)
+            ->with('typeConge')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('espace-employe.demandes', compact('personnel', 'demandes'));
     }

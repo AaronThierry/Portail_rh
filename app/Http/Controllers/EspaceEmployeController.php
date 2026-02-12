@@ -508,6 +508,25 @@ class EspaceEmployeController extends Controller
     }
 
     /**
+     * Télécharger le document officiel d'un congé approuvé
+     */
+    public function downloadDocumentOfficiel(Conge $conge)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        if (!$personnel || $conge->personnel_id !== $personnel->id) {
+            abort(403, 'Accès non autorisé');
+        }
+
+        if (!$conge->document_officiel || !Storage::disk('public')->exists($conge->document_officiel)) {
+            return back()->with('error', 'Aucun document officiel disponible.');
+        }
+
+        return Storage::disk('public')->download($conge->document_officiel, 'note_conge_' . $conge->id . '.pdf');
+    }
+
+    /**
      * Affiche les demandes de l'employé
      */
     public function demandes()

@@ -23,6 +23,7 @@ class Conge extends Model
         'demi_journee_fin',
         'motif',
         'piece_jointe',
+        'document_officiel',
         'statut',
         'traite_par',
         'motif_refus',

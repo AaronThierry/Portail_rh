@@ -96,6 +96,7 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
     Route::get('/conges', [EspaceEmployeController::class, 'conges'])->name('conges');
     Route::post('/conges', [EspaceEmployeController::class, 'storeConge'])->name('conges.store');
     Route::post('/conges/{conge}/annuler', [EspaceEmployeController::class, 'annulerConge'])->name('conges.annuler');
+    Route::get('/conges/{conge}/document', [EspaceEmployeController::class, 'downloadDocumentOfficiel'])->name('conges.document');
     Route::get('/demandes', [EspaceEmployeController::class, 'demandes'])->name('demandes');
 
     // Paramètres du compte

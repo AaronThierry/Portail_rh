@@ -648,6 +648,12 @@
                                             <button type="submit" class="ee-btn-cancel-sm">Annuler</button>
                                         </form>
                                     @endif
+                                    @if($conge->statut === 'approuve' && $conge->document_officiel)
+                                        <a href="{{ route('espace-employe.conges.document', $conge) }}" class="ee-btn-cancel-sm" style="border-color: var(--e-emerald); color: var(--e-emerald); text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;" title="Télécharger la note officielle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                            Note officielle
+                                        </a>
+                                    @endif
                                     @if($conge->statut === 'refuse' && $conge->motif_refus)
                                         <button class="ee-btn-cancel-sm" onclick="alert('Motif du refus :\n{{ addslashes($conge->motif_refus) }}')" title="Voir le motif">Motif</button>
                                     @endif

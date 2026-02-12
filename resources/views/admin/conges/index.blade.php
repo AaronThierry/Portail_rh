@@ -789,7 +789,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
         </div>
-        <form id="approveForm" method="POST">
+        <form id="approveForm" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="cg-modal-body">
                 <div class="cg-modal-info">
@@ -810,6 +810,18 @@
                         <div class="cg-modal-info-value" id="approveDays">-</div>
                     </div>
                 </div>
+
+                <div class="cg-reject-form-group">
+                    <label class="cg-reject-label">Document officiel (PDF)</label>
+                    <input type="file" name="document_officiel" class="cg-reject-textarea" style="min-height: auto; padding: 0.5rem; cursor: pointer;" accept=".pdf">
+                    <p style="font-size: 0.75rem; color: var(--cg-text-muted); margin-top: 0.375rem;">Note de cong&eacute; officielle &mdash; PDF, max 10 Mo. Ce document sera t&eacute;l&eacute;chargeable par l'employ&eacute;.</p>
+                </div>
+
+                <div class="cg-reject-form-group">
+                    <label class="cg-reject-label">Commentaire (optionnel)</label>
+                    <textarea name="commentaire_admin" class="cg-reject-textarea" placeholder="Commentaire pour l'employ&eacute;..." style="min-height: 60px;"></textarea>
+                </div>
+
                 <p style="font-size: 0.9375rem; color: var(--cg-text-secondary);">Confirmez-vous l'approbation de cette demande de cong&eacute; ?</p>
             </div>
             <div class="cg-modal-footer">
@@ -936,6 +948,12 @@ function openDetailModal(id) {
                 html += `<div class="cg-modal-motif">
                     <div class="cg-modal-motif-label">Commentaire admin</div>
                     <div class="cg-modal-motif-text">${conge.commentaire_admin}</div>
+                </div>`;
+            }
+            if (conge.document_officiel) {
+                html += `<div class="cg-modal-motif" style="border-left: 3px solid var(--cg-success);">
+                    <div class="cg-modal-motif-label">Document officiel</div>
+                    <div class="cg-modal-motif-text"><a href="/storage/${conge.document_officiel}" target="_blank" style="color: var(--cg-primary); text-decoration: underline;">T\u00e9l\u00e9charger le PDF</a></div>
                 </div>`;
             }
             content.innerHTML = html;

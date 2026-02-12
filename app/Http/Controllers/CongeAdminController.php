@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Conge;
-use App\Models\Personnel;
 use App\Notifications\CongeStatusNotification;
 
 class CongeAdminController extends Controller
@@ -73,18 +72,28 @@ class CongeAdminController extends Controller
     {
         $request->validate([
             'commentaire_admin' => 'nullable|string|max:1000',
+            'document_officiel' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         if ($conge->statut !== 'en_attente') {
             return back()->with('error', 'Cette demande a déjà été traitée.');
         }
 
-        $conge->update([
+        $data = [
             'statut' => 'approuve',
             'traite_par' => Auth::id(),
             'commentaire_admin' => $request->commentaire_admin,
             'traite_at' => now(),
-        ]);
+        ];
+
+        if ($request->hasFile('document_officiel')) {
+            $file = $request->file('document_officiel');
+            $filename = 'conge_' . $conge->id . '_officiel_' . time() . '.pdf';
+            $path = $file->storeAs('conges/documents-officiels', $filename, 'public');
+            $data['document_officiel'] = $path;
+        }
+
+        $conge->update($data);
 
         // Notifier l'employé
         $conge->load('personnel', 'typeConge');

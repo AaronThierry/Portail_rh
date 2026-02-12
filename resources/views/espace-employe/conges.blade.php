@@ -1,11 +1,11 @@
 @extends('layouts.espace-employe')
 
-@section('title', 'Congés & Absences')
-@section('page-title', 'Congés & Absences')
+@section('title', 'Mes Congés')
+@section('page-title', 'Mes Congés')
 @section('breadcrumb')
     <a href="{{ route('espace-employe.dashboard') }}">Accueil</a>
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-    <span>Congés & Absences</span>
+    <span>Mes Congés</span>
 @endsection
 
 @section('styles')

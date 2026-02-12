@@ -164,6 +164,21 @@
                         <span class="nav-badge" style="background: linear-gradient(135deg, #FF9500 0%, #FF6B00 100%); color: white;">{{ $pendingCongesCount }}</span>
                     @endif
                 </a>
+
+                <a href="{{ route('admin.absences.index') }}" class="nav-link {{ Request::is('admin/absences*') ? 'active' : '' }}" data-tooltip="Gestion des Absences">
+                    <span class="nav-link-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                            <line x1="15" y1="9" x2="9" y2="15" stroke-width="2"/>
+                            <line x1="9" y1="9" x2="15" y2="15" stroke-width="2"/>
+                        </svg>
+                    </span>
+                    <span class="nav-link-text">Gestion des Absences</span>
+                    @php $injustifiedCount = \App\Models\Absence::where('justifiee', false)->count(); @endphp
+                    @if($injustifiedCount > 0)
+                        <span class="nav-badge" style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white;">{{ $injustifiedCount }}</span>
+                    @endif
+                </a>
                 @endif
 
                 @can('view-documents')

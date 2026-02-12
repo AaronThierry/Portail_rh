@@ -15,6 +15,8 @@ use App\Models\BulletinPaie;
 use App\Models\Conge;
 use App\Models\TypeConge;
 use App\Models\User;
+use App\Models\Absence;
+use App\Models\TypeAbsence;
 use App\Http\Requests\StoreCongeRequest;
 use App\Notifications\NouvelleDemandeCongeNotification;
 
@@ -33,11 +35,17 @@ class EspaceEmployeController extends Controller
             ? Conge::getSolde($personnel->id, now()->year, $personnel->entreprise_id)
             : ['annuels' => 0, 'pris' => 0, 'restants' => 0, 'en_attente' => 0];
 
+        $statsAbsences = $personnel
+            ? Absence::getStatistiquesPersonnel($personnel->id, now()->year)
+            : ['total' => 0, 'justifiees' => 0, 'injustifiees' => 0, 'retards' => 0];
+
         $stats = [
             'documents' => $personnel ? $personnel->documents()->count() : 0,
             'conges_restants' => $soldeConges['restants'],
             'demandes_en_cours' => $personnel ? Conge::forPersonnel($personnel->id)->enAttente()->count() : 0,
             'anciennete' => $personnel ? $personnel->anciennete : 0,
+            'absences' => $statsAbsences['total'],
+            'absences_injustifiees' => $statsAbsences['injustifiees'],
         ];
 
         // Dernières activités réelles depuis les congés
@@ -642,6 +650,36 @@ class EspaceEmployeController extends Controller
             ->get();
 
         return view('espace-employe.demandes', compact('personnel', 'demandes'));
+    }
+
+    /**
+     * Affiche les absences de l'employé
+     */
+    public function absences(Request $request)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        if (!$personnel) {
+            return redirect()->route('espace-employe.dashboard')
+                ->with('error', 'Profil non trouvé.');
+        }
+
+        $annee = $request->get('annee', now()->year);
+
+        $absences = Absence::forPersonnel($personnel->id)
+            ->annee($annee)
+            ->with('typeAbsence')
+            ->orderBy('date_absence', 'desc')
+            ->get();
+
+        $statsAbsences = Absence::getStatistiquesPersonnel($personnel->id, $annee);
+
+        $anneesDisponibles = Absence::getAnneesDisponibles($personnel->id);
+
+        return view('espace-employe.absences', compact(
+            'personnel', 'absences', 'statsAbsences', 'annee', 'anneesDisponibles'
+        ));
     }
 
     /**

@@ -18,6 +18,7 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BulletinPaieController;
 use App\Http\Controllers\CongeAdminController;
+use App\Http\Controllers\AbsenceAdminController;
 use App\Http\Controllers\NotificationController;
 
 /*
@@ -99,6 +100,9 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
     Route::post('/conges/{conge}/prolonger', [EspaceEmployeController::class, 'prolongerConge'])->name('conges.prolonger');
     Route::get('/conges/{conge}/document', [EspaceEmployeController::class, 'downloadDocumentOfficiel'])->name('conges.document');
     Route::get('/demandes', [EspaceEmployeController::class, 'demandes'])->name('demandes');
+
+    // Absences
+    Route::get('/absences', [EspaceEmployeController::class, 'absences'])->name('absences');
 
     // Paramètres du compte
     Route::get('/parametres', [EspaceEmployeController::class, 'parametres'])->name('parametres');
@@ -194,6 +198,13 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     Route::get('conges/{conge}', [CongeAdminController::class, 'show'])->name('conges.show');
     Route::post('conges/{conge}/approuver', [CongeAdminController::class, 'approve'])->name('conges.approve');
     Route::post('conges/{conge}/refuser', [CongeAdminController::class, 'reject'])->name('conges.reject');
+
+    // Gestion des absences
+    Route::get('absences', [AbsenceAdminController::class, 'index'])->name('absences.index');
+    Route::post('absences', [AbsenceAdminController::class, 'store'])->name('absences.store');
+    Route::get('absences/{absence}', [AbsenceAdminController::class, 'show'])->name('absences.show');
+    Route::post('absences/{absence}/toggle-justifiee', [AbsenceAdminController::class, 'toggleJustifiee'])->name('absences.toggle-justifiee');
+    Route::delete('absences/{absence}', [AbsenceAdminController::class, 'destroy'])->name('absences.destroy');
 
     // Gestion des bulletins de paie
     Route::get('bulletins-paie', [BulletinPaieController::class, 'index'])->name('bulletins-paie.index');

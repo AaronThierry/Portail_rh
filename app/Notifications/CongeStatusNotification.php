@@ -37,9 +37,14 @@ class CongeStatusNotification extends Notification implements ShouldQueue
     {
         $channels = ['database'];
 
-        // Ajouter WhatsApp si activé et numéro disponible
-        if ($notifiable->personnel && $notifiable->personnel->telephone) {
-            $channels[] = 'whatsapp';
+        // Ajouter WhatsApp seulement si le service est activé et numéro disponible
+        try {
+            $whatsapp = app(WhatsAppService::class);
+            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->telephone) {
+                $channels[] = 'whatsapp';
+            }
+        } catch (\Throwable $e) {
+            // WhatsApp non configuré, on continue avec database uniquement
         }
 
         return $channels;

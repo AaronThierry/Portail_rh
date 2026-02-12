@@ -21,7 +21,7 @@ class CongeAdminController extends Controller
         $statut = $request->get('statut');
         $search = $request->get('search');
 
-        $query = Conge::with(['personnel', 'typeConge', 'user', 'traitePar'])
+        $query = Conge::with(['personnel', 'typeConge', 'user', 'traitePar', 'congeParent'])
             ->orderBy('created_at', 'desc');
 
         if ($entrepriseId) {
@@ -60,7 +60,7 @@ class CongeAdminController extends Controller
      */
     public function show(Conge $conge)
     {
-        $conge->load(['personnel', 'typeConge', 'user', 'traitePar']);
+        $conge->load(['personnel', 'typeConge', 'user', 'traitePar', 'congeParent']);
 
         return response()->json($conge);
     }

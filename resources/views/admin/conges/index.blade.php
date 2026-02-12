@@ -702,6 +702,9 @@
                                     <span class="cg-type-badge" style="background: {{ $conge->typeConge->couleur ?? '#4A90D9' }}20; color: {{ $conge->typeConge->couleur ?? '#4A90D9' }};">
                                         {{ $conge->typeConge->nom ?? 'Cong&eacute;' }}
                                     </span>
+                                    @if($conge->conge_parent_id)
+                                        <span class="cg-type-badge" style="background: #dbeafe; color: #2563eb; margin-left: 0.25rem; font-size: 0.6875rem;">Prolongation</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="cg-dates">
@@ -932,6 +935,12 @@ function openDetailModal(id) {
                         <div class="cg-modal-info-value">${conge.created_at || '-'}</div>
                     </div>
                 </div>`;
+            if (conge.conge_parent_id && conge.conge_parent) {
+                html += `<div class="cg-modal-motif" style="border-left: 3px solid #2563eb;">
+                    <div class="cg-modal-motif-label">Prolongation</div>
+                    <div class="cg-modal-motif-text">Prolongation du cong\u00e9 initial du ${conge.conge_parent.date_debut} au ${conge.conge_parent.date_fin} (${conge.conge_parent.nombre_jours} jour${conge.conge_parent.nombre_jours > 1 ? 's' : ''})</div>
+                </div>`;
+            }
             if (conge.motif) {
                 html += `<div class="cg-modal-motif">
                     <div class="cg-modal-motif-label">Motif</div>

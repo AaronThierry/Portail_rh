@@ -648,11 +648,14 @@
                                             <button type="submit" class="ee-btn-cancel-sm">Annuler</button>
                                         </form>
                                     @endif
-                                    @if($conge->statut === 'approuve' && $conge->document_officiel)
-                                        <a href="{{ route('espace-employe.conges.document', $conge) }}" class="ee-btn-cancel-sm" style="border-color: var(--e-emerald); color: var(--e-emerald); text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;" title="Télécharger la note officielle">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                            Note officielle
-                                        </a>
+                                    @if($conge->statut === 'approuve')
+                                        <button class="ee-btn-cancel-sm" style="border-color: var(--e-blue); color: var(--e-blue);" onclick="openProlongerModal({{ $conge->id }}, '{{ $conge->date_fin->format('Y-m-d') }}', '{{ $conge->date_fin->format('d/m/Y') }}', '{{ addslashes($conge->typeConge->nom ?? 'Congé') }}')" title="Prolonger ce congé">Prolonger</button>
+                                        @if($conge->document_officiel)
+                                            <a href="{{ route('espace-employe.conges.document', $conge) }}" class="ee-btn-cancel-sm" style="border-color: var(--e-emerald); color: var(--e-emerald); text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;" title="Télécharger la note officielle">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                                Note officielle
+                                            </a>
+                                        @endif
                                     @endif
                                     @if($conge->statut === 'refuse' && $conge->motif_refus)
                                         <button class="ee-btn-cancel-sm" onclick="alert('Motif du refus :\n{{ addslashes($conge->motif_refus) }}')" title="Voir le motif">Motif</button>
@@ -734,15 +737,79 @@
     </div>
 </div>
 
+{{-- Modal Prolongation --}}
+<div class="ee-modal-overlay" id="prolongerModal">
+    <div class="ee-modal">
+        <div class="ee-modal-header">
+            <h3 class="ee-modal-title">Prolonger un congé</h3>
+            <button class="ee-modal-close" onclick="document.getElementById('prolongerModal').classList.remove('active')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <form id="prolongerForm" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="ee-modal-body">
+                <div style="padding: 0.75rem; background: var(--e-blue-wash); border-radius: var(--e-radius); margin-bottom: 1.25rem; font-size: 0.875rem; color: var(--e-blue);">
+                    <strong id="prolongerTypeLabel">Congé</strong> &mdash; Fin actuelle : <strong id="prolongerDateFinLabel">-</strong>
+                </div>
+
+                <div class="ee-form-group">
+                    <label class="ee-form-label">Nouvelle date de fin *</label>
+                    <input type="date" name="nouvelle_date_fin" id="prolongerDateFin" class="ee-form-input" required>
+                    <p class="ee-form-hint">La nouvelle date doit être postérieure à la date de fin actuelle.</p>
+                </div>
+
+                <div class="ee-form-group">
+                    <label class="ee-form-label">Motif de la prolongation</label>
+                    <textarea name="motif" class="ee-form-textarea" placeholder="Raison de la prolongation (optionnel)"></textarea>
+                </div>
+
+                <div class="ee-form-group">
+                    <label class="ee-form-label">Pièce jointe</label>
+                    <input type="file" name="piece_jointe" class="ee-form-input" accept=".pdf,.jpg,.jpeg,.png">
+                    <p class="ee-form-hint">PDF, JPG ou PNG - Max 5 Mo</p>
+                </div>
+            </div>
+            <div class="ee-modal-footer">
+                <button type="button" class="ee-btn-secondary" onclick="document.getElementById('prolongerModal').classList.remove('active')">Annuler</button>
+                <button type="submit" class="ee-btn-primary">Demander la prolongation</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
-// Fermer le modal en cliquant à l'extérieur
-document.getElementById('congeModal').addEventListener('click', function(e) {
-    if (e.target === this) this.classList.remove('active');
+// Fermer les modals en cliquant à l'extérieur
+document.querySelectorAll('.ee-modal-overlay').forEach(function(overlay) {
+    overlay.addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
 });
+
+// Ouvrir le modal prolonger
+function openProlongerModal(congeId, dateFinYmd, dateFinFormatted, typeName) {
+    document.getElementById('prolongerForm').action = '/mon-espace/conges/' + congeId + '/prolonger';
+    document.getElementById('prolongerTypeLabel').textContent = typeName;
+    document.getElementById('prolongerDateFinLabel').textContent = dateFinFormatted;
+
+    var dateInput = document.getElementById('prolongerDateFin');
+    // Min = lendemain de la date de fin actuelle
+    var nextDay = new Date(dateFinYmd);
+    nextDay.setDate(nextDay.getDate() + 1);
+    var minDate = nextDay.toISOString().split('T')[0];
+    dateInput.min = minDate;
+    dateInput.value = '';
+
+    document.getElementById('prolongerModal').classList.add('active');
+}
 
 // Ouvrir le modal si erreurs de validation
 @if($errors->any())
-    document.getElementById('congeModal').classList.add('active');
+    @if(old('nouvelle_date_fin'))
+        document.getElementById('prolongerModal').classList.add('active');
+    @else
+        document.getElementById('congeModal').classList.add('active');
+    @endif
 @endif
 </script>
 @endsection

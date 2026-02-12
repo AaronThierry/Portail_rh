@@ -30,6 +30,7 @@ class Conge extends Model
         'commentaire_admin',
         'traite_at',
         'annee',
+        'conge_parent_id',
     ];
 
     protected $casts = [
@@ -78,6 +79,16 @@ class Conge extends Model
     public function traitePar()
     {
         return $this->belongsTo(User::class, 'traite_par');
+    }
+
+    public function congeParent()
+    {
+        return $this->belongsTo(self::class, 'conge_parent_id');
+    }
+
+    public function prolongations()
+    {
+        return $this->hasMany(self::class, 'conge_parent_id');
     }
 
     // =========================================================================

@@ -440,6 +440,24 @@ class EspaceEmployeController extends Controller
         $typeConge = TypeConge::findOrFail($request->type_conge_id);
         $annee = Carbon::parse($request->date_debut)->year;
 
+        // Vérifier qu'il n'y a pas de congé en cours qui chevauche les dates demandées
+        $chevauchement = Conge::forPersonnel($personnel->id)
+            ->whereIn('statut', ['en_attente', 'approuve'])
+            ->where(function ($q) use ($request) {
+                $q->where(function ($sub) use ($request) {
+                    $sub->where('date_debut', '<=', $request->date_fin)
+                        ->where('date_fin', '>=', $request->date_debut);
+                });
+            })
+            ->first();
+
+        if ($chevauchement) {
+            $msg = 'Vous avez déjà un congé (' . ($chevauchement->typeConge->nom ?? 'Congé') . ') '
+                 . 'du ' . $chevauchement->date_debut->format('d/m/Y') . ' au ' . $chevauchement->date_fin->format('d/m/Y')
+                 . ' qui chevauche cette période. Vous pouvez prolonger ce congé existant au lieu d\'en créer un nouveau.';
+            return back()->withErrors(['date_debut' => $msg])->withInput();
+        }
+
         // Vérifier le solde si le type est déductible
         if ($typeConge->deductible) {
             $solde = Conge::getSolde($personnel->id, $annee, $personnel->entreprise_id);
@@ -505,6 +523,85 @@ class EspaceEmployeController extends Controller
         $conge->update(['statut' => 'annule']);
 
         return back()->with('success', 'La demande de congé a été annulée.');
+    }
+
+    /**
+     * Prolonger un congé approuvé existant
+     */
+    public function prolongerConge(Request $request, Conge $conge)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        if (!$personnel || $conge->personnel_id !== $personnel->id) {
+            abort(403, 'Accès non autorisé');
+        }
+
+        if ($conge->statut !== 'approuve') {
+            return back()->with('error', 'Seuls les congés approuvés peuvent être prolongés.');
+        }
+
+        $request->validate([
+            'nouvelle_date_fin' => ['required', 'date', 'after:' . $conge->date_fin->format('Y-m-d')],
+            'motif' => ['nullable', 'string', 'max:1000'],
+            'piece_jointe' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+        ], [
+            'nouvelle_date_fin.required' => 'La nouvelle date de fin est obligatoire.',
+            'nouvelle_date_fin.after' => 'La nouvelle date de fin doit être postérieure au ' . $conge->date_fin->format('d/m/Y') . '.',
+        ]);
+
+        // Calculer les jours supplémentaires (du lendemain de l'ancienne fin jusqu'à la nouvelle fin)
+        $ancienneFin = $conge->date_fin->copy()->addDay();
+        $nouvelleFin = Carbon::parse($request->nouvelle_date_fin);
+        $joursSupp = Conge::calculerNombreJours($ancienneFin, $nouvelleFin);
+
+        // Vérifier le solde si le type est déductible
+        $typeConge = $conge->typeConge;
+        $annee = $conge->annee;
+
+        if ($typeConge && $typeConge->deductible) {
+            $solde = Conge::getSolde($personnel->id, $annee, $personnel->entreprise_id);
+            if ($joursSupp > $solde['restants']) {
+                return back()->withErrors(['nouvelle_date_fin' => 'Solde insuffisant. Il vous reste ' . $solde['restants'] . ' jours, mais la prolongation nécessite ' . $joursSupp . ' jours.'])->withInput();
+            }
+        }
+
+        // Upload pièce jointe
+        $pieceJointe = null;
+        if ($request->hasFile('piece_jointe')) {
+            $pieceJointe = $request->file('piece_jointe')
+                ->store("conges/{$personnel->entreprise_id}/{$personnel->id}", 'public');
+        }
+
+        // Créer une demande de prolongation liée au congé parent
+        $prolongation = Conge::create([
+            'entreprise_id' => $personnel->entreprise_id,
+            'personnel_id' => $personnel->id,
+            'type_conge_id' => $conge->type_conge_id,
+            'user_id' => $user->id,
+            'date_debut' => $ancienneFin,
+            'date_fin' => $nouvelleFin,
+            'nombre_jours' => $joursSupp,
+            'motif' => $request->motif ? 'Prolongation : ' . $request->motif : 'Prolongation du congé #' . $conge->id,
+            'piece_jointe' => $pieceJointe,
+            'statut' => 'en_attente',
+            'annee' => $annee,
+            'conge_parent_id' => $conge->id,
+        ]);
+
+        // Notifier les admins/RH
+        $prolongation->load('personnel', 'typeConge');
+        $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
+            ->where('id', '!=', $user->id)
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager']))
+            ->get();
+
+        if ($adminsRH->isNotEmpty()) {
+            Notification::send($adminsRH, new NouvelleDemandeCongeNotification($prolongation));
+        }
+
+        return redirect()->route('espace-employe.conges')
+            ->with('success', 'Votre demande de prolongation a été soumise (' . $joursSupp . ' jours supplémentaires).');
     }
 
     /**

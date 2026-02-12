@@ -70,7 +70,7 @@ class AbsenceAdminController extends Controller
 
         // Liste des personnels pour le formulaire d'ajout
         $personnels = Personnel::where('entreprise_id', $entrepriseId)
-            ->whereNull('date_sortie')
+            ->actif()
             ->orderBy('nom')
             ->get();
 

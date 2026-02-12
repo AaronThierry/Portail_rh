@@ -712,6 +712,41 @@
     gap: 1rem;
 }
 
+/* Searchable Select */
+.bp-search-select { position: relative; }
+.bp-search-select .bp-search-input {
+    width: 100%; padding: 0.875rem 1rem 0.875rem 2.5rem; background: var(--bp-bg);
+    border: 1px solid var(--bp-card-border); border-radius: 10px;
+    font-size: 0.95rem; color: var(--bp-text-primary); box-sizing: border-box; transition: all 0.2s ease;
+}
+.bp-search-select .bp-search-input:focus { outline: none; border-color: var(--bp-primary); box-shadow: 0 0 0 3px var(--bp-primary-light); }
+.bp-search-select .bp-search-icon {
+    position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px; color: var(--bp-text-muted); pointer-events: none;
+}
+.bp-search-select .bp-search-clear {
+    position: absolute; right: 0.625rem; top: 50%; transform: translateY(-50%);
+    width: 20px; height: 20px; border: none; background: none; cursor: pointer;
+    color: var(--bp-text-muted); display: none; padding: 0; font-size: 1.125rem; line-height: 1;
+}
+.bp-search-select .bp-search-clear:hover { color: var(--bp-text-primary); }
+.bp-search-dropdown {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--bp-card-bg); border: 1px solid var(--bp-card-border);
+    border-radius: 10px; max-height: 220px; overflow-y: auto; z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-top: 4px;
+}
+.bp-search-option {
+    padding: 0.75rem 1rem; cursor: pointer; font-size: 0.95rem;
+    color: var(--bp-text-primary); transition: background 0.15s;
+}
+.bp-search-option:hover { background: var(--bp-primary-light); }
+.bp-search-option .bp-opt-sub { color: var(--bp-text-muted); font-size: 0.8125rem; }
+.bp-search-no-results {
+    padding: 0.875rem 1rem; color: var(--bp-text-muted); font-style: italic;
+    font-size: 0.875rem; text-align: center; display: none;
+}
+
 /* File Upload Zone */
 .bp-upload-zone {
     border: 2px dashed var(--bp-card-border);
@@ -1176,14 +1211,20 @@
                 <!-- Sélection employé -->
                 <div class="bp-form-group">
                     <label>Employé <span>*</span></label>
-                    <select name="personnel_id" class="bp-form-control" required>
-                        <option value="">Sélectionner un employé...</option>
-                        @foreach($personnels as $personnel)
-                            <option value="{{ $personnel->id }}">
-                                {{ $personnel->matricule }} - {{ $personnel->nom }} {{ $personnel->prenoms }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="bp-search-select" id="bpPersonnelSearch">
+                        <svg class="bp-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" class="bp-search-input" placeholder="Rechercher un employé..." autocomplete="off">
+                        <button type="button" class="bp-search-clear" title="Effacer">&times;</button>
+                        <input type="hidden" name="personnel_id" required>
+                        <div class="bp-search-dropdown">
+                            @foreach($personnels as $personnel)
+                                <div class="bp-search-option" data-value="{{ $personnel->id }}" data-text="{{ $personnel->matricule }} - {{ $personnel->nom }} {{ $personnel->prenoms }}">
+                                    {{ $personnel->matricule }} - {{ $personnel->nom }} {{ $personnel->prenoms }}
+                                </div>
+                            @endforeach
+                            <div class="bp-search-no-results">Aucun résultat</div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Période -->
@@ -1397,6 +1438,79 @@ function formatFileSize(bytes) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
+
+// ── Searchable Personnel Select ──
+(function() {
+    var wrapper = document.getElementById('bpPersonnelSearch');
+    if (!wrapper) return;
+    var input = wrapper.querySelector('.bp-search-input');
+    var hidden = wrapper.querySelector('input[name="personnel_id"]');
+    var dropdown = wrapper.querySelector('.bp-search-dropdown');
+    var options = wrapper.querySelectorAll('.bp-search-option');
+    var noResults = wrapper.querySelector('.bp-search-no-results');
+    var clearBtn = wrapper.querySelector('.bp-search-clear');
+
+    function showDropdown() { dropdown.style.display = 'block'; }
+    function hideDropdown() { dropdown.style.display = 'none'; }
+
+    function filterOptions() {
+        var term = input.value.toLowerCase().trim();
+        var visible = 0;
+        options.forEach(function(opt) {
+            var match = opt.getAttribute('data-text').toLowerCase().indexOf(term) !== -1;
+            opt.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        noResults.style.display = visible === 0 ? 'block' : 'none';
+        if (visible === 1 && term.length > 0) {
+            options.forEach(function(opt) {
+                if (opt.style.display !== 'none') selectOption(opt);
+            });
+        }
+    }
+
+    function selectOption(opt) {
+        hidden.value = opt.getAttribute('data-value');
+        input.value = opt.getAttribute('data-text');
+        clearBtn.style.display = 'block';
+        hideDropdown();
+    }
+
+    function clearSelection() {
+        hidden.value = '';
+        input.value = '';
+        clearBtn.style.display = 'none';
+        options.forEach(function(opt) { opt.style.display = ''; });
+        noResults.style.display = 'none';
+    }
+
+    input.addEventListener('focus', function() { showDropdown(); filterOptions(); });
+    input.addEventListener('input', function() {
+        hidden.value = '';
+        clearBtn.style.display = input.value ? 'block' : 'none';
+        showDropdown();
+        filterOptions();
+    });
+    options.forEach(function(opt) {
+        opt.addEventListener('click', function() { selectOption(opt); });
+    });
+    clearBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        clearSelection();
+        input.focus();
+    });
+    document.addEventListener('click', function(e) {
+        if (!wrapper.contains(e.target)) hideDropdown();
+    });
+
+    // Reset on form reset
+    var form = wrapper.closest('form');
+    if (form) {
+        form.addEventListener('reset', function() {
+            setTimeout(function() { clearSelection(); }, 0);
+        });
+    }
+})();
 
 // Auto-hide toast
 setTimeout(function() {

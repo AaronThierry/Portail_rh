@@ -1112,6 +1112,46 @@
     pointer-events: none;
 }
 
+/* Searchable Select */
+.usr-search-select { position: relative; }
+.usr-search-select .usr-search-input {
+    width: 100%; padding: 12px 16px 12px 42px; background: white;
+    border: 1px solid var(--usr-gray-300); border-radius: 10px;
+    font-size: 0.9375rem; color: var(--usr-gray-800); box-sizing: border-box; transition: all 0.2s ease;
+}
+.usr-search-select .usr-search-input:hover { border-color: var(--usr-gray-400); }
+.usr-search-select .usr-search-input:focus { outline: none; border-color: var(--usr-orange); box-shadow: 0 0 0 3px rgba(255, 149, 0, 0.1); }
+.usr-search-select .usr-search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px; color: var(--usr-gray-400); pointer-events: none;
+}
+.usr-search-select .usr-search-clear {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    width: 20px; height: 20px; border: none; background: none; cursor: pointer;
+    color: var(--usr-gray-400); display: none; padding: 0; font-size: 1.125rem; line-height: 1;
+}
+.usr-search-select .usr-search-clear:hover { color: var(--usr-gray-800); }
+.usr-search-dropdown {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    background: white; border: 1px solid var(--usr-gray-200);
+    border-radius: 10px; max-height: 220px; overflow-y: auto; z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-top: 4px;
+}
+.usr-search-option {
+    padding: 10px 16px; cursor: pointer; font-size: 0.9375rem;
+    color: var(--usr-gray-800); transition: background 0.15s;
+}
+.usr-search-option:hover { background: rgba(255, 149, 0, 0.08); }
+.usr-search-option .usr-opt-sub { color: var(--usr-gray-400); font-size: 0.8125rem; }
+.usr-search-no-results {
+    padding: 12px 16px; color: var(--usr-gray-400); font-style: italic;
+    font-size: 0.875rem; text-align: center; display: none;
+}
+.dark .usr-search-select .usr-search-input { background: var(--usr-gray-700); border-color: var(--usr-gray-600); color: white; }
+.dark .usr-search-dropdown { background: var(--usr-gray-700); border-color: var(--usr-gray-600); }
+.dark .usr-search-option { color: var(--usr-gray-200); }
+.dark .usr-search-option:hover { background: rgba(255, 149, 0, 0.15); }
+
 .usr-form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -2166,19 +2206,25 @@
                         <label class="usr-form-label">
                             Employé <span class="required">*</span>
                         </label>
-                        <div class="usr-select-wrapper">
-                            <select id="usrPersonnelId" name="personnel_id" class="usr-form-select" required>
-                                <option value="">-- Choisir un employé --</option>
+                        <div class="usr-search-select" id="usrPersonnelSearch">
+                            <svg class="usr-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" class="usr-search-input" id="usrPersonnelInput" placeholder="Rechercher un employé..." autocomplete="off">
+                            <button type="button" class="usr-search-clear" title="Effacer">&times;</button>
+                            <input type="hidden" id="usrPersonnelId" name="personnel_id" required>
+                            <div class="usr-search-dropdown">
                                 @foreach($personnels_sans_compte ?? [] as $personnel)
-                                <option value="{{ $personnel->id }}"
-                                        data-email="{{ $personnel->email }}"
-                                        data-phone="{{ $personnel->telephone_complet }}"
-                                        data-department="{{ $personnel->departement->nom ?? 'N/A' }}">
+                                <div class="usr-search-option"
+                                     data-value="{{ $personnel->id }}"
+                                     data-text="{{ $personnel->matricule }} - {{ $personnel->nom_complet }}{{ $personnel->poste ? ' ('.$personnel->poste.')' : '' }}"
+                                     data-email="{{ $personnel->email }}"
+                                     data-phone="{{ $personnel->telephone_complet }}"
+                                     data-department="{{ $personnel->departement->nom ?? 'N/A' }}">
                                     {{ $personnel->matricule }} - {{ $personnel->nom_complet }}
-                                    @if($personnel->poste) ({{ $personnel->poste }}) @endif
-                                </option>
+                                    @if($personnel->poste) <span class="usr-opt-sub">({{ $personnel->poste }})</span> @endif
+                                </div>
                                 @endforeach
-                            </select>
+                                <div class="usr-search-no-results">Aucun résultat</div>
+                            </div>
                         </div>
                     </div>
 
@@ -2487,7 +2533,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (step === 1) {
             const personnel = document.getElementById('usrPersonnelId');
             if (!personnel.value) {
-                personnel.focus();
+                document.getElementById('usrPersonnelInput').focus();
                 alert('Veuillez sélectionner un employé');
                 return false;
             }
@@ -2509,27 +2555,84 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Employee preview
-    const personnelSelect = document.getElementById('usrPersonnelId');
+    // ── Searchable Personnel Select with Preview ──
     const preview = document.getElementById('usrEmployeePreview');
     const emailInput = document.getElementById('usrEmail');
 
-    personnelSelect?.addEventListener('change', function() {
-        const option = this.options[this.selectedIndex];
-        if (this.value && option) {
-            document.getElementById('usrPreviewEmail').textContent = option.dataset.email || '-';
-            document.getElementById('usrPreviewPhone').textContent = option.dataset.phone || '-';
-            document.getElementById('usrPreviewDept').textContent = option.dataset.department || '-';
-            preview.classList.add('visible');
+    (function() {
+        var wrapper = document.getElementById('usrPersonnelSearch');
+        if (!wrapper) return;
+        var searchInput = wrapper.querySelector('.usr-search-input');
+        var hidden = document.getElementById('usrPersonnelId');
+        var dropdown = wrapper.querySelector('.usr-search-dropdown');
+        var options = wrapper.querySelectorAll('.usr-search-option');
+        var noResults = wrapper.querySelector('.usr-search-no-results');
+        var clearBtn = wrapper.querySelector('.usr-search-clear');
 
-            // Auto-fill email
-            if (option.dataset.email) {
-                emailInput.value = option.dataset.email;
+        function showDropdown() { dropdown.style.display = 'block'; }
+        function hideDropdown() { dropdown.style.display = 'none'; }
+
+        function filterOptions() {
+            var term = searchInput.value.toLowerCase().trim();
+            var visible = 0;
+            options.forEach(function(opt) {
+                var match = opt.getAttribute('data-text').toLowerCase().indexOf(term) !== -1;
+                opt.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            noResults.style.display = visible === 0 ? 'block' : 'none';
+            if (visible === 1 && term.length > 0) {
+                options.forEach(function(opt) {
+                    if (opt.style.display !== 'none') selectOption(opt);
+                });
             }
-        } else {
+        }
+
+        function selectOption(opt) {
+            hidden.value = opt.getAttribute('data-value');
+            searchInput.value = opt.getAttribute('data-text');
+            clearBtn.style.display = 'block';
+            hideDropdown();
+            // Update preview
+            document.getElementById('usrPreviewEmail').textContent = opt.dataset.email || '-';
+            document.getElementById('usrPreviewPhone').textContent = opt.dataset.phone || '-';
+            document.getElementById('usrPreviewDept').textContent = opt.dataset.department || '-';
+            preview.classList.add('visible');
+            // Auto-fill email
+            if (opt.dataset.email && emailInput) {
+                emailInput.value = opt.dataset.email;
+            }
+        }
+
+        function clearSelection() {
+            hidden.value = '';
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            options.forEach(function(opt) { opt.style.display = ''; });
+            noResults.style.display = 'none';
             preview.classList.remove('visible');
         }
-    });
+
+        searchInput.addEventListener('focus', function() { showDropdown(); filterOptions(); });
+        searchInput.addEventListener('input', function() {
+            hidden.value = '';
+            clearBtn.style.display = searchInput.value ? 'block' : 'none';
+            showDropdown();
+            filterOptions();
+            preview.classList.remove('visible');
+        });
+        options.forEach(function(opt) {
+            opt.addEventListener('click', function() { selectOption(opt); });
+        });
+        clearBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            clearSelection();
+            searchInput.focus();
+        });
+        document.addEventListener('click', function(e) {
+            if (!wrapper.contains(e.target)) hideDropdown();
+        });
+    })();
 
     // ESC to close modal
     document.addEventListener('keydown', function(e) {

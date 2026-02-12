@@ -256,6 +256,41 @@
 .ab-form-textarea { resize: vertical; min-height: 70px; }
 .ab-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 .ab-form-hint { font-size: 0.75rem; color: var(--ab-text-muted); margin-top: 0.25rem; }
+
+/* Searchable Select */
+.ab-search-select { position: relative; }
+.ab-search-select .ab-search-input {
+    width: 100%; padding: 0.625rem 0.875rem 0.625rem 2.25rem; background: var(--ab-bg);
+    border: 1px solid var(--ab-card-border); border-radius: 8px;
+    font-size: 0.9375rem; color: var(--ab-text-primary); box-sizing: border-box;
+}
+.ab-search-select .ab-search-input:focus { outline: none; border-color: var(--ab-primary); }
+.ab-search-select .ab-search-icon {
+    position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px; color: var(--ab-text-muted); pointer-events: none;
+}
+.ab-search-select .ab-search-clear {
+    position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%);
+    width: 20px; height: 20px; border: none; background: none; cursor: pointer;
+    color: var(--ab-text-muted); display: none; padding: 0;
+}
+.ab-search-select .ab-search-clear:hover { color: var(--ab-text-primary); }
+.ab-search-dropdown {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--ab-card-bg); border: 1px solid var(--ab-card-border);
+    border-radius: 8px; max-height: 220px; overflow-y: auto; z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-top: 4px;
+}
+.ab-search-option {
+    padding: 0.625rem 0.875rem; cursor: pointer; font-size: 0.9375rem;
+    color: var(--ab-text-primary); transition: background 0.1s;
+}
+.ab-search-option:hover, .ab-search-option.highlighted { background: var(--ab-primary-light); }
+.ab-search-option .ab-opt-sub { color: var(--ab-text-muted); font-size: 0.8125rem; }
+.ab-search-no-results {
+    padding: 0.875rem; color: var(--ab-text-muted); font-style: italic;
+    font-size: 0.875rem; text-align: center; display: none;
+}
 .ab-modal-btn-cancel { padding: 0.625rem 1.25rem; background: var(--ab-bg); border: 1px solid var(--ab-card-border); border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: var(--ab-text-secondary); cursor: pointer; }
 .ab-modal-btn-confirm { padding: 0.625rem 1.25rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: white; cursor: pointer; background: var(--ab-accent); }
 .ab-modal-btn-confirm:hover { opacity: 0.9; }
@@ -575,14 +610,20 @@
             <div class="ab-modal-body">
                 <div class="ab-form-group">
                     <label class="ab-form-label">Employ&eacute; *</label>
-                    <select name="personnel_id" class="ab-form-select" required>
-                        <option value="">S&eacute;lectionnez un employ&eacute;</option>
-                        @foreach($personnels as $p)
-                            <option value="{{ $p->id }}" {{ old('personnel_id') == $p->id ? 'selected' : '' }}>
-                                {{ $p->prenoms }} {{ $p->nom }} ({{ $p->matricule ?? '-' }})
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="ab-search-select" id="abPersonnelSearch">
+                        <svg class="ab-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" class="ab-search-input" placeholder="Rechercher un employ&eacute;..." autocomplete="off">
+                        <button type="button" class="ab-search-clear" title="Effacer">&times;</button>
+                        <input type="hidden" name="personnel_id" value="{{ old('personnel_id') }}" required>
+                        <div class="ab-search-dropdown">
+                            @foreach($personnels as $p)
+                                <div class="ab-search-option" data-value="{{ $p->id }}" data-text="{{ $p->prenoms }} {{ $p->nom }} ({{ $p->matricule ?? '-' }})">
+                                    {{ $p->prenoms }} {{ $p->nom }} <span class="ab-opt-sub">({{ $p->matricule ?? '-' }})</span>
+                                </div>
+                            @endforeach
+                            <div class="ab-search-no-results">Aucun r&eacute;sultat</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="ab-form-row">
@@ -698,6 +739,91 @@ function openRejectModal(absenceId) {
     form.querySelector('textarea[name="motif_refus"]').value = '';
     document.getElementById('rejectModal').classList.add('active');
 }
+
+// ── Searchable Personnel Select ──
+(function() {
+    var wrapper = document.getElementById('abPersonnelSearch');
+    if (!wrapper) return;
+    var input = wrapper.querySelector('.ab-search-input');
+    var hidden = wrapper.querySelector('input[name="personnel_id"]');
+    var dropdown = wrapper.querySelector('.ab-search-dropdown');
+    var options = wrapper.querySelectorAll('.ab-search-option');
+    var noResults = wrapper.querySelector('.ab-search-no-results');
+    var clearBtn = wrapper.querySelector('.ab-search-clear');
+
+    function showDropdown() { dropdown.style.display = 'block'; }
+    function hideDropdown() { dropdown.style.display = 'none'; }
+
+    function filterOptions() {
+        var term = input.value.toLowerCase().trim();
+        var visible = 0;
+        options.forEach(function(opt) {
+            var match = opt.getAttribute('data-text').toLowerCase().indexOf(term) !== -1;
+            opt.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        noResults.style.display = visible === 0 ? 'block' : 'none';
+        // Auto-select if single result and user typed something
+        if (visible === 1 && term.length > 0) {
+            options.forEach(function(opt) {
+                if (opt.style.display !== 'none') {
+                    selectOption(opt);
+                }
+            });
+        }
+    }
+
+    function selectOption(opt) {
+        hidden.value = opt.getAttribute('data-value');
+        input.value = opt.getAttribute('data-text');
+        clearBtn.style.display = 'block';
+        hideDropdown();
+    }
+
+    function clearSelection() {
+        hidden.value = '';
+        input.value = '';
+        clearBtn.style.display = 'none';
+        options.forEach(function(opt) { opt.style.display = ''; });
+        noResults.style.display = 'none';
+    }
+
+    input.addEventListener('focus', function() {
+        showDropdown();
+        filterOptions();
+    });
+
+    input.addEventListener('input', function() {
+        hidden.value = '';
+        clearBtn.style.display = input.value ? 'block' : 'none';
+        showDropdown();
+        filterOptions();
+    });
+
+    options.forEach(function(opt) {
+        opt.addEventListener('click', function() { selectOption(opt); });
+    });
+
+    clearBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        clearSelection();
+        input.focus();
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!wrapper.contains(e.target)) hideDropdown();
+    });
+
+    // Restore old() value on load
+    if (hidden.value) {
+        options.forEach(function(opt) {
+            if (opt.getAttribute('data-value') === hidden.value) {
+                input.value = opt.getAttribute('data-text');
+                clearBtn.style.display = 'block';
+            }
+        });
+    }
+})();
 
 // Init on load
 toggleMinutesRetard();

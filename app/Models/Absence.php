@@ -25,6 +25,11 @@ class Absence extends Model
         'commentaire_admin',
         'justificatif',
         'justifiee',
+        'source',
+        'statut',
+        'motif_refus',
+        'traite_par',
+        'traite_at',
         'annee',
     ];
 
@@ -33,6 +38,7 @@ class Absence extends Model
         'justifiee' => 'boolean',
         'minutes_retard' => 'integer',
         'annee' => 'integer',
+        'traite_at' => 'datetime',
     ];
 
     protected $appends = ['duree_label', 'justifiee_label'];
@@ -68,6 +74,11 @@ class Absence extends Model
         return $this->belongsTo(User::class, 'enregistre_par');
     }
 
+    public function traitePar()
+    {
+        return $this->belongsTo(User::class, 'traite_par');
+    }
+
     // =========================================================================
     // SCOPES
     // =========================================================================
@@ -97,6 +108,26 @@ class Absence extends Model
         return $query->where('justifiee', false);
     }
 
+    public function scopeEnAttente($query)
+    {
+        return $query->where('statut', 'en_attente');
+    }
+
+    public function scopeApprouvee($query)
+    {
+        return $query->where('statut', 'approuvee');
+    }
+
+    public function scopeFromEmploye($query)
+    {
+        return $query->where('source', 'employe');
+    }
+
+    public function scopeFromAdmin($query)
+    {
+        return $query->where('source', 'admin');
+    }
+
     // =========================================================================
     // ACCESSEURS
     // =========================================================================
@@ -124,11 +155,14 @@ class Absence extends Model
         if ($entrepriseId) $query->forEntreprise($entrepriseId);
         if ($annee) $query->annee($annee);
 
+        $baseApprouvee = (clone $query)->approuvee();
+
         return [
-            'total' => (clone $query)->count(),
-            'justifiees' => (clone $query)->justifiee()->count(),
-            'injustifiees' => (clone $query)->injustifiee()->count(),
-            'retards' => (clone $query)->where('duree_type', 'retard')->count(),
+            'total' => (clone $baseApprouvee)->count(),
+            'justifiees' => (clone $baseApprouvee)->justifiee()->count(),
+            'injustifiees' => (clone $baseApprouvee)->injustifiee()->count(),
+            'retards' => (clone $baseApprouvee)->where('duree_type', 'retard')->count(),
+            'en_attente' => (clone $query)->enAttente()->count(),
         ];
     }
 
@@ -137,11 +171,14 @@ class Absence extends Model
         $query = self::forPersonnel($personnelId);
         if ($annee) $query->annee($annee);
 
+        $baseApprouvee = (clone $query)->approuvee();
+
         return [
-            'total' => (clone $query)->count(),
-            'justifiees' => (clone $query)->justifiee()->count(),
-            'injustifiees' => (clone $query)->injustifiee()->count(),
-            'retards' => (clone $query)->where('duree_type', 'retard')->count(),
+            'total' => (clone $baseApprouvee)->count(),
+            'justifiees' => (clone $baseApprouvee)->justifiee()->count(),
+            'injustifiees' => (clone $baseApprouvee)->injustifiee()->count(),
+            'retards' => (clone $baseApprouvee)->where('duree_type', 'retard')->count(),
+            'en_attente' => (clone $query)->enAttente()->count(),
         ];
     }
 

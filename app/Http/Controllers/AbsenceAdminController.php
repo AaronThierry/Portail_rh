@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Absence;
 use App\Models\TypeAbsence;
 use App\Models\Personnel;
+use App\Models\User;
+use App\Notifications\AbsenceStatusNotification;
 
 class AbsenceAdminController extends Controller
 {
@@ -23,8 +24,9 @@ class AbsenceAdminController extends Controller
         $typeAbsenceId = $request->get('type_absence');
         $justifiee = $request->get('justifiee');
         $search = $request->get('search');
+        $statut = $request->get('statut');
 
-        $query = Absence::with(['personnel', 'typeAbsence', 'enregistrePar'])
+        $query = Absence::with(['personnel', 'typeAbsence', 'enregistrePar', 'traitePar'])
             ->orderBy('date_absence', 'desc');
 
         if ($entrepriseId) {
@@ -41,6 +43,10 @@ class AbsenceAdminController extends Controller
 
         if ($justifiee !== null && $justifiee !== '') {
             $query->where('justifiee', $justifiee === '1');
+        }
+
+        if ($statut) {
+            $query->where('statut', $statut);
         }
 
         if ($search) {
@@ -75,13 +81,13 @@ class AbsenceAdminController extends Controller
             ->get();
 
         return view('admin.absences.index', compact(
-            'absences', 'stats', 'annee', 'typeAbsenceId', 'justifiee', 'search',
+            'absences', 'stats', 'annee', 'typeAbsenceId', 'justifiee', 'search', 'statut',
             'anneesDisponibles', 'typesAbsence', 'personnels'
         ));
     }
 
     /**
-     * Enregistrer une absence
+     * Enregistrer une absence (par l'admin)
      */
     public function store(Request $request)
     {
@@ -110,6 +116,7 @@ class AbsenceAdminController extends Controller
         $existe = Absence::where('personnel_id', $request->personnel_id)
             ->where('date_absence', $request->date_absence)
             ->where('duree_type', $request->duree_type)
+            ->whereIn('statut', ['en_attente', 'approuvee'])
             ->exists();
 
         if ($existe) {
@@ -138,6 +145,8 @@ class AbsenceAdminController extends Controller
             'commentaire_admin' => $request->commentaire_admin,
             'justificatif' => $justificatif,
             'justifiee' => $request->boolean('justifiee'),
+            'source' => 'admin',
+            'statut' => 'approuvee',
             'annee' => \Carbon\Carbon::parse($request->date_absence)->year,
         ]);
 
@@ -149,8 +158,78 @@ class AbsenceAdminController extends Controller
      */
     public function show(Absence $absence)
     {
-        $absence->load(['personnel', 'typeAbsence', 'enregistrePar']);
+        $absence->load(['personnel', 'typeAbsence', 'enregistrePar', 'traitePar']);
         return response()->json($absence);
+    }
+
+    /**
+     * Approuver une demande d'absence / justification
+     */
+    public function approve(Absence $absence)
+    {
+        if ($absence->statut !== 'en_attente') {
+            return back()->with('error', 'Cette absence a déjà été traitée.');
+        }
+
+        $absence->update([
+            'statut' => 'approuvee',
+            'justifiee' => true,
+            'traite_par' => Auth::id(),
+            'traite_at' => now(),
+        ]);
+
+        // Notifier l'employé
+        $absence->load('personnel', 'typeAbsence');
+        $userEmploye = User::where('personnel_id', $absence->personnel_id)->first();
+        if ($userEmploye) {
+            $userEmploye->notify(new AbsenceStatusNotification($absence, 'approuvee'));
+        }
+
+        return back()->with('success', 'L\'absence a été approuvée et justifiée.');
+    }
+
+    /**
+     * Refuser une demande d'absence / justification
+     */
+    public function reject(Request $request, Absence $absence)
+    {
+        $request->validate([
+            'motif_refus' => 'required|string|max:1000',
+        ], [
+            'motif_refus.required' => 'Le motif de refus est obligatoire.',
+        ]);
+
+        if ($absence->statut !== 'en_attente') {
+            return back()->with('error', 'Cette absence a déjà été traitée.');
+        }
+
+        // Si c'est une déclaration employé, on refuse (statut refusee)
+        // Si c'est une justification d'absence admin, on remet en approuvee mais injustifiée
+        if ($absence->source === 'employe') {
+            $absence->update([
+                'statut' => 'refusee',
+                'motif_refus' => $request->motif_refus,
+                'traite_par' => Auth::id(),
+                'traite_at' => now(),
+            ]);
+        } else {
+            $absence->update([
+                'statut' => 'approuvee',
+                'justifiee' => false,
+                'motif_refus' => $request->motif_refus,
+                'traite_par' => Auth::id(),
+                'traite_at' => now(),
+            ]);
+        }
+
+        // Notifier l'employé
+        $absence->load('personnel', 'typeAbsence');
+        $userEmploye = User::where('personnel_id', $absence->personnel_id)->first();
+        if ($userEmploye) {
+            $userEmploye->notify(new AbsenceStatusNotification($absence, 'refusee'));
+        }
+
+        return back()->with('success', 'L\'absence a été refusée.');
     }
 
     /**

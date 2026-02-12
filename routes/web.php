@@ -103,6 +103,9 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
 
     // Absences
     Route::get('/absences', [EspaceEmployeController::class, 'absences'])->name('absences');
+    Route::post('/absences', [EspaceEmployeController::class, 'storeAbsence'])->name('absences.store');
+    Route::post('/absences/{absence}/justifier', [EspaceEmployeController::class, 'justifierAbsence'])->name('absences.justifier');
+    Route::post('/absences/{absence}/annuler', [EspaceEmployeController::class, 'annulerAbsence'])->name('absences.annuler');
 
     // Paramètres du compte
     Route::get('/parametres', [EspaceEmployeController::class, 'parametres'])->name('parametres');
@@ -203,6 +206,8 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     Route::get('absences', [AbsenceAdminController::class, 'index'])->name('absences.index');
     Route::post('absences', [AbsenceAdminController::class, 'store'])->name('absences.store');
     Route::get('absences/{absence}', [AbsenceAdminController::class, 'show'])->name('absences.show');
+    Route::post('absences/{absence}/approuver', [AbsenceAdminController::class, 'approve'])->name('absences.approve');
+    Route::post('absences/{absence}/refuser', [AbsenceAdminController::class, 'reject'])->name('absences.reject');
     Route::post('absences/{absence}/toggle-justifiee', [AbsenceAdminController::class, 'toggleJustifiee'])->name('absences.toggle-justifiee');
     Route::delete('absences/{absence}', [AbsenceAdminController::class, 'destroy'])->name('absences.destroy');
 

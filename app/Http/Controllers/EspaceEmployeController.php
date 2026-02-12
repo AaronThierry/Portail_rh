@@ -19,6 +19,7 @@ use App\Models\Absence;
 use App\Models\TypeAbsence;
 use App\Http\Requests\StoreCongeRequest;
 use App\Notifications\NouvelleDemandeCongeNotification;
+use App\Notifications\NouvelleDemandeAbsenceNotification;
 
 class EspaceEmployeController extends Controller
 {
@@ -677,9 +678,163 @@ class EspaceEmployeController extends Controller
 
         $anneesDisponibles = Absence::getAnneesDisponibles($personnel->id);
 
+        // Types d'absences pour le formulaire
+        $typesAbsence = TypeAbsence::forEntreprise($personnel->entreprise_id)->actif()->ordered()->get();
+
+        // Auto-seed si vide
+        if ($typesAbsence->isEmpty()) {
+            foreach (TypeAbsence::getDefaultTypes() as $type) {
+                TypeAbsence::firstOrCreate(
+                    ['entreprise_id' => $personnel->entreprise_id, 'code' => $type['code']],
+                    array_merge($type, ['entreprise_id' => $personnel->entreprise_id])
+                );
+            }
+            $typesAbsence = TypeAbsence::forEntreprise($personnel->entreprise_id)->actif()->ordered()->get();
+        }
+
         return view('espace-employe.absences', compact(
-            'personnel', 'absences', 'statsAbsences', 'annee', 'anneesDisponibles'
+            'personnel', 'absences', 'statsAbsences', 'annee', 'anneesDisponibles', 'typesAbsence'
         ));
+    }
+
+    /**
+     * Enregistre une demande d'absence par l'employé
+     */
+    public function storeAbsence(Request $request)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        if (!$personnel) {
+            return back()->with('error', 'Profil non trouvé.');
+        }
+
+        $request->validate([
+            'type_absence_id' => 'required|exists:type_absences,id',
+            'date_absence' => 'required|date',
+            'duree_type' => 'required|in:journee,demi_journee,retard,depart_anticipe',
+            'minutes_retard' => 'nullable|integer|min:1|max:480',
+            'motif' => 'required|string|max:1000',
+            'justificatif' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ], [
+            'type_absence_id.required' => 'Le type d\'absence est obligatoire.',
+            'date_absence.required' => 'La date est obligatoire.',
+            'motif.required' => 'Le motif est obligatoire pour une déclaration d\'absence.',
+        ]);
+
+        // Vérifier doublon
+        $existe = Absence::where('personnel_id', $personnel->id)
+            ->where('date_absence', $request->date_absence)
+            ->where('duree_type', $request->duree_type)
+            ->whereIn('statut', ['en_attente', 'approuvee'])
+            ->exists();
+
+        if ($existe) {
+            return back()->with('error', 'Une absence existe déjà pour cette date et ce type de durée.')->withInput();
+        }
+
+        $justificatif = null;
+        if ($request->hasFile('justificatif')) {
+            $justificatif = $request->file('justificatif')
+                ->store("absences/{$personnel->entreprise_id}/{$personnel->id}", 'public');
+        }
+
+        $absence = Absence::create([
+            'entreprise_id' => $personnel->entreprise_id,
+            'personnel_id' => $personnel->id,
+            'type_absence_id' => $request->type_absence_id,
+            'enregistre_par' => $user->id,
+            'date_absence' => $request->date_absence,
+            'duree_type' => $request->duree_type,
+            'minutes_retard' => $request->duree_type === 'retard' ? $request->minutes_retard : null,
+            'motif' => $request->motif,
+            'justificatif' => $justificatif,
+            'justifiee' => false,
+            'source' => 'employe',
+            'statut' => 'en_attente',
+            'annee' => Carbon::parse($request->date_absence)->year,
+        ]);
+
+        // Notifier les admins/RH
+        $absence->load('personnel', 'typeAbsence');
+        $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
+            ->where('id', '!=', $user->id)
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager']))
+            ->get();
+
+        if ($adminsRH->isNotEmpty()) {
+            Notification::send($adminsRH, new NouvelleDemandeAbsenceNotification($absence));
+        }
+
+        return redirect()->route('espace-employe.absences')
+            ->with('success', 'Votre déclaration d\'absence a été soumise avec succès.');
+    }
+
+    /**
+     * Soumettre un justificatif pour une absence existante non justifiée
+     */
+    public function justifierAbsence(Request $request, Absence $absence)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        if (!$personnel || $absence->personnel_id !== $personnel->id) {
+            abort(403, 'Accès non autorisé');
+        }
+
+        if ($absence->justifiee) {
+            return back()->with('error', 'Cette absence est déjà justifiée.');
+        }
+
+        $request->validate([
+            'justificatif' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'motif' => 'nullable|string|max:1000',
+        ], [
+            'justificatif.required' => 'Un justificatif est obligatoire.',
+        ]);
+
+        $justificatif = $request->file('justificatif')
+            ->store("absences/{$personnel->entreprise_id}/{$personnel->id}", 'public');
+
+        $absence->update([
+            'justificatif' => $justificatif,
+            'motif' => $request->motif ?: $absence->motif,
+            'statut' => 'en_attente',
+        ]);
+
+        // Notifier les admins/RH
+        $absence->load('personnel', 'typeAbsence');
+        $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
+            ->where('id', '!=', $user->id)
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager']))
+            ->get();
+
+        if ($adminsRH->isNotEmpty()) {
+            Notification::send($adminsRH, new NouvelleDemandeAbsenceNotification($absence));
+        }
+
+        return back()->with('success', 'Votre justificatif a été soumis. L\'administration va l\'examiner.');
+    }
+
+    /**
+     * Annuler une demande d'absence en attente
+     */
+    public function annulerAbsence(Absence $absence)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        if (!$personnel || $absence->personnel_id !== $personnel->id) {
+            abort(403, 'Accès non autorisé');
+        }
+
+        if ($absence->statut !== 'en_attente' || $absence->source !== 'employe') {
+            return back()->with('error', 'Seules vos demandes en attente peuvent être annulées.');
+        }
+
+        $absence->delete();
+
+        return back()->with('success', 'La déclaration d\'absence a été annulée.');
     }
 
     /**

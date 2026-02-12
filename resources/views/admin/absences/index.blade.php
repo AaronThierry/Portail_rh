@@ -14,7 +14,7 @@
 @section('styles')
 <style>
 /* ========================================
-   VARIABLES - Charte RH+ (identique congés)
+   VARIABLES - Charte RH+ (identique cong&eacute;s)
    ======================================== */
 :root {
     --ab-primary: #4A90D9;
@@ -60,7 +60,7 @@
 .absences-page { padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
 
 /* STATS ROW */
-.ab-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
+.ab-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
 .ab-stat-card {
     background: var(--ab-card-bg); border: 1px solid var(--ab-card-border);
     border-radius: var(--ab-radius-lg); padding: 1.25rem;
@@ -72,6 +72,7 @@
 .ab-stat-card.justified::before { background: var(--ab-success); }
 .ab-stat-card.unjustified::before { background: var(--ab-danger); }
 .ab-stat-card.late::before { background: var(--ab-warning); }
+.ab-stat-card.pending::before { background: var(--ab-accent); }
 .ab-stat-icon {
     width: 48px; height: 48px; border-radius: var(--ab-radius);
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -81,6 +82,7 @@
 .ab-stat-icon.justified { background: var(--ab-success-light); color: var(--ab-success); }
 .ab-stat-icon.unjustified { background: var(--ab-danger-light); color: var(--ab-danger); }
 .ab-stat-icon.late { background: var(--ab-warning-light); color: var(--ab-warning); }
+.ab-stat-icon.pending { background: var(--ab-accent-light); color: var(--ab-accent); }
 .ab-stat-value { font-size: 1.75rem; font-weight: 700; color: var(--ab-text-primary); line-height: 1; }
 .ab-stat-label { font-size: 0.8125rem; color: var(--ab-text-secondary); margin-top: 0.25rem; }
 
@@ -166,13 +168,33 @@
     font-size: 0.8125rem; font-weight: 600; white-space: nowrap;
 }
 
-/* Justifiée Badge */
+/* Justifi&eacute;e Badge */
 .ab-justif { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
 .ab-justif.oui { background: var(--ab-success-light); color: #15803d; }
 .ab-justif.non { background: var(--ab-danger-light); color: #b91c1c; }
+.ab-justif.attente { background: var(--ab-warning-light); color: #92400e; }
+
+/* Source Badge */
+.ab-source {
+    display: inline-flex; align-items: center; gap: 0.375rem;
+    padding: 0.375rem 0.75rem; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+}
+.ab-source.admin { background: var(--ab-primary-light); color: var(--ab-primary); }
+.ab-source.employe { background: var(--ab-accent-light); color: var(--ab-accent); }
+
+/* Statut Badge */
+.ab-statut {
+    display: inline-flex; align-items: center; gap: 0.375rem;
+    padding: 0.375rem 0.75rem; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+}
+.ab-statut.en-attente { background: var(--ab-warning-light); color: #92400e; }
+.ab-statut.approuvee { background: var(--ab-success-light); color: #15803d; }
+.ab-statut.refusee { background: var(--ab-danger-light); color: #b91c1c; }
 
 /* Actions */
-.ab-actions { display: flex; gap: 0.5rem; }
+.ab-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .ab-btn {
     padding: 0.5rem 0.875rem; border: none; border-radius: 8px;
     font-size: 0.8125rem; font-weight: 600; cursor: pointer;
@@ -185,6 +207,18 @@
 .ab-btn-delete:hover { background: var(--ab-danger); color: white; }
 .ab-btn-detail { background: var(--ab-bg); color: var(--ab-text-secondary); border: 1px solid var(--ab-card-border); }
 .ab-btn-detail:hover { border-color: var(--ab-primary); color: var(--ab-primary); }
+.ab-btn-approve { background: var(--ab-success-light); color: #15803d; }
+.ab-btn-approve:hover { background: var(--ab-success); color: white; }
+.ab-btn-reject { background: var(--ab-danger-light); color: #b91c1c; }
+.ab-btn-reject:hover { background: var(--ab-danger); color: white; }
+
+/* Justificatif link */
+.ab-justif-link {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    font-size: 0.75rem; color: var(--ab-primary); text-decoration: none; font-weight: 600;
+}
+.ab-justif-link:hover { text-decoration: underline; }
+.ab-justif-link svg { width: 12px; height: 12px; }
 
 /* EMPTY */
 .ab-empty { text-align: center; padding: 4rem 2rem; }
@@ -225,6 +259,8 @@
 .ab-modal-btn-cancel { padding: 0.625rem 1.25rem; background: var(--ab-bg); border: 1px solid var(--ab-card-border); border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: var(--ab-text-secondary); cursor: pointer; }
 .ab-modal-btn-confirm { padding: 0.625rem 1.25rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: white; cursor: pointer; background: var(--ab-accent); }
 .ab-modal-btn-confirm:hover { opacity: 0.9; }
+.ab-modal-btn-reject { padding: 0.625rem 1.25rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: white; cursor: pointer; background: var(--ab-danger); }
+.ab-modal-btn-reject:hover { opacity: 0.9; }
 
 /* Flash */
 .ab-flash { padding: 1rem 1.25rem; border-radius: var(--ab-radius); font-size: 0.9375rem; font-weight: 500; margin-bottom: 1.25rem; }
@@ -232,6 +268,7 @@
 .ab-flash-error { background: var(--ab-danger-light); color: #991b1b; border: 1px solid #fecaca; }
 
 /* RESPONSIVE */
+@media (max-width: 1200px) { .ab-stats { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 1024px) { .ab-stats { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 768px) {
     .absences-page { padding: 1rem; }
@@ -304,6 +341,19 @@
                 <div class="ab-stat-label">Retards</div>
             </div>
         </div>
+        <div class="ab-stat-card pending">
+            <div class="ab-stat-icon pending">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+            <div>
+                <div class="ab-stat-value">{{ $stats['en_attente'] }}</div>
+                <div class="ab-stat-label">En attente</div>
+            </div>
+        </div>
     </div>
 
     {{-- Filters --}}
@@ -323,6 +373,15 @@
                 <option value="">Toutes</option>
                 <option value="1" {{ request('justifiee') === '1' ? 'selected' : '' }}>Oui</option>
                 <option value="0" {{ request('justifiee') === '0' ? 'selected' : '' }}>Non</option>
+            </select>
+        </div>
+        <div class="ab-filter-group">
+            <span class="ab-filter-label">Statut</span>
+            <select name="statut" class="ab-filter-select" style="min-width: 120px;">
+                <option value="">Toutes</option>
+                <option value="en_attente" {{ request('statut') === 'en_attente' ? 'selected' : '' }}>En attente</option>
+                <option value="approuvee" {{ request('statut') === 'approuvee' ? 'selected' : '' }}>Approuv&eacute;es</option>
+                <option value="refusee" {{ request('statut') === 'refusee' ? 'selected' : '' }}>Refus&eacute;es</option>
             </select>
         </div>
         <div class="ab-filter-group">
@@ -363,6 +422,8 @@
                             <th>Type</th>
                             <th>Date</th>
                             <th>Dur&eacute;e</th>
+                            <th>Source</th>
+                            <th>Statut</th>
                             <th>Justifi&eacute;e</th>
                             <th>Actions</th>
                         </tr>
@@ -392,6 +453,35 @@
                                     {{ $absence->duree_label }}
                                 </td>
                                 <td>
+                                    <span class="ab-source {{ $absence->source === 'admin' ? 'admin' : 'employe' }}">
+                                        @if($absence->source === 'admin')
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                                            Admin
+                                        @else
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                            Employ&eacute;
+                                        @endif
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($absence->statut === 'en_attente')
+                                        <span class="ab-statut en-attente">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                            En attente
+                                        </span>
+                                    @elseif($absence->statut === 'approuvee')
+                                        <span class="ab-statut approuvee">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                            Approuv&eacute;e
+                                        </span>
+                                    @elseif($absence->statut === 'refusee')
+                                        <span class="ab-statut refusee">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                            Refus&eacute;e
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>
                                     <span class="ab-justif {{ $absence->justifiee ? 'oui' : 'non' }}">
                                         @if($absence->justifiee)
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -401,23 +491,47 @@
                                             Non justifi&eacute;e
                                         @endif
                                     </span>
+                                    @if($absence->justificatif)
+                                        <a href="{{ asset('storage/' . $absence->justificatif) }}" target="_blank" class="ab-justif-link" style="margin-top: 0.25rem; display: inline-flex;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                            T&eacute;l&eacute;charger
+                                        </a>
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="ab-actions">
-                                        <form action="{{ route('admin.absences.toggle-justifiee', $absence) }}" method="POST" style="margin:0;">
-                                            @csrf
-                                            <button type="submit" class="ab-btn ab-btn-toggle" title="{{ $absence->justifiee ? 'Marquer non justifi&eacute;e' : 'Marquer justifi&eacute;e' }}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                                {{ $absence->justifiee ? 'D&eacute;justifier' : 'Justifier' }}
+                                        @if($absence->statut === 'en_attente')
+                                            {{-- Approve button --}}
+                                            <form action="{{ route('admin.absences.approve', $absence) }}" method="POST" style="margin:0;">
+                                                @csrf
+                                                <button type="submit" class="ab-btn ab-btn-approve" title="Approuver cette absence">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                    Approuver
+                                                </button>
+                                            </form>
+                                            {{-- Reject button --}}
+                                            <button type="button" class="ab-btn ab-btn-reject" title="Refuser cette absence" onclick="openRejectModal({{ $absence->id }})">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                Refuser
                                             </button>
-                                        </form>
-                                        <form action="{{ route('admin.absences.destroy', $absence) }}" method="POST" style="margin:0;" onsubmit="return confirm('Supprimer cette absence ?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="ab-btn ab-btn-delete" title="Supprimer">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                            </button>
-                                        </form>
+                                        @else
+                                            {{-- Toggle justifi&eacute;e --}}
+                                            <form action="{{ route('admin.absences.toggle-justifiee', $absence) }}" method="POST" style="margin:0;">
+                                                @csrf
+                                                <button type="submit" class="ab-btn ab-btn-toggle" title="{{ $absence->justifiee ? 'Marquer non justifi&eacute;e' : 'Marquer justifi&eacute;e' }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                    {{ $absence->justifiee ? 'D&eacute;justifier' : 'Justifier' }}
+                                                </button>
+                                            </form>
+                                            {{-- Delete --}}
+                                            <form action="{{ route('admin.absences.destroy', $absence) }}" method="POST" style="margin:0;" onsubmit="return confirm('Supprimer cette absence ?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="ab-btn ab-btn-delete" title="Supprimer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -539,6 +653,34 @@
     </div>
 </div>
 
+{{-- Reject Modal --}}
+<div class="ab-modal-overlay" id="rejectModal">
+    <div class="ab-modal">
+        <div class="ab-modal-header">
+            <h3 class="ab-modal-title">Refuser l'absence</h3>
+            <button class="ab-modal-close" onclick="closeAbModal('rejectModal')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <form id="rejectForm" method="POST" action="">
+            @csrf
+            <div class="ab-modal-body">
+                <p style="font-size: 0.9375rem; color: var(--ab-text-secondary); margin-bottom: 1rem;">
+                    Veuillez indiquer le motif du refus. L'employ&eacute; sera notifi&eacute; de cette d&eacute;cision.
+                </p>
+                <div class="ab-form-group">
+                    <label class="ab-form-label">Motif du refus *</label>
+                    <textarea name="motif_refus" class="ab-form-textarea" required placeholder="Indiquez la raison du refus..." style="min-height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="ab-modal-footer">
+                <button type="button" class="ab-modal-btn-cancel" onclick="closeAbModal('rejectModal')">Annuler</button>
+                <button type="submit" class="ab-modal-btn-reject">Confirmer le refus</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 function closeAbModal(id) {
     document.getElementById(id).classList.remove('active');
@@ -548,6 +690,13 @@ function toggleMinutesRetard() {
     var sel = document.getElementById('dureeTypeSelect');
     var grp = document.getElementById('minutesRetardGroup');
     grp.style.display = sel.value === 'retard' ? '' : 'none';
+}
+
+function openRejectModal(absenceId) {
+    var form = document.getElementById('rejectForm');
+    form.action = '{{ url("admin/absences") }}/' + absenceId + '/reject';
+    form.querySelector('textarea[name="motif_refus"]').value = '';
+    document.getElementById('rejectModal').classList.add('active');
 }
 
 // Init on load

@@ -747,6 +747,28 @@
     font-size: 0.875rem; text-align: center; display: none;
 }
 
+/* Form Errors */
+.bp-form-error {
+    font-size: 0.8125rem; color: var(--bp-danger); margin-top: 0.375rem;
+}
+.bp-form-group.has-error .bp-form-control,
+.bp-form-group.has-error .bp-search-input {
+    border-color: var(--bp-danger);
+}
+.bp-errors-summary {
+    background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1rem;
+}
+.bp-errors-summary p {
+    font-size: 0.875rem; font-weight: 600; color: var(--bp-danger); margin: 0 0 0.5rem;
+}
+.bp-errors-summary ul {
+    margin: 0; padding-left: 1.25rem; list-style: disc;
+}
+.bp-errors-summary li {
+    font-size: 0.8125rem; color: var(--bp-danger); margin-bottom: 0.25rem;
+}
+
 /* File Upload Zone */
 .bp-upload-zone {
     border: 2px dashed var(--bp-card-border);
@@ -1208,14 +1230,25 @@
         <form action="{{ route('admin.bulletins-paie.store') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
             @csrf
             <div class="bp-modal-body">
+                @if($errors->any())
+                <div class="bp-errors-summary">
+                    <p>Veuillez corriger les erreurs suivantes :</p>
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
                 <!-- Sélection employé -->
-                <div class="bp-form-group">
+                <div class="bp-form-group {{ $errors->has('personnel_id') ? 'has-error' : '' }}">
                     <label>Employé <span>*</span></label>
                     <div class="bp-search-select" id="bpPersonnelSearch">
                         <svg class="bp-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         <input type="text" class="bp-search-input" placeholder="Rechercher un employé..." autocomplete="off">
                         <button type="button" class="bp-search-clear" title="Effacer">&times;</button>
-                        <input type="hidden" name="personnel_id" required>
+                        <input type="hidden" name="personnel_id" value="{{ old('personnel_id') }}" required>
                         <div class="bp-search-dropdown">
                             @foreach($personnels as $personnel)
                                 <div class="bp-search-option" data-value="{{ $personnel->id }}" data-text="{{ $personnel->matricule }} - {{ $personnel->nom }} {{ $personnel->prenoms }}">
@@ -1225,6 +1258,9 @@
                             <div class="bp-search-no-results">Aucun résultat</div>
                         </div>
                     </div>
+                    @error('personnel_id')
+                        <div class="bp-form-error">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <!-- Période -->
@@ -1249,8 +1285,12 @@
                     </div>
                 </div>
 
+                @error('periode')
+                    <div class="bp-form-error" style="margin-top: -0.5rem; margin-bottom: 0.75rem;">{{ $message }}</div>
+                @enderror
+
                 <!-- Upload fichier -->
-                <div class="bp-form-group">
+                <div class="bp-form-group {{ $errors->has('fichier') ? 'has-error' : '' }}">
                     <label>Fichier PDF <span>*</span></label>
                     <div class="bp-upload-zone" id="uploadZone">
                         <input type="file" name="fichier" id="fichierInput" accept=".pdf" required hidden>
@@ -1283,6 +1323,9 @@
                             </button>
                         </div>
                     </div>
+                    @error('fichier')
+                        <div class="bp-form-error">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <!-- Options -->
@@ -1323,6 +1366,20 @@
     </svg>
     {{ session('success') }}
 </div>
+@endif
+
+@if(session('error'))
+<div class="alert-toast error" id="errorToast">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+    </svg>
+    {{ session('error') }}
+</div>
+@endif
+
+@if(session('success') || session('error'))
 <style>
 .alert-toast {
     position: fixed;
@@ -1339,6 +1396,10 @@
 }
 .alert-toast.success {
     background: #10B981;
+    color: white;
+}
+.alert-toast.error {
+    background: #EF4444;
     color: white;
 }
 @keyframes slideIn {
@@ -1439,6 +1500,23 @@ function formatFileSize(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
+// Client-side validation before submit
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    var hidden = document.querySelector('#bpPersonnelSearch input[name="personnel_id"]');
+    if (!hidden || !hidden.value) {
+        e.preventDefault();
+        var searchInput = document.querySelector('#bpPersonnelSearch .bp-search-input');
+        if (searchInput) searchInput.focus();
+        alert('Veuillez sélectionner un employé.');
+        return false;
+    }
+});
+
+// Auto-open modal if validation errors
+@if($errors->any())
+    openUploadModal();
+@endif
+
 // ── Searchable Personnel Select ──
 (function() {
     var wrapper = document.getElementById('bpPersonnelSearch');
@@ -1503,6 +1581,16 @@ function formatFileSize(bytes) {
         if (!wrapper.contains(e.target)) hideDropdown();
     });
 
+    // Restore old() value on load
+    if (hidden.value) {
+        options.forEach(function(opt) {
+            if (opt.getAttribute('data-value') === hidden.value) {
+                input.value = opt.getAttribute('data-text');
+                clearBtn.style.display = 'block';
+            }
+        });
+    }
+
     // Reset on form reset
     var form = wrapper.closest('form');
     if (form) {
@@ -1512,10 +1600,12 @@ function formatFileSize(bytes) {
     }
 })();
 
-// Auto-hide toast
+// Auto-hide toasts
 setTimeout(function() {
-    const toast = document.getElementById('successToast');
+    var toast = document.getElementById('successToast');
     if (toast) toast.remove();
+    var errorToast = document.getElementById('errorToast');
+    if (errorToast) errorToast.remove();
 }, 5000);
 </script>
 @endsection

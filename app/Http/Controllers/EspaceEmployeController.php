@@ -41,7 +41,7 @@ class EspaceEmployeController extends Controller
             : ['total' => 0, 'justifiees' => 0, 'injustifiees' => 0, 'retards' => 0];
 
         $stats = [
-            'documents' => $personnel ? $personnel->documents()->count() : 0,
+            'documents' => $personnel ? $personnel->documents()->where('visible_employe', true)->where('confidentiel', false)->count() : 0,
             'conges_restants' => $soldeConges['restants'],
             'demandes_en_cours' => $personnel ? Conge::forPersonnel($personnel->id)->enAttente()->count() : 0,
             'anciennete' => $personnel ? $personnel->anciennete : 0,
@@ -76,6 +76,7 @@ class EspaceEmployeController extends Controller
             // Ajouter les documents récents
             $recentDocs = $personnel->documents()
                 ->where('visible_employe', true)
+                ->where('confidentiel', false)
                 ->orderBy('created_at', 'desc')
                 ->take(3)
                 ->get();
@@ -186,6 +187,7 @@ class EspaceEmployeController extends Controller
         $allDocuments = $personnel
             ? $personnel->documents()
                 ->where('visible_employe', true)
+                ->where('confidentiel', false)
                 ->with('categorie')
                 ->orderBy('created_at', 'desc')
                 ->get()
@@ -863,6 +865,7 @@ class EspaceEmployeController extends Controller
         $document = DocumentAgent::where('id', $id)
             ->where('personnel_id', $personnel->id)
             ->where('visible_employe', true)
+            ->where('confidentiel', false)
             ->firstOrFail();
 
         if (empty($document->chemin)) {
@@ -911,6 +914,7 @@ class EspaceEmployeController extends Controller
         $document = DocumentAgent::where('id', $id)
             ->where('personnel_id', $personnel->id)
             ->where('visible_employe', true)
+            ->where('confidentiel', false)
             ->firstOrFail();
 
         if (empty($document->chemin)) {

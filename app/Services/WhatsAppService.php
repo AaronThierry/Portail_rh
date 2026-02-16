@@ -12,12 +12,14 @@ class WhatsAppService
     protected bool $enabled;
     protected string $apiUrl;
     protected string $session;
+    protected string $apiKey;
 
     public function __construct()
     {
         $this->enabled = config('services.whatsapp.enabled', false);
         $this->apiUrl = rtrim(config('services.whatsapp.api_url', 'http://localhost:3000'), '/');
         $this->session = config('services.whatsapp.session', 'default');
+        $this->apiKey = config('services.whatsapp.api_key', '');
     }
 
     /**
@@ -34,6 +36,7 @@ class WhatsAppService
             $chatId = $this->formatChatId($phone);
 
             $response = Http::timeout(15)
+                ->withHeaders($this->apiKey ? ['X-Api-Key' => $this->apiKey] : [])
                 ->post("{$this->apiUrl}/api/sendText", [
                     'chatId' => $chatId,
                     'text' => $message,

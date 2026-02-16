@@ -35,6 +35,7 @@ return [
         'enabled' => env('WHATSAPP_ENABLED', false),
         'api_url' => env('WAHA_API_URL', 'http://localhost:3000'),
         'session' => env('WAHA_SESSION', 'default'),
+        'api_key' => env('WAHA_API_KEY', ''),
     ],
 
 ];

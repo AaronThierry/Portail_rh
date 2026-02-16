@@ -2,7 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Channels\WhatsAppChannel;
 use App\Models\Absence;
+use App\Services\WhatsAppService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -20,7 +22,18 @@ class NouvelleDemandeAbsenceNotification extends Notification implements ShouldQ
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        $channels = ['database'];
+
+        try {
+            $whatsapp = app(WhatsAppService::class);
+            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->callmebot_apikey) {
+                $channels[] = WhatsAppChannel::class;
+            }
+        } catch (\Throwable $e) {
+            // WhatsApp non configure
+        }
+
+        return $channels;
     }
 
     public function toArray(object $notifiable): array
@@ -34,7 +47,17 @@ class NouvelleDemandeAbsenceNotification extends Notification implements ShouldQ
             'employe' => $employe,
             'type_absence' => $typeNom,
             'date_absence' => $this->absence->date_absence->format('d/m/Y'),
-            'message' => $employe . ' a soumis une déclaration d\'absence (' . $typeNom . ') pour le ' . $this->absence->date_absence->format('d/m/Y'),
+            'message' => $employe . ' a soumis une declaration d\'absence (' . $typeNom . ') pour le ' . $this->absence->date_absence->format('d/m/Y'),
         ];
+    }
+
+    public function toWhatsApp(object $notifiable): void
+    {
+        if (!$notifiable->personnel) {
+            return;
+        }
+
+        $whatsapp = app(WhatsAppService::class);
+        $whatsapp->notifyNewAbsence($this->absence, $notifiable->personnel);
     }
 }

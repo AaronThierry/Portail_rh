@@ -109,6 +109,7 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
 
     // Paramètres du compte
     Route::get('/parametres', [EspaceEmployeController::class, 'parametres'])->name('parametres');
+    Route::put('/whatsapp-config', [EspaceEmployeController::class, 'updateWhatsApp'])->name('whatsapp.update');
 
     // 2FA
     Route::post('/two-factor/enable', [TwoFactorController::class, 'enable'])->name('two-factor.enable');
@@ -180,6 +181,7 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     Route::get('dossier-agent/document/{document}/preview', [DossierAgentController::class, 'preview'])->name('dossier-agent.preview');
     Route::get('dossier-agent/document/{document}/download', [DossierAgentController::class, 'download'])->name('dossier-agent.download');
     Route::delete('dossier-agent/document/{document}', [DossierAgentController::class, 'destroy'])->name('dossier-agent.destroy');
+    Route::post('dossier-agent/document/{document}/toggle-visibility', [DossierAgentController::class, 'toggleVisibility'])->name('dossier-agent.toggle-visibility');
 
     // Paramètres
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');

@@ -2,16 +2,12 @@
 
 namespace App\Notifications;
 
+use App\Channels\WhatsAppChannel;
+use App\Services\WhatsAppService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use App\Services\WhatsAppService;
 
-/**
- * Notification de changement de statut de congé
- *
- * Envoie une notification WhatsApp lorsqu'un congé est approuvé ou refusé
- */
 class CongeStatusNotification extends Notification implements ShouldQueue
 {
     use Queueable;
@@ -19,49 +15,35 @@ class CongeStatusNotification extends Notification implements ShouldQueue
     protected $conge;
     protected $status;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct($conge, string $status)
     {
         $this->conge = $conge;
         $this->status = $status;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
         $channels = ['database'];
 
-        // Ajouter WhatsApp seulement si le service est activé et numéro disponible
         try {
             $whatsapp = app(WhatsAppService::class);
-            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->telephone) {
-                $channels[] = 'whatsapp';
+            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->callmebot_apikey) {
+                $channels[] = WhatsAppChannel::class;
             }
         } catch (\Throwable $e) {
-            // WhatsApp non configuré, on continue avec database uniquement
+            // WhatsApp non configure
         }
 
         return $channels;
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(object $notifiable): array
     {
         return [
             'type' => 'statut_conge',
             'conge_id' => $this->conge->id,
             'status' => $this->status,
-            'type_conge' => $this->conge->typeConge->nom ?? 'Congé',
+            'type_conge' => $this->conge->typeConge->nom ?? 'Conge',
             'date_debut' => $this->conge->date_debut->format('d/m/Y'),
             'date_fin' => $this->conge->date_fin->format('d/m/Y'),
             'nombre_jours' => $this->conge->nombre_jours,
@@ -69,35 +51,21 @@ class CongeStatusNotification extends Notification implements ShouldQueue
         ];
     }
 
-    /**
-     * Envoyer la notification via WhatsApp
-     *
-     * @param object $notifiable
-     * @return void
-     */
-    public function toWhatsApp(object $notifiable)
+    public function toWhatsApp(object $notifiable): void
     {
-        $whatsapp = app(WhatsAppService::class);
-
-        if (!$whatsapp->isEnabled()) {
+        if (!$notifiable->personnel) {
             return;
         }
 
-        $phoneNumber = $notifiable->personnel->telephone_code_pays . $notifiable->personnel->telephone;
-
-        $whatsapp->notifyCongeValidation($this->conge, $phoneNumber);
+        $whatsapp = app(WhatsAppService::class);
+        $whatsapp->notifyCongeValidation($this->conge, $notifiable->personnel);
     }
 
-    /**
-     * Get the notification message
-     *
-     * @return string
-     */
     protected function getMessage(): string
     {
-        $statusText = $this->status === 'approuve' ? 'approuvée' : 'refusée';
+        $statusText = $this->status === 'approuve' ? 'approuvee' : 'refusee';
 
-        return "Votre demande de congé du {$this->conge->date_debut->format('d/m/Y')} "
-            . "au {$this->conge->date_fin->format('d/m/Y')} a été {$statusText}.";
+        return "Votre demande de conge du {$this->conge->date_debut->format('d/m/Y')} "
+            . "au {$this->conge->date_fin->format('d/m/Y')} a ete {$statusText}.";
     }
 }

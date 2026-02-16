@@ -2,7 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Channels\WhatsAppChannel;
 use App\Models\Conge;
+use App\Services\WhatsAppService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -20,7 +22,18 @@ class NouvelleDemandeCongeNotification extends Notification implements ShouldQue
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        $channels = ['database'];
+
+        try {
+            $whatsapp = app(WhatsAppService::class);
+            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->callmebot_apikey) {
+                $channels[] = WhatsAppChannel::class;
+            }
+        } catch (\Throwable $e) {
+            // WhatsApp non configure
+        }
+
+        return $channels;
     }
 
     public function toArray(object $notifiable): array
@@ -41,5 +54,15 @@ class NouvelleDemandeCongeNotification extends Notification implements ShouldQue
                 . ' au ' . $this->conge->date_fin->format('d/m/Y')
                 . ' (' . $this->conge->nombre_jours . ' jours)',
         ];
+    }
+
+    public function toWhatsApp(object $notifiable): void
+    {
+        if (!$notifiable->personnel) {
+            return;
+        }
+
+        $whatsapp = app(WhatsAppService::class);
+        $whatsapp->notifyNewConge($this->conge, $notifiable->personnel);
     }
 }

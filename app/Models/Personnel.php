@@ -98,6 +98,7 @@ class Personnel extends Model
         'telephone',
         'telephone_code_pays',
         'telephone_whatsapp',
+        'callmebot_apikey',
         'numero_identification',
         'poste',
         'date_naissance',

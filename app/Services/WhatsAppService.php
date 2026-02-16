@@ -2,276 +2,199 @@
 
 namespace App\Services;
 
-use Twilio\Rest\Client;
+use App\Models\Personnel;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
-/**
- * Service de gestion des notifications WhatsApp via Twilio
- *
- * Ce service permet d'envoyer des notifications WhatsApp aux utilisateurs
- * pour différents événements : validation de congés, rappels, etc.
- */
 class WhatsAppService
 {
-    protected $twilio;
-    protected $from;
-    protected $enabled;
+    protected bool $enabled;
 
     public function __construct()
     {
-        // Vérifier si WhatsApp est activé
         $this->enabled = config('services.whatsapp.enabled', false);
-
-        if ($this->enabled) {
-            $this->twilio = new Client(
-                config('services.whatsapp.sid'),
-                config('services.whatsapp.token')
-            );
-            $this->from = config('services.whatsapp.from');
-        }
     }
 
     /**
-     * Envoyer une notification WhatsApp
-     *
-     * @param string $to Numéro au format international (+226XXXXXXXX)
-     * @param string $message Message à envoyer
-     * @param array $templateData Données pour template (optionnel)
-     * @return bool
+     * Envoyer un message WhatsApp via CallMeBot
      */
-    public function sendNotification(string $to, string $message, array $templateData = []): bool
+    public function sendNotification(string $phone, string $message, string $apikey): bool
     {
         if (!$this->enabled) {
-            Log::info('WhatsApp désactivé, message non envoyé', [
-                'to' => $to,
-                'message' => $message
-            ]);
+            Log::info('WhatsApp desactive, message non envoye', ['to' => $phone]);
+            return false;
+        }
+
+        if (empty($apikey)) {
+            Log::warning('WhatsApp: pas de cle API pour le numero', ['to' => $phone]);
             return false;
         }
 
         try {
-            // Formater le numéro de téléphone
-            $formattedTo = $this->formatPhoneNumber($to);
+            $formattedPhone = $this->formatPhoneNumber($phone);
 
-            // Préparer le message
-            $body = $this->prepareMessage($message, $templateData);
-
-            // Envoyer via Twilio
-            $result = $this->twilio->messages->create(
-                "whatsapp:{$formattedTo}",
-                [
-                    'from' => $this->from,
-                    'body' => $body
-                ]
-            );
-
-            Log::info('Message WhatsApp envoyé avec succès', [
-                'sid' => $result->sid,
-                'to' => $formattedTo,
-                'status' => $result->status
+            $response = Http::timeout(15)->get('https://api.callmebot.com/whatsapp.php', [
+                'phone' => $formattedPhone,
+                'text' => $message,
+                'apikey' => $apikey,
             ]);
 
-            return true;
+            if ($response->successful()) {
+                Log::info('WhatsApp envoye avec succes', [
+                    'to' => $formattedPhone,
+                    'status' => $response->status(),
+                ]);
+                return true;
+            }
+
+            Log::error('WhatsApp: erreur API CallMeBot', [
+                'to' => $formattedPhone,
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+            return false;
 
         } catch (Exception $e) {
-            Log::error('Erreur lors de l\'envoi du message WhatsApp', [
-                'to' => $to,
+            Log::error('WhatsApp: exception lors de l\'envoi', [
+                'to' => $phone,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
             ]);
-
             return false;
         }
     }
 
     /**
-     * Envoyer une notification de validation de congé
-     *
-     * @param object $conge
-     * @param string $phoneNumber
-     * @return bool
+     * Envoyer un message WhatsApp a un personnel (recupere phone + apikey automatiquement)
      */
-    public function notifyCongeValidation($conge, string $phoneNumber): bool
+    public function sendToPersonnel(Personnel $personnel, string $message): bool
     {
-        $status = $conge->statut === 'approuve' ? 'approuvée' : 'refusée';
+        if (!$personnel->callmebot_apikey || !$personnel->telephone) {
+            return false;
+        }
 
-        $message = "🏖️ *Notification Congé*\n\n";
+        $phone = ($personnel->telephone_code_pays ?? '+226') . $personnel->telephone;
+
+        return $this->sendNotification($phone, $message, $personnel->callmebot_apikey);
+    }
+
+    /**
+     * Notification de validation/refus de conge
+     */
+    public function notifyCongeValidation($conge, Personnel $personnel): bool
+    {
+        $status = $conge->statut === 'approuve' ? 'approuvee' : 'refusee';
+
+        $message = "Notification Conge - Portail RH+\n\n";
         $message .= "Bonjour {$conge->personnel->prenoms},\n\n";
-        $message .= "Votre demande de congé du *{$conge->date_debut->format('d/m/Y')}* ";
-        $message .= "au *{$conge->date_fin->format('d/m/Y')}* ";
-        $message .= "a été *{$status}*.\n\n";
+        $message .= "Votre demande de conge du {$conge->date_debut->format('d/m/Y')} ";
+        $message .= "au {$conge->date_fin->format('d/m/Y')} ";
+        $message .= "a ete {$status}.\n";
 
         if ($conge->statut === 'refuse' && $conge->motif_refus) {
-            $message .= "Motif : {$conge->motif_refus}\n\n";
+            $message .= "Motif : {$conge->motif_refus}\n";
         }
 
-        $message .= "Cordialement,\n";
-        $message .= "Service RH";
+        $message .= "\nCordialement, Service RH";
 
-        return $this->sendNotification($phoneNumber, $message);
+        return $this->sendToPersonnel($personnel, $message);
     }
 
     /**
-     * Envoyer une notification de rappel d'événement
-     *
-     * @param string $phoneNumber
-     * @param string $eventTitle
-     * @param string $eventDate
-     * @return bool
+     * Notification de validation/refus d'absence
      */
-    public function notifyEventReminder(string $phoneNumber, string $eventTitle, string $eventDate): bool
+    public function notifyAbsenceValidation($absence, Personnel $personnel): bool
     {
-        $message = "📅 *Rappel Événement*\n\n";
-        $message .= "N'oubliez pas l'événement suivant :\n\n";
-        $message .= "*{$eventTitle}*\n";
-        $message .= "Date : {$eventDate}\n\n";
-        $message .= "À bientôt !";
+        $status = $absence->statut === 'approuvee' ? 'approuvee' : 'refusee';
+        $typeNom = $absence->typeAbsence->nom ?? 'Absence';
 
-        return $this->sendNotification($phoneNumber, $message);
-    }
-
-    /**
-     * Envoyer une notification de création de compte
-     *
-     * @param object $user
-     * @param string $phoneNumber
-     * @param string $temporaryPassword
-     * @return bool
-     */
-    public function notifyAccountCreation($user, string $phoneNumber, string $temporaryPassword): bool
-    {
-        $message = "👤 *Bienvenue sur le Portail RH*\n\n";
-        $message .= "Bonjour {$user->personnel->prenoms},\n\n";
-        $message .= "Votre compte utilisateur a été créé avec succès !\n\n";
-        $message .= "📧 Email : {$user->email}\n";
-        $message .= "🔐 Mot de passe temporaire : {$temporaryPassword}\n\n";
-        $message .= "⚠️ Pensez à changer votre mot de passe lors de votre première connexion.\n\n";
-        $message .= "🔗 Portail : " . config('app.url');
-
-        return $this->sendNotification($phoneNumber, $message);
-    }
-
-    /**
-     * Envoyer une notification de rappel de fin de contrat
-     *
-     * @param object $personnel
-     * @param string $phoneNumber
-     * @param int $daysRemaining
-     * @return bool
-     */
-    public function notifyContractExpiration($personnel, string $phoneNumber, int $daysRemaining): bool
-    {
-        $message = "⏰ *Rappel Fin de Contrat*\n\n";
+        $message = "Notification Absence - Portail RH+\n\n";
         $message .= "Bonjour {$personnel->prenoms},\n\n";
-        $message .= "Votre contrat arrive à expiration dans *{$daysRemaining} jours* ";
-        $message .= "le {$personnel->date_fin_contrat->format('d/m/Y')}.\n\n";
-        $message .= "Veuillez contacter le service RH pour plus d'informations.\n\n";
-        $message .= "Cordialement,\n";
-        $message .= "Service RH";
+        $message .= "Votre declaration d'absence ({$typeNom}) du {$absence->date_absence->format('d/m/Y')} ";
+        $message .= "a ete {$status}.\n";
 
-        return $this->sendNotification($phoneNumber, $message);
-    }
-
-    /**
-     * Envoyer une notification personnalisée
-     *
-     * @param string $phoneNumber
-     * @param string $title
-     * @param string $content
-     * @return bool
-     */
-    public function notifyCustom(string $phoneNumber, string $title, string $content): bool
-    {
-        $message = "*{$title}*\n\n";
-        $message .= $content;
-
-        return $this->sendNotification($phoneNumber, $message);
-    }
-
-    /**
-     * Formater le numéro de téléphone au format international
-     *
-     * @param string $phoneNumber
-     * @return string
-     */
-    protected function formatPhoneNumber(string $phoneNumber): string
-    {
-        // Retirer tous les espaces, tirets, parenthèses
-        $cleaned = preg_replace('/[^0-9+]/', '', $phoneNumber);
-
-        // Si le numéro commence par 0, remplacer par +226 (Burkina Faso)
-        if (substr($cleaned, 0, 1) === '0') {
-            $cleaned = '+226' . substr($cleaned, 1);
+        if ($absence->statut === 'refusee' && $absence->motif_refus) {
+            $message .= "Motif : {$absence->motif_refus}\n";
         }
 
-        // Si le numéro ne commence pas par +, ajouter +226
-        if (substr($cleaned, 0, 1) !== '+') {
-            $cleaned = '+226' . $cleaned;
-        }
+        $message .= "\nCordialement, Service RH";
 
-        return $cleaned;
+        return $this->sendToPersonnel($personnel, $message);
     }
 
     /**
-     * Préparer le message avec les données du template
-     *
-     * @param string $message
-     * @param array $data
-     * @return string
+     * Notifier les admins d'une nouvelle demande de conge
      */
-    protected function prepareMessage(string $message, array $data): string
+    public function notifyNewConge($conge, Personnel $adminPersonnel): bool
     {
-        foreach ($data as $key => $value) {
-            $message = str_replace("{{$key}}", $value, $message);
-        }
+        $employe = $conge->personnel->nom . ' ' . $conge->personnel->prenoms;
+        $typeNom = $conge->typeConge->nom ?? 'Conge';
 
-        return $message;
+        $message = "Nouvelle demande de conge - Portail RH+\n\n";
+        $message .= "{$employe} a soumis une demande de {$typeNom}\n";
+        $message .= "Du {$conge->date_debut->format('d/m/Y')} au {$conge->date_fin->format('d/m/Y')}\n";
+        $message .= "Duree : {$conge->nombre_jours} jours\n\n";
+        $message .= "Connectez-vous au portail pour traiter cette demande.";
+
+        return $this->sendToPersonnel($adminPersonnel, $message);
     }
 
     /**
-     * Vérifier si le service WhatsApp est activé
-     *
-     * @return bool
+     * Notifier les admins d'une nouvelle declaration d'absence
      */
-    public function isEnabled(): bool
+    public function notifyNewAbsence($absence, Personnel $adminPersonnel): bool
     {
-        return $this->enabled;
+        $employe = $absence->personnel->nom . ' ' . $absence->personnel->prenoms;
+        $typeNom = $absence->typeAbsence->nom ?? 'Absence';
+
+        $message = "Nouvelle absence declaree - Portail RH+\n\n";
+        $message .= "{$employe} a declare une absence ({$typeNom})\n";
+        $message .= "Date : {$absence->date_absence->format('d/m/Y')}\n\n";
+        $message .= "Connectez-vous au portail pour traiter cette demande.";
+
+        return $this->sendToPersonnel($adminPersonnel, $message);
     }
 
     /**
-     * Vérifier si un numéro est valide pour WhatsApp
-     *
-     * @param string $phoneNumber
-     * @return bool
+     * Notification de creation de compte
      */
-    public function isValidPhoneNumber(string $phoneNumber): bool
+    public function notifyAccountCreation($user, Personnel $personnel, string $temporaryPassword): bool
     {
-        $formatted = $this->formatPhoneNumber($phoneNumber);
+        $message = "Bienvenue sur le Portail RH+\n\n";
+        $message .= "Bonjour {$personnel->prenoms},\n\n";
+        $message .= "Votre compte a ete cree !\n\n";
+        $message .= "Email : {$user->email}\n";
+        $message .= "Mot de passe : {$temporaryPassword}\n\n";
+        $message .= "Changez votre mot de passe a la premiere connexion.\n";
+        $message .= "Portail : " . config('app.url');
 
-        // Vérifier le format international
-        return preg_match('/^\+[1-9]\d{1,14}$/', $formatted);
+        return $this->sendToPersonnel($personnel, $message);
+    }
+
+    /**
+     * Notification personnalisee
+     */
+    public function notifyCustom(Personnel $personnel, string $title, string $content): bool
+    {
+        $message = "{$title} - Portail RH+\n\n{$content}";
+
+        return $this->sendToPersonnel($personnel, $message);
     }
 
     /**
      * Envoyer des notifications en masse
-     *
-     * @param array $recipients Format: [['phone' => '+226...', 'message' => '...']]
-     * @return array Résultats: ['sent' => count, 'failed' => count, 'details' => [...]]
      */
-    public function sendBulkNotifications(array $recipients): array
+    public function sendBulkToPersonnels(array $personnelIds, string $message): array
     {
-        $results = [
-            'sent' => 0,
-            'failed' => 0,
-            'details' => []
-        ];
+        $results = ['sent' => 0, 'failed' => 0, 'skipped' => 0];
 
-        foreach ($recipients as $recipient) {
-            $success = $this->sendNotification(
-                $recipient['phone'],
-                $recipient['message']
-            );
+        $personnels = Personnel::whereIn('id', $personnelIds)
+            ->whereNotNull('callmebot_apikey')
+            ->whereNotNull('telephone')
+            ->get();
+
+        foreach ($personnels as $personnel) {
+            $success = $this->sendToPersonnel($personnel, $message);
 
             if ($success) {
                 $results['sent']++;
@@ -279,15 +202,43 @@ class WhatsAppService
                 $results['failed']++;
             }
 
-            $results['details'][] = [
-                'phone' => $recipient['phone'],
-                'success' => $success
-            ];
-
-            // Pause pour éviter le rate limiting (optionnel)
-            usleep(100000); // 100ms entre chaque message
+            // Pause pour eviter le rate limiting CallMeBot
+            usleep(500000); // 500ms entre chaque message
         }
 
+        $results['skipped'] = count($personnelIds) - $personnels->count();
+
         return $results;
+    }
+
+    /**
+     * Formater le numero au format international (sans +, requis par CallMeBot)
+     */
+    protected function formatPhoneNumber(string $phoneNumber): string
+    {
+        $cleaned = preg_replace('/[^0-9+]/', '', $phoneNumber);
+
+        // Si commence par 0, remplacer par +226
+        if (substr($cleaned, 0, 1) === '0') {
+            $cleaned = '+226' . substr($cleaned, 1);
+        }
+
+        // Si ne commence pas par +, ajouter +226
+        if (substr($cleaned, 0, 1) !== '+') {
+            $cleaned = '+226' . $cleaned;
+        }
+
+        return $cleaned;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function isValidPhoneNumber(string $phoneNumber): bool
+    {
+        $formatted = $this->formatPhoneNumber($phoneNumber);
+        return (bool) preg_match('/^\+[1-9]\d{1,14}$/', $formatted);
     }
 }

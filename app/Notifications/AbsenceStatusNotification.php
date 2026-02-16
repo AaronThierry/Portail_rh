@@ -2,7 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Channels\WhatsAppChannel;
 use App\Models\Absence;
+use App\Services\WhatsAppService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -22,13 +24,24 @@ class AbsenceStatusNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['database'];
+        $channels = ['database'];
+
+        try {
+            $whatsapp = app(WhatsAppService::class);
+            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->callmebot_apikey) {
+                $channels[] = WhatsAppChannel::class;
+            }
+        } catch (\Throwable $e) {
+            // WhatsApp non configure
+        }
+
+        return $channels;
     }
 
     public function toArray(object $notifiable): array
     {
         $typeNom = $this->absence->typeAbsence->nom ?? 'Absence';
-        $statusText = $this->status === 'approuvee' ? 'approuvée' : 'refusée';
+        $statusText = $this->status === 'approuvee' ? 'approuvee' : 'refusee';
 
         return [
             'type' => 'statut_absence',
@@ -36,8 +49,18 @@ class AbsenceStatusNotification extends Notification implements ShouldQueue
             'status' => $this->status,
             'type_absence' => $typeNom,
             'date_absence' => $this->absence->date_absence->format('d/m/Y'),
-            'message' => 'Votre déclaration d\'absence (' . $typeNom . ') du '
-                . $this->absence->date_absence->format('d/m/Y') . ' a été ' . $statusText . '.',
+            'message' => 'Votre declaration d\'absence (' . $typeNom . ') du '
+                . $this->absence->date_absence->format('d/m/Y') . ' a ete ' . $statusText . '.',
         ];
+    }
+
+    public function toWhatsApp(object $notifiable): void
+    {
+        if (!$notifiable->personnel) {
+            return;
+        }
+
+        $whatsapp = app(WhatsAppService::class);
+        $whatsapp->notifyAbsenceValidation($this->absence, $notifiable->personnel);
     }
 }

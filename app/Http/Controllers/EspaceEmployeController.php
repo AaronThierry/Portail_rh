@@ -851,6 +851,29 @@ class EspaceEmployeController extends Controller
     }
 
     /**
+     * Met à jour la configuration WhatsApp (clé CallMeBot)
+     */
+    public function updateWhatsApp(Request $request)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        if (!$personnel) {
+            return back()->with('error', 'Profil personnel introuvable.');
+        }
+
+        $request->validate([
+            'callmebot_apikey' => 'nullable|string|max:50',
+        ]);
+
+        $personnel->update([
+            'callmebot_apikey' => $request->callmebot_apikey ?: null,
+        ]);
+
+        return back()->with('success', 'Configuration WhatsApp mise à jour avec succès.');
+    }
+
+    /**
      * Prévisualise un document
      */
     public function previewDocument($id)

@@ -10,46 +10,46 @@ use Exception;
 class WhatsAppService
 {
     protected bool $enabled;
+    protected string $apiUrl;
+    protected string $session;
 
     public function __construct()
     {
         $this->enabled = config('services.whatsapp.enabled', false);
+        $this->apiUrl = rtrim(config('services.whatsapp.api_url', 'http://localhost:3000'), '/');
+        $this->session = config('services.whatsapp.session', 'default');
     }
 
     /**
-     * Envoyer un message WhatsApp via CallMeBot
+     * Envoyer un message WhatsApp via WAHA
      */
-    public function sendNotification(string $phone, string $message, string $apikey): bool
+    public function sendMessage(string $phone, string $message): bool
     {
         if (!$this->enabled) {
             Log::info('WhatsApp desactive, message non envoye', ['to' => $phone]);
             return false;
         }
 
-        if (empty($apikey)) {
-            Log::warning('WhatsApp: pas de cle API pour le numero', ['to' => $phone]);
-            return false;
-        }
-
         try {
-            $formattedPhone = $this->formatPhoneNumber($phone);
+            $chatId = $this->formatChatId($phone);
 
-            $response = Http::timeout(15)->get('https://api.callmebot.com/whatsapp.php', [
-                'phone' => $formattedPhone,
-                'text' => $message,
-                'apikey' => $apikey,
-            ]);
+            $response = Http::timeout(15)
+                ->post("{$this->apiUrl}/api/sendText", [
+                    'chatId' => $chatId,
+                    'text' => $message,
+                    'session' => $this->session,
+                ]);
 
             if ($response->successful()) {
                 Log::info('WhatsApp envoye avec succes', [
-                    'to' => $formattedPhone,
+                    'to' => $chatId,
                     'status' => $response->status(),
                 ]);
                 return true;
             }
 
-            Log::error('WhatsApp: erreur API CallMeBot', [
-                'to' => $formattedPhone,
+            Log::error('WhatsApp: erreur WAHA API', [
+                'to' => $chatId,
                 'status' => $response->status(),
                 'body' => $response->body(),
             ]);
@@ -65,17 +65,17 @@ class WhatsAppService
     }
 
     /**
-     * Envoyer un message WhatsApp a un personnel (recupere phone + apikey automatiquement)
+     * Envoyer un message WhatsApp a un personnel
      */
     public function sendToPersonnel(Personnel $personnel, string $message): bool
     {
-        if (!$personnel->callmebot_apikey || !$personnel->telephone) {
+        if (!$personnel->telephone) {
             return false;
         }
 
         $phone = ($personnel->telephone_code_pays ?? '+226') . $personnel->telephone;
 
-        return $this->sendNotification($phone, $message, $personnel->callmebot_apikey);
+        return $this->sendMessage($phone, $message);
     }
 
     /**
@@ -85,11 +85,11 @@ class WhatsAppService
     {
         $status = $conge->statut === 'approuve' ? 'approuvee' : 'refusee';
 
-        $message = "Notification Conge - Portail RH+\n\n";
+        $message = "*Notification Conge - Portail RH+*\n\n";
         $message .= "Bonjour {$conge->personnel->prenoms},\n\n";
-        $message .= "Votre demande de conge du {$conge->date_debut->format('d/m/Y')} ";
-        $message .= "au {$conge->date_fin->format('d/m/Y')} ";
-        $message .= "a ete {$status}.\n";
+        $message .= "Votre demande de conge du *{$conge->date_debut->format('d/m/Y')}* ";
+        $message .= "au *{$conge->date_fin->format('d/m/Y')}* ";
+        $message .= "a ete *{$status}*.\n";
 
         if ($conge->statut === 'refuse' && $conge->motif_refus) {
             $message .= "Motif : {$conge->motif_refus}\n";
@@ -108,10 +108,10 @@ class WhatsAppService
         $status = $absence->statut === 'approuvee' ? 'approuvee' : 'refusee';
         $typeNom = $absence->typeAbsence->nom ?? 'Absence';
 
-        $message = "Notification Absence - Portail RH+\n\n";
+        $message = "*Notification Absence - Portail RH+*\n\n";
         $message .= "Bonjour {$personnel->prenoms},\n\n";
-        $message .= "Votre declaration d'absence ({$typeNom}) du {$absence->date_absence->format('d/m/Y')} ";
-        $message .= "a ete {$status}.\n";
+        $message .= "Votre declaration d'absence ({$typeNom}) du *{$absence->date_absence->format('d/m/Y')}* ";
+        $message .= "a ete *{$status}*.\n";
 
         if ($absence->statut === 'refusee' && $absence->motif_refus) {
             $message .= "Motif : {$absence->motif_refus}\n";
@@ -130,9 +130,9 @@ class WhatsAppService
         $employe = $conge->personnel->nom . ' ' . $conge->personnel->prenoms;
         $typeNom = $conge->typeConge->nom ?? 'Conge';
 
-        $message = "Nouvelle demande de conge - Portail RH+\n\n";
+        $message = "*Nouvelle demande de conge - Portail RH+*\n\n";
         $message .= "{$employe} a soumis une demande de {$typeNom}\n";
-        $message .= "Du {$conge->date_debut->format('d/m/Y')} au {$conge->date_fin->format('d/m/Y')}\n";
+        $message .= "Du *{$conge->date_debut->format('d/m/Y')}* au *{$conge->date_fin->format('d/m/Y')}*\n";
         $message .= "Duree : {$conge->nombre_jours} jours\n\n";
         $message .= "Connectez-vous au portail pour traiter cette demande.";
 
@@ -147,9 +147,9 @@ class WhatsAppService
         $employe = $absence->personnel->nom . ' ' . $absence->personnel->prenoms;
         $typeNom = $absence->typeAbsence->nom ?? 'Absence';
 
-        $message = "Nouvelle absence declaree - Portail RH+\n\n";
+        $message = "*Nouvelle absence declaree - Portail RH+*\n\n";
         $message .= "{$employe} a declare une absence ({$typeNom})\n";
-        $message .= "Date : {$absence->date_absence->format('d/m/Y')}\n\n";
+        $message .= "Date : *{$absence->date_absence->format('d/m/Y')}*\n\n";
         $message .= "Connectez-vous au portail pour traiter cette demande.";
 
         return $this->sendToPersonnel($adminPersonnel, $message);
@@ -160,7 +160,7 @@ class WhatsAppService
      */
     public function notifyAccountCreation($user, Personnel $personnel, string $temporaryPassword): bool
     {
-        $message = "Bienvenue sur le Portail RH+\n\n";
+        $message = "*Bienvenue sur le Portail RH+*\n\n";
         $message .= "Bonjour {$personnel->prenoms},\n\n";
         $message .= "Votre compte a ete cree !\n\n";
         $message .= "Email : {$user->email}\n";
@@ -176,7 +176,7 @@ class WhatsAppService
      */
     public function notifyCustom(Personnel $personnel, string $title, string $content): bool
     {
-        $message = "{$title} - Portail RH+\n\n{$content}";
+        $message = "*{$title} - Portail RH+*\n\n{$content}";
 
         return $this->sendToPersonnel($personnel, $message);
     }
@@ -189,7 +189,6 @@ class WhatsAppService
         $results = ['sent' => 0, 'failed' => 0, 'skipped' => 0];
 
         $personnels = Personnel::whereIn('id', $personnelIds)
-            ->whereNotNull('callmebot_apikey')
             ->whereNotNull('telephone')
             ->get();
 
@@ -202,8 +201,8 @@ class WhatsAppService
                 $results['failed']++;
             }
 
-            // Pause pour eviter le rate limiting CallMeBot
-            usleep(500000); // 500ms entre chaque message
+            // Pause pour eviter le rate limiting
+            usleep(300000); // 300ms entre chaque message
         }
 
         $results['skipped'] = count($personnelIds) - $personnels->count();
@@ -212,23 +211,19 @@ class WhatsAppService
     }
 
     /**
-     * Formater le numero au format international (sans +, requis par CallMeBot)
+     * Formater le numero en chatId WAHA (format: 22607XXXXX@c.us)
      */
-    protected function formatPhoneNumber(string $phoneNumber): string
+    protected function formatChatId(string $phoneNumber): string
     {
-        $cleaned = preg_replace('/[^0-9+]/', '', $phoneNumber);
+        // Retirer tout sauf les chiffres
+        $cleaned = preg_replace('/[^0-9]/', '', $phoneNumber);
 
-        // Si commence par 0, remplacer par +226
+        // Si commence par 0, prefixer avec 226 (Burkina Faso)
         if (substr($cleaned, 0, 1) === '0') {
-            $cleaned = '+226' . substr($cleaned, 1);
+            $cleaned = '226' . substr($cleaned, 1);
         }
 
-        // Si ne commence pas par +, ajouter +226
-        if (substr($cleaned, 0, 1) !== '+') {
-            $cleaned = '+226' . $cleaned;
-        }
-
-        return $cleaned;
+        return $cleaned . '@c.us';
     }
 
     public function isEnabled(): bool
@@ -238,7 +233,7 @@ class WhatsAppService
 
     public function isValidPhoneNumber(string $phoneNumber): bool
     {
-        $formatted = $this->formatPhoneNumber($phoneNumber);
-        return (bool) preg_match('/^\+[1-9]\d{1,14}$/', $formatted);
+        $cleaned = preg_replace('/[^0-9]/', '', $phoneNumber);
+        return strlen($cleaned) >= 8 && strlen($cleaned) <= 15;
     }
 }

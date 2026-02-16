@@ -26,7 +26,7 @@ class NouvelleDemandeAbsenceNotification extends Notification implements ShouldQ
 
         try {
             $whatsapp = app(WhatsAppService::class);
-            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->callmebot_apikey) {
+            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->telephone) {
                 $channels[] = WhatsAppChannel::class;
             }
         } catch (\Throwable $e) {

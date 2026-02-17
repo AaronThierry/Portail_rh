@@ -175,6 +175,22 @@ class WhatsAppService
     }
 
     /**
+     * Notification de bulletin de paie disponible
+     */
+    public function notifyBulletinPaie($bulletin, Personnel $personnel): bool
+    {
+        $moisNom = $bulletin->mois_nom ?? $bulletin->mois;
+
+        $message = "*Bulletin de paie - Portail RH+*\n\n";
+        $message .= "Bonjour {$personnel->prenoms},\n\n";
+        $message .= "Votre bulletin de paie de *{$moisNom} {$bulletin->annee}* est disponible.\n";
+        $message .= "Connectez-vous au portail pour le consulter.\n\n";
+        $message .= "Cordialement, Service RH";
+
+        return $this->sendToPersonnel($personnel, $message);
+    }
+
+    /**
      * Notification personnalisee
      */
     public function notifyCustom(Personnel $personnel, string $title, string $content): bool

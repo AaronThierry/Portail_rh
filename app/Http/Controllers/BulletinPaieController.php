@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Notifications\BulletinPaieNotification;
 
 class BulletinPaieController extends Controller
 {
@@ -151,9 +152,9 @@ class BulletinPaieController extends Controller
             'commentaire' => $request->commentaire,
         ]);
 
-        // TODO: Envoyer notification si demandé
-        if ($bulletin->notifier_employe) {
-            // Mail::to($personnel->email)->send(new BulletinPaieNotification($bulletin));
+        // Envoyer notification WhatsApp si demandé
+        if ($bulletin->notifier_employe && $personnel->user) {
+            $personnel->user->notify(new BulletinPaieNotification($bulletin));
             $bulletin->update(['notifie_at' => now()]);
         }
 
@@ -198,7 +199,7 @@ class BulletinPaieController extends Controller
                 $fileName = sprintf('%s_%d_%02d.pdf', Str::slug($personnel->matricule), $annee, $mois);
                 $path = $fichier->storeAs($storagePath, $fileName, 'public');
 
-                BulletinPaie::create([
+                $bulletin = BulletinPaie::create([
                     'personnel_id' => $data['personnel_id'],
                     'entreprise_id' => $personnel->entreprise_id,
                     'uploaded_by' => Auth::id(),
@@ -212,7 +213,14 @@ class BulletinPaieController extends Controller
                     'reference' => BulletinPaie::genererReference($personnel->entreprise_id, $data['personnel_id'], $annee, $mois),
                     'statut' => 'publie',
                     'visible_employe' => true,
+                    'notifier_employe' => true,
                 ]);
+
+                // Notification WhatsApp
+                if ($personnel->user) {
+                    $personnel->user->notify(new BulletinPaieNotification($bulletin));
+                    $bulletin->update(['notifie_at' => now()]);
+                }
 
                 $resultats['success']++;
             }

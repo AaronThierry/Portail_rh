@@ -148,12 +148,12 @@ class BulletinPaieController extends Controller
             ),
             'statut' => 'publie',
             'visible_employe' => $request->boolean('visible_employe', true),
-            'notifier_employe' => $request->boolean('notifier_employe', false),
+            'notifier_employe' => true,
             'commentaire' => $request->commentaire,
         ]);
 
-        // Envoyer notification WhatsApp si demandé
-        if ($bulletin->notifier_employe && $personnel->user) {
+        // Envoyer notification WhatsApp automatiquement
+        if ($personnel->user) {
             $personnel->user->notify(new BulletinPaieNotification($bulletin));
             $bulletin->update(['notifie_at' => now()]);
         }

@@ -122,9 +122,9 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
 });
 
 // ============================================================================
-// PORTAIL ADMIN - Super Admin + Chef d'Entreprise (lecture seule)
+// PORTAIL ADMIN - Super Admin + RH (validation) + Chef d'Entreprise (lecture + validation)
 // ============================================================================
-Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|Chef d'Entreprise"])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|Chef d'Entreprise"])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard admin
     Route::get('/', [DashbordController::class, 'index'])->name('dashboard');
 
@@ -250,7 +250,7 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
 // Redirection racine selon le rôle
 Route::get('/', function () {
     if (Auth::check()) {
-        if (Auth::user()->hasAnyRole(['Super Admin', "Chef d'Entreprise"])) {
+        if (Auth::user()->hasAnyRole(['Super Admin', 'RH', "Chef d'Entreprise"])) {
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('espace-employe.dashboard');
@@ -259,14 +259,14 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    if (Auth::check() && Auth::user()->hasAnyRole(['Super Admin', "Chef d'Entreprise"])) {
+    if (Auth::check() && Auth::user()->hasAnyRole(['Super Admin', 'RH', "Chef d'Entreprise"])) {
         return redirect()->route('admin.dashboard');
     }
     return redirect()->route('espace-employe.dashboard');
 })->name('dashboard')->middleware(['auth']);
 
 Route::get('/home', function () {
-    if (Auth::check() && Auth::user()->hasAnyRole(['Super Admin', "Chef d'Entreprise"])) {
+    if (Auth::check() && Auth::user()->hasAnyRole(['Super Admin', 'RH', "Chef d'Entreprise"])) {
         return redirect()->route('admin.dashboard');
     }
     return redirect()->route('espace-employe.dashboard');
@@ -275,7 +275,7 @@ Route::get('/home', function () {
 // Route de fallback - Redirection selon le rôle
 Route::fallback(function () {
     if (Auth::check()) {
-        if (Auth::user()->hasAnyRole(['Super Admin', "Chef d'Entreprise"])) {
+        if (Auth::user()->hasAnyRole(['Super Admin', 'RH', "Chef d'Entreprise"])) {
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('espace-employe.dashboard');

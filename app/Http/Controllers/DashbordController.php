@@ -149,7 +149,7 @@ class DashbordController extends Controller
         // Trier par date décroissante et prendre les 8 plus récentes
         $activitesRecentes = $activitesRecentes->sortByDesc('date')->take(8)->values();
 
-        // --- Nombre d'entreprises (Super Admin : total / Chef d'Entreprise : son entreprise uniquement) ---
+        // --- Nombre d'entreprises (Super Admin : total / RH + Chef d'Entreprise : son entreprise uniquement) ---
         $totalEntreprises = $user->hasRole('Super Admin')
             ? Entreprise::count()
             : ($entrepriseId ? 1 : 0);

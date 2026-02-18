@@ -163,7 +163,7 @@
                     <span class="nav-link-text">Gestion des Congés</span>
                     @php
                         $pendingCongesQuery = \App\Models\Conge::where('statut', 'en_attente');
-                        if (auth()->user()->hasRole("Chef d'Entreprise")) {
+                        if (auth()->user()->hasAnyRole(["Chef d'Entreprise", 'RH']) && auth()->user()->entreprise_id) {
                             $pendingCongesQuery->forEntreprise(auth()->user()->entreprise_id);
                         }
                         $pendingCongesCount = $pendingCongesQuery->count();
@@ -184,7 +184,7 @@
                     <span class="nav-link-text">Gestion des Absences</span>
                     @php
                         $injustifiedQuery = \App\Models\Absence::where('justifiee', false);
-                        if (auth()->user()->hasRole("Chef d'Entreprise")) {
+                        if (auth()->user()->hasAnyRole(["Chef d'Entreprise", 'RH']) && auth()->user()->entreprise_id) {
                             $injustifiedQuery->forEntreprise(auth()->user()->entreprise_id);
                         }
                         $injustifiedCount = $injustifiedQuery->count();

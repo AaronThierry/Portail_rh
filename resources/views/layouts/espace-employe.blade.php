@@ -6,6 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Mon Espace') - Portail RH</title>
 
+    <!-- Theme init — must run BEFORE any render to prevent FOUC -->
+    <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark');}})();</script>
+
     <!-- Google Fonts — Swiss Editorial Design System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +23,7 @@
            Geometric precision · Warm accents · Editorial typography
            ============================================================ */
         :root {
+            color-scheme: light;
             --e-slate-50: #f8fafc;
             --e-slate-100: #f1f5f9;
             --e-slate-200: #e2e8f0;
@@ -44,6 +48,7 @@
             --e-red: #dc2626;
             --e-red-pale: #fee2e2;
             --e-surface: #ffffff;
+            --e-surface-elevated: #ffffff;
             --e-bg: var(--e-slate-50);
             --e-text: var(--e-slate-900);
             --e-text-secondary: var(--e-slate-500);
@@ -66,24 +71,28 @@
         }
 
         .dark {
-            --e-surface: var(--e-slate-800);
-            --e-bg: var(--e-slate-900);
-            --e-text: var(--e-slate-100);
-            --e-text-secondary: var(--e-slate-400);
-            --e-text-tertiary: var(--e-slate-500);
-            --e-border: var(--e-slate-700);
-            --e-border-light: var(--e-slate-800);
-            --e-blue-pale: rgba(59, 125, 216, 0.15);
-            --e-blue-wash: rgba(59, 125, 216, 0.08);
-            --e-amber-pale: rgba(232, 133, 12, 0.15);
-            --e-amber-wash: rgba(232, 133, 12, 0.08);
-            --e-emerald-pale: rgba(5, 150, 105, 0.15);
-            --e-red-pale: rgba(220, 38, 38, 0.15);
-            --e-shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
-            --e-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            --e-shadow-md: 0 4px 6px rgba(0,0,0,0.25);
-            --e-shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
-            --e-shadow-xl: 0 20px 25px rgba(0,0,0,0.35);
+            color-scheme: dark;
+            --e-surface: #1a2236;
+            --e-surface-elevated: #1f2d42;
+            --e-bg: #0d1520;
+            --e-text: #e8edf5;
+            --e-text-secondary: #8fa3bd;
+            --e-text-tertiary: #5d7a9a;
+            --e-border: #2a3a52;
+            --e-border-light: #1a2a3e;
+            --e-blue: #5b9cf6;
+            --e-blue-deep: #3d7de8;
+            --e-blue-pale: rgba(91, 156, 246, 0.18);
+            --e-blue-wash: rgba(91, 156, 246, 0.09);
+            --e-amber-pale: rgba(232, 133, 12, 0.18);
+            --e-amber-wash: rgba(232, 133, 12, 0.09);
+            --e-emerald-pale: rgba(5, 150, 105, 0.18);
+            --e-red-pale: rgba(220, 38, 38, 0.18);
+            --e-shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
+            --e-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            --e-shadow-md: 0 4px 10px rgba(0,0,0,0.35);
+            --e-shadow-lg: 0 12px 24px rgba(0,0,0,0.4);
+            --e-shadow-xl: 0 24px 40px rgba(0,0,0,0.45);
         }
 
         /* ==================== ANIMATIONS ==================== */
@@ -127,6 +136,7 @@
             font-size: 0.9375rem;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* ==================== LAYOUT ==================== */
@@ -671,6 +681,58 @@
             background: var(--e-bg);
         }
 
+        /* ==================== DARK MODE — composants ==================== */
+        .dark .ee-header {
+            background: var(--e-surface);
+            border-bottom-color: var(--e-border);
+            box-shadow: 0 1px 0 var(--e-border), 0 4px 16px rgba(0,0,0,0.25);
+        }
+
+        .dark .ee-header-btn {
+            background: var(--e-surface-elevated);
+            border-color: var(--e-border);
+            color: var(--e-text-secondary);
+        }
+
+        .dark .ee-header-btn:hover {
+            background: var(--e-blue-pale);
+            color: var(--e-blue);
+            border-color: var(--e-blue-pale);
+        }
+
+        .dark .ee-theme-toggle {
+            background: var(--e-surface-elevated);
+            border-color: var(--e-border);
+        }
+
+        .dark .ee-mobile-toggle {
+            background: var(--e-surface-elevated);
+            border-color: var(--e-border);
+        }
+
+        .dark .ee-header-avatar img {
+            border-color: var(--e-border);
+        }
+
+        /* Notification dropdown dark mode */
+        .dark .ee-notif-dropdown {
+            background: var(--e-surface-elevated);
+            border-color: var(--e-border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .dark .ee-notif-dropdown-header {
+            border-bottom-color: var(--e-border);
+        }
+
+        .dark .ee-notif-item {
+            border-bottom-color: var(--e-border-light);
+        }
+
+        .dark .ee-notif-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
         /* ==================== FOOTER ==================== */
         .ee-footer {
             padding: 1.25rem 2rem;
@@ -1070,13 +1132,8 @@
         }
 
         function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-        }
-
-        // Load saved theme
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark');
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
 
         // Close sidebar on window resize (desktop)

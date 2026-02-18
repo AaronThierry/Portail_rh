@@ -1087,6 +1087,156 @@
         font-size: 1.5rem;
     }
 }
+
+/* ==================== DARK MODE — DASHBOARD ==================== */
+/* Stat cards */
+.dark .ee-stat-card {
+    background: var(--e-surface);
+    border-color: var(--e-border);
+}
+
+.dark .ee-stat-card:hover {
+    border-color: var(--e-border);
+    box-shadow: var(--e-shadow-lg);
+}
+
+/* Quick actions */
+.dark .ee-quick-actions {
+    background: var(--e-surface);
+    border-color: var(--e-border);
+}
+
+.dark .ee-action-card {
+    background: var(--e-surface-elevated);
+    border-color: transparent;
+}
+
+.dark .ee-action-card:hover {
+    background: var(--e-surface-elevated);
+    box-shadow: var(--e-shadow-lg);
+}
+
+/* Activities card */
+.dark .ee-activities-card {
+    background: var(--e-surface);
+    border-color: var(--e-border);
+}
+
+.dark .ee-activity-item {
+    background: rgba(255,255,255,0.035);
+}
+
+.dark .ee-activity-item:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: var(--e-border);
+}
+
+/* Activity icons — plus lisibles en dark */
+.dark .ee-activity-icon.file {
+    background: var(--e-blue-pale);
+    color: var(--e-blue);
+}
+
+.dark .ee-activity-icon.calendar {
+    background: var(--e-emerald-pale);
+    color: #34d399;
+}
+
+.dark .ee-activity-icon.user {
+    background: var(--e-amber-pale);
+    color: var(--e-amber);
+}
+
+/* Card link — visible en dark */
+.dark .ee-card-link {
+    background: var(--e-blue-pale);
+    color: var(--e-blue);
+}
+
+.dark .ee-card-link:hover {
+    background: var(--e-blue);
+    color: white;
+}
+
+/* Profile card */
+.dark .ee-profile-card {
+    background: var(--e-surface);
+    border-color: var(--e-border);
+}
+
+.dark .ee-profile-body {
+    background: var(--e-surface);
+}
+
+.dark .ee-info-item {
+    background: rgba(255,255,255,0.035);
+    border-color: transparent;
+}
+
+.dark .ee-info-item:hover {
+    background: var(--e-blue-pale);
+    border-color: var(--e-blue-pale);
+}
+
+.dark .ee-info-icon {
+    background: var(--e-surface-elevated);
+    border-color: var(--e-border);
+    color: var(--e-blue);
+}
+
+.dark .ee-info-item:hover .ee-info-icon {
+    background: var(--e-blue);
+    color: white;
+    border-color: var(--e-blue);
+}
+
+/* Profile button — contraste correct en dark */
+.dark .ee-profile-btn {
+    background: linear-gradient(135deg, var(--e-surface-elevated), var(--e-border));
+    border-color: var(--e-border);
+    color: var(--e-text);
+}
+
+.dark .ee-profile-btn:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    border-color: var(--e-blue-pale);
+}
+
+/* Empty state */
+.dark .ee-empty-icon {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Stat badges */
+.dark .ee-stat-badge.success {
+    background: var(--e-emerald-pale);
+    color: #34d399;
+}
+
+.dark .ee-stat-badge.warning {
+    background: var(--e-amber-pale);
+    color: var(--e-amber-bright);
+}
+
+.dark .ee-stat-badge.info {
+    background: var(--e-blue-pale);
+    color: var(--e-blue);
+}
+
+/* Section title icon */
+.dark .ee-section-title-icon {
+    background: var(--e-blue);
+}
+
+.dark .ee-card-title-icon {
+    background: #059669;
+}
+
+/* Nav badge */
+.dark .ee-nav-badge {
+    background: rgba(255,255,255,0.08);
+    color: var(--e-text-secondary);
+}
 </style>
 @endsection
 

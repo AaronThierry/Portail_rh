@@ -171,7 +171,8 @@
                                 $pendingCongesQuery->forEntreprise(auth()->user()->entreprise_id);
                             }
                         } else {
-                            $pendingCongesQuery = \App\Models\Conge::whereIn('statut', ['en_attente', 'valide_chef']);
+                            // Super Admin / RH : uniquement valide_chef (prêts pour approbation finale)
+                            $pendingCongesQuery = \App\Models\Conge::where('statut', 'valide_chef');
                             if (auth()->user()->hasRole('RH') && auth()->user()->entreprise_id) {
                                 $pendingCongesQuery->forEntreprise(auth()->user()->entreprise_id);
                             }

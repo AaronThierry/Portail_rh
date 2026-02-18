@@ -771,12 +771,22 @@
                                                 Refuser
                                             </button>
 
-                                        {{-- Étape 2 : Super Admin / RH voit Approuver pour en_attente et valide_chef --}}
-                                        @elseif(!$isChef && in_array($conge->statut, ['en_attente', 'valide_chef']))
+                                        {{-- Étape 2 : Super Admin / RH — Approuver UNIQUEMENT si valide_chef (étape 1 obligatoire) --}}
+                                        @elseif(!$isChef && $conge->statut === 'valide_chef')
                                             <button class="cg-btn cg-btn-approve" onclick="openApproveModal({{ $conge->id }}, '{{ addslashes($conge->personnel->prenoms . ' ' . $conge->personnel->nom) }}', '{{ $conge->typeConge->nom ?? 'Congé' }}', '{{ $conge->date_debut->format('d/m/Y') }}', '{{ $conge->date_fin->format('d/m/Y') }}', {{ $conge->nombre_jours }}, false)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                                 Approuver
                                             </button>
+                                            <button class="cg-btn cg-btn-reject" onclick="openRejectModal({{ $conge->id }}, '{{ addslashes($conge->personnel->prenoms . ' ' . $conge->personnel->nom) }}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                Refuser
+                                            </button>
+
+                                        {{-- en_attente : Super Admin/RH peut refuser mais pas encore approuver --}}
+                                        @elseif(!$isChef && $conge->statut === 'en_attente')
+                                            <span style="font-size:0.75rem;color:var(--cg-warning);background:var(--cg-warning-light);padding:0.25rem 0.625rem;border-radius:6px;white-space:nowrap;">
+                                                ⏳ Attente Chef
+                                            </span>
                                             <button class="cg-btn cg-btn-reject" onclick="openRejectModal({{ $conge->id }}, '{{ addslashes($conge->personnel->prenoms . ' ' . $conge->personnel->nom) }}')">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                                 Refuser

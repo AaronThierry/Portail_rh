@@ -97,7 +97,11 @@ class CongeAdminController extends Controller
         }
 
         // Étape 2 : Super Admin / RH approuve définitivement
-        if (!in_array($conge->statut, ['en_attente', 'valide_chef'])) {
+        // L'approbation est obligatoirement en 2 étapes : la validation du Chef d'Entreprise est requise
+        if ($conge->statut !== 'valide_chef') {
+            if ($conge->statut === 'en_attente') {
+                return back()->with('error', 'Cette demande doit d\'abord être validée par le Chef d\'Entreprise avant votre approbation finale.');
+            }
             return back()->with('error', 'Cette demande a déjà été traitée.');
         }
 
@@ -143,7 +147,7 @@ class CongeAdminController extends Controller
             return back()->with('error', 'Vous ne pouvez refuser que les demandes en attente de votre validation.');
         }
 
-        // Super Admin / RH peut refuser en_attente ou valide_chef
+        // Super Admin / RH peut refuser en_attente (si bloqué) ou valide_chef
         if (!$user->hasRole("Chef d'Entreprise") && !in_array($conge->statut, ['en_attente', 'valide_chef'])) {
             return back()->with('error', 'Cette demande a déjà été traitée.');
         }

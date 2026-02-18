@@ -163,10 +163,10 @@ class AbsenceAdminController extends Controller
     }
 
     /**
-     * Valider / Approuver une demande d'absence (2 étapes)
+     * Valider / Approuver une demande d'absence (2 étapes obligatoires)
      *
      * Étape 1 — Chef d'Entreprise : en_attente → valide_chef
-     * Étape 2 — Super Admin / RH  : en_attente ou valide_chef → approuvee
+     * Étape 2 — Super Admin / RH  : valide_chef → approuvee (l'étape 1 est obligatoire)
      */
     public function approve(Absence $absence)
     {
@@ -188,7 +188,11 @@ class AbsenceAdminController extends Controller
         }
 
         // Étape 2 : Super Admin / RH approuve définitivement
-        if (!in_array($absence->statut, ['en_attente', 'valide_chef'])) {
+        // L'approbation est obligatoirement en 2 étapes : la validation du Chef d'Entreprise est requise
+        if ($absence->statut !== 'valide_chef') {
+            if ($absence->statut === 'en_attente') {
+                return back()->with('error', 'Cette absence doit d\'abord être validée par le Chef d\'Entreprise avant votre approbation finale.');
+            }
             return back()->with('error', 'Cette absence a déjà été traitée.');
         }
 

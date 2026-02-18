@@ -80,7 +80,7 @@
                 <span class="nav-section-title">Ressources Humaines</span>
             </div>
             <div class="nav-items">
-                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH']))
+                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', "Chef d'Entreprise"]))
                     <a href="{{ route('admin.personnels.index') }}" class="nav-link {{ Request::is('admin/personnels*') ? 'active' : '' }}" data-tooltip="Personnel">
                         <span class="nav-link-icon">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,6 +101,7 @@
                         <span class="nav-link-indicator"></span>
                     </a>
 
+                    @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH']))
                     <a href="{{ route('admin.dossier-agent.categories') }}" class="nav-link {{ Request::is('admin/dossier-agent/categories*') ? 'active' : '' }}" data-tooltip="Répertoires Documents">
                         <span class="nav-link-icon">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,6 +121,7 @@
                         <span class="nav-link-text">Comptes Utilisateurs</span>
                         <span class="nav-link-indicator"></span>
                     </a>
+                    @endif
 
                 @endif
             </div>
@@ -127,7 +129,7 @@
         @endif
 
         <!-- SECTION: Gestion Documentaire -->
-        @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Employé']))
+        @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Employé', "Chef d'Entreprise"]))
         <div class="nav-section">
             <div class="nav-section-header">
                 <span class="nav-section-icon">
@@ -141,7 +143,7 @@
                 <span class="nav-section-title">Documents & Demandes</span>
             </div>
             <div class="nav-items">
-                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH']))
+                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH', "Chef d'Entreprise"]))
                 <a href="{{ route('admin.bulletins-paie.index') }}" class="nav-link {{ Request::is('admin/bulletins-paie*') ? 'active' : '' }}" data-tooltip="Bulletins de Paie">
                     <span class="nav-link-icon">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +161,13 @@
                         </svg>
                     </span>
                     <span class="nav-link-text">Gestion des Congés</span>
-                    @php $pendingCongesCount = \App\Models\Conge::where('statut', 'en_attente')->count(); @endphp
+                    @php
+                        $pendingCongesQuery = \App\Models\Conge::where('statut', 'en_attente');
+                        if (auth()->user()->hasRole("Chef d'Entreprise")) {
+                            $pendingCongesQuery->forEntreprise(auth()->user()->entreprise_id);
+                        }
+                        $pendingCongesCount = $pendingCongesQuery->count();
+                    @endphp
                     @if($pendingCongesCount > 0)
                         <span class="nav-badge" style="background: linear-gradient(135deg, #FF9500 0%, #FF6B00 100%); color: white;">{{ $pendingCongesCount }}</span>
                     @endif
@@ -174,7 +182,13 @@
                         </svg>
                     </span>
                     <span class="nav-link-text">Gestion des Absences</span>
-                    @php $injustifiedCount = \App\Models\Absence::where('justifiee', false)->count(); @endphp
+                    @php
+                        $injustifiedQuery = \App\Models\Absence::where('justifiee', false);
+                        if (auth()->user()->hasRole("Chef d'Entreprise")) {
+                            $injustifiedQuery->forEntreprise(auth()->user()->entreprise_id);
+                        }
+                        $injustifiedCount = $injustifiedQuery->count();
+                    @endphp
                     @if($injustifiedCount > 0)
                         <span class="nav-badge" style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white;">{{ $injustifiedCount }}</span>
                     @endif

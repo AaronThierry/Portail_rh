@@ -20,6 +20,7 @@ use App\Http\Controllers\BulletinPaieController;
 use App\Http\Controllers\CongeAdminController;
 use App\Http\Controllers\AbsenceAdminController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ChefEntrepriseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,13 +122,13 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
 });
 
 // ============================================================================
-// PORTAIL ADMIN - Réservé aux superadmins
+// PORTAIL ADMIN - Super Admin + Chef d'Entreprise (lecture seule)
 // ============================================================================
-Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|Chef d'Entreprise"])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard admin
     Route::get('/', [DashbordController::class, 'index'])->name('dashboard');
 
-    // Gestion des personnels
+    // Gestion des personnels (Super Admin : CRUD complet / Chef d'Entreprise : lecture seule via contrôleur)
     Route::resource('personnels', PersonnelController::class);
 
     // Gestion des départements (désactivé)
@@ -136,20 +137,32 @@ Route::middleware(['auth', 'force.password.change', '2fa', 'role:Super Admin'])-
     // Gestion des services (désactivé)
     // Route::resource('services', ServiceController::class);
 
-    // Gestion des entreprises
-    Route::resource('entreprises', EntrepriseController::class);
+    // Gestion des entreprises — Super Admin uniquement
+    Route::resource('entreprises', EntrepriseController::class)->middleware("role:Super Admin");
 
-    // Gestion des rôles et permissions
-    Route::resource('roles', RoleController::class);
-    Route::resource('permissions', PermissionController::class);
+    // Compte Chef d'Entreprise — créer / renvoyer / supprimer (Super Admin uniquement)
+    Route::get('entreprises/{entreprise}/chef-entreprise/creer', [ChefEntrepriseController::class, 'create'])
+        ->name('chef-entreprise.create')->middleware("role:Super Admin");
+    Route::post('entreprises/{entreprise}/chef-entreprise', [ChefEntrepriseController::class, 'store'])
+        ->name('chef-entreprise.store')->middleware("role:Super Admin");
+    Route::post('entreprises/{entreprise}/chef-entreprise/renvoyer', [ChefEntrepriseController::class, 'renvoyer'])
+        ->name('chef-entreprise.renvoyer')->middleware("role:Super Admin");
+    Route::delete('entreprises/{entreprise}/chef-entreprise', [ChefEntrepriseController::class, 'destroy'])
+        ->name('chef-entreprise.destroy')->middleware("role:Super Admin");
 
-    // Gestion des utilisateurs (comptes)
-    Route::get('utilisateurs', [UserController::class, 'index'])->name('utilisateurs.index');
-    Route::post('utilisateurs', [UserController::class, 'store'])->name('utilisateurs.store');
-    Route::get('utilisateurs/{user}', [UserController::class, 'show'])->name('utilisateurs.show');
-    Route::get('utilisateurs/{user}/edit', [UserController::class, 'edit'])->name('utilisateurs.edit');
-    Route::put('utilisateurs/{user}', [UserController::class, 'update'])->name('utilisateurs.update');
-    Route::delete('utilisateurs/{user}', [UserController::class, 'destroy'])->name('utilisateurs.destroy');
+    // Gestion des rôles et permissions — Super Admin uniquement
+    Route::resource('roles', RoleController::class)->middleware("role:Super Admin");
+    Route::resource('permissions', PermissionController::class)->middleware("role:Super Admin");
+
+    // Gestion des utilisateurs (comptes) — Super Admin uniquement
+    Route::middleware("role:Super Admin")->group(function () {
+        Route::get('utilisateurs', [UserController::class, 'index'])->name('utilisateurs.index');
+        Route::post('utilisateurs', [UserController::class, 'store'])->name('utilisateurs.store');
+        Route::get('utilisateurs/{user}', [UserController::class, 'show'])->name('utilisateurs.show');
+        Route::get('utilisateurs/{user}/edit', [UserController::class, 'edit'])->name('utilisateurs.edit');
+        Route::put('utilisateurs/{user}', [UserController::class, 'update'])->name('utilisateurs.update');
+        Route::delete('utilisateurs/{user}', [UserController::class, 'destroy'])->name('utilisateurs.destroy');
+    });
 
     // Gestion des accompagnements collaborateurs (désactivé — controller non implémenté)
     // Route::get('accompagnements', [AccompagnementController::class, 'index'])->name('accompagnements.index');
@@ -237,7 +250,7 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
 // Redirection racine selon le rôle
 Route::get('/', function () {
     if (Auth::check()) {
-        if (Auth::user()->hasRole('Super Admin')) {
+        if (Auth::user()->hasAnyRole(['Super Admin', "Chef d'Entreprise"])) {
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('espace-employe.dashboard');
@@ -246,14 +259,14 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    if (Auth::check() && Auth::user()->hasRole('Super Admin')) {
+    if (Auth::check() && Auth::user()->hasAnyRole(['Super Admin', "Chef d'Entreprise"])) {
         return redirect()->route('admin.dashboard');
     }
     return redirect()->route('espace-employe.dashboard');
 })->name('dashboard')->middleware(['auth']);
 
 Route::get('/home', function () {
-    if (Auth::check() && Auth::user()->hasRole('Super Admin')) {
+    if (Auth::check() && Auth::user()->hasAnyRole(['Super Admin', "Chef d'Entreprise"])) {
         return redirect()->route('admin.dashboard');
     }
     return redirect()->route('espace-employe.dashboard');
@@ -262,7 +275,7 @@ Route::get('/home', function () {
 // Route de fallback - Redirection selon le rôle
 Route::fallback(function () {
     if (Auth::check()) {
-        if (Auth::user()->hasRole('Super Admin')) {
+        if (Auth::user()->hasAnyRole(['Super Admin', "Chef d'Entreprise"])) {
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('espace-employe.dashboard');

@@ -301,6 +301,32 @@ class RolesAndPermissionsSeeder extends Seeder
             $employe->syncPermissions($employePermissions);
             $this->command->info('   ✓ Employé créé avec ' . count($employePermissions) . ' permissions');
 
+            // ========================================
+            // RÔLE 6: CHEF D'ENTREPRISE
+            // ========================================
+            $chefEntreprise = Role::firstOrCreate(['name' => "Chef d'Entreprise"], ['guard_name' => 'web']);
+            $chefEntreprisePermissions = [
+                // Dashboard — accès à son tableau de bord uniquement
+                'view-dashboard', 'view-analytics',
+
+                // Personnel — consultation uniquement
+                'view-users', 'view-user-details',
+
+                // Congés — consultation uniquement
+                'view-conges',
+
+                // Paies — consultation uniquement
+                'view-paies',
+
+                // Documents — consultation et téléchargement
+                'view-documents', 'download-documents',
+
+                // Rapports — consultation uniquement
+                'view-reports',
+            ];
+            $chefEntreprise->syncPermissions($chefEntreprisePermissions);
+            $this->command->info("   ✓ Chef d'Entreprise créé avec " . count($chefEntreprisePermissions) . ' permissions (lecture seule)');
+
             DB::commit();
 
             // ========================================
@@ -311,7 +337,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $this->command->info('✅ Rôles et permissions créés avec succès!');
             $this->command->line('══════════════════════════════════════════════════════════');
             $this->command->info('📊 Total des permissions: ' . Permission::count());
-            $this->command->info('👥 Rôles créés: Super Admin, Admin, RH, Manager, Employé');
+            $this->command->info("👥 Rôles créés: Super Admin, Admin, RH, Manager, Employé, Chef d'Entreprise");
             $this->command->line('══════════════════════════════════════════════════════════');
 
         } catch (\Exception $e) {

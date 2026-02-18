@@ -1369,6 +1369,34 @@
                         <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
                 </a>
+
+                {{-- Accès Chef d'Entreprise --}}
+                @php
+                    $chefCompte = \App\Models\User::where('entreprise_id', $entreprise->id)->role("Chef d'Entreprise")->first();
+                @endphp
+                <a href="{{ route('admin.chef-entreprise.create', $entreprise) }}"
+                   class="ep-action-link"
+                   style="{{ $chefCompte ? 'background:rgba(5,150,105,0.06);border-color:rgba(5,150,105,0.15);color:#059669;' : 'background:rgba(232,133,12,0.06);border-color:rgba(232,133,12,0.15);color:#b45309;' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                        @if($chefCompte)
+                            <path d="M9 12l2 2 4-4" stroke-width="2.5"/>
+                        @else
+                            <line x1="12" y1="11" x2="12" y2="17"/>
+                            <line x1="9" y1="14" x2="15" y2="14"/>
+                        @endif
+                    </svg>
+                    @if($chefCompte)
+                        Compte Chef d'Entreprise ✓
+                    @else
+                        Créer accès Chef d'Entreprise
+                    @endif
+                    <svg class="ep-action-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
             </div>
 
             <!-- Activity Timeline -->

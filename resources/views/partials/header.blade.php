@@ -29,19 +29,25 @@
             <!-- Theme Toggle - Elegant -->
             <button class="header-action-btn theme-toggle" data-theme-toggle aria-label="Changer le thème">
                 <div class="theme-icon-wrapper">
-                    <svg class="theme-icon sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    <!-- Soleil - Design moderne avec rayons animés -->
+                    <svg class="theme-icon sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4" fill="currentColor" opacity="0.15"></circle>
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2" class="sun-ray"></path>
+                        <path d="M12 20v2" class="sun-ray"></path>
+                        <path d="M4.93 4.93l1.41 1.41" class="sun-ray"></path>
+                        <path d="M17.66 17.66l1.41 1.41" class="sun-ray"></path>
+                        <path d="M2 12h2" class="sun-ray"></path>
+                        <path d="M20 12h2" class="sun-ray"></path>
+                        <path d="M6.34 17.66l-1.41 1.41" class="sun-ray"></path>
+                        <path d="M19.07 4.93l-1.41 1.41" class="sun-ray"></path>
                     </svg>
-                    <svg class="theme-icon moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <!-- Lune - Croissant élégant avec étoile -->
+                    <svg class="theme-icon moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" opacity="0.1"></path>
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        <path d="M17.5 5.5l.5 1 1 .5-1 .5-.5 1-.5-1-1-.5 1-.5z" class="moon-star" fill="currentColor" stroke="none"></path>
+                        <circle cx="20" cy="10" r="0.6" class="moon-star" fill="currentColor" stroke="none"></circle>
                     </svg>
                 </div>
             </button>
@@ -325,8 +331,8 @@
     height: 44px;
     border: none;
     border-radius: var(--radius-md, 12px);
-    background: var(--sidebar-hover, #F0F4F8);
-    color: var(--sidebar-text, #5A6C7D);
+    background: var(--bg-tertiary, #F0F4F8);
+    color: var(--text-secondary, #5A6C7D);
     cursor: pointer;
     align-items: center;
     justify-content: center;
@@ -335,7 +341,7 @@
 }
 
 .mobile-menu-btn:hover {
-    background: var(--primary-light, #E8F4FD);
+    background: rgba(74, 144, 217, 0.1);
     color: var(--primary, #4A90D9);
 }
 
@@ -368,16 +374,6 @@
     }
 }
 
-.dark .mobile-menu-btn {
-    background: #374151;
-    color: #E5E7EB;
-}
-
-.dark .mobile-menu-btn:hover {
-    background: var(--primary-light);
-    color: var(--primary);
-}
-
 /* Header Action Button Base */
 .header-action-btn {
     position: relative;
@@ -388,14 +384,14 @@
     height: 44px;
     border: none;
     border-radius: var(--radius-md, 12px);
-    background: var(--sidebar-hover, #F0F4F8);
-    color: var(--sidebar-text, #5A6C7D);
+    background: var(--bg-tertiary, #F0F4F8);
+    color: var(--text-secondary, #5A6C7D);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .header-action-btn:hover {
-    background: var(--primary-light, #E8F4FD);
+    background: rgba(74, 144, 217, 0.1);
     color: var(--primary, #4A90D9);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(74, 144, 217, 0.15);
@@ -422,19 +418,38 @@
     inset: 0;
     width: 20px;
     height: 20px;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Sun Icon */
 .sun-icon {
     opacity: 1;
     transform: rotate(0deg) scale(1);
+    color: #F59E0B;
 }
 
+.sun-icon .sun-ray {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center;
+}
+
+.theme-toggle:hover .sun-icon .sun-ray {
+    stroke-width: 2.2;
+}
+
+/* Moon Icon */
 .moon-icon {
     opacity: 0;
     transform: rotate(-90deg) scale(0.5);
+    color: #93C5FD;
 }
 
+.moon-icon .moon-star {
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+}
+
+/* Dark Mode - Switch icons */
 .dark .sun-icon {
     opacity: 0;
     transform: rotate(90deg) scale(0.5);
@@ -443,6 +458,25 @@
 .dark .moon-icon {
     opacity: 1;
     transform: rotate(0deg) scale(1);
+}
+
+.dark .moon-icon .moon-star {
+    opacity: 1;
+    animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* Hover glow effect */
+.theme-toggle:hover {
+    background: rgba(245, 158, 11, 0.1) !important;
+}
+
+.dark .theme-toggle:hover {
+    background: rgba(147, 197, 253, 0.12) !important;
 }
 
 /* Notification Badge */
@@ -492,13 +526,13 @@
     padding-right: 1rem;
     border: none;
     border-radius: var(--radius-lg, 16px);
-    background: var(--sidebar-hover, #F0F4F8);
+    background: var(--bg-tertiary, #F0F4F8);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .user-profile-btn:hover {
-    background: var(--primary-light, #E8F4FD);
+    background: rgba(74, 144, 217, 0.1);
     box-shadow: 0 4px 16px rgba(74, 144, 217, 0.15);
     transform: translateY(-2px);
 }
@@ -512,7 +546,7 @@
     height: 40px;
     border-radius: var(--radius-md, 12px);
     object-fit: cover;
-    border: 2px solid white;
+    border: 2px solid var(--header-bg, #ffffff);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -523,7 +557,7 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    border: 2px solid var(--sidebar-hover, #F0F4F8);
+    border: 2px solid var(--bg-tertiary, #F0F4F8);
 }
 
 .user-status.online {
@@ -568,20 +602,20 @@
 .user-name {
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--sidebar-text, #5A6C7D);
+    color: var(--text-primary, #1F2937);
     line-height: 1.2;
 }
 
 .user-role {
     font-size: 0.75rem;
-    color: var(--sidebar-text-muted, #8B9CAD);
+    color: var(--text-muted, #6B7280);
     line-height: 1.2;
 }
 
 .dropdown-arrow {
     width: 16px;
     height: 16px;
-    color: var(--sidebar-text-muted, #8B9CAD);
+    color: var(--text-muted, #6B7280);
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: none;
 }
@@ -611,7 +645,7 @@
     border-radius: var(--radius-lg, 16px);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12),
                 0 2px 10px rgba(0, 0, 0, 0.08);
-    border: 1px solid var(--sidebar-border, #E8ECF0);
+    border: 1px solid var(--card-border, #E8ECF0);
     overflow: hidden;
     opacity: 0;
     visibility: hidden;
@@ -670,7 +704,7 @@
     height: 56px;
     border-radius: 14px;
     object-fit: cover;
-    border: 3px solid white;
+    border: 3px solid var(--card-bg, #ffffff);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -681,7 +715,7 @@
     width: 14px;
     height: 14px;
     background: #22C55E;
-    border: 3px solid white;
+    border: 3px solid var(--card-bg, #ffffff);
     border-radius: 50%;
     box-shadow: 0 2px 4px rgba(34, 197, 94, 0.4);
 }
@@ -730,7 +764,7 @@
 /* Actions */
 .ud-actions {
     padding: 0.5rem;
-    border-top: 1px solid var(--sidebar-border, #E8ECF0);
+    border-top: 1px solid var(--card-border, #E8ECF0);
 }
 
 .ud-action-item {
@@ -744,7 +778,7 @@
 }
 
 .ud-action-item:hover {
-    background: var(--sidebar-hover, #F3F4F6);
+    background: var(--bg-tertiary, #F3F4F6);
 }
 
 .ud-action-item:hover .ud-action-icon {
@@ -764,7 +798,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--sidebar-hover, #F3F4F6);
+    background: var(--bg-tertiary, #F3F4F6);
     border-radius: 10px;
     color: var(--text-muted, #6B7280);
     transition: all 0.2s ease;
@@ -808,7 +842,7 @@
 /* Logout Section */
 .ud-logout-section {
     padding: 0.5rem;
-    border-top: 1px solid var(--sidebar-border, #E8ECF0);
+    border-top: 1px solid var(--card-border, #E8ECF0);
     background: linear-gradient(180deg, transparent 0%, rgba(239, 68, 68, 0.03) 100%);
 }
 
@@ -898,8 +932,8 @@
 /* Dropdown Header */
 .dropdown-header {
     padding: 1rem 1.25rem;
-    background: linear-gradient(135deg, var(--primary-lighter, #F0F8FF) 0%, var(--primary-light, #E8F4FD) 100%);
-    border-bottom: 1px solid var(--sidebar-border, #E8ECF0);
+    background: linear-gradient(135deg, rgba(74, 144, 217, 0.06) 0%, rgba(74, 144, 217, 0.1) 100%);
+    border-bottom: 1px solid var(--card-border, #E8ECF0);
 }
 
 .dropdown-header-content {
@@ -920,7 +954,7 @@
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--primary, #4A90D9);
-    background: white;
+    background: var(--bg-primary, #ffffff);
     padding: 0.25rem 0.625rem;
     border-radius: var(--radius-sm, 8px);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -989,7 +1023,7 @@
     padding: 1rem 1.25rem;
     text-decoration: none;
     transition: all 0.2s;
-    border-bottom: 1px solid var(--sidebar-border, #E8ECF0);
+    border-bottom: 1px solid var(--card-border, #E8ECF0);
     position: relative;
 }
 
@@ -998,11 +1032,11 @@
 }
 
 .notification-item:hover {
-    background: var(--sidebar-hover, #F0F4F8);
+    background: var(--bg-tertiary, #F0F4F8);
 }
 
 .notification-item.unread {
-    background: var(--primary-lighter, #F0F8FF);
+    background: rgba(74, 144, 217, 0.05);
 }
 
 .notification-item.unread::before {
@@ -1059,13 +1093,13 @@
 .notification-title {
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--sidebar-text, #5A6C7D);
+    color: var(--text-primary, #1F2937);
     margin: 0 0 0.25rem 0;
 }
 
 .notification-text {
     font-size: 0.8125rem;
-    color: var(--sidebar-text-muted, #8B9CAD);
+    color: var(--text-muted, #6B7280);
     margin: 0 0 0.375rem 0;
     white-space: nowrap;
     overflow: hidden;
@@ -1074,7 +1108,7 @@
 
 .notification-time {
     font-size: 0.75rem;
-    color: var(--sidebar-text-muted, #8B9CAD);
+    color: var(--text-light, #9CA3AF);
 }
 
 /* Dropdown Item */
@@ -1084,17 +1118,17 @@
     gap: 0.875rem;
     padding: 0.875rem 1.25rem;
     text-decoration: none;
-    color: var(--sidebar-text, #5A6C7D);
+    color: var(--text-secondary, #374151);
     transition: all 0.2s;
 }
 
 .dropdown-item:hover {
-    background: var(--sidebar-hover, #F0F4F8);
+    background: var(--bg-tertiary, #F0F4F8);
     color: var(--primary, #4A90D9);
 }
 
 .dropdown-item:hover .dropdown-item-icon {
-    background: var(--primary-light, #E8F4FD);
+    background: rgba(74, 144, 217, 0.12);
     color: var(--primary, #4A90D9);
     transform: scale(1.1);
 }
@@ -1103,7 +1137,7 @@
     width: 36px;
     height: 36px;
     border-radius: var(--radius-sm, 8px);
-    background: var(--sidebar-hover, #F0F4F8);
+    background: var(--bg-tertiary, #F0F4F8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1123,8 +1157,8 @@
 /* Dropdown Footer */
 .dropdown-footer {
     padding: 0.875rem 1.25rem;
-    border-top: 1px solid var(--sidebar-border, #E8ECF0);
-    background: var(--sidebar-hover, #F0F4F8);
+    border-top: 1px solid var(--card-border, #E8ECF0);
+    background: var(--bg-secondary, #F9FAFB);
 }
 
 .view-all-link {
@@ -1189,44 +1223,119 @@
     height: 18px;
 }
 
-/* Dark Mode Adjustments */
+/* ==================== DARK MODE - HEADER OVERRIDES ==================== */
 .dark .header-action-btn {
-    background: var(--sidebar-hover);
-    color: var(--sidebar-text);
+    background: rgba(255, 255, 255, 0.06);
+    color: #D1D5DB;
 }
 
 .dark .header-action-btn:hover {
-    background: var(--primary-light);
-    color: var(--primary);
+    background: rgba(91, 163, 232, 0.15);
+    color: var(--primary, #5BA3E8);
+    box-shadow: 0 4px 12px rgba(91, 163, 232, 0.1);
 }
 
 .dark .user-profile-btn {
-    background: var(--sidebar-hover);
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .dark .user-profile-btn:hover {
-    background: var(--primary-light);
+    background: rgba(91, 163, 232, 0.15);
+    box-shadow: 0 4px 16px rgba(91, 163, 232, 0.1);
+}
+
+.dark .user-avatar {
+    border-color: #374151;
+}
+
+.dark .user-status {
+    border-color: #374151;
 }
 
 .dark .header-dropdown {
-    background: var(--card-bg);
-    border-color: var(--sidebar-border);
-}
-
-.dark .notification-item.unread {
-    background: var(--primary-light);
+    background: var(--card-bg, #1f2937);
+    border-color: #374151;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4),
+                0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .dark .dropdown-header {
-    background: var(--primary-light);
+    background: linear-gradient(135deg, rgba(91, 163, 232, 0.08) 0%, rgba(91, 163, 232, 0.12) 100%);
+    border-color: #374151;
+}
+
+.dark .dropdown-title {
+    color: #93C5FD;
+}
+
+.dark .notification-count {
+    background: rgba(255, 255, 255, 0.08);
+    color: #93C5FD;
+    box-shadow: none;
+}
+
+.dark .notification-item {
+    border-color: #374151;
+}
+
+.dark .notification-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.dark .notification-item.unread {
+    background: rgba(91, 163, 232, 0.08);
+}
+
+.dark .notification-icon.success {
+    background: rgba(34, 197, 94, 0.12);
+    color: #4ADE80;
+}
+
+.dark .notification-icon.info {
+    background: rgba(91, 163, 232, 0.12);
+    color: #93C5FD;
+}
+
+.dark .notification-icon.warning {
+    background: rgba(255, 149, 0, 0.12);
+    color: #FBBF24;
+    box-shadow: none;
+}
+
+.dark .notification-icon.danger {
+    background: rgba(239, 68, 68, 0.12);
+    color: #F87171;
 }
 
 .dark .dropdown-footer {
-    background: var(--sidebar-hover);
+    background: rgba(255, 255, 255, 0.03);
+    border-color: #374151;
+}
+
+.dark .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.dark .dropdown-item-icon {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.dark .dropdown-item:hover .dropdown-item-icon {
+    background: rgba(91, 163, 232, 0.15);
 }
 
 .dark .notification-badge {
-    border-color: var(--header-bg);
+    border-color: var(--header-bg, #1F2937);
+}
+
+.dark .mobile-menu-btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: #D1D5DB;
+}
+
+.dark .mobile-menu-btn:hover {
+    background: rgba(91, 163, 232, 0.15);
+    color: var(--primary, #5BA3E8);
 }
 </style>
 

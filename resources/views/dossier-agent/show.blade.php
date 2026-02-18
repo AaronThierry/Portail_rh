@@ -485,6 +485,8 @@
 .ds-badge-danger { background: var(--e-red-pale); color: var(--e-red); }
 .ds-badge-warning { background: var(--e-amber-pale); color: var(--e-amber); }
 .ds-badge-confidential { background: var(--e-amber-wash); color: #92400e; }
+.ds-badge-visible { background: var(--e-emerald-pale); color: var(--e-emerald); }
+.ds-badge-masque { background: var(--e-slate-100); color: var(--e-text-tertiary); }
 
 .ds-doc-card-body {
     padding: 0.75rem 1rem 1rem;
@@ -574,6 +576,28 @@
 
 .ds-doc-btn-delete:hover {
     background: #fecaca;
+    transform: translateY(-1px);
+}
+
+.ds-doc-btn-visibility {
+    padding: 0.5rem 0.625rem;
+    flex: 0;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ds-doc-btn-visibility.is-visible {
+    background: var(--e-emerald-pale);
+    color: var(--e-emerald);
+}
+.ds-doc-btn-visibility.is-visible:hover {
+    background: #a7f3d0;
+    transform: translateY(-1px);
+}
+.ds-doc-btn-visibility.is-masque {
+    background: var(--e-slate-100);
+    color: var(--e-text-tertiary);
+}
+.ds-doc-btn-visibility.is-masque:hover {
+    background: var(--e-slate-200, #e2e8f0);
     transform: translateY(-1px);
 }
 
@@ -1551,27 +1575,8 @@
                     </div>
 
                     <div class="ds-form-check-group">
-                        <label class="ds-form-check" id="confidentielCheck">
-                            <input type="checkbox" name="confidentiel" id="confidentiel" value="1">
-                            <div class="ds-form-check-icon confidential">
-                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                    <path d="M7 11V7a5 5 0 0110 0v4"/>
-                                </svg>
-                            </div>
-                            <div class="ds-form-check-content">
-                                <span class="ds-form-check-label">Document confidentiel</span>
-                                <span class="ds-form-check-desc">Acces restreint aux admins</span>
-                            </div>
-                            <div class="ds-form-check-box">
-                                <svg fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
-                            </div>
-                        </label>
-
                         <label class="ds-form-check checked" id="visibleCheck">
-                            <input type="checkbox" name="visible_employe" id="visible_employe" value="1" checked>
+                            <input type="radio" name="visibilite" value="visible" checked>
                             <div class="ds-form-check-icon visible">
                                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -1581,6 +1586,25 @@
                             <div class="ds-form-check-content">
                                 <span class="ds-form-check-label">Visible par l'employe</span>
                                 <span class="ds-form-check-desc">L'employe peut voir ce document</span>
+                            </div>
+                            <div class="ds-form-check-box">
+                                <svg fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                        </label>
+
+                        <label class="ds-form-check" id="masqueCheck">
+                            <input type="radio" name="visibilite" value="masque">
+                            <div class="ds-form-check-icon confidential">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                                    <line x1="1" y1="1" x2="23" y2="23"/>
+                                </svg>
+                            </div>
+                            <div class="ds-form-check-content">
+                                <span class="ds-form-check-label">Masque pour l'employe</span>
+                                <span class="ds-form-check-desc">Confidentiel, visible uniquement par les admins</span>
                             </div>
                             <div class="ds-form-check-box">
                                 <svg fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
@@ -1643,11 +1667,15 @@ function resetUploadForm() {
     fileSelectedInfo.style.display = 'none';
     fileInput.value = '';
 
-    // Réinitialiser les checkboxes
-    const checkboxes = document.querySelectorAll('.ds-form-check input[type="checkbox"]');
-    checkboxes.forEach(cb => {
-        cb.checked = false;
-        cb.closest('.ds-form-check').classList.remove('checked');
+    // Réinitialiser les radios à "visible" par défaut
+    const radios = document.querySelectorAll('.ds-form-check input[type="radio"][name="visibilite"]');
+    radios.forEach(r => {
+        r.checked = (r.value === 'visible');
+        if (r.value === 'visible') {
+            r.closest('.ds-form-check').classList.add('checked');
+        } else {
+            r.closest('.ds-form-check').classList.remove('checked');
+        }
     });
 }
 
@@ -1769,13 +1797,16 @@ fileInput.addEventListener('change', () => {
     }
 });
 
-// Gestion des checkboxes
-document.querySelectorAll('.ds-form-check input[type="checkbox"]').forEach(checkbox => {
-    checkbox.addEventListener('change', function() {
+// Gestion des radios visibilite (exclusif)
+document.querySelectorAll('.ds-form-check input[type="radio"][name="visibilite"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        // Retirer checked de tous les labels du groupe
+        document.querySelectorAll('.ds-form-check input[type="radio"][name="visibilite"]').forEach(r => {
+            r.closest('.ds-form-check').classList.remove('checked');
+        });
+        // Ajouter checked au label sélectionné
         if (this.checked) {
             this.closest('.ds-form-check').classList.add('checked');
-        } else {
-            this.closest('.ds-form-check').classList.remove('checked');
         }
     });
 });
@@ -1800,6 +1831,44 @@ function deleteDocument(id) {
         })
         .catch(() => alert('Erreur lors de la suppression'));
     }
+}
+
+// Basculer la visibilité d'un document existant
+function toggleDocVisibility(id) {
+    fetch(`{{ url('admin/dossier-agent/document') }}/${id}/toggle-visibility`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            var btn = document.getElementById('btnVisib' + id);
+            var badge = document.getElementById('badgeVisib' + id);
+            if (data.visible_employe) {
+                btn.classList.remove('is-masque');
+                btn.classList.add('is-visible');
+                btn.title = 'Masquer pour l\'employe';
+                btn.querySelector('.ico-visible').style.display = '';
+                btn.querySelector('.ico-masque').style.display = 'none';
+                badge.className = 'ds-badge ds-badge-visible';
+                badge.textContent = 'Visible';
+            } else {
+                btn.classList.remove('is-visible');
+                btn.classList.add('is-masque');
+                btn.title = 'Rendre visible';
+                btn.querySelector('.ico-visible').style.display = 'none';
+                btn.querySelector('.ico-masque').style.display = '';
+                badge.className = 'ds-badge ds-badge-masque';
+                badge.textContent = 'Masque';
+            }
+        } else {
+            alert('Erreur: ' + (data.message || 'Impossible de modifier la visibilite'));
+        }
+    })
+    .catch(() => alert('Erreur lors de la modification'));
 }
 
 // Escape pour fermer

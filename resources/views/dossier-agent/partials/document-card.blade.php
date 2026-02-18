@@ -1,4 +1,4 @@
-<div class="ds-doc-card">
+<div class="ds-doc-card" id="docCard{{ $document->id }}">
     <div class="ds-doc-card-header">
         <div class="ds-doc-icon {{ $document->extension === 'pdf' ? 'pdf' : (in_array($document->extension, ['doc', 'docx']) ? 'doc' : (in_array($document->extension, ['xls', 'xlsx']) ? 'xls' : (in_array($document->extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']) ? 'img' : 'default'))) }}">
             @if($document->extension === 'pdf')
@@ -34,13 +34,16 @@
             <div class="ds-doc-filename" title="{{ $document->nom_original }}">{{ $document->nom_original }}</div>
             <div class="ds-doc-badges">
                 @if($document->est_expire)
-                <span class="ds-badge ds-badge-danger">Expiré</span>
+                <span class="ds-badge ds-badge-danger">Expire</span>
                 @elseif($document->date_expiration && $document->date_expiration->diffInDays(now()) <= 30)
-                <span class="ds-badge ds-badge-warning">Expire bientôt</span>
+                <span class="ds-badge ds-badge-warning">Expire bientot</span>
                 @endif
                 @if($document->confidentiel)
                 <span class="ds-badge ds-badge-confidential">Confidentiel</span>
                 @endif
+                <span class="ds-badge {{ $document->visible_employe ? 'ds-badge-visible' : 'ds-badge-masque' }}" id="badgeVisib{{ $document->id }}">
+                    {{ $document->visible_employe ? 'Visible' : 'Masque' }}
+                </span>
             </div>
         </div>
     </div>
@@ -80,16 +83,26 @@
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                 </svg>
-                Télécharger
+                Telecharger
             </a>
             @if($document->estPdf() || $document->estImage())
-            <a href="{{ route('admin.dossier-agent.preview', $document) }}" target="_blank" class="ds-doc-btn ds-doc-btn-preview" title="Prévisualiser">
+            <a href="{{ route('admin.dossier-agent.preview', $document) }}" target="_blank" class="ds-doc-btn ds-doc-btn-preview" title="Previsualiser">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                     <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                 </svg>
             </a>
             @endif
+            <button type="button" onclick="toggleDocVisibility({{ $document->id }})" class="ds-doc-btn ds-doc-btn-visibility {{ $document->visible_employe ? 'is-visible' : 'is-masque' }}" id="btnVisib{{ $document->id }}" title="{{ $document->visible_employe ? 'Masquer pour l\'employe' : 'Rendre visible' }}">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="ico-visible" style="{{ $document->visible_employe ? '' : 'display:none' }}">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="ico-masque" style="{{ $document->visible_employe ? 'display:none' : '' }}">
+                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+            </button>
             <button type="button" onclick="deleteDocument({{ $document->id }})" class="ds-doc-btn ds-doc-btn-delete" title="Supprimer">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>

@@ -191,6 +191,25 @@ class WhatsAppService
     }
 
     /**
+     * Notification de nouveau document dans le dossier agent
+     */
+    public function notifyDocumentAgent($document, Personnel $personnel): bool
+    {
+        $titre = $document->titre ?? $document->nom_original;
+        $categorie = $document->categorie->nom ?? 'Document';
+
+        $message = "*Nouveau document - Portail RH+*\n\n";
+        $message .= "Bonjour {$personnel->prenoms},\n\n";
+        $message .= "Un nouveau document a ete ajoute a votre dossier :\n";
+        $message .= "- *{$titre}*\n";
+        $message .= "- Categorie : {$categorie}\n\n";
+        $message .= "Connectez-vous au portail pour le consulter.\n\n";
+        $message .= "Cordialement, Service RH";
+
+        return $this->sendToPersonnel($personnel, $message);
+    }
+
+    /**
      * Notification personnalisee
      */
     public function notifyCustom(Personnel $personnel, string $title, string $content): bool

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Services\WhatsAppService;
 
 class DossierAgentController extends Controller
 {
@@ -198,8 +199,8 @@ class DossierAgentController extends Controller
                 'date_document' => $request->date_document,
                 'date_expiration' => $request->date_expiration,
                 'reference' => $request->reference,
-                'confidentiel' => $request->boolean('confidentiel'),
-                'visible_employe' => $request->boolean('visible_employe', true),
+                'visible_employe' => $request->input('visibilite', 'visible') === 'visible',
+                'confidentiel' => $request->input('visibilite', 'visible') === 'masque',
             ]);
 
             // Log de l'action
@@ -209,6 +210,19 @@ class DossierAgentController extends Controller
             ]);
 
             DB::commit();
+
+            // Notification WhatsApp si document visible par l'employe
+            if ($document->visible_employe && !$document->confidentiel && $personnel->user) {
+                try {
+                    $whatsapp = app(WhatsAppService::class);
+                    if ($whatsapp->isEnabled()) {
+                        $document->load('categorie');
+                        $whatsapp->notifyDocumentAgent($document, $personnel);
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning('WhatsApp notification document echouee', ['error' => $e->getMessage()]);
+                }
+            }
 
             if ($request->ajax()) {
                 return response()->json([
@@ -280,8 +294,8 @@ class DossierAgentController extends Controller
                     'date_expiration' => $request->date_expiration,
                     'reference' => $request->reference,
                     'categorie_id' => $request->categorie_id ?? $document->categorie_id,
-                    'confidentiel' => $request->boolean('confidentiel'),
-                    'visible_employe' => $request->boolean('visible_employe', true),
+                    'visible_employe' => $request->input('visibilite', 'visible') === 'visible',
+                    'confidentiel' => $request->input('visibilite', 'visible') === 'masque',
                     'statut' => 'actif',
                     'uploaded_by' => auth()->id(),
                 ]);
@@ -294,8 +308,8 @@ class DossierAgentController extends Controller
                     'date_expiration' => $request->date_expiration,
                     'reference' => $request->reference,
                     'categorie_id' => $request->categorie_id ?? $document->categorie_id,
-                    'confidentiel' => $request->boolean('confidentiel'),
-                    'visible_employe' => $request->boolean('visible_employe', true),
+                    'visible_employe' => $request->input('visibilite', 'visible') === 'visible',
+                    'confidentiel' => $request->input('visibilite', 'visible') === 'masque',
                 ]);
             }
 
@@ -408,6 +422,49 @@ class DossierAgentController extends Controller
     }
 
     /**
+     * Basculer la visibilité employé d'un document
+     */
+    public function toggleVisibility(DocumentAgent $document)
+    {
+        $this->authorizeAccess($document->personnel);
+
+        $newVisible = !$document->visible_employe;
+
+        $document->update([
+            'visible_employe' => $newVisible,
+            'confidentiel' => !$newVisible,
+        ]);
+
+        $document->logAction('update', auth()->id(), [
+            'action' => 'toggle_visibility',
+            'visible_employe' => $newVisible,
+        ]);
+
+        // Notification WhatsApp si le document devient visible
+        if ($newVisible && $document->personnel->user) {
+            try {
+                $whatsapp = app(WhatsAppService::class);
+                if ($whatsapp->isEnabled()) {
+                    $document->load('categorie');
+                    $whatsapp->notifyDocumentAgent($document, $document->personnel);
+                }
+            } catch (\Throwable $e) {
+                Log::warning('WhatsApp notification document echouee', ['error' => $e->getMessage()]);
+            }
+        }
+
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'visible_employe' => $newVisible,
+                'message' => $newVisible ? 'Document visible par l\'employé' : 'Document masqué pour l\'employé',
+            ]);
+        }
+
+        return back()->with('success', $newVisible ? 'Document visible par l\'employé' : 'Document masqué pour l\'employé');
+    }
+
+    /**
      * Archiver un document
      */
     public function archive(DocumentAgent $document)
@@ -488,6 +545,19 @@ class DossierAgentController extends Controller
 
                 $document->logAction('upload');
                 $uploaded[] = $document;
+
+                // Notification WhatsApp si visible par l'employe
+                if ($document->visible_employe && !$document->confidentiel && $personnel->user) {
+                    try {
+                        $whatsapp = app(WhatsAppService::class);
+                        if ($whatsapp->isEnabled()) {
+                            $document->load('categorie');
+                            $whatsapp->notifyDocumentAgent($document, $personnel);
+                        }
+                    } catch (\Throwable $e2) {
+                        Log::warning('WhatsApp notification document echouee', ['error' => $e2->getMessage()]);
+                    }
+                }
 
             } catch (\Exception $e) {
                 $errors[] = [

@@ -2,7 +2,7 @@
 
 @section('title', 'Tableau de bord')
 @section('page-title', 'Tableau de bord')
-@section('page-subtitle', 'Vue d\'ensemble de votre activité')
+@section('page-subtitle', 'Vue d\'ensemble de votre activite')
 @section('page-icon')
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <rect x="3" y="3" width="7" height="7" rx="1"></rect>
@@ -14,21 +14,37 @@
 
 @section('styles')
 <style>
-/* Dashboard specific styles */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 28px;
 }
 
 .stat-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--border-radius);
-  padding: 24px;
+  padding: 22px;
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
 }
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.stat-card.card-primary::after { background: var(--primary); }
+.stat-card.card-success::after { background: var(--success); }
+.stat-card.card-warning::after { background: #f59e0b; }
+.stat-card.card-info::after { background: var(--info); }
+.stat-card.card-danger::after { background: var(--danger); }
 
 .stat-card:hover {
   box-shadow: var(--shadow-lg);
@@ -39,11 +55,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .stat-card-title {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -51,103 +67,72 @@
 }
 
 .stat-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
   color: white;
 }
 
-.stat-icon.success {
-  background: linear-gradient(135deg, var(--success), #059669);
-}
-
-.stat-icon.warning {
-  background: linear-gradient(135deg, var(--warning), #d97706);
-}
-
-.stat-icon.info {
-  background: linear-gradient(135deg, var(--info), #0891b2);
-}
+.stat-icon.bg-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); }
+.stat-icon.bg-success { background: linear-gradient(135deg, var(--success), #059669); }
+.stat-icon.bg-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.stat-icon.bg-info { background: linear-gradient(135deg, var(--info), #0891b2); }
+.stat-icon.bg-danger { background: linear-gradient(135deg, var(--danger), #dc2626); }
 
 .stat-value {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   line-height: 1;
 }
 
-.stat-change {
+.stat-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.875rem;
+  gap: 4px;
+}
+
+.stat-sub .badge-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
-.stat-change.positive {
-  color: var(--success);
-}
-
-.stat-change.negative {
-  color: var(--danger);
-}
+.badge-green { background: rgba(16,185,129,0.1); color: #059669; }
+.badge-red { background: rgba(239,68,68,0.1); color: #dc2626; }
+.badge-orange { background: rgba(245,158,11,0.1); color: #d97706; }
+.badge-blue { background: rgba(59,130,246,0.1); color: #2563eb; }
 
 .chart-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--border-radius);
   padding: 24px;
-  margin-bottom: 24px;
 }
 
 .chart-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--card-border);
 }
 
 .chart-title {
-  font-size: 1.125rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-primary);
-}
-
-.chart-filters {
-  display: flex;
-  gap: 8px;
-}
-
-.filter-btn {
-  padding: 8px 16px;
-  background: var(--bg-tertiary);
-  border: 2px solid var(--card-border);
-  border-radius: 8px;
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.filter-btn:hover {
-  background: var(--bg-secondary);
-  border-color: var(--primary);
-  color: var(--text-primary);
-}
-
-.filter-btn.active {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: white;
-  box-shadow: var(--shadow-md);
 }
 
 .recent-activities {
@@ -160,13 +145,13 @@
 .activity-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .activity-item {
   display: flex;
-  gap: 16px;
-  padding: 16px;
+  gap: 14px;
+  padding: 12px;
   background: var(--bg-tertiary);
   border-radius: 10px;
   transition: var(--transition);
@@ -178,37 +163,42 @@
 }
 
 .activity-icon {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: var(--primary);
   color: white;
 }
 
-.activity-content {
-  flex: 1;
-  min-width: 0;
-}
+.activity-icon.icon-success { background: var(--success); }
+.activity-icon.icon-danger { background: var(--danger); }
+.activity-icon.icon-warning { background: #f59e0b; }
+.activity-icon.icon-info { background: var(--info); }
+.activity-icon.icon-primary { background: var(--primary); }
+
+.activity-content { flex: 1; min-width: 0; }
 
 .activity-title {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .activity-description {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .activity-time {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-light);
 }
 
@@ -222,22 +212,22 @@
 
 .actions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 14px;
 }
 
 .action-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 20px;
+  gap: 10px;
+  padding: 18px 12px;
   background: var(--bg-tertiary);
   border: 2px solid var(--card-border);
   border-radius: 12px;
   color: var(--text-primary);
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 600;
   text-align: center;
   transition: var(--transition);
@@ -252,49 +242,73 @@
   box-shadow: var(--shadow-lg);
 }
 
-.action-btn svg {
-  transition: var(--transition);
+.action-btn svg { flex-shrink: 0; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
 }
 
-.action-btn svg {
-  flex-shrink: 0;
+.summary-item {
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.summary-item .label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.summary-item .value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.empty-activities {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-muted);
 }
 
 @media (max-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
+  .dashboard-grid { grid-template-columns: 1fr 1fr; }
+  .main-charts { grid-template-columns: 1fr !important; }
+  .actions-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
-  .chart-filters {
-    flex-wrap: wrap;
-  }
-
-  .actions-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+@media (max-width: 480px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
 }
 </style>
 @endsection
 
 @section('content')
 <div class="dashboard-content">
-    <!-- Page Header -->
-    <div style="margin-bottom: 32px;">
-        <h1 style="font-size: 1.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
-            Bonjour, {{ auth()->user()->prenom ?? 'Admin' }} 👋
+    {{-- Header --}}
+    <div style="margin-bottom: 28px;">
+        <h1 style="font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+            Bonjour, {{ auth()->user()->prenom ?? auth()->user()->name ?? 'Admin' }}
         </h1>
-        <p style="color: var(--text-muted); font-size: 1rem;">
-            Voici un aperçu de votre portail RH aujourd'hui
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Voici un apercu de votre portail RH &mdash; {{ now()->translatedFormat('l j F Y') }}
         </p>
     </div>
 
-    <!-- Statistics Cards -->
+    {{-- Cartes statistiques --}}
     <div class="dashboard-grid">
-        <div class="stat-card">
+        {{-- Total Employes --}}
+        <div class="stat-card card-primary">
             <div class="stat-card-header">
-                <span class="stat-card-title">Total Employés</span>
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <span class="stat-card-title">Employes actifs</span>
+                <div class="stat-icon bg-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                         <circle cx="9" cy="7" r="4"></circle>
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -302,40 +316,37 @@
                     </svg>
                 </div>
             </div>
-            <div class="stat-value">{{ $totalEmployees ?? 248 }}</div>
-            <div class="stat-change positive">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                    <polyline points="17 6 23 6 23 12"></polyline>
-                </svg>
-                +12% ce mois
+            <div class="stat-value">{{ $totalEmployes }}</div>
+            <div class="stat-sub">
+                <span class="badge-inline badge-blue">{{ $employesAvecCompte }} avec compte</span>
             </div>
         </div>
 
-        <div class="stat-card">
+        {{-- Presence --}}
+        <div class="stat-card card-success">
             <div class="stat-card-header">
-                <span class="stat-card-title">Présents Aujourd'hui</span>
-                <div class="stat-icon success">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <span class="stat-card-title">Presence aujourd'hui</span>
+                <div class="stat-icon bg-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                 </div>
             </div>
-            <div class="stat-value">{{ $presentToday ?? 231 }}</div>
-            <div class="stat-change positive">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                    <polyline points="17 6 23 6 23 12"></polyline>
-                </svg>
-                93.1% taux de présence
+            <div class="stat-value">{{ $totalEmployes - $absencesAujourdhui }}</div>
+            <div class="stat-sub">
+                <span class="badge-inline badge-green">{{ $tauxPresence }}% taux de presence</span>
+                @if($absencesAujourdhui > 0)
+                    <span class="badge-inline badge-red">{{ $absencesAujourdhui }} absent{{ $absencesAujourdhui > 1 ? 's' : '' }}</span>
+                @endif
             </div>
         </div>
 
-        <div class="stat-card">
+        {{-- Conges en attente --}}
+        <div class="stat-card card-warning">
             <div class="stat-card-header">
-                <span class="stat-card-title">Congés en attente</span>
-                <div class="stat-icon warning">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <span class="stat-card-title">Conges en attente</span>
+                <div class="stat-icon bg-warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                         <line x1="16" y1="2" x2="16" y2="6"></line>
                         <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -343,58 +354,120 @@
                     </svg>
                 </div>
             </div>
-            <div class="stat-value">{{ $pendingLeaves ?? 15 }}</div>
-            <div class="stat-change negative">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
-                    <polyline points="17 18 23 18 23 12"></polyline>
-                </svg>
-                +3 depuis hier
+            <div class="stat-value">{{ $statsConges['en_attente'] }}</div>
+            <div class="stat-sub">
+                <span class="badge-inline badge-green">{{ $statsConges['approuve'] }} approuves</span>
+                <span class="badge-inline badge-red">{{ $statsConges['refuse'] }} refuses</span>
             </div>
         </div>
 
-        <div class="stat-card">
+        {{-- Absences en attente --}}
+        <div class="stat-card card-info">
             <div class="stat-card-header">
-                <span class="stat-card-title">Nouvelles Candidatures</span>
-                <div class="stat-icon info">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="8.5" cy="7" r="4"></circle>
-                        <polyline points="17 11 19 13 23 9"></polyline>
+                <span class="stat-card-title">Absences en attente</span>
+                <div class="stat-icon bg-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                 </div>
             </div>
-            <div class="stat-value">{{ $newCandidates ?? 42 }}</div>
-            <div class="stat-change positive">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                    <polyline points="17 6 23 6 23 12"></polyline>
-                </svg>
-                +8 cette semaine
+            <div class="stat-value">{{ $statsAbsences['en_attente'] }}</div>
+            <div class="stat-sub">
+                <span class="badge-inline badge-green">{{ $statsAbsences['justifiees'] }} justifiees</span>
+                <span class="badge-inline badge-red">{{ $statsAbsences['injustifiees'] }} injustifiees</span>
+            </div>
+        </div>
+
+        {{-- Bulletins de paie --}}
+        <div class="stat-card card-primary">
+            <div class="stat-card-header">
+                <span class="stat-card-title">Bulletins {{ $annee }}</span>
+                <div class="stat-icon bg-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value">{{ $statsBulletins['total_bulletins'] }}</div>
+            <div class="stat-sub">
+                <span class="badge-inline badge-blue">{{ $statsBulletins['total_employes'] }} employes</span>
+            </div>
+        </div>
+
+        {{-- Documents expirant --}}
+        <div class="stat-card card-danger">
+            <div class="stat-card-header">
+                <span class="stat-card-title">Docs expirant (-30j)</span>
+                <div class="stat-icon bg-danger">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value">{{ $docsExpirentBientot }}</div>
+            <div class="stat-sub">
+                @if($docsExpirentBientot > 0)
+                    <span class="badge-inline badge-orange">A renouveler</span>
+                @else
+                    <span class="badge-inline badge-green">Tout est en ordre</span>
+                @endif
             </div>
         </div>
     </div>
 
-    <!-- Quick Actions -->
+    {{-- Actions rapides --}}
     <div class="quick-actions">
-        <h2 class="chart-title" style="margin-bottom: 20px;">Actions rapides</h2>
+        <h2 class="chart-title" style="margin-bottom: 16px;">Actions rapides</h2>
         <div class="actions-grid">
             @if(auth()->user()->hasRole('Super Admin'))
             <a href="{{ route('admin.entreprises.index') }}" class="action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                 </svg>
-                Gérer entreprises
+                Entreprises
             </a>
             @endif
+            <a href="{{ route('admin.personnels.create') }}" class="action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+                Ajouter employe
+            </a>
+            <a href="{{ route('admin.conges.index') }}" class="action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Gestion conges
+            </a>
+            <a href="{{ route('admin.absences.index') }}" class="action-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                Gestion absences
+            </a>
             <a href="{{ route('admin.dossiers-agents.index') }}" class="action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"></path>
                 </svg>
                 Dossiers Agents
             </a>
             <a href="{{ route('admin.bulletins-paie.index') }}" class="action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
                     <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -402,109 +475,112 @@
                 </svg>
                 Bulletins de Paie
             </a>
-            <a href="{{ route('admin.personnels.create') }}" class="action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="8.5" cy="7" r="4"></circle>
-                    <line x1="20" y1="8" x2="20" y2="14"></line>
-                    <line x1="23" y1="11" x2="17" y2="11"></line>
-                </svg>
-                Ajouter un employé
-            </a>
-            <a href="#" class="action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                Gestion congés
-            </a>
-            <a href="#" class="action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="20" x2="18" y2="10"></line>
-                    <line x1="12" y1="20" x2="12" y2="4"></line>
-                    <line x1="6" y1="20" x2="6" y2="14"></line>
-                </svg>
-                Rapports
-            </a>
         </div>
     </div>
 
-    <!-- Charts Section -->
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;">
+    {{-- Graphiques + Activites --}}
+    <div class="main-charts" style="display: grid; grid-template-columns: 3fr 2fr; gap: 24px; margin-bottom: 24px;">
+        {{-- Graphique conges/absences par mois --}}
         <div class="chart-card">
             <div class="chart-header">
-                <h2 class="chart-title">Présence mensuelle</h2>
-                <div class="chart-filters">
-                    <button class="filter-btn active">7 jours</button>
-                    <button class="filter-btn">30 jours</button>
-                    <button class="filter-btn">12 mois</button>
-                </div>
+                <h2 class="chart-title">Conges & Absences par mois ({{ $annee }})</h2>
             </div>
-            <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); border-radius: 10px;">
-                <p style="color: var(--text-muted);">Graphique de présence (à intégrer avec Chart.js ou similar)</p>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chartCongesAbsences"></canvas>
             </div>
         </div>
 
+        {{-- Activites recentes --}}
         <div class="recent-activities">
-            <h2 class="chart-title" style="margin-bottom: 20px;">Activités récentes</h2>
+            <h2 class="chart-title" style="margin-bottom: 16px;">Activites recentes</h2>
             <div class="activity-list">
-                <div class="activity-item">
-                    <div class="activity-icon" style="background: var(--success);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
+                @forelse($activitesRecentes as $activite)
+                    <div class="activity-item">
+                        <div class="activity-icon icon-{{ $activite['icon'] }}">
+                            @if($activite['type'] === 'conge')
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    @if($activite['icon'] === 'success')
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    @else
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    @endif
+                                </svg>
+                            @elseif($activite['type'] === 'demande_conge')
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            @elseif($activite['type'] === 'absence')
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            @elseif($activite['type'] === 'bulletin')
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            @elseif($activite['type'] === 'personnel')
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                                </svg>
+                            @endif
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ $activite['titre'] }}</div>
+                            <div class="activity-description">{{ $activite['description'] }}</div>
+                            <div class="activity-time">{{ $activite['date']->diffForHumans() }}</div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="empty-activities">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 10px; opacity: 0.4;">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
                         </svg>
+                        <p>Aucune activite recente</p>
                     </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Congé approuvé</div>
-                        <div class="activity-description">Marie Dubois - 5 jours validés</div>
-                        <div class="activity-time">Il y a 10 minutes</div>
-                    </div>
-                </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
 
-                <div class="activity-item">
-                    <div class="activity-icon" style="background: var(--primary);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="8.5" cy="7" r="4"></circle>
-                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                        </svg>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Nouvel employé</div>
-                        <div class="activity-description">Thomas Martin a été ajouté</div>
-                        <div class="activity-time">Il y a 1 heure</div>
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon" style="background: var(--info);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                        </svg>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Document signé</div>
-                        <div class="activity-description">Contrat CDI - Sophie Laurent</div>
-                        <div class="activity-time">Il y a 2 heures</div>
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-icon" style="background: var(--warning);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                    </div>
-                    <div class="activity-content">
-                        <div class="activity-title">Entretien programmé</div>
-                        <div class="activity-description">Alexandre Petit - Demain 14h</div>
-                        <div class="activity-time">Il y a 3 heures</div>
-                    </div>
-                </div>
+    {{-- Resume annuel --}}
+    <div class="chart-card">
+        <div class="chart-header">
+            <h2 class="chart-title">Resume annuel {{ $annee }}</h2>
+        </div>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <div class="label">Total conges</div>
+                <div class="value">{{ $statsConges['total'] }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Total absences</div>
+                <div class="value">{{ $statsAbsences['total'] }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Retards</div>
+                <div class="value">{{ $statsAbsences['retards'] }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Bulletins emis</div>
+                <div class="value">{{ $statsBulletins['total_bulletins'] }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Masse salariale nette</div>
+                <div class="value">{{ number_format($statsBulletins['masse_salariale_nette'] ?? 0, 0, ',', ' ') }} F</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Entreprises</div>
+                <div class="value">{{ $totalEntreprises }}</div>
             </div>
         </div>
     </div>
@@ -512,20 +588,87 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script>
-// Dashboard specific JavaScript
-console.log('Dashboard page loaded');
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('chartCongesAbsences');
+    if (!ctx) return;
 
-// Example: Initialize chart filters
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        // Remove active class from all buttons
-        this.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        // Add active class to clicked button
-        this.classList.add('active');
+    const moisLabels = @json($moisLabels);
+    const congesData = @json($congesParMois);
+    const absencesData = @json($absencesParMois);
 
-        // TODO: Load chart data based on selected filter
-        console.log('Filter changed to:', this.textContent);
+    // Detecter le theme
+    const style = getComputedStyle(document.documentElement);
+    const textColor = style.getPropertyValue('--text-muted').trim() || '#6b7280';
+    const gridColor = style.getPropertyValue('--card-border').trim() || '#e5e7eb';
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: moisLabels,
+            datasets: [
+                {
+                    label: 'Conges approuves',
+                    data: congesData,
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                },
+                {
+                    label: 'Absences',
+                    data: absencesData,
+                    backgroundColor: 'rgba(245, 158, 11, 0.7)',
+                    borderColor: 'rgba(245, 158, 11, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: textColor,
+                        usePointStyle: true,
+                        pointStyle: 'rectRounded',
+                        padding: 16,
+                        font: { size: 12, weight: '600' }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleFont: { size: 13, weight: '600' },
+                    bodyFont: { size: 12 },
+                    padding: 12,
+                    cornerRadius: 8,
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: textColor, font: { size: 11 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: gridColor },
+                    ticks: {
+                        color: textColor,
+                        font: { size: 11 },
+                        stepSize: 1,
+                        precision: 0
+                    }
+                }
+            }
+        }
     });
 });
 </script>

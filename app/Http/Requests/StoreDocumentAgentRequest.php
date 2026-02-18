@@ -33,8 +33,7 @@ class StoreDocumentAgentRequest extends FormRequest
             'date_document' => 'nullable|date',
             'date_expiration' => 'nullable|date|after_or_equal:today',
             'reference' => 'nullable|string|max:100',
-            'confidentiel' => 'boolean',
-            'visible_employe' => 'boolean',
+            'visibilite' => 'nullable|in:visible,masque',
         ];
     }
 
@@ -71,8 +70,7 @@ class StoreDocumentAgentRequest extends FormRequest
             'date_document' => 'date du document',
             'date_expiration' => 'date d\'expiration',
             'reference' => 'référence',
-            'confidentiel' => 'confidentiel',
-            'visible_employe' => 'visible par l\'employé',
+            'visibilite' => 'visibilité',
         ];
     }
 }

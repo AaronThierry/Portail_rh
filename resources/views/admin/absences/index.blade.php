@@ -190,6 +190,8 @@
     font-size: 0.75rem; font-weight: 600; white-space: nowrap;
 }
 .ab-statut.en-attente { background: var(--ab-warning-light); color: #92400e; }
+.ab-statut.valide-chef { background: #dbeafe; color: #1d4ed8; }
+.dark .ab-statut.valide-chef { background: rgba(59,130,246,0.18); color: #60a5fa; }
 .ab-statut.approuvee { background: var(--ab-success-light); color: #15803d; }
 .ab-statut.refusee { background: var(--ab-danger-light); color: #b91c1c; }
 
@@ -504,6 +506,11 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                                             En attente
                                         </span>
+                                    @elseif($absence->statut === 'valide_chef')
+                                        <span class="ab-statut valide-chef">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>
+                                            Valid&eacute; Chef
+                                        </span>
                                     @elseif($absence->statut === 'approuvee')
                                         <span class="ab-statut approuvee">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -514,6 +521,8 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                             Refus&eacute;e
                                         </span>
+                                    @else
+                                        <span style="color:var(--ab-text-muted);font-size:0.75rem;">—</span>
                                     @endif
                                 </td>
                                 <td>
@@ -535,37 +544,60 @@
                                 </td>
                                 <td>
                                     <div class="ab-actions">
-                                        @if($absence->statut === 'en_attente')
-                                            {{-- Approve button --}}
-                                            <form action="{{ route('admin.absences.approve', $absence) }}" method="POST" style="margin:0;">
-                                                @csrf
-                                                <button type="submit" class="ab-btn ab-btn-approve" title="Approuver cette absence">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                                    Approuver
-                                                </button>
-                                            </form>
-                                            {{-- Reject button --}}
-                                            <button type="button" class="ab-btn ab-btn-reject" title="Refuser cette absence" onclick="openRejectModal({{ $absence->id }})">
+                                        @php $isChefAb = auth()->user()->hasRole("Chef d'Entreprise"); @endphp
+
+                                        {{-- Étape 1 : Chef d'Entreprise — Valider les demandes en_attente --}}
+                                        @if($isChefAb && $absence->statut === 'en_attente')
+                                            <button type="button" class="ab-btn ab-btn-approve" onclick="openApproveAbModal({{ $absence->id }}, '{{ addslashes($absence->personnel->prenoms . ' ' . $absence->personnel->nom) }}', true)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>
+                                                Valider
+                                            </button>
+                                            <button type="button" class="ab-btn ab-btn-reject" onclick="openRejectModal({{ $absence->id }})">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                                 Refuser
                                             </button>
+
+                                        {{-- Étape 2 : Super Admin / RH — Approuver UNIQUEMENT si valide_chef --}}
+                                        @elseif(!$isChefAb && $absence->statut === 'valide_chef')
+                                            <button type="button" class="ab-btn ab-btn-approve" onclick="openApproveAbModal({{ $absence->id }}, '{{ addslashes($absence->personnel->prenoms . ' ' . $absence->personnel->nom) }}', false)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                Approuver
+                                            </button>
+                                            <button type="button" class="ab-btn ab-btn-reject" onclick="openRejectModal({{ $absence->id }})">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                Refuser
+                                            </button>
+
+                                        {{-- en_attente : Super Admin/RH attend la validation du Chef d'Entreprise --}}
+                                        @elseif(!$isChefAb && $absence->statut === 'en_attente')
+                                            <span style="font-size:0.75rem;color:var(--ab-warning);background:var(--ab-warning-light);padding:0.25rem 0.625rem;border-radius:6px;white-space:nowrap;">
+                                                ⏳ Attente Chef
+                                            </span>
+                                            <button type="button" class="ab-btn ab-btn-reject" onclick="openRejectModal({{ $absence->id }})">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                Refuser
+                                            </button>
+
                                         @else
-                                            {{-- Toggle justifi&eacute;e --}}
-                                            <form action="{{ route('admin.absences.toggle-justifiee', $absence) }}" method="POST" style="margin:0;">
-                                                @csrf
-                                                <button type="submit" class="ab-btn ab-btn-toggle" title="{{ $absence->justifiee ? 'Marquer non justifi&eacute;e' : 'Marquer justifi&eacute;e' }}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                                    {{ $absence->justifiee ? 'D&eacute;justifier' : 'Justifier' }}
-                                                </button>
-                                            </form>
-                                            {{-- Delete --}}
-                                            <form action="{{ route('admin.absences.destroy', $absence) }}" method="POST" style="margin:0;" onsubmit="return confirm('Supprimer cette absence ?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="ab-btn ab-btn-delete" title="Supprimer">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                                </button>
-                                            </form>
+                                            {{-- Absence traitée (approuvee / refusee) : toggle justifiée + supprimer --}}
+                                            @if(!$isChefAb)
+                                                <form action="{{ route('admin.absences.toggle-justifiee', $absence) }}" method="POST" style="margin:0;">
+                                                    @csrf
+                                                    <button type="submit" class="ab-btn ab-btn-toggle" title="{{ $absence->justifiee ? 'Marquer non justifiée' : 'Marquer justifiée' }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                        {{ $absence->justifiee ? 'Déjustifier' : 'Justifier' }}
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('admin.absences.destroy', $absence) }}" method="POST" style="margin:0;" onsubmit="return confirm('Supprimer cette absence ?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="ab-btn ab-btn-delete" title="Supprimer">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <span style="font-size:0.75rem;color:var(--ab-text-muted);">—</span>
+                                            @endif
                                         @endif
                                     </div>
                                 </td>
@@ -694,6 +726,33 @@
     </div>
 </div>
 
+{{-- Approve Modal --}}
+<div class="ab-modal-overlay" id="approveAbModal">
+    <div class="ab-modal">
+        <div class="ab-modal-header">
+            <h3 class="ab-modal-title" id="approveAbModalTitle">Approuver l'absence</h3>
+            <button class="ab-modal-close" onclick="closeAbModal('approveAbModal')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <form id="approveAbForm" method="POST" action="">
+            @csrf
+            <div class="ab-modal-body">
+                <div style="background:var(--ab-bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--ab-card-border);">
+                    <p style="margin:0;font-size:0.875rem;color:var(--ab-text-secondary);">Employé</p>
+                    <p style="margin:0.25rem 0 0;font-weight:600;color:var(--ab-text-primary);" id="approveAbEmployee">—</p>
+                </div>
+                <p id="approveAbDesc" style="font-size:0.9375rem;color:var(--ab-text-secondary);margin-bottom:1rem;"></p>
+                <p style="font-size:0.9375rem;color:var(--ab-text-secondary);">Cette action enverra une notification &agrave; l'employ&eacute;.</p>
+            </div>
+            <div class="ab-modal-footer">
+                <button type="button" class="ab-modal-btn-cancel" onclick="closeAbModal('approveAbModal')">Annuler</button>
+                <button type="submit" class="ab-modal-btn-confirm" id="approveAbBtnLabel">Approuver</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {{-- Reject Modal --}}
 <div class="ab-modal-overlay" id="rejectModal">
     <div class="ab-modal">
@@ -733,9 +792,25 @@ function toggleMinutesRetard() {
     grp.style.display = sel.value === 'retard' ? '' : 'none';
 }
 
+function openApproveAbModal(absenceId, employee, isChefStep) {
+    var form = document.getElementById('approveAbForm');
+    form.action = '{{ url("admin/absences") }}/' + absenceId + '/approuver';
+    document.getElementById('approveAbEmployee').textContent = employee;
+    if (isChefStep) {
+        document.getElementById('approveAbModalTitle').textContent = 'Valider l\'absence (Étape 1/2)';
+        document.getElementById('approveAbDesc').textContent = 'Confirmer la validation de cette absence. Elle sera ensuite soumise à l\'approbation finale du service RH.';
+        document.getElementById('approveAbBtnLabel').textContent = 'Valider';
+    } else {
+        document.getElementById('approveAbModalTitle').textContent = 'Approuver l\'absence (Étape finale)';
+        document.getElementById('approveAbDesc').textContent = 'Confirmer l\'approbation définitive de cette absence. L\'employé sera notifié.';
+        document.getElementById('approveAbBtnLabel').textContent = 'Approuver définitivement';
+    }
+    document.getElementById('approveAbModal').classList.add('active');
+}
+
 function openRejectModal(absenceId) {
     var form = document.getElementById('rejectForm');
-    form.action = '{{ url("admin/absences") }}/' + absenceId + '/reject';
+    form.action = '{{ url("admin/absences") }}/' + absenceId + '/refuser';
     form.querySelector('textarea[name="motif_refus"]').value = '';
     document.getElementById('rejectModal').classList.add('active');
 }

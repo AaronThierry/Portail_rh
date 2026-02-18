@@ -17,7 +17,7 @@
 
 /* ==================== WELCOME BANNER ==================== */
 .ee-welcome-banner {
-    background: var(--e-slate-900);
+    background: linear-gradient(135deg, var(--e-slate-900) 0%, #1a2744 50%, var(--e-slate-800) 100%);
     border-radius: var(--e-radius-xl);
     padding: 2.5rem;
     color: white;
@@ -33,16 +33,27 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--e-amber);
+    background: linear-gradient(90deg, var(--e-amber), #f59e0b, var(--e-amber));
 }
 
 .ee-welcome-banner::after {
-    content: none;
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 15% 85%, rgba(232, 133, 12, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 85% 15%, rgba(59, 125, 216, 0.08) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .ee-welcome-pattern {
-    content: none;
-    display: none;
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
 }
 
 .ee-welcome-content {
@@ -180,7 +191,7 @@
     display: flex;
     align-items: flex-start;
     gap: 1.25rem;
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
@@ -195,16 +206,22 @@
     background: var(--stat-color);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .ee-stat-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: var(--e-shadow-lg);
+    border-color: var(--e-border-light);
 }
 
 .ee-stat-card:hover::before {
     transform: scaleX(1);
+}
+
+.ee-stat-card:hover .ee-stat-icon {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .ee-stat-icon {
@@ -216,6 +233,7 @@
     justify-content: center;
     flex-shrink: 0;
     position: relative;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .ee-stat-icon::after {
@@ -391,12 +409,16 @@
 
 .ee-action-card:hover {
     border-color: var(--action-color);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     box-shadow: var(--e-shadow-lg);
 }
 
 .ee-action-card:hover::before {
-    opacity: 0.05;
+    opacity: 0.04;
+}
+
+.ee-action-card:active {
+    transform: translateY(-1px);
 }
 
 .ee-action-icon {
@@ -555,10 +577,17 @@
     padding: 1.25rem;
     background: var(--e-bg);
     border-radius: var(--e-radius);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid transparent;
     cursor: pointer;
+    animation: ee-fadeUp 0.4s ease both;
 }
+
+.ee-activity-item:nth-child(1) { animation-delay: 0.1s; }
+.ee-activity-item:nth-child(2) { animation-delay: 0.15s; }
+.ee-activity-item:nth-child(3) { animation-delay: 0.2s; }
+.ee-activity-item:nth-child(4) { animation-delay: 0.25s; }
+.ee-activity-item:nth-child(5) { animation-delay: 0.3s; }
 
 .ee-activity-item:hover {
     transform: translateX(4px);
@@ -681,7 +710,8 @@
 }
 
 .ee-profile-card:hover {
-    box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.15);
+    box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.18);
+    transform: translateY(-2px);
 }
 
 .ee-profile-header {

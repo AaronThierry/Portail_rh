@@ -149,9 +149,61 @@
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* Sidebar Brand */
+        .ee-sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.25rem 1.25rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .ee-brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--e-amber) 0%, #f59e0b 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--e-slate-900);
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(232, 133, 12, 0.3);
+        }
+
+        .ee-brand-logo svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .ee-brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ee-brand-name {
+            font-size: 1.0625rem;
+            font-weight: 400;
+            color: white;
+            letter-spacing: -0.01em;
+        }
+
+        .ee-brand-name strong {
+            font-weight: 700;
+            color: var(--e-amber);
+        }
+
+        .ee-brand-label {
+            font-size: 0.6875rem;
+            color: var(--e-slate-500);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         /* Sidebar Header */
         .ee-sidebar-header {
-            padding: 1.5rem 1.25rem 1.25rem;
+            padding: 1.25rem 1.25rem 1.125rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -510,9 +562,15 @@
         }
 
         .ee-theme-toggle:hover {
-            background: var(--e-amber-wash);
-            color: var(--e-amber);
-            border-color: var(--e-amber);
+            background: rgba(245, 158, 11, 0.08);
+            color: #F59E0B;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .dark .ee-theme-toggle:hover {
+            background: rgba(147, 197, 253, 0.1);
+            color: #93C5FD;
+            border-color: rgba(147, 197, 253, 0.25);
         }
 
         .ee-theme-toggle .sun-icon,
@@ -520,13 +578,91 @@
             position: absolute;
             width: 20px;
             height: 20px;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .ee-theme-toggle .sun-icon { opacity: 1; transform: rotate(0deg) scale(1); }
-        .ee-theme-toggle .moon-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
-        .dark .ee-theme-toggle .sun-icon { opacity: 0; transform: rotate(90deg) scale(0.5); }
-        .dark .ee-theme-toggle .moon-icon { opacity: 1; transform: rotate(0deg) scale(1); }
+        .ee-theme-toggle .sun-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+            color: #F59E0B;
+        }
+
+        .ee-theme-toggle .moon-icon {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.5);
+            color: #93C5FD;
+        }
+
+        .dark .ee-theme-toggle .sun-icon {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.5);
+        }
+
+        .dark .ee-theme-toggle .moon-icon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+
+        @keyframes ee-twinkle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .dark .ee-theme-toggle .moon-icon [fill="currentColor"]:not([stroke]) {
+            animation: ee-twinkle 3s ease-in-out infinite;
+        }
+
+        /* Header Avatar */
+        .ee-header-avatar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .ee-header-avatar img {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid var(--e-border);
+            transition: all 0.2s ease;
+        }
+
+        .ee-header-avatar:hover img {
+            border-color: var(--e-blue);
+            box-shadow: 0 2px 8px rgba(59, 125, 216, 0.2);
+        }
+
+        .ee-header-avatar-status {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 10px;
+            height: 10px;
+            background: var(--e-emerald);
+            border: 2px solid var(--e-surface);
+            border-radius: 50%;
+        }
+
+        /* Notification btn active state */
+        .ee-notif-btn.has-notif::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--e-red);
+            border-radius: 50%;
+            border: 2px solid var(--e-surface);
+        }
+
+        @media (max-width: 640px) {
+            .ee-header-avatar { display: none; }
+        }
 
         /* ==================== CONTENT ==================== */
         .ee-content {
@@ -678,6 +814,22 @@
 
         <!-- Sidebar -->
         <aside class="ee-sidebar" id="eeSidebar">
+            <!-- App Branding -->
+            <div class="ee-sidebar-brand">
+                <div class="ee-brand-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        <path d="M21 21v-2a4 4 0 0 0-3-3.87"></path>
+                    </svg>
+                </div>
+                <div class="ee-brand-text">
+                    <span class="ee-brand-name">Portail <strong>RH+</strong></span>
+                    <span class="ee-brand-label">Espace Employ&eacute;</span>
+                </div>
+            </div>
+
             <div class="ee-sidebar-header">
                 @php
                     $personnel = auth()->user()->personnel;
@@ -775,11 +927,31 @@
                         </svg>
                         Mes Absences
                     </a>
+                    <a href="{{ route('espace-employe.demandes') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.demandes') ? 'active' : '' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M9 14l2 2 4-4"></path>
+                        </svg>
+                        Mes Demandes
+                    </a>
+                </div>
+
+                <!-- Compte -->
+                <div class="ee-nav-section">
+                    <div class="ee-nav-title">Compte</div>
+                    <a href="{{ route('espace-employe.parametres') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.parametres') ? 'active' : '' }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        Param&egrave;tres
+                    </a>
                 </div>
             </nav>
 
             <div class="ee-sidebar-footer">
-                @if(auth()->user()->hasRole('Super Admin'))
+                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH']))
                 <a href="{{ route('admin.dashboard') }}" class="ee-btn-portal">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 12H5M12 19l-7-7 7-7"></path>
@@ -823,8 +995,10 @@
                     </div>
                 </div>
                 <div class="ee-header-right">
+                    <!-- Search (placeholder for future) -->
+
                     <div class="ee-notif-wrapper">
-                        <button class="ee-header-btn" id="eeNotifBtn" title="Notifications">
+                        <button class="ee-header-btn ee-notif-btn" id="eeNotifBtn" title="Notifications">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
@@ -842,21 +1016,33 @@
                         </div>
                     </div>
                     <button class="ee-theme-toggle" onclick="toggleTheme()" title="Changer le th&egrave;me">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="sun-icon">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                            <circle cx="12" cy="12" r="4" fill="currentColor" opacity="0.15"></circle>
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path d="M12 2v2"></path>
+                            <path d="M12 20v2"></path>
+                            <path d="M4.93 4.93l1.41 1.41"></path>
+                            <path d="M17.66 17.66l1.41 1.41"></path>
+                            <path d="M2 12h2"></path>
+                            <path d="M20 12h2"></path>
+                            <path d="M6.34 17.66l-1.41 1.41"></path>
+                            <path d="M19.07 4.93l-1.41 1.41"></path>
                         </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="moon-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" opacity="0.1"></path>
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            <path d="M17.5 5.5l.5 1 1 .5-1 .5-.5 1-.5-1-1-.5 1-.5z" fill="currentColor" stroke="none"></path>
+                            <circle cx="20" cy="10" r="0.6" fill="currentColor" stroke="none"></circle>
                         </svg>
                     </button>
+                    <!-- User Quick Avatar -->
+                    <a href="{{ route('espace-employe.profil') }}" class="ee-header-avatar" title="Mon Profil">
+                        @php $headerPersonnel = auth()->user()->personnel; @endphp
+                        <img src="{{ $headerPersonnel && $headerPersonnel->photo ? asset('storage/' . $headerPersonnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=80&background=1e293b&color=e2e8f0&bold=true' }}"
+                             alt="Photo"
+                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=80&background=1e293b&color=e2e8f0&bold=true'">
+                        <span class="ee-header-avatar-status"></span>
+                    </a>
                 </div>
             </header>
 

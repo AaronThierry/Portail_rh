@@ -322,25 +322,6 @@
             </div>
         </div>
 
-        {{-- Presence --}}
-        <div class="stat-card card-success">
-            <div class="stat-card-header">
-                <span class="stat-card-title">Presence aujourd'hui</span>
-                <div class="stat-icon bg-success">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                </div>
-            </div>
-            <div class="stat-value">{{ $totalEmployes - $absencesAujourdhui }}</div>
-            <div class="stat-sub">
-                <span class="badge-inline badge-green">{{ $tauxPresence }}% taux de presence</span>
-                @if($absencesAujourdhui > 0)
-                    <span class="badge-inline badge-red">{{ $absencesAujourdhui }} absent{{ $absencesAujourdhui > 1 ? 's' : '' }}</span>
-                @endif
-            </div>
-        </div>
-
         {{-- Conges en attente --}}
         <div class="stat-card card-warning">
             <div class="stat-card-header">

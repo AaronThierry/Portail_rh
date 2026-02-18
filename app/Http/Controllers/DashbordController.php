@@ -28,16 +28,6 @@ class DashbordController extends Controller
             ->when($entrepriseId, fn($q) => $q->forEntreprise($entrepriseId))
             ->count();
 
-        // --- Absences aujourd'hui ---
-        $absencesAujourdhui = Absence::where('date_absence', today())
-            ->where('statut', 'approuvee')
-            ->when($entrepriseId, fn($q) => $q->forEntreprise($entrepriseId))
-            ->count();
-
-        $tauxPresence = $totalEmployes > 0
-            ? round((($totalEmployes - $absencesAujourdhui) / $totalEmployes) * 100, 1)
-            : 100;
-
         // --- Congés ---
         $statsConges = Conge::getStatistiques($entrepriseId, $annee);
 
@@ -165,8 +155,6 @@ class DashbordController extends Controller
         return view('dashboard', compact(
             'totalEmployes',
             'employesAvecCompte',
-            'absencesAujourdhui',
-            'tauxPresence',
             'statsConges',
             'statsAbsences',
             'statsBulletins',

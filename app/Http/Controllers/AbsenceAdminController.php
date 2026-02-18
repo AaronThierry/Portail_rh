@@ -163,18 +163,39 @@ class AbsenceAdminController extends Controller
     }
 
     /**
-     * Approuver une demande d'absence / justification
+     * Valider / Approuver une demande d'absence (2 étapes)
+     *
+     * Étape 1 — Chef d'Entreprise : en_attente → valide_chef
+     * Étape 2 — Super Admin / RH  : en_attente ou valide_chef → approuvee
      */
     public function approve(Absence $absence)
     {
-        if ($absence->statut !== 'en_attente') {
+        $user = Auth::user();
+
+        // Étape 1 : Chef d'Entreprise valide en premier
+        if ($user->hasRole("Chef d'Entreprise")) {
+            if ($absence->statut !== 'en_attente') {
+                return back()->with('error', 'Cette absence a déjà été traitée ou n\'est plus en attente.');
+            }
+
+            $absence->update([
+                'statut' => 'valide_chef',
+                'valide_chef_par' => $user->id,
+                'valide_chef_at' => now(),
+            ]);
+
+            return back()->with('success', 'Absence validée. En attente de l\'approbation finale du service RH.');
+        }
+
+        // Étape 2 : Super Admin / RH approuve définitivement
+        if (!in_array($absence->statut, ['en_attente', 'valide_chef'])) {
             return back()->with('error', 'Cette absence a déjà été traitée.');
         }
 
         $absence->update([
             'statut' => 'approuvee',
             'justifiee' => true,
-            'traite_par' => Auth::id(),
+            'traite_par' => $user->id,
             'traite_at' => now(),
         ]);
 
@@ -189,7 +210,7 @@ class AbsenceAdminController extends Controller
     }
 
     /**
-     * Refuser une demande d'absence / justification
+     * Refuser une demande d'absence (n'importe quelle étape)
      */
     public function reject(Request $request, Absence $absence)
     {
@@ -199,17 +220,25 @@ class AbsenceAdminController extends Controller
             'motif_refus.required' => 'Le motif de refus est obligatoire.',
         ]);
 
-        if ($absence->statut !== 'en_attente') {
+        $user = Auth::user();
+
+        // Chef d'Entreprise peut refuser uniquement en_attente
+        if ($user->hasRole("Chef d'Entreprise") && $absence->statut !== 'en_attente') {
+            return back()->with('error', 'Vous ne pouvez refuser que les absences en attente de votre validation.');
+        }
+
+        // Super Admin / RH peut refuser en_attente ou valide_chef
+        if (!$user->hasRole("Chef d'Entreprise") && !in_array($absence->statut, ['en_attente', 'valide_chef'])) {
             return back()->with('error', 'Cette absence a déjà été traitée.');
         }
 
         // Si c'est une déclaration employé, on refuse (statut refusee)
-        // Si c'est une justification d'absence admin, on remet en approuvee mais injustifiée
+        // Si c'est une absence admin, on remet en approuvee mais injustifiée
         if ($absence->source === 'employe') {
             $absence->update([
                 'statut' => 'refusee',
                 'motif_refus' => $request->motif_refus,
-                'traite_par' => Auth::id(),
+                'traite_par' => $user->id,
                 'traite_at' => now(),
             ]);
         } else {
@@ -217,7 +246,7 @@ class AbsenceAdminController extends Controller
                 'statut' => 'approuvee',
                 'justifiee' => false,
                 'motif_refus' => $request->motif_refus,
-                'traite_par' => Auth::id(),
+                'traite_par' => $user->id,
                 'traite_at' => now(),
             ]);
         }

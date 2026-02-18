@@ -162,9 +162,19 @@
                     </span>
                     <span class="nav-link-text">Gestion des Congés</span>
                     @php
-                        $pendingCongesQuery = \App\Models\Conge::where('statut', 'en_attente');
-                        if (auth()->user()->hasAnyRole(["Chef d'Entreprise", 'RH']) && auth()->user()->entreprise_id) {
-                            $pendingCongesQuery->forEntreprise(auth()->user()->entreprise_id);
+                        $isChefSidebar = auth()->user()->hasRole("Chef d'Entreprise");
+                        // Chef : uniquement en_attente (étape 1 à traiter)
+                        // Super Admin / RH : en_attente + valide_chef (les deux étapes en attente d'action)
+                        if ($isChefSidebar) {
+                            $pendingCongesQuery = \App\Models\Conge::where('statut', 'en_attente');
+                            if (auth()->user()->entreprise_id) {
+                                $pendingCongesQuery->forEntreprise(auth()->user()->entreprise_id);
+                            }
+                        } else {
+                            $pendingCongesQuery = \App\Models\Conge::whereIn('statut', ['en_attente', 'valide_chef']);
+                            if (auth()->user()->hasRole('RH') && auth()->user()->entreprise_id) {
+                                $pendingCongesQuery->forEntreprise(auth()->user()->entreprise_id);
+                            }
                         }
                         $pendingCongesCount = $pendingCongesQuery->count();
                     @endphp
@@ -183,9 +193,19 @@
                     </span>
                     <span class="nav-link-text">Gestion des Absences</span>
                     @php
-                        $injustifiedQuery = \App\Models\Absence::where('justifiee', false);
-                        if (auth()->user()->hasAnyRole(["Chef d'Entreprise", 'RH']) && auth()->user()->entreprise_id) {
-                            $injustifiedQuery->forEntreprise(auth()->user()->entreprise_id);
+                        $isChefAbsence = auth()->user()->hasRole("Chef d'Entreprise");
+                        // Chef : uniquement en_attente (étape 1)
+                        // Super Admin / RH : en_attente + valide_chef
+                        if ($isChefAbsence) {
+                            $injustifiedQuery = \App\Models\Absence::where('statut', 'en_attente');
+                            if (auth()->user()->entreprise_id) {
+                                $injustifiedQuery->forEntreprise(auth()->user()->entreprise_id);
+                            }
+                        } else {
+                            $injustifiedQuery = \App\Models\Absence::whereIn('statut', ['en_attente', 'valide_chef']);
+                            if (auth()->user()->hasRole('RH') && auth()->user()->entreprise_id) {
+                                $injustifiedQuery->forEntreprise(auth()->user()->entreprise_id);
+                            }
                         }
                         $injustifiedCount = $injustifiedQuery->count();
                     @endphp

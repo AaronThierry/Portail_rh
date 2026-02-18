@@ -85,9 +85,9 @@ class DashbordController extends Controller
             ]);
         $activitesRecentes = $activitesRecentes->merge($derniersConges);
 
-        // Dernières demandes de congé en attente
+        // Dernières demandes de congé en attente de traitement
         $nouvellesDemandesConge = Conge::with('personnel')
-            ->where('statut', 'en_attente')
+            ->whereIn('statut', ['en_attente', 'valide_chef'])
             ->when($entrepriseId, fn($q) => $q->forEntreprise($entrepriseId))
             ->orderByDesc('created_at')
             ->limit(5)

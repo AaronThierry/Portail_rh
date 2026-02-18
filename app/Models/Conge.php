@@ -29,6 +29,8 @@ class Conge extends Model
         'motif_refus',
         'commentaire_admin',
         'traite_at',
+        'valide_chef_par',
+        'valide_chef_at',
         'annee',
         'conge_parent_id',
     ];
@@ -37,6 +39,7 @@ class Conge extends Model
         'date_debut' => 'date',
         'date_fin' => 'date',
         'traite_at' => 'datetime',
+        'valide_chef_at' => 'datetime',
         'nombre_jours' => 'integer',
         'demi_journee_debut' => 'boolean',
         'demi_journee_fin' => 'boolean',
@@ -47,6 +50,7 @@ class Conge extends Model
 
     public const STATUTS = [
         'en_attente' => 'En attente',
+        'valide_chef' => 'Validé (Chef)',
         'approuve' => 'Approuvé',
         'refuse' => 'Refusé',
         'annule' => 'Annulé',
@@ -81,6 +85,11 @@ class Conge extends Model
         return $this->belongsTo(User::class, 'traite_par');
     }
 
+    public function valideChefPar()
+    {
+        return $this->belongsTo(User::class, 'valide_chef_par');
+    }
+
     public function congeParent()
     {
         return $this->belongsTo(self::class, 'conge_parent_id');
@@ -108,6 +117,11 @@ class Conge extends Model
     public function scopeEnAttente($query)
     {
         return $query->where('statut', 'en_attente');
+    }
+
+    public function scopeValideChef($query)
+    {
+        return $query->where('statut', 'valide_chef');
     }
 
     public function scopeApprouve($query)
@@ -151,6 +165,7 @@ class Conge extends Model
     {
         return match ($this->statut) {
             'en_attente' => '#f59e0b',
+            'valide_chef' => '#3b82f6',
             'approuve' => '#10b981',
             'refuse' => '#ef4444',
             'annule' => '#6b7280',
@@ -262,6 +277,7 @@ class Conge extends Model
         return [
             'total' => (clone $query)->count(),
             'en_attente' => (clone $query)->enAttente()->count(),
+            'valide_chef' => (clone $query)->valideChef()->count(),
             'approuve' => (clone $query)->approuve()->count(),
             'refuse' => (clone $query)->refuse()->count(),
         ];

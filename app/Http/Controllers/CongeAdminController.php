@@ -66,7 +66,10 @@ class CongeAdminController extends Controller
     }
 
     /**
-     * Approuver une demande de congé
+     * Valider / Approuver une demande de congé (2 étapes)
+     *
+     * Étape 1 — Chef d'Entreprise : en_attente → valide_chef
+     * Étape 2 — Super Admin / RH  : en_attente ou valide_chef → approuve
      */
     public function approve(Request $request, Conge $conge)
     {
@@ -75,13 +78,32 @@ class CongeAdminController extends Controller
             'document_officiel' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
-        if ($conge->statut !== 'en_attente') {
+        $user = Auth::user();
+
+        // Étape 1 : Chef d'Entreprise valide en premier
+        if ($user->hasRole("Chef d'Entreprise")) {
+            if ($conge->statut !== 'en_attente') {
+                return back()->with('error', 'Cette demande a déjà été traitée ou n\'est plus en attente.');
+            }
+
+            $conge->update([
+                'statut' => 'valide_chef',
+                'valide_chef_par' => $user->id,
+                'valide_chef_at' => now(),
+                'commentaire_admin' => $request->commentaire_admin,
+            ]);
+
+            return back()->with('success', 'Demande validée. En attente de l\'approbation finale du service RH.');
+        }
+
+        // Étape 2 : Super Admin / RH approuve définitivement
+        if (!in_array($conge->statut, ['en_attente', 'valide_chef'])) {
             return back()->with('error', 'Cette demande a déjà été traitée.');
         }
 
         $data = [
             'statut' => 'approuve',
-            'traite_par' => Auth::id(),
+            'traite_par' => $user->id,
             'commentaire_admin' => $request->commentaire_admin,
             'traite_at' => now(),
         ];
@@ -101,11 +123,11 @@ class CongeAdminController extends Controller
             $conge->user->notify(new CongeStatusNotification($conge, 'approuve'));
         }
 
-        return back()->with('success', 'La demande de congé a été approuvée.');
+        return back()->with('success', 'La demande de congé a été approuvée définitivement.');
     }
 
     /**
-     * Refuser une demande de congé
+     * Refuser une demande de congé (n'importe quelle étape)
      */
     public function reject(Request $request, Conge $conge)
     {
@@ -114,13 +136,21 @@ class CongeAdminController extends Controller
             'commentaire_admin' => 'nullable|string|max:1000',
         ]);
 
-        if ($conge->statut !== 'en_attente') {
+        $user = Auth::user();
+
+        // Chef d'Entreprise peut refuser uniquement en_attente
+        if ($user->hasRole("Chef d'Entreprise") && $conge->statut !== 'en_attente') {
+            return back()->with('error', 'Vous ne pouvez refuser que les demandes en attente de votre validation.');
+        }
+
+        // Super Admin / RH peut refuser en_attente ou valide_chef
+        if (!$user->hasRole("Chef d'Entreprise") && !in_array($conge->statut, ['en_attente', 'valide_chef'])) {
             return back()->with('error', 'Cette demande a déjà été traitée.');
         }
 
         $conge->update([
             'statut' => 'refuse',
-            'traite_par' => Auth::id(),
+            'traite_par' => $user->id,
             'motif_refus' => $request->motif_refus,
             'commentaire_admin' => $request->commentaire_admin,
             'traite_at' => now(),

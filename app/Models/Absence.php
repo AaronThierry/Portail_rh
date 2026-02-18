@@ -30,6 +30,8 @@ class Absence extends Model
         'motif_refus',
         'traite_par',
         'traite_at',
+        'valide_chef_par',
+        'valide_chef_at',
         'annee',
     ];
 
@@ -39,6 +41,7 @@ class Absence extends Model
         'minutes_retard' => 'integer',
         'annee' => 'integer',
         'traite_at' => 'datetime',
+        'valide_chef_at' => 'datetime',
     ];
 
     protected $appends = ['duree_label', 'justifiee_label'];
@@ -79,6 +82,11 @@ class Absence extends Model
         return $this->belongsTo(User::class, 'traite_par');
     }
 
+    public function valideChefPar()
+    {
+        return $this->belongsTo(User::class, 'valide_chef_par');
+    }
+
     // =========================================================================
     // SCOPES
     // =========================================================================
@@ -111,6 +119,11 @@ class Absence extends Model
     public function scopeEnAttente($query)
     {
         return $query->where('statut', 'en_attente');
+    }
+
+    public function scopeValideChef($query)
+    {
+        return $query->where('statut', 'valide_chef');
     }
 
     public function scopeApprouvee($query)
@@ -163,6 +176,7 @@ class Absence extends Model
             'injustifiees' => (clone $baseApprouvee)->injustifiee()->count(),
             'retards' => (clone $baseApprouvee)->where('duree_type', 'retard')->count(),
             'en_attente' => (clone $query)->enAttente()->count(),
+            'valide_chef' => (clone $query)->valideChef()->count(),
         ];
     }
 

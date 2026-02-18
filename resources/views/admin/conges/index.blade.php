@@ -307,6 +307,8 @@
 }
 .cg-status svg { width: 12px; height: 12px; }
 .cg-status.en_attente { background: var(--cg-warning-light); color: #b45309; }
+.cg-status.valide_chef { background: #dbeafe; color: #1d4ed8; }
+.dark .cg-status.valide_chef { background: rgba(59,130,246,0.18); color: #60a5fa; }
 .cg-status.approuve { background: var(--cg-success-light); color: #15803d; }
 .cg-status.refuse { background: var(--cg-danger-light); color: #b91c1c; }
 .cg-status.annule { background: #f1f5f9; color: #64748b; }
@@ -581,7 +583,7 @@
     @endif
 
     {{-- Stats --}}
-    <div class="cg-stats">
+    <div class="cg-stats" style="grid-template-columns: repeat(5, 1fr);">
         <div class="cg-stat-card total">
             <div class="cg-stat-icon total">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -593,7 +595,7 @@
             </div>
             <div>
                 <div class="cg-stat-value">{{ $stats['total'] }}</div>
-                <div class="cg-stat-label">Total demandes</div>
+                <div class="cg-stat-label">Total</div>
             </div>
         </div>
         <div class="cg-stat-card pending">
@@ -606,6 +608,19 @@
             <div>
                 <div class="cg-stat-value">{{ $stats['en_attente'] }}</div>
                 <div class="cg-stat-label">En attente</div>
+            </div>
+        </div>
+        <div class="cg-stat-card" style="border-top: none; position:relative; overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#3b82f6;"></div>
+            <div class="cg-stat-icon" style="background:#dbeafe;color:#1d4ed8;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 12l2 2 4-4"></path>
+                    <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+            </div>
+            <div>
+                <div class="cg-stat-value">{{ $stats['valide_chef'] }}</div>
+                <div class="cg-stat-label">Valid&eacute; Chef</div>
             </div>
         </div>
         <div class="cg-stat-card approved">
@@ -642,6 +657,7 @@
             <select name="statut" class="cg-filter-select">
                 <option value="">Tous</option>
                 <option value="en_attente" {{ request('statut') === 'en_attente' ? 'selected' : '' }}>En attente</option>
+                <option value="valide_chef" {{ request('statut') === 'valide_chef' ? 'selected' : '' }}>Valid&eacute; Chef</option>
                 <option value="approuve" {{ request('statut') === 'approuve' ? 'selected' : '' }}>Approuv&eacute;</option>
                 <option value="refuse" {{ request('statut') === 'refuse' ? 'selected' : '' }}>Refus&eacute;</option>
                 <option value="annule" {{ request('statut') === 'annule' ? 'selected' : '' }}>Annul&eacute;</option>
@@ -719,6 +735,10 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                                                 En attente
                                                 @break
+                                            @case('valide_chef')
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>
+                                                Valid&eacute; Chef
+                                                @break
                                             @case('approuve')
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                                 Approuv&eacute;
@@ -738,8 +758,22 @@
                                 </td>
                                 <td>
                                     <div class="cg-actions">
-                                        @if($conge->statut === 'en_attente')
-                                            <button class="cg-btn cg-btn-approve" onclick="openApproveModal({{ $conge->id }}, '{{ addslashes($conge->personnel->prenoms . ' ' . $conge->personnel->nom) }}', '{{ $conge->typeConge->nom ?? 'Cong&eacute;' }}', '{{ $conge->date_debut->format('d/m/Y') }}', '{{ $conge->date_fin->format('d/m/Y') }}', {{ $conge->nombre_jours }})">
+                                        @php $isChef = auth()->user()->hasRole("Chef d'Entreprise"); @endphp
+
+                                        {{-- Étape 1 : Chef d'Entreprise voit bouton Valider pour en_attente --}}
+                                        @if($isChef && $conge->statut === 'en_attente')
+                                            <button class="cg-btn cg-btn-approve" onclick="openApproveModal({{ $conge->id }}, '{{ addslashes($conge->personnel->prenoms . ' ' . $conge->personnel->nom) }}', '{{ $conge->typeConge->nom ?? 'Congé' }}', '{{ $conge->date_debut->format('d/m/Y') }}', '{{ $conge->date_fin->format('d/m/Y') }}', {{ $conge->nombre_jours }}, true)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>
+                                                Valider
+                                            </button>
+                                            <button class="cg-btn cg-btn-reject" onclick="openRejectModal({{ $conge->id }}, '{{ addslashes($conge->personnel->prenoms . ' ' . $conge->personnel->nom) }}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                Refuser
+                                            </button>
+
+                                        {{-- Étape 2 : Super Admin / RH voit Approuver pour en_attente et valide_chef --}}
+                                        @elseif(!$isChef && in_array($conge->statut, ['en_attente', 'valide_chef']))
+                                            <button class="cg-btn cg-btn-approve" onclick="openApproveModal({{ $conge->id }}, '{{ addslashes($conge->personnel->prenoms . ' ' . $conge->personnel->nom) }}', '{{ $conge->typeConge->nom ?? 'Congé' }}', '{{ $conge->date_debut->format('d/m/Y') }}', '{{ $conge->date_fin->format('d/m/Y') }}', {{ $conge->nombre_jours }}, false)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                                 Approuver
                                             </button>
@@ -747,6 +781,7 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                                 Refuser
                                             </button>
+
                                         @else
                                             <button class="cg-btn cg-btn-detail" onclick="openDetailModal({{ $conge->id }})">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
@@ -787,7 +822,7 @@
 <div class="cg-modal-overlay" id="approveModal">
     <div class="cg-modal">
         <div class="cg-modal-header">
-            <h3 class="cg-modal-title">Approuver la demande</h3>
+            <h3 class="cg-modal-title" id="approveModalTitle">Approuver la demande</h3>
             <button class="cg-modal-close" onclick="closeModal('approveModal')">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
@@ -829,7 +864,7 @@
             </div>
             <div class="cg-modal-footer">
                 <button type="button" class="cg-modal-btn-cancel" onclick="closeModal('approveModal')">Annuler</button>
-                <button type="submit" class="cg-modal-btn-confirm approve">Approuver</button>
+                <button type="submit" class="cg-modal-btn-confirm approve" id="approveBtnLabel">Approuver</button>
             </div>
         </form>
     </div>
@@ -882,12 +917,17 @@
 </div>
 
 <script>
-function openApproveModal(id, employee, type, dateDebut, dateFin, jours) {
+function openApproveModal(id, employee, type, dateDebut, dateFin, jours, isChefStep) {
     document.getElementById('approveForm').action = '/admin/conges/' + id + '/approuver';
     document.getElementById('approveEmployee').textContent = employee;
     document.getElementById('approveType').textContent = type;
     document.getElementById('approveDates').textContent = dateDebut + ' - ' + dateFin;
     document.getElementById('approveDays').textContent = jours + (jours > 1 ? ' jours' : ' jour');
+    // Adapter le titre et le bouton selon l'étape
+    const title = isChefStep ? 'Valider la demande (Étape 1/2)' : 'Approuver la demande (Étape finale)';
+    const btnLabel = isChefStep ? 'Valider' : 'Approuver définitivement';
+    document.getElementById('approveModalTitle').textContent = title;
+    document.getElementById('approveBtnLabel').textContent = btnLabel;
     document.getElementById('approveModal').classList.add('active');
 }
 
@@ -907,7 +947,7 @@ function openDetailModal(id) {
     fetch('/admin/conges/' + id, { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
         .then(r => r.json())
         .then(conge => {
-            const statuts = { en_attente: 'En attente', approuve: 'Approuv\u00e9', refuse: 'Refus\u00e9', annule: 'Annul\u00e9' };
+            const statuts = { en_attente: 'En attente', valide_chef: 'Valid\u00e9 Chef (attente RH)', approuve: 'Approuv\u00e9', refuse: 'Refus\u00e9', annule: 'Annul\u00e9' };
             let html = `
                 <div class="cg-modal-info">
                     <div class="cg-modal-info-item">

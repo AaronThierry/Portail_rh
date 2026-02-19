@@ -29,7 +29,7 @@ class SettingsController extends Controller
                 return $query->where('entreprise_id', $user->entreprise_id);
             })->count(),
             'total_entreprises' => Entreprise::count(),
-            'active_users' => User::where('statut', 'actif')
+            'active_users' => User::where('status', 'active')
                 ->when($user->entreprise_id, function($query) use ($user) {
                     return $query->where('entreprise_id', $user->entreprise_id);
                 })->count(),

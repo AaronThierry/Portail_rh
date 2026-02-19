@@ -121,15 +121,21 @@
   padding: 0;
   overflow: hidden;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .chart-top-bar {
   height: 3px;
   background: linear-gradient(90deg, #3b82f6 0%, #818cf8 40%, #f59e0b 100%);
+  flex-shrink: 0;
 }
 
 .chart-card-inner {
   padding: 20px 24px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .chart-header {
@@ -659,7 +665,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="position: relative; height: 280px;">
+                <div style="position: relative; flex: 1; min-height: 200px;">
                     <canvas id="chartCongesAbsences"></canvas>
                 </div>
             </div>

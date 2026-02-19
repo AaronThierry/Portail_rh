@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Requete;
+use App\Models\RequeteMessage;
 use App\Models\User;
 use App\Notifications\NouvelleRequeteNotification;
 use App\Notifications\ReponseRequeteNotification;
@@ -15,9 +16,6 @@ class RequeteController extends Controller
      |  CHEF D'ENTREPRISE — ses requêtes
      ══════════════════════════════════════════════════════ */
 
-    /**
-     * Liste des requêtes du Chef d'Entreprise connecté
-     */
     public function index(Request $request)
     {
         $user   = Auth::user();
@@ -42,17 +40,11 @@ class RequeteController extends Controller
         return view('chef.requetes.index', compact('requetes', 'stats', 'statut'));
     }
 
-    /**
-     * Formulaire de création
-     */
     public function create()
     {
         return view('chef.requetes.create');
     }
 
-    /**
-     * Enregistre la requête et notifie le Super Admin
-     */
     public function store(Request $request)
     {
         $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -67,10 +59,8 @@ class RequeteController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()
-                ->route('admin.requetes.index')
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->route('admin.requetes.index')
+                ->withErrors($validator)->withInput();
         }
 
         $user = Auth::user();
@@ -86,7 +76,7 @@ class RequeteController extends Controller
             'lu_par_admin'  => false,
         ]);
 
-        // Notifier le Super Admin (DB + WhatsApp)
+        // Notifier le Super Admin
         $superAdmin = User::role('Super Admin')->first();
         if ($superAdmin) {
             try {
@@ -96,36 +86,81 @@ class RequeteController extends Controller
             }
         }
 
-        return redirect()
-            ->route('admin.requetes.index')
+        return redirect()->route('admin.requetes.index')
             ->with('success', 'Votre requête a été envoyée avec succès. Nous vous répondrons dans les plus brefs délais.');
     }
 
-    /**
-     * Détail d'une requête pour le Chef (marque comme lu)
-     */
     public function show(Requete $requete)
     {
-        // Sécurité : le Chef ne peut voir que ses propres requêtes
         if (!Auth::user()->hasRole('Super Admin') && $requete->user_id !== Auth::id()) {
             abort(403);
         }
 
-        // Marquer comme lu par le chef si répondue
-        if ($requete->statut === 'repondue' && !$requete->lu_par_chef) {
+        // Marquer comme lu par le chef si il y a de nouveaux messages admin non lus
+        if (!$requete->lu_par_chef) {
             $requete->update(['lu_par_chef' => true]);
         }
 
-        return view('chef.requetes.show', compact('requete'));
+        $requete->load(['user', 'entreprise']);
+        $messages = RequeteMessage::where('requete_id', $requete->id)
+            ->with('user')
+            ->orderBy('created_at')
+            ->get();
+
+        return view('chef.requetes.show', compact('requete', 'messages'));
+    }
+
+    /**
+     * Le Chef répond après une réponse admin (continuation du fil)
+     */
+    public function chefReply(Request $request, Requete $requete)
+    {
+        if ($requete->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($requete->isFermee()) {
+            return back()->with('error', 'Cette requête est fermée.');
+        }
+
+        $request->validate([
+            'content' => 'required|string|min:5|max:3000',
+        ], [
+            'content.required' => 'Le message est obligatoire.',
+            'content.min'      => 'Le message doit contenir au moins 5 caractères.',
+        ]);
+
+        RequeteMessage::create([
+            'requete_id' => $requete->id,
+            'user_id'    => Auth::id(),
+            'role'       => 'chef',
+            'content'    => $request->content,
+        ]);
+
+        // Remettre en cours + admin non-lu
+        $requete->update([
+            'statut'       => 'en_cours',
+            'lu_par_admin' => false,
+        ]);
+
+        // Notifier le Super Admin
+        $superAdmin = User::role('Super Admin')->first();
+        if ($superAdmin) {
+            try {
+                $superAdmin->notify(new NouvelleRequeteNotification($requete));
+            } catch (\Throwable $e) {
+                \Log::error('Erreur notification chefReply: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->route('admin.requetes.show', $requete)
+            ->with('success', 'Votre message a été envoyé.');
     }
 
     /* ══════════════════════════════════════════════════════
      |  SUPER ADMIN — inbox
      ══════════════════════════════════════════════════════ */
 
-    /**
-     * Inbox Super Admin — toutes les requêtes
-     */
     public function adminIndex(Request $request)
     {
         $statut   = $request->get('statut');
@@ -136,12 +171,8 @@ class RequeteController extends Controller
             ->orderByRaw("CASE WHEN priorite = 'urgente' THEN 0 ELSE 1 END")
             ->orderBy('created_at', 'desc');
 
-        if ($statut) {
-            $query->where('statut', $statut);
-        }
-        if ($priorite) {
-            $query->where('priorite', $priorite);
-        }
+        if ($statut)   $query->where('statut', $statut);
+        if ($priorite) $query->where('priorite', $priorite);
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('sujet', 'like', "%{$search}%")
@@ -162,23 +193,24 @@ class RequeteController extends Controller
         return view('admin.requetes.index', compact('requetes', 'stats', 'statut', 'search', 'priorite'));
     }
 
-    /**
-     * Détail d'une requête (Super Admin) — marque comme lu
-     */
     public function adminShow(Requete $requete)
     {
         if (!$requete->lu_par_admin) {
-            $requete->update(['lu_par_admin' => true, 'statut' => $requete->statut === 'en_attente' ? 'en_cours' : $requete->statut]);
+            $requete->update([
+                'lu_par_admin' => true,
+                'statut'       => $requete->statut === 'en_attente' ? 'en_cours' : $requete->statut,
+            ]);
         }
 
         $requete->load(['user', 'entreprise', 'reponduPar']);
+        $messages = RequeteMessage::where('requete_id', $requete->id)
+            ->with('user')
+            ->orderBy('created_at')
+            ->get();
 
-        return view('admin.requetes.show', compact('requete'));
+        return view('admin.requetes.show', compact('requete', 'messages'));
     }
 
-    /**
-     * Répondre à une requête
-     */
     public function adminReply(Request $request, Requete $requete)
     {
         $request->validate([
@@ -188,6 +220,15 @@ class RequeteController extends Controller
             'reponse.min'      => 'La réponse doit contenir au moins 5 caractères.',
         ]);
 
+        // Enregistrer le message dans le fil
+        RequeteMessage::create([
+            'requete_id' => $requete->id,
+            'user_id'    => Auth::id(),
+            'role'       => 'admin',
+            'content'    => $request->reponse,
+        ]);
+
+        // Mettre à jour la requête
         $requete->update([
             'reponse'     => $request->reponse,
             'statut'      => 'repondue',
@@ -196,27 +237,22 @@ class RequeteController extends Controller
             'lu_par_chef' => false,
         ]);
 
-        // Notifier le Chef d'Entreprise
+        // Notifier le Chef
         try {
             $requete->user->notify(new ReponseRequeteNotification($requete));
         } catch (\Throwable $e) {
             \Log::error('Erreur notification Chef requete: ' . $e->getMessage());
         }
 
-        return redirect()
-            ->route('admin.admin-requetes.show', $requete)
+        return redirect()->route('admin.admin-requetes.show', $requete)
             ->with('success', 'Réponse envoyée avec succès.');
     }
 
-    /**
-     * Fermer une requête
-     */
     public function adminClose(Requete $requete)
     {
         $requete->update(['statut' => 'fermee']);
 
-        return redirect()
-            ->route('admin.admin-requetes.index')
+        return redirect()->route('admin.admin-requetes.index')
             ->with('success', "La requête « {$requete->sujet} » a été fermée.");
     }
 }

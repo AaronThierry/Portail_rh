@@ -231,7 +231,8 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
         Route::get('requetes',           [RequeteController::class, 'index'])->name('requetes.index');
         Route::get('requetes/nouvelle',  [RequeteController::class, 'create'])->name('requetes.create');
         Route::post('requetes',          [RequeteController::class, 'store'])->name('requetes.store');
-        Route::get('requetes/{requete}', [RequeteController::class, 'show'])->name('requetes.show');
+        Route::get('requetes/{requete}',          [RequeteController::class, 'show'])->name('requetes.show');
+        Route::post('requetes/{requete}/reply',   [RequeteController::class, 'chefReply'])->name('requetes.chef-reply');
     });
 
     // ── Inbox requêtes Super Admin ──────────────────────────

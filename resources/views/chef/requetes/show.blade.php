@@ -256,6 +256,58 @@
   gap: 8px;
 }
 
+/* ── Reply card ── */
+.reply-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.reply-card-header {
+  padding: 18px 24px 16px;
+  border-bottom: 1px solid var(--card-border);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.reply-form { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.reply-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 14px 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+}
+.reply-textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+
+.reply-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex-wrap: wrap; }
+
+/* Buttons */
+.btn-reply {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 24px;
+  border-radius: 10px;
+  font-size: 0.87rem; font-weight: 700;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-reply:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(59,130,246,0.35); }
+.btn-reply:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
 /* ── Back button ── */
 .back-btn {
   display: inline-flex; align-items: center; gap: 7px;
@@ -361,7 +413,7 @@
     <div class="thread-wrap">
         <div class="thread-inner">
 
-            {{-- Message du chef --}}
+            {{-- Message initial du chef --}}
             <div class="msg-row right">
                 <div class="msg-avatar you">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
                 <div class="msg-content">
@@ -373,21 +425,32 @@
                 </div>
             </div>
 
-            {{-- Réponse admin ou état d'attente --}}
-            @if($requete->reponse)
+            {{-- Messages du fil (requete_messages) --}}
+            @if($messages->isNotEmpty())
 
-            <div class="thread-divider">Réponse du support</div>
+            <div class="thread-divider">Échanges</div>
 
-            <div class="msg-row">
-                <div class="msg-avatar admin">RH</div>
+            @foreach($messages as $msg)
+            @php $isAdmin = $msg->isFromAdmin(); @endphp
+            <div class="msg-row {{ $isAdmin ? '' : 'right' }}">
+                <div class="msg-avatar {{ $isAdmin ? 'admin' : 'you' }}">
+                    @if($isAdmin)
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    @else
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    @endif
+                </div>
                 <div class="msg-content">
                     <div class="msg-name-time">
-                        <strong style="color: var(--text-primary);">Support Portail RH+</strong>
-                        <span>{{ $requete->repondu_le?->format('d/m/Y à H\hi') }}</span>
+                        <strong style="color: var(--text-primary);">
+                            {{ $isAdmin ? 'Support Portail RH+' : 'Vous' }}
+                        </strong>
+                        <span>{{ $msg->created_at->format('d/m/Y à H\hi') }}</span>
                     </div>
-                    <div class="msg-bubble admin">{{ $requete->reponse }}</div>
+                    <div class="msg-bubble {{ $isAdmin ? 'admin' : 'you' }}">{{ $msg->content }}</div>
                 </div>
             </div>
+            @endforeach
 
             @elseif(!$requete->isFermee())
 
@@ -410,11 +473,57 @@
         @endif
     </div>
 
+    {{-- Formulaire de réponse (si une réponse admin existe et ticket non fermé) --}}
+    @if($messages->isNotEmpty() && $messages->last()->isFromAdmin() && !$requete->isFermee())
+    <div class="reply-card">
+        <div class="reply-card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Répondre au support
+        </div>
+
+        <form id="replyForm" action="{{ route('admin.requetes.chef-reply', $requete) }}" method="POST" class="reply-form">
+            @csrf
+
+            @if($errors->any())
+            <div style="padding: 12px 16px; border-radius: 8px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #dc2626; font-size: 0.84rem;">
+                {{ $errors->first() }}
+            </div>
+            @endif
+
+            <textarea name="content" class="reply-textarea" placeholder="Rédigez votre message…" rows="5" required>{{ old('content') }}</textarea>
+
+            <div class="reply-actions">
+                <a href="{{ route('admin.requetes.index') }}" class="back-btn">Annuler</a>
+                <button type="submit" class="btn-reply" id="btnReply">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Envoyer
+                </button>
+            </div>
+        </form>
+    </div>
+    @endif
+
     {{-- Retour --}}
+    @if($requete->isFermee() || $messages->isEmpty() || $messages->last()->isFromChef())
     <a href="{{ route('admin.requetes.index') }}" class="back-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Retour à mes requêtes
     </a>
+    @endif
 
 </div>
+@endsection
+
+@section('scripts')
+<script>
+const replyForm = document.getElementById('replyForm');
+const btnReply  = document.getElementById('btnReply');
+if (replyForm && btnReply) {
+    replyForm.addEventListener('submit', function() {
+        btnReply.disabled = true;
+        btnReply.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Envoi…';
+    });
+}
+</script>
+@append
 @endsection

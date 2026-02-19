@@ -74,15 +74,7 @@
                     <div class="dropdown-body custom-scrollbar" id="adminNotifList">
                         <div style="padding: 2rem; text-align: center; color: var(--text-muted, #6B7280); font-size: 0.875rem;">Aucune notification</div>
                     </div>
-                    <div class="dropdown-footer">
-                        <a href="{{ route('admin.conges.index') }}" class="view-all-link">
-                            <span>Voir les demandes de congés</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                <polyline points="12 5 19 12 12 19"></polyline>
-                            </svg>
-                        </a>
-                    </div>
+                    <div class="dropdown-footer" id="adminNotifFooter" style="display:none;"></div>
                 </div>
             </div>
 
@@ -1091,14 +1083,19 @@
 }
 
 .notification-title {
-    font-size: 0.875rem;
+    font-size: 0.84rem;
     font-weight: 600;
     color: var(--text-primary, #1F2937);
     margin: 0 0 0.25rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
 }
 
 .notification-text {
-    font-size: 0.8125rem;
+    font-size: 0.78rem;
     color: var(--text-muted, #6B7280);
     margin: 0 0 0.375rem 0;
     white-space: nowrap;
@@ -1411,28 +1408,42 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(() => {});
     }
 
+    const adminFooter = document.getElementById('adminNotifFooter');
+
+    function getNotifMeta(n) {
+        const icons = {
+            nouvelle_requete: { cls: 'warning', svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' },
+            requete: { cls: 'info', svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' },
+            reponse_requete: { cls: 'success', svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><polyline points="9 10 12 13 15 10" stroke-width="2.5"/></svg>' },
+            nouvelle_demande_conge: { cls: 'warning', svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>' },
+        };
+        let meta = icons[n.type] || { cls: 'info', svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' };
+        if (n.status === 'approuve') meta = { cls: 'success', svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' };
+        if (n.status === 'refuse') meta = { cls: 'danger', svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' };
+        return meta;
+    }
+
+    function truncate(str, len) { return str && str.length > len ? str.substring(0, len) + '...' : (str || ''); }
+
     function renderAdminNotifs(items) {
         if (!items.length) {
-            adminList.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted,#6B7280);font-size:0.875rem;">Aucune notification</div>';
+            adminList.innerHTML = '<div style="padding:2.5rem 1.5rem;text-align:center;"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--text-muted,#9CA3AF);margin:0 auto 12px;display:block;opacity:0.5;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div style="font-size:0.875rem;font-weight:600;color:var(--text-primary,#374151);margin-bottom:4px;">Tout est lu</div><div style="font-size:0.78rem;color:var(--text-muted,#9CA3AF);">Aucune notification en attente</div></div>';
+            adminFooter.style.display = 'none';
             return;
         }
+        adminFooter.style.display = '';
         adminList.innerHTML = items.map(n => {
-            let iconClass = 'info', iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
-            if (n.type === 'nouvelle_demande_conge') {
-                iconClass = 'warning';
-                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>';
-            } else if (n.status === 'approuve') {
-                iconClass = 'success';
-                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
-            } else if (n.status === 'refuse') {
-                iconClass = 'danger';
-                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-            }
-            return `<a href="#" class="notification-item unread" onclick="markAdminNotifRead('${n.id}',this);return false;">
-                <div class="notification-icon ${iconClass}">${iconSvg}</div>
+            const m = getNotifMeta(n);
+            const title = truncate(n.message, 70);
+            let sub = '';
+            if (n.sujet) sub = truncate(n.sujet, 50);
+            else if (n.employe) sub = n.employe + (n.date_debut ? ' &middot; ' + n.date_debut + ' → ' + n.date_fin : '');
+            const href = n.link ? n.link : '#';
+            return `<a href="${href}" class="notification-item unread" onclick="markAdminNotifRead('${n.id}',this);">
+                <div class="notification-icon ${m.cls}">${m.svg}</div>
                 <div class="notification-content">
-                    <p class="notification-title">${n.message}</p>
-                    <p class="notification-text">${n.employe || ''} ${n.date_debut ? n.date_debut + ' - ' + n.date_fin : ''}</p>
+                    <p class="notification-title">${title}</p>
+                    ${sub ? '<p class="notification-text">' + sub + '</p>' : ''}
                     <span class="notification-time">${n.created_at}</span>
                 </div>
             </a>`;
@@ -1440,13 +1451,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     window.markAdminNotifRead = function(id, el) {
+        const href = el ? el.getAttribute('href') : null;
         fetch('/api/notifications/' + id + '/read', {
             method: 'POST',
             headers: { 'X-CSRF-TOKEN': csrfVal, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
         }).then(() => {
+            if (href && href !== '#') { window.location.href = href; return; }
             if (el) el.remove();
             fetchAdminNotifications();
         }).catch(() => {});
+        return false;
     };
 
     if (adminMarkAll) {

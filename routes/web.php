@@ -153,6 +153,8 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
 
     // Gestion des rôles et permissions — Super Admin uniquement
     Route::resource('roles', RoleController::class)->middleware("role:Super Admin");
+    Route::get('roles/{role}/permissions', [RoleController::class, 'permissions'])->name('roles.permissions')->middleware("role:Super Admin");
+    Route::put('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.update-permissions')->middleware("role:Super Admin");
     Route::resource('permissions', PermissionController::class)->middleware("role:Super Admin");
 
     // Gestion des utilisateurs (comptes) — Super Admin uniquement

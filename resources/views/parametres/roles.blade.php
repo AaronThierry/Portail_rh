@@ -687,7 +687,7 @@
                 </div>
 
                 <div class="role-actions">
-                    <a href="{{ route('parametres.roles.permissions', $role) }}" class="btn-action btn-permissions">
+                    <a href="{{ route('admin.roles.permissions', $role) }}" class="btn-action btn-permissions">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                         </svg>
@@ -699,7 +699,7 @@
                         </svg>
                     </button>
                     @if(!in_array($role->name, ['Super Admin', 'Admin']))
-                    <form action="{{ route('parametres.roles.destroy', $role) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rôle ?');">
+                    <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rôle ?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn-action btn-delete">
@@ -746,7 +746,7 @@
             <h3 class="modal-title">Créer un Nouveau Rôle</h3>
             <button onclick="closeModal('createModal')" class="modal-close">&times;</button>
         </div>
-        <form action="{{ route('parametres.roles.store') }}" method="POST">
+        <form action="{{ route('admin.roles.store') }}" method="POST">
             @csrf
             <div class="modal-body">
                 <div class="form-group">
@@ -801,7 +801,7 @@ function closeModal(id) {
 
 function showEditModal(roleId, roleName) {
     document.getElementById('edit_role_name').value = roleName;
-    document.getElementById('editForm').action = '{{ url("parametres/roles") }}/' + roleId;
+    document.getElementById('editForm').action = '{{ url("/admin/roles") }}/' + roleId;
     showModal('editModal');
 }
 

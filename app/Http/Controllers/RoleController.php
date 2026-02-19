@@ -117,7 +117,7 @@ class RoleController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('parametres.roles')
+                ->route('admin.roles.index')
                 ->with('success', "Le rôle '{$role->name}' a été créé avec succès.");
 
         } catch (\Exception $e) {
@@ -172,7 +172,7 @@ class RoleController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('parametres.roles')
+                ->route('admin.roles.index')
                 ->with('success', "Le rôle '{$role->name}' a été mis à jour avec succès.");
 
         } catch (\Exception $e) {
@@ -201,7 +201,7 @@ class RoleController extends Controller
         // Double vérification de sécurité
         if (in_array($role->name, self::PROTECTED_ROLES)) {
             return redirect()
-                ->route('parametres.roles')
+                ->route('admin.roles.index')
                 ->with('error', "Le rôle '{$role->name}' est protégé et ne peut pas être supprimé.");
         }
 
@@ -210,7 +210,7 @@ class RoleController extends Controller
 
         if ($usersCount > 0) {
             return redirect()
-                ->route('parametres.roles')
+                ->route('admin.roles.index')
                 ->with('error', "Impossible de supprimer le rôle '{$role->name}'. {$usersCount} utilisateur(s) possède(nt) ce rôle.");
         }
 
@@ -228,14 +228,14 @@ class RoleController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('parametres.roles')
+                ->route('admin.roles.index')
                 ->with('success', "Le rôle '{$roleName}' a été supprimé avec succès.");
 
         } catch (\Exception $e) {
             DB::rollBack();
 
             return redirect()
-                ->route('parametres.roles')
+                ->route('admin.roles.index')
                 ->with('error', 'Erreur lors de la suppression: ' . $e->getMessage());
         }
     }
@@ -311,7 +311,7 @@ class RoleController extends Controller
             $message .= "({$beforeCount} → {$afterCount} permissions)";
 
             return redirect()
-                ->route('parametres.roles')
+                ->route('admin.roles.index')
                 ->with('success', $message);
 
         } catch (\Exception $e) {

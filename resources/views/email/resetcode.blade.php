@@ -21,7 +21,7 @@
         body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
         table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
         img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
-        body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #E8E0D4; }
+        body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #E8E2DA; }
 
         @media only screen and (max-width: 620px) {
             .email-container { width: 100% !important; }
@@ -30,14 +30,14 @@
         }
     </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #E8E0D4;">
+<body style="margin: 0; padding: 0; background-color: #E8E2DA;">
 
     <!-- Preheader -->
     <div style="display: none; max-height: 0; overflow: hidden;">
         Votre code de v&eacute;rification : {{ $code }} - Valide pendant {{ $expiryMinutes ?? '10' }} minutes.
     </div>
 
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #E8E0D4;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #E8E2DA;">
         <tr>
             <td style="padding: 40px 10px;">
 
@@ -46,24 +46,24 @@
 
                     <!-- Gold Top Accent Line -->
                     <tr>
-                        <td style="height: 4px; background: linear-gradient(90deg, #B8976A 0%, #D4B88C 50%, #B8976A 100%); font-size: 0; line-height: 0;">&nbsp;</td>
+                        <td style="height: 4px; background: linear-gradient(90deg, #9A7A4E 0%, #C9A96E 40%, #E2C78A 60%, #C9A96E 80%, #9A7A4E 100%); font-size: 0; line-height: 0;">&nbsp;</td>
                     </tr>
 
                     <!-- Header -->
                     <tr>
-                        <td style="background-color: #0F172A; padding: 0;">
+                        <td style="background-color: #0C1628; padding: 0;">
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                 <tr>
                                     <td style="padding: 36px 44px 40px;">
                                         <!-- Logo + Brand -->
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                                             <tr>
-                                                <td style="width: 42px; height: 42px; background-color: #B8976A; border-radius: 10px; text-align: center; vertical-align: middle;">
+                                                <td style="width: 42px; height: 42px; background-color: #C9A96E; border-radius: 10px; text-align: center; vertical-align: middle;">
                                                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'%3E%3C/path%3E%3Ccircle cx='12' cy='16' r='1'%3E%3C/circle%3E%3C/svg%3E" alt="" width="22" height="22" style="display: block; margin: 0 auto;">
                                                 </td>
                                                 <td style="padding-left: 14px; vertical-align: middle;">
                                                     <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;">Portail</span>
-                                                    <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; color: #B8976A; letter-spacing: 0.5px;">RH+</span>
+                                                    <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 18px; font-weight: 700; color: #C9A96E; letter-spacing: 0.5px;">RH+</span>
                                                 </td>
                                             </tr>
                                         </table>
@@ -79,7 +79,7 @@
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 20px;">
                                             <tr>
                                                 <td style="background-color: rgba(184, 151, 106, 0.15); padding: 6px 16px; border-radius: 4px;">
-                                                    <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 600; color: #D4B88C; letter-spacing: 1.5px; text-transform: uppercase;">
+                                                    <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 600; color: #E2C78A; letter-spacing: 1.5px; text-transform: uppercase;">
                                                         S&eacute;curit&eacute;
                                                     </p>
                                                 </td>
@@ -107,7 +107,7 @@
                                 <tr>
                                     <td style="padding-bottom: 20px;">
                                         <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; color: #1F2937; line-height: 1.7;">
-                                            Bonjour <strong style="color: #0F172A;">{{ $name ?? 'Utilisateur' }}</strong>,
+                                            Bonjour <strong style="color: #0C1628;">{{ $name ?? 'Utilisateur' }}</strong>,
                                         </p>
                                     </td>
                                 </tr>
@@ -141,13 +141,13 @@
                                                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                                         <tr>
                                                             <td align="center" style="padding: 36px 24px 32px;">
-                                                                <p class="code-text" style="margin: 0; font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace; font-size: 44px; font-weight: 800; color: #0F172A; letter-spacing: 12px;">
+                                                                <p class="code-text" style="margin: 0; font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace; font-size: 44px; font-weight: 800; color: #0C1628; letter-spacing: 12px;">
                                                                     {{ $code }}
                                                                 </p>
                                                                 <!-- Gold underline accent -->
                                                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-top: 16px;">
                                                                     <tr>
-                                                                        <td style="width: 60px; height: 3px; background: linear-gradient(90deg, #B8976A, #D4B88C); border-radius: 2px;">&nbsp;</td>
+                                                                        <td style="width: 60px; height: 3px; background: linear-gradient(90deg, #9A7A4E, #C9A96E, #E2C78A); border-radius: 2px;">&nbsp;</td>
                                                                     </tr>
                                                                 </table>
                                                             </td>
@@ -164,7 +164,7 @@
                                     <td style="padding-bottom: 28px;">
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                             <tr>
-                                                <td style="background-color: #FFFBF5; border-left: 3px solid #B8976A; padding: 16px 20px;">
+                                                <td style="background-color: #FFFBF5; border-left: 3px solid #C9A96E; padding: 16px 20px;">
                                                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                                         <tr>
                                                             <td style="width: 36px; vertical-align: top;">
@@ -172,7 +172,7 @@
                                                             </td>
                                                             <td>
                                                                 <p style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #78716C; line-height: 1.6;">
-                                                                    <strong style="color: #92400E;">Attention :</strong> Ce code expire dans <strong style="color: #0F172A;">{{ $expiryMinutes ?? '10' }} minutes</strong>. Ne le partagez avec personne.
+                                                                    <strong style="color: #92400E;">Attention :</strong> Ce code expire dans <strong style="color: #0C1628;">{{ $expiryMinutes ?? '10' }} minutes</strong>. Ne le partagez avec personne.
                                                                 </p>
                                                             </td>
                                                         </tr>
@@ -246,12 +246,12 @@
                                     <td style="padding-bottom: 18px;">
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                                             <tr>
-                                                <td style="width: 28px; height: 28px; background-color: #0F172A; border-radius: 6px; text-align: center; vertical-align: middle;">
+                                                <td style="width: 28px; height: 28px; background-color: #0C1628; border-radius: 6px; text-align: center; vertical-align: middle;">
                                                     <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23B8976A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'%3E%3C/path%3E%3Ccircle cx='12' cy='7' r='4'%3E%3C/circle%3E%3C/svg%3E" alt="" width="16" height="16" style="display: block; margin: 0 auto;">
                                                 </td>
                                                 <td style="padding-left: 10px;">
                                                     <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 13px; font-weight: 700; color: #334155;">Portail</span>
-                                                    <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 13px; font-weight: 700; color: #B8976A;">RH+</span>
+                                                    <span style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 13px; font-weight: 700; color: #C9A96E;">RH+</span>
                                                 </td>
                                             </tr>
                                         </table>
@@ -289,7 +289,7 @@
 
                     <!-- Gold Bottom Accent Line -->
                     <tr>
-                        <td style="height: 3px; background: linear-gradient(90deg, #B8976A 0%, #D4B88C 50%, #B8976A 100%); font-size: 0; line-height: 0;">&nbsp;</td>
+                        <td style="height: 3px; background: linear-gradient(90deg, #9A7A4E 0%, #C9A96E 40%, #E2C78A 60%, #C9A96E 80%, #9A7A4E 100%); font-size: 0; line-height: 0;">&nbsp;</td>
                     </tr>
 
                 </table>

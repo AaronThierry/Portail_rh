@@ -198,6 +198,8 @@
   border: 1px solid var(--card-border);
   border-radius: var(--border-radius);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .activities-header {
@@ -206,6 +208,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
 }
 
 .activities-count {
@@ -224,6 +227,29 @@
   flex-direction: column;
   padding: 8px 0;
   position: relative;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--card-border) transparent;
+}
+
+.activity-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.activity-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.activity-list::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 2px;
+}
+
+.activity-list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
 
 /* Timeline vertical connector */
@@ -611,7 +637,7 @@
     </div>
 
     {{-- Graphiques + Activites --}}
-    <div class="main-charts" style="display: grid; grid-template-columns: 3fr 2fr; gap: 24px; margin-bottom: 24px;">
+    <div class="main-charts" style="display: grid; grid-template-columns: 3fr 2fr; gap: 24px; margin-bottom: 24px; align-items: stretch;">
 
         {{-- Graphique conges/absences par mois --}}
         <div class="chart-card">

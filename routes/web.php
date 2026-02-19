@@ -21,6 +21,7 @@ use App\Http\Controllers\CongeAdminController;
 use App\Http\Controllers\AbsenceAdminController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ChefEntrepriseController;
+use App\Http\Controllers\RequeteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -224,6 +225,22 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
     Route::post('absences/{absence}/refuser', [AbsenceAdminController::class, 'reject'])->name('absences.reject');
     Route::post('absences/{absence}/toggle-justifiee', [AbsenceAdminController::class, 'toggleJustifiee'])->name('absences.toggle-justifiee');
     Route::delete('absences/{absence}', [AbsenceAdminController::class, 'destroy'])->name('absences.destroy');
+
+    // ── Requêtes Chef d'Entreprise ──────────────────────────
+    Route::middleware("role:Super Admin|Chef d'Entreprise")->group(function () {
+        Route::get('requetes',           [RequeteController::class, 'index'])->name('requetes.index');
+        Route::get('requetes/nouvelle',  [RequeteController::class, 'create'])->name('requetes.create');
+        Route::post('requetes',          [RequeteController::class, 'store'])->name('requetes.store');
+        Route::get('requetes/{requete}', [RequeteController::class, 'show'])->name('requetes.show');
+    });
+
+    // ── Inbox requêtes Super Admin ──────────────────────────
+    Route::middleware("role:Super Admin")->group(function () {
+        Route::get('admin-requetes',                  [RequeteController::class, 'adminIndex'])->name('admin-requetes.index');
+        Route::get('admin-requetes/{requete}',        [RequeteController::class, 'adminShow'])->name('admin-requetes.show');
+        Route::post('admin-requetes/{requete}/reply', [RequeteController::class, 'adminReply'])->name('admin-requetes.reply');
+        Route::post('admin-requetes/{requete}/close', [RequeteController::class, 'adminClose'])->name('admin-requetes.close');
+    });
 
     // Gestion des bulletins de paie
     Route::get('bulletins-paie', [BulletinPaieController::class, 'index'])->name('bulletins-paie.index');

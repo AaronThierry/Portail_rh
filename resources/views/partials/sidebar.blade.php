@@ -32,6 +32,21 @@
         }
         $personnelCount = $sidebarQuery->count();
         $activeCount    = (clone $sidebarQuery)->actif()->count();
+
+        // Badges requêtes
+        $requetesNonLues = 0;
+        if (auth()->user()->hasRole("Chef d'Entreprise")) {
+            $requetesNonLues = \App\Models\Requete::where('user_id', auth()->id())
+                ->where('lu_par_chef', false)
+                ->where('statut', 'repondue')
+                ->count();
+        }
+        $requetesAdminNonLues = 0;
+        if (auth()->user()->hasRole('Super Admin')) {
+            $requetesAdminNonLues = \App\Models\Requete::where('lu_par_admin', false)
+                ->whereIn('statut', ['en_attente', 'en_cours'])
+                ->count();
+        }
     @endphp
     <div class="sidebar-quick-stats">
         <div class="quick-stat-item">
@@ -247,6 +262,36 @@
                     <span class="nav-badge coming-soon">Bientôt</span>
                 </a>
                 @endcan
+
+                {{-- Requêtes : Chef d'Entreprise --}}
+                @if(auth()->user()->hasRole("Chef d'Entreprise"))
+                <a href="{{ route('admin.requetes.index') }}" class="nav-link {{ Request::is('admin/requetes*') ? 'active' : '' }}" data-tooltip="Mes Requêtes">
+                    <span class="nav-link-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-link-text">Mes Requêtes</span>
+                    @if($requetesNonLues > 0)
+                        <span class="nav-badge" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">{{ $requetesNonLues }}</span>
+                    @endif
+                </a>
+                @endif
+
+                {{-- Requêtes : Super Admin inbox --}}
+                @if(auth()->user()->hasRole('Super Admin'))
+                <a href="{{ route('admin.admin-requetes.index') }}" class="nav-link {{ Request::is('admin/admin-requetes*') ? 'active' : '' }}" data-tooltip="Requêtes Clients">
+                    <span class="nav-link-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-link-text">Requêtes Clients</span>
+                    @if($requetesAdminNonLues > 0)
+                        <span class="nav-badge" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;">{{ $requetesAdminNonLues }}</span>
+                    @endif
+                </a>
+                @endif
             </div>
         </div>
         @endif

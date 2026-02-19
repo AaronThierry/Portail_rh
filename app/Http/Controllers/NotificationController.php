@@ -18,15 +18,30 @@ class NotificationController extends Controller
             ->take(10)
             ->get()
             ->map(function ($notification) {
+                $data = $notification->data;
+                $type = $data['type'] ?? 'info';
+
+                // Lien contextuel selon le type
+                $link = null;
+                if (in_array($type, ['requete', 'nouvelle_requete']) && isset($data['requete_id'])) {
+                    $link = route('admin.admin-requetes.show', $data['requete_id']);
+                } elseif ($type === 'reponse_requete' && isset($data['requete_id'])) {
+                    $link = route('admin.requetes.show', $data['requete_id']);
+                }
+
                 return [
                     'id' => $notification->id,
-                    'type' => $notification->data['type'] ?? 'info',
-                    'message' => $notification->data['message'] ?? '',
-                    'conge_id' => $notification->data['conge_id'] ?? null,
-                    'employe' => $notification->data['employe'] ?? null,
-                    'date_debut' => $notification->data['date_debut'] ?? null,
-                    'date_fin' => $notification->data['date_fin'] ?? null,
-                    'status' => $notification->data['status'] ?? null,
+                    'type' => $type,
+                    'message' => $data['message'] ?? '',
+                    'conge_id' => $data['conge_id'] ?? null,
+                    'employe' => $data['employe'] ?? null,
+                    'date_debut' => $data['date_debut'] ?? null,
+                    'date_fin' => $data['date_fin'] ?? null,
+                    'status' => $data['status'] ?? null,
+                    // Champs requête
+                    'requete_id' => $data['requete_id'] ?? null,
+                    'sujet' => $data['sujet'] ?? null,
+                    'link' => $link,
                     'created_at' => $notification->created_at->diffForHumans(),
                     'created_at_raw' => $notification->created_at->toISOString(),
                 ];

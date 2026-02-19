@@ -113,93 +113,244 @@
 .badge-orange { background: rgba(245,158,11,0.1); color: #d97706; }
 .badge-blue { background: rgba(59,130,246,0.1); color: #2563eb; }
 
+/* ── Chart card ───────────────────────────────────────── */
 .chart-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--border-radius);
-  padding: 24px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-top-bar {
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6 0%, #818cf8 40%, #f59e0b 100%);
+}
+
+.chart-card-inner {
+  padding: 20px 24px 24px;
 }
 
 .chart-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 20px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--card-border);
 }
+
+.chart-title-block { flex: 1; }
 
 .chart-title {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.015em;
 }
 
+.chart-subtitle {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  letter-spacing: 0.01em;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.legend-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.legend-pill-blue {
+  background: rgba(59,130,246,0.08);
+  color: #3b82f6;
+  border: 1px solid rgba(59,130,246,0.2);
+}
+
+.legend-pill-amber {
+  background: rgba(245,158,11,0.08);
+  color: #d97706;
+  border: 1px solid rgba(245,158,11,0.2);
+}
+
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ── Activity feed ────────────────────────────────────── */
 .recent-activities {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--border-radius);
-  padding: 24px;
+  overflow: hidden;
+}
+
+.activities-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.activities-count {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--card-border);
+  padding: 2px 9px;
+  border-radius: 12px;
+  letter-spacing: 0.03em;
 }
 
 .activity-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  padding: 8px 0;
+  position: relative;
+}
+
+/* Timeline vertical connector */
+.activity-list::before {
+  content: '';
+  position: absolute;
+  left: 37px;
+  top: 24px;
+  bottom: 24px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--card-border) 60%, transparent 100%);
+  pointer-events: none;
 }
 
 .activity-item {
   display: flex;
-  gap: 14px;
-  padding: 12px;
-  background: var(--bg-tertiary);
-  border-radius: 10px;
+  gap: 12px;
+  padding: 9px 20px;
+  position: relative;
   transition: var(--transition);
+  cursor: default;
+  animation: activityFadeIn 0.35s ease both;
 }
 
-.activity-item:hover {
-  background: var(--bg-secondary);
-  box-shadow: var(--shadow-sm);
+@keyframes activityFadeIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
+
+.activity-item:nth-child(1) { animation-delay: 0.04s; }
+.activity-item:nth-child(2) { animation-delay: 0.09s; }
+.activity-item:nth-child(3) { animation-delay: 0.14s; }
+.activity-item:nth-child(4) { animation-delay: 0.19s; }
+.activity-item:nth-child(5) { animation-delay: 0.24s; }
+.activity-item:nth-child(6) { animation-delay: 0.29s; }
+.activity-item:nth-child(7) { animation-delay: 0.34s; }
+.activity-item:nth-child(8) { animation-delay: 0.39s; }
+
+.activity-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: var(--primary);
+  opacity: 0;
+  transform: scaleY(0.4);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.activity-item:hover { background: var(--bg-tertiary); }
+.activity-item:hover::before { opacity: 1; transform: scaleY(1); }
 
 .activity-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   color: white;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.activity-icon.icon-success { background: var(--success); }
-.activity-icon.icon-danger { background: var(--danger); }
-.activity-icon.icon-warning { background: #f59e0b; }
-.activity-icon.icon-info { background: var(--info); }
-.activity-icon.icon-primary { background: var(--primary); }
+.activity-item:hover .activity-icon { transform: scale(1.06); }
 
-.activity-content { flex: 1; min-width: 0; }
+.activity-icon.icon-success {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.12);
+}
+.activity-icon.icon-danger {
+  background: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
+}
+.activity-icon.icon-warning {
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
+}
+.activity-icon.icon-info {
+  background: #06b6d4;
+  box-shadow: 0 0 0 3px rgba(6,182,212,0.12);
+}
+.activity-icon.icon-primary {
+  background: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+
+.activity-content { flex: 1; min-width: 0; padding-top: 1px; }
 
 .activity-title {
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 2px;
-}
-
-.activity-description {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-bottom: 2px;
+  margin-bottom: 1px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.activity-description {
+  font-size: 0.765rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.45;
 }
 
 .activity-time {
-  font-size: 0.7rem;
-  color: var(--text-light);
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 0.67rem;
+  font-weight: 500;
+  color: var(--text-light, #9ca3af);
+  letter-spacing: 0.025em;
+}
+
+.empty-activities {
+  text-align: center;
+  padding: 36px 20px;
+  color: var(--text-muted);
 }
 
 .quick-actions {
@@ -461,25 +612,47 @@
 
     {{-- Graphiques + Activites --}}
     <div class="main-charts" style="display: grid; grid-template-columns: 3fr 2fr; gap: 24px; margin-bottom: 24px;">
+
         {{-- Graphique conges/absences par mois --}}
         <div class="chart-card">
-            <div class="chart-header">
-                <h2 class="chart-title">Conges & Absences par mois ({{ $annee }})</h2>
-            </div>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chartCongesAbsences"></canvas>
+            <div class="chart-top-bar"></div>
+            <div class="chart-card-inner">
+                <div class="chart-header">
+                    <div class="chart-title-block">
+                        <h2 class="chart-title">Congés & Absences</h2>
+                        <div class="chart-subtitle">Évolution mensuelle &mdash; {{ $annee }}</div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-pill legend-pill-blue">
+                            <div class="legend-dot" style="background: #3b82f6;"></div>
+                            Congés
+                        </div>
+                        <div class="legend-pill legend-pill-amber">
+                            <div class="legend-dot" style="background: #f59e0b;"></div>
+                            Absences
+                        </div>
+                    </div>
+                </div>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="chartCongesAbsences"></canvas>
+                </div>
             </div>
         </div>
 
         {{-- Activites recentes --}}
         <div class="recent-activities">
-            <h2 class="chart-title" style="margin-bottom: 16px;">Activites recentes</h2>
+            <div class="activities-header">
+                <h2 class="chart-title">Activités récentes</h2>
+                @if($activitesRecentes->count() > 0)
+                    <span class="activities-count">{{ $activitesRecentes->count() }}</span>
+                @endif
+            </div>
             <div class="activity-list">
                 @forelse($activitesRecentes as $activite)
                     <div class="activity-item">
                         <div class="activity-icon icon-{{ $activite['icon'] }}">
                             @if($activite['type'] === 'conge')
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     @if($activite['icon'] === 'success')
                                         <polyline points="20 6 9 17 4 12"></polyline>
                                     @else
@@ -488,25 +661,25 @@
                                     @endif
                                 </svg>
                             @elseif($activite['type'] === 'demande_conge')
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                     <line x1="16" y1="2" x2="16" y2="6"></line>
                                     <line x1="8" y1="2" x2="8" y2="6"></line>
                                     <line x1="3" y1="10" x2="21" y2="10"></line>
                                 </svg>
                             @elseif($activite['type'] === 'absence')
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <line x1="12" y1="8" x2="12" y2="12"></line>
                                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                                 </svg>
                             @elseif($activite['type'] === 'bulletin')
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
                                     <polyline points="14 2 14 8 20 8"></polyline>
                                 </svg>
                             @elseif($activite['type'] === 'personnel')
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="8.5" cy="7" r="4"></circle>
                                     <line x1="20" y1="8" x2="20" y2="14"></line>
@@ -517,16 +690,16 @@
                         <div class="activity-content">
                             <div class="activity-title">{{ $activite['titre'] }}</div>
                             <div class="activity-description">{{ $activite['description'] }}</div>
-                            <div class="activity-time">{{ $activite['date']->diffForHumans() }}</div>
+                            <span class="activity-time">{{ $activite['date']->diffForHumans() }}</span>
                         </div>
                     </div>
                 @empty
                     <div class="empty-activities">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 10px; opacity: 0.4;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 10px; opacity: 0.35;">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             <line x1="3" y1="9" x2="21" y2="9"></line>
                         </svg>
-                        <p>Aucune activite recente</p>
+                        <p style="font-size: 0.85rem;">Aucune activité récente</p>
                     </div>
                 @endforelse
             </div>
@@ -535,8 +708,13 @@
 
     {{-- Resume annuel --}}
     <div class="chart-card">
-        <div class="chart-header">
-            <h2 class="chart-title">Resume annuel {{ $annee }}</h2>
+        <div class="chart-top-bar"></div>
+        <div class="chart-card-inner">
+        <div class="chart-header" style="margin-bottom: 16px;">
+            <div class="chart-title-block">
+                <h2 class="chart-title">Résumé annuel</h2>
+                <div class="chart-subtitle">Données consolidées — {{ $annee }}</div>
+            </div>
         </div>
         <div class="summary-grid">
             <div class="summary-item">
@@ -564,6 +742,7 @@
                 <div class="value">{{ $totalEntreprises }}</div>
             </div>
         </div>
+        </div>{{-- /chart-card-inner --}}
     </div>
 </div>
 @endsection
@@ -572,82 +751,110 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('chartCongesAbsences');
-    if (!ctx) return;
+    const canvas = document.getElementById('chartCongesAbsences');
+    if (!canvas) return;
 
-    const moisLabels = @json($moisLabels);
-    const congesData = @json($congesParMois);
+    const moisLabels  = @json($moisLabels);
+    const congesData  = @json($congesParMois);
     const absencesData = @json($absencesParMois);
 
-    // Detecter le theme
-    const style = getComputedStyle(document.documentElement);
-    const textColor = style.getPropertyValue('--text-muted').trim() || '#6b7280';
-    const gridColor = style.getPropertyValue('--card-border').trim() || '#e5e7eb';
+    const style     = getComputedStyle(document.documentElement);
+    const textColor = style.getPropertyValue('--text-muted').trim()   || '#6b7280';
+    const gridColor = style.getPropertyValue('--card-border').trim()  || '#e5e7eb';
 
-    new Chart(ctx, {
+    const canvasCtx = canvas.getContext('2d');
+
+    // Gradient fills — fade from solid top to transparent bottom
+    const congeGrad = canvasCtx.createLinearGradient(0, 0, 0, 280);
+    congeGrad.addColorStop(0,   'rgba(59, 130, 246, 0.82)');
+    congeGrad.addColorStop(1,   'rgba(59, 130, 246, 0.18)');
+
+    const absenceGrad = canvasCtx.createLinearGradient(0, 0, 0, 280);
+    absenceGrad.addColorStop(0, 'rgba(245, 158, 11, 0.82)');
+    absenceGrad.addColorStop(1, 'rgba(245, 158, 11, 0.18)');
+
+    new Chart(canvas, {
         type: 'bar',
         data: {
             labels: moisLabels,
             datasets: [
                 {
-                    label: 'Conges approuves',
+                    label: 'Congés approuvés',
                     data: congesData,
-                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                    borderColor: 'rgba(59, 130, 246, 1)',
+                    backgroundColor: congeGrad,
+                    borderColor: 'rgba(59, 130, 246, 0.9)',
                     borderWidth: 1,
-                    borderRadius: 4,
+                    borderRadius: 5,
+                    borderSkipped: false,
                 },
                 {
                     label: 'Absences',
                     data: absencesData,
-                    backgroundColor: 'rgba(245, 158, 11, 0.7)',
-                    borderColor: 'rgba(245, 158, 11, 1)',
+                    backgroundColor: absenceGrad,
+                    borderColor: 'rgba(245, 158, 11, 0.9)',
                     borderWidth: 1,
-                    borderRadius: 4,
+                    borderRadius: 5,
+                    borderSkipped: false,
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            interaction: {
-                intersect: false,
-                mode: 'index',
-            },
+            interaction: { intersect: false, mode: 'index' },
             plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        color: textColor,
-                        usePointStyle: true,
-                        pointStyle: 'rectRounded',
-                        padding: 16,
-                        font: { size: 12, weight: '600' }
-                    }
-                },
+                legend: { display: false },   // custom pills used instead
                 tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleFont: { size: 13, weight: '600' },
+                    backgroundColor: 'rgba(12, 22, 40, 0.95)',
+                    titleColor: '#e2e8f0',
+                    bodyColor: '#94a3b8',
+                    borderColor: 'rgba(148,163,184,0.15)',
+                    borderWidth: 1,
+                    padding: 14,
+                    cornerRadius: 10,
+                    titleFont: { size: 12, weight: '700' },
                     bodyFont: { size: 12 },
-                    padding: 12,
-                    cornerRadius: 8,
+                    boxWidth: 9,
+                    boxHeight: 9,
+                    boxPadding: 4,
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded',
+                    callbacks: {
+                        title: function(items) {
+                            return items[0]?.label || '';
+                        }
+                    }
                 }
             },
             scales: {
                 x: {
                     grid: { display: false },
-                    ticks: { color: textColor, font: { size: 11 } }
+                    border: { display: false },
+                    ticks: {
+                        color: textColor,
+                        font: { size: 11, weight: '500' },
+                        maxRotation: 0,
+                    }
                 },
                 y: {
                     beginAtZero: true,
-                    grid: { color: gridColor },
+                    grid: {
+                        color: gridColor,
+                        drawBorder: false,
+                    },
+                    border: { display: false, dash: [4, 4] },
                     ticks: {
                         color: textColor,
                         font: { size: 11 },
                         stepSize: 1,
-                        precision: 0
+                        precision: 0,
+                        padding: 8,
                     }
                 }
+            },
+            animation: {
+                duration: 600,
+                easing: 'easeOutQuart',
             }
         }
     });

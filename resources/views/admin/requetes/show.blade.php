@@ -216,13 +216,13 @@
   background: rgba(59,130,246,0.07);
   border: 1px solid rgba(59,130,246,0.15);
   color: var(--text-primary);
-  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
 }
 .msg-bubble.admin {
   background: rgba(16,185,129,0.07);
   border: 1px solid rgba(16,185,129,0.15);
   color: var(--text-primary);
-  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
 }
 
 /* ── Divider ── */
@@ -437,7 +437,7 @@
         <div class="thread-inner">
 
             {{-- Message initial du chef --}}
-            <div class="msg-row right">
+            <div class="msg-row">
                 <div class="msg-avatar chef">{{ strtoupper(substr($requete->user->name ?? 'C', 0, 1)) }}</div>
                 <div class="msg-content">
                     <div class="msg-name-time">
@@ -456,10 +456,10 @@
             @endif
 
             @php $isAdmin = $msg->isFromAdmin(); @endphp
-            <div class="msg-row {{ $isAdmin ? '' : 'right' }}">
+            <div class="msg-row {{ $isAdmin ? 'right' : '' }}">
                 <div class="msg-avatar {{ $isAdmin ? 'admin' : 'chef' }}">
                     @if($isAdmin)
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     @else
                         {{ strtoupper(substr($msg->user->name ?? 'C', 0, 1)) }}
                     @endif
@@ -467,7 +467,7 @@
                 <div class="msg-content">
                     <div class="msg-name-time">
                         <strong style="color: var(--text-primary);">
-                            {{ $isAdmin ? 'Support Portail RH+' : $msg->user->name }}
+                            {{ $isAdmin ? 'Vous' : $msg->user->name }}
                         </strong>
                         <span>{{ $msg->created_at->format('d/m/Y à H\hi') }}</span>
                     </div>

@@ -137,7 +137,7 @@ class TwoFactorController extends Controller
             session(['2fa_verified' => true]);
 
             // Rediriger selon le rôle
-            if ($user->hasRole('Super Admin')) {
+            if ($user->hasRole(['Super Admin', 'Admin', 'RH', 'Manager', "Chef d'Entreprise"])) {
                 return redirect()->route('admin.dashboard');
             }
 

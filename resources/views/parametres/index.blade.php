@@ -450,7 +450,7 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ route('roles.index') }}" class="card-link">
+                        <a href="{{ route('admin.roles.index') }}" class="card-link">
                             Gérer les rôles
                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                         </a>

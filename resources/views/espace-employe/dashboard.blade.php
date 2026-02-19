@@ -1393,7 +1393,7 @@
                     <span id="greetingLabel">Bienvenue</span>
                 </div>
                 <h2 class="ee-welcome-title">
-                    <span class="ee-welcome-title-prefix">Bonjour,</span>
+                    <span class="ee-welcome-title-prefix" id="greetingPrefix">Bonjour,</span>
                     <span class="ee-welcome-title-name">{{ $personnel ? $personnel->prenoms : auth()->user()->name }}</span>
                 </h2>
                 <div class="ee-welcome-divider"></div>
@@ -1756,12 +1756,16 @@
     // Dynamic greeting based on time of day
     function initDashboard() {
         const hour = new Date().getHours();
+        let greeting, prefix;
+        if (hour < 12)       { greeting = 'Bonjour';        prefix = 'Bonjour,'; }
+        else if (hour < 18)  { greeting = 'Bon après-midi'; prefix = 'Bon après-midi,'; }
+        else                 { greeting = 'Bonsoir';        prefix = 'Bonsoir,'; }
+
         const greetingEl = document.getElementById('greetingLabel');
-        if (greetingEl) {
-            if (hour < 12) greetingEl.textContent = 'Bonjour';
-            else if (hour < 18) greetingEl.textContent = 'Bon après-midi';
-            else greetingEl.textContent = 'Bonsoir';
-        }
+        if (greetingEl) greetingEl.textContent = greeting;
+
+        const prefixEl = document.getElementById('greetingPrefix');
+        if (prefixEl) prefixEl.textContent = prefix;
 
         const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
         const dayNameEl = document.getElementById('dayName');

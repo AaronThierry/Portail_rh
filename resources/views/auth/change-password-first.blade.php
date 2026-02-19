@@ -4,160 +4,245 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Changement de mot de passe requis - Portail RH</title>
+    <title>Sécurisez votre compte — Portail RH+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy:       #070D1A;
+            --navy-card:  #0C1628;
+            --navy-input: #0A1422;
+            --navy-mid:   #111D35;
+            --gold:       #C9A96E;
+            --gold-light: #E2C78A;
+            --gold-dim:   #9A7A4E;
+            --text:       #F0EDE8;
+            --text-muted: rgba(240,237,232,0.45);
+            --text-sub:   rgba(240,237,232,0.65);
+            --border:     rgba(201,169,110,0.15);
+            --border-faint: rgba(255,255,255,0.06);
+            --danger:     #F87171;
         }
 
+        html { height: 100%; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--navy);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px 16px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .container {
+        /* Geometric grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(201,169,110,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(201,169,110,0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Radial glow */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(201,169,110,0.055) 0%, transparent 68%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Card ── */
+        .vault-card {
+            position: relative;
+            z-index: 1;
             width: 100%;
-            max-width: 500px;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 460px;
+            background: var(--navy-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
             overflow: hidden;
-            animation: slideUp 0.5s ease;
+            animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px 30px;
-            text-align: center;
-            color: white;
+        /* Gold top stripe */
+        .vault-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 80%, var(--gold-dim) 100%);
         }
 
-        .lock-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
+        /* ── Header ── */
+        .vh-header {
+            padding: 40px 44px 32px;
+            border-bottom: 1px solid var(--border-faint);
+        }
+
+        .vh-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .vh-brand-icon {
+            width: 34px;
+            height: 34px;
+            background: var(--gold);
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            flex-shrink: 0;
         }
 
-        .lock-icon svg {
-            width: 40px;
-            height: 40px;
+        .vh-brand-icon svg { width: 16px; height: 16px; stroke: var(--navy-card); }
+
+        .vh-brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--text);
+        }
+        .vh-brand-name span { color: var(--gold); }
+
+        .vh-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(201,169,110,0.1);
+            border: 1px solid rgba(201,169,110,0.25);
+            padding: 4px 12px;
+            border-radius: 3px;
+            margin-bottom: 18px;
         }
 
-        .card-header h1 {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        .vh-badge-dot {
+            width: 5px;
+            height: 5px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: pulse 2.2s ease-in-out infinite;
         }
 
-        .card-header p {
-            font-size: 16px;
-            opacity: 0.95;
-            line-height: 1.5;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
         }
 
-        .card-body {
-            padding: 40px 30px;
+        .vh-badge span {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
         }
 
-        .alert {
-            padding: 16px 20px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            font-size: 15px;
-            line-height: 1.5;
+        .vh-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 34px;
+            font-weight: 400;
+            color: var(--text);
+            line-height: 1.18;
+            letter-spacing: -0.3px;
+            margin-bottom: 12px;
         }
 
-        .alert-warning {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
-            border-left: 4px solid #f59e0b;
-            color: #92400e;
+        .vh-subtitle {
+            font-size: 13.5px;
+            color: var(--text-sub);
+            line-height: 1.65;
         }
 
-        .alert-info {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
-            border-left: 4px solid #3b82f6;
-            color: #1e40af;
+        /* ── Body ── */
+        .vh-body {
+            padding: 32px 44px 36px;
         }
 
-        .alert-error {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
-            border-left: 4px solid #ef4444;
-            color: #991b1b;
-        }
-
-        .form-group {
+        .vh-alert {
+            padding: 13px 16px;
+            border-radius: 3px;
+            font-size: 13px;
+            line-height: 1.55;
             margin-bottom: 24px;
         }
+        .vh-alert.warn {
+            background: rgba(251,191,36,0.06);
+            border-left: 2px solid #FBBF24;
+            color: #FCD34D;
+        }
+        .vh-alert.err {
+            background: rgba(248,113,113,0.06);
+            border-left: 2px solid var(--danger);
+            color: var(--danger);
+        }
 
-        .form-label {
+        .vh-group { margin-bottom: 22px; }
+
+        .vh-label {
             display: block;
-            font-size: 15px;
-            font-weight: 700;
-            color: #334155;
-            margin-bottom: 10px;
-            letter-spacing: 0.3px;
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 9px;
         }
 
-        .form-label.required::after {
-            content: '*';
-            color: #ef4444;
-            margin-left: 6px;
-        }
+        .vh-input-wrap { position: relative; }
 
-        .input-wrapper {
-            position: relative;
-        }
-
-        .form-input {
+        .vh-input {
             width: 100%;
-            padding: 14px 48px 14px 18px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #f8fafc;
-        }
-
-        .form-input:focus {
+            padding: 13px 46px 13px 16px;
+            background: var(--navy-input);
+            border: 1px solid var(--border-faint);
+            border-bottom: 1px solid rgba(201,169,110,0.2);
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--text);
             outline: none;
-            border-color: #667eea;
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .vh-input::placeholder {
+            color: var(--text-muted);
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+        }
+        .vh-input:focus {
+            border-color: rgba(201,169,110,0.5);
+            box-shadow: 0 0 0 3px rgba(201,169,110,0.07), inset 0 0 0 1px rgba(201,169,110,0.1);
+        }
+        .vh-input.is-error {
+            border-color: rgba(248,113,113,0.5);
+            box-shadow: 0 0 0 3px rgba(248,113,113,0.05);
         }
 
-        .form-input.error {
-            border-color: #ef4444;
-            background: rgba(239, 68, 68, 0.05);
-        }
-
-        .toggle-password {
+        .vh-eye {
             position: absolute;
             right: 14px;
             top: 50%;
@@ -165,310 +250,435 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #64748b;
-            padding: 8px;
-            transition: color 0.2s ease;
+            color: var(--text-muted);
+            padding: 6px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
         }
+        .vh-eye:hover { color: var(--gold); }
+        .vh-eye svg { width: 16px; height: 16px; }
 
-        .toggle-password:hover {
-            color: #667eea;
-        }
-
-        .error-message {
-            color: #ef4444;
-            font-size: 13px;
+        .vh-field-error {
+            font-size: 12px;
+            color: var(--danger);
             margin-top: 6px;
             display: none;
         }
+        .vh-field-error.show { display: block; }
 
-        .error-message.show {
-            display: block;
+        /* Strength meter */
+        .vh-strength { margin-top: 12px; display: none; }
+        .vh-strength.visible { display: block; }
+
+        .vh-strength-bar-wrap {
+            height: 3px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        .vh-strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            transition: width 0.35s ease, background-color 0.35s ease;
+        }
+        .vh-strength-label {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            transition: color 0.3s;
         }
 
-        .password-requirements {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 30px;
+        /* Requirements list */
+        .vh-reqs {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-faint);
+            border-radius: 3px;
+            padding: 16px 18px;
+            margin-bottom: 28px;
         }
-
-        .password-requirements h3 {
-            font-size: 15px;
-            font-weight: 700;
-            color: #334155;
+        .vh-reqs-title {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
             margin-bottom: 12px;
         }
-
-        .password-requirements ul {
-            list-style: none;
-            padding: 0;
+        .vh-req-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            transition: color 0.25s;
         }
-
-        .password-requirements li {
-            font-size: 14px;
-            color: #64748b;
-            padding: 6px 0;
-            padding-left: 25px;
-            position: relative;
+        .vh-req-item:last-child { margin-bottom: 0; }
+        .req-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.25s, border-color 0.25s;
         }
-
-        .password-requirements li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #10b981;
-            font-weight: bold;
+        .req-icon svg {
+            width: 9px;
+            height: 9px;
+            stroke: transparent;
+            transition: stroke 0.25s;
         }
+        .vh-req-item.valid { color: var(--text-sub); }
+        .vh-req-item.valid .req-icon {
+            background: rgba(201,169,110,0.18);
+            border-color: rgba(201,169,110,0.4);
+        }
+        .vh-req-item.valid .req-icon svg { stroke: var(--gold); }
 
-        .btn {
+        /* Submit button */
+        .vh-submit {
             width: 100%;
-            padding: 16px;
+            padding: 15px 24px;
+            background: var(--gold);
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 30px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .logout-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .logout-link a {
-            color: #667eea;
-            text-decoration: none;
+            border-radius: 3px;
+            font-family: 'Outfit', sans-serif;
             font-size: 14px;
             font-weight: 600;
-            transition: color 0.2s ease;
+            color: var(--navy-card);
+            letter-spacing: 0.4px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-
-        .logout-link a:hover {
-            color: #764ba2;
-            text-decoration: underline;
+        .vh-submit::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+            transform: translateX(-100%);
+            transition: transform 0.5s;
         }
+        .vh-submit:hover {
+            background: var(--gold-light);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(201,169,110,0.25);
+        }
+        .vh-submit:hover::after { transform: translateX(100%); }
+        .vh-submit:active { transform: translateY(0); }
+        .vh-submit:disabled {
+            background: rgba(201,169,110,0.3);
+            color: rgba(7,13,26,0.45);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .vh-submit svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--navy-card);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .vh-submit:hover:not(:disabled) svg { transform: translateX(2px); }
 
-        @media (max-width: 600px) {
-            .card-header {
-                padding: 30px 20px;
-            }
+        /* Footer */
+        .vh-footer {
+            padding: 0 44px 32px;
+            text-align: center;
+        }
+        .vh-logout-link {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .vh-logout-link:hover { color: var(--text-sub); }
 
-            .card-body {
-                padding: 30px 20px;
+        @media (max-width: 520px) {
+            .vh-header, .vh-body, .vh-footer {
+                padding-left: 24px;
+                padding-right: 24px;
             }
-
-            .card-header h1 {
-                font-size: 24px;
-            }
+            .vh-title { font-size: 28px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <div class="lock-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                </div>
-                <h1>Changement de mot de passe requis</h1>
-                <p>Pour votre sécurité, vous devez changer votre mot de passe temporaire avant de continuer</p>
+
+<div class="vault-card">
+
+    {{-- Header --}}
+    <div class="vh-header">
+        <div class="vh-brand">
+            <div class="vh-brand-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
             </div>
-
-            <div class="card-body">
-                @if(session('info'))
-                <div class="alert alert-info">
-                    {{ session('info') }}
-                </div>
-                @endif
-
-                @if(session('warning'))
-                <div class="alert alert-warning">
-                    ⚠️ {{ session('warning') }}
-                </div>
-                @endif
-
-                @if($errors->any())
-                <div class="alert alert-error">
-                    <strong>Erreur :</strong>
-                    <ul style="margin-top: 8px; padding-left: 20px;">
-                        @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
-
-                <form action="{{ route('password.update-first') }}" method="POST" id="passwordForm">
-                    @csrf
-
-                    <div class="form-group">
-                        <label for="current_password" class="form-label required">Mot de passe actuel (temporaire)</label>
-                        <div class="input-wrapper">
-                            <input type="password" id="current_password" name="current_password" class="form-input" required autofocus>
-                            <button type="button" class="toggle-password" onclick="togglePassword('current_password')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle class="eye-open" cx="12" cy="12" r="3"></circle>
-                                    <path class="eye-closed" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" style="display:none;"></path>
-                                    <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" style="display:none;"></line>
-                                </svg>
-                            </button>
-                        </div>
-                        <span class="error-message" id="error-current_password"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="new_password" class="form-label required">Nouveau mot de passe</label>
-                        <div class="input-wrapper">
-                            <input type="password" id="new_password" name="new_password" class="form-input" required>
-                            <button type="button" class="toggle-password" onclick="togglePassword('new_password')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle class="eye-open" cx="12" cy="12" r="3"></circle>
-                                    <path class="eye-closed" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" style="display:none;"></path>
-                                    <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" style="display:none;"></line>
-                                </svg>
-                            </button>
-                        </div>
-                        <span class="error-message" id="error-new_password"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="new_password_confirmation" class="form-label required">Confirmer le nouveau mot de passe</label>
-                        <div class="input-wrapper">
-                            <input type="password" id="new_password_confirmation" name="new_password_confirmation" class="form-input" required>
-                            <button type="button" class="toggle-password" onclick="togglePassword('new_password_confirmation')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle class="eye-open" cx="12" cy="12" r="3"></circle>
-                                    <path class="eye-closed" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" style="display:none;"></path>
-                                    <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" style="display:none;"></line>
-                                </svg>
-                            </button>
-                        </div>
-                        <span class="error-message" id="error-new_password_confirmation"></span>
-                    </div>
-
-                    <div class="password-requirements">
-                        <h3>🔒 Exigences du mot de passe</h3>
-                        <ul>
-                            <li>Au moins 8 caractères</li>
-                            <li>Contenir des lettres majuscules et minuscules</li>
-                            <li>Contenir au moins un chiffre</li>
-                            <li>Contenir au moins un caractère spécial</li>
-                            <li>Être différent de votre mot de passe actuel</li>
-                        </ul>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                        Changer mon mot de passe
-                    </button>
-                </form>
-
-                <div class="logout-link">
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        Me déconnecter
-                    </a>
-                </div>
-
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </div>
+            <div class="vh-brand-name">Portail <span>RH+</span></div>
         </div>
+
+        <div class="vh-badge">
+            <div class="vh-badge-dot"></div>
+            <span>Sécurité &mdash; Première connexion</span>
+        </div>
+
+        <h1 class="vh-title">Sécurisez<br><em>votre compte</em></h1>
+        <p class="vh-subtitle">
+            Vous utilisez un mot de passe temporaire. Définissez votre mot de passe permanent pour accéder à votre espace.
+        </p>
     </div>
 
-    <script>
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const button = field.nextElementSibling;
-            const eyeOpen = button.querySelectorAll('.eye-open');
-            const eyeClosed = button.querySelectorAll('.eye-closed');
+    {{-- Body --}}
+    <div class="vh-body">
 
-            if (field.type === 'password') {
-                field.type = 'text';
-                eyeOpen.forEach(el => el.style.display = 'none');
-                eyeClosed.forEach(el => el.style.display = 'block');
-            } else {
-                field.type = 'password';
-                eyeOpen.forEach(el => el.style.display = 'block');
-                eyeClosed.forEach(el => el.style.display = 'none');
-            }
-        }
+        @if(session('warning'))
+        <div class="vh-alert warn">{{ session('warning') }}</div>
+        @endif
 
-        // Validation du formulaire
-        document.getElementById('passwordForm').addEventListener('submit', function(e) {
-            let isValid = true;
+        @if($errors->any())
+        <div class="vh-alert err">
+            @foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach
+        </div>
+        @endif
 
-            // Réinitialiser les erreurs
-            document.querySelectorAll('.error-message').forEach(el => {
-                el.classList.remove('show');
-                el.textContent = '';
-            });
-            document.querySelectorAll('.form-input').forEach(el => {
-                el.classList.remove('error');
-            });
+        <form action="{{ route('password.update-first') }}" method="POST" id="vaultForm" novalidate>
+            @csrf
 
-            // Valider les champs
-            const currentPassword = document.getElementById('current_password');
-            const newPassword = document.getElementById('new_password');
-            const confirmPassword = document.getElementById('new_password_confirmation');
+            {{-- Nouveau mot de passe --}}
+            <div class="vh-group">
+                <label for="new_password" class="vh-label">Nouveau mot de passe</label>
+                <div class="vh-input-wrap">
+                    <input type="password" id="new_password" name="new_password"
+                           class="vh-input @error('new_password') is-error @enderror"
+                           placeholder="Minimum 8 caractères"
+                           autocomplete="new-password"
+                           autofocus required>
+                    <button type="button" class="vh-eye" onclick="togglePwd('new_password', this)" aria-label="Afficher">
+                        <svg id="eye-np-show" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <svg id="eye-np-hide" style="display:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                        </svg>
+                    </button>
+                </div>
+                <span class="vh-field-error @error('new_password') show @enderror" id="err-np">
+                    @error('new_password'){{ $message }}@enderror
+                </span>
 
-            if (!currentPassword.value) {
-                showError('current_password', 'Le mot de passe actuel est requis');
-                isValid = false;
-            }
+                <div class="vh-strength" id="strengthWrap">
+                    <div class="vh-strength-bar-wrap">
+                        <div class="vh-strength-bar" id="strengthBar"></div>
+                    </div>
+                    <span class="vh-strength-label" id="strengthLabel"></span>
+                </div>
+            </div>
 
-            if (!newPassword.value) {
-                showError('new_password', 'Le nouveau mot de passe est requis');
-                isValid = false;
-            } else if (newPassword.value.length < 8) {
-                showError('new_password', 'Le mot de passe doit contenir au moins 8 caractères');
-                isValid = false;
-            }
+            {{-- Confirmation --}}
+            <div class="vh-group">
+                <label for="new_password_confirmation" class="vh-label">Confirmer le mot de passe</label>
+                <div class="vh-input-wrap">
+                    <input type="password" id="new_password_confirmation" name="new_password_confirmation"
+                           class="vh-input"
+                           placeholder="Retapez votre mot de passe"
+                           autocomplete="new-password"
+                           required>
+                    <button type="button" class="vh-eye" onclick="togglePwd('new_password_confirmation', this)" aria-label="Afficher">
+                        <svg id="eye-nc-show" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <svg id="eye-nc-hide" style="display:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                        </svg>
+                    </button>
+                </div>
+                <span class="vh-field-error" id="err-nc"></span>
+            </div>
 
-            if (!confirmPassword.value) {
-                showError('new_password_confirmation', 'Veuillez confirmer le mot de passe');
-                isValid = false;
-            } else if (newPassword.value !== confirmPassword.value) {
-                showError('new_password_confirmation', 'Les mots de passe ne correspondent pas');
-                isValid = false;
-            }
+            {{-- Requirements checklist --}}
+            <div class="vh-reqs">
+                <div class="vh-reqs-title">Règles du mot de passe</div>
 
-            if (!isValid) {
-                e.preventDefault();
-            }
-        });
+                <div class="vh-req-item" id="req-length">
+                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <span>Au moins 8 caractères</span>
+                </div>
+                <div class="vh-req-item" id="req-upper">
+                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <span>Une lettre majuscule</span>
+                </div>
+                <div class="vh-req-item" id="req-lower">
+                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <span>Une lettre minuscule</span>
+                </div>
+                <div class="vh-req-item" id="req-digit">
+                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <span>Un chiffre</span>
+                </div>
+                <div class="vh-req-item" id="req-special">
+                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <span>Un caractère spécial (@, #, !, &hellip;)</span>
+                </div>
+            </div>
 
-        function showError(fieldId, message) {
-            const field = document.getElementById(fieldId);
-            const error = document.getElementById('error-' + fieldId);
-            field.classList.add('error');
-            error.textContent = message;
-            error.classList.add('show');
-        }
-    </script>
+            {{-- Submit --}}
+            <button type="submit" class="vh-submit" id="submitBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Définir mon mot de passe permanent
+            </button>
+        </form>
+    </div>
+
+    {{-- Footer --}}
+    <div class="vh-footer">
+        <a href="{{ route('logout') }}"
+           class="vh-logout-link"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            Me déconnecter
+        </a>
+    </div>
+
+</div>
+
+<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
+
+<script>
+/* Toggle visibility */
+function togglePwd(fieldId, btn) {
+    const input = document.getElementById(fieldId);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    // show/hide icons for new_password
+    if (fieldId === 'new_password') {
+        document.getElementById('eye-np-show').style.display = isHidden ? 'none' : '';
+        document.getElementById('eye-np-hide').style.display = isHidden ? '' : 'none';
+    } else {
+        document.getElementById('eye-nc-show').style.display = isHidden ? 'none' : '';
+        document.getElementById('eye-nc-hide').style.display = isHidden ? '' : 'none';
+    }
+}
+
+/* Strength calculator */
+const STRENGTH_COLORS = ['#EF4444','#F97316','#EAB308','#84CC16','#C9A96E','#E2C78A'];
+const STRENGTH_LABELS = ['Très faible','Faible','Moyen','Bien','Fort','Excellent'];
+
+function calcScore(pwd) {
+    let s = 0;
+    if (pwd.length >= 8)            s++;
+    if (pwd.length >= 12)           s++;
+    if (/[A-Z]/.test(pwd))          s++;
+    if (/[a-z]/.test(pwd))          s++;
+    if (/\d/.test(pwd))             s++;
+    if (/[^A-Za-z0-9]/.test(pwd))   s++;
+    return s; // 0–6
+}
+
+const reqs = [
+    { id: 'req-length',  test: p => p.length >= 8 },
+    { id: 'req-upper',   test: p => /[A-Z]/.test(p) },
+    { id: 'req-lower',   test: p => /[a-z]/.test(p) },
+    { id: 'req-digit',   test: p => /\d/.test(p) },
+    { id: 'req-special', test: p => /[^A-Za-z0-9]/.test(p) },
+];
+
+const pwdInput  = document.getElementById('new_password');
+const confInput = document.getElementById('new_password_confirmation');
+const bar       = document.getElementById('strengthBar');
+const barLabel  = document.getElementById('strengthLabel');
+const sWrap     = document.getElementById('strengthWrap');
+
+function updateUI(val) {
+    if (!val) {
+        sWrap.classList.remove('visible');
+        reqs.forEach(r => document.getElementById(r.id).classList.remove('valid'));
+        return;
+    }
+    sWrap.classList.add('visible');
+    const score = calcScore(val);
+    bar.style.width           = Math.max((score / 6) * 100, 8) + '%';
+    bar.style.backgroundColor = STRENGTH_COLORS[Math.min(score, 5)];
+    barLabel.style.color      = STRENGTH_COLORS[Math.min(score, 5)];
+    barLabel.textContent      = STRENGTH_LABELS[Math.min(score, 5)];
+    reqs.forEach(r => document.getElementById(r.id).classList.toggle('valid', r.test(val)));
+}
+
+pwdInput.addEventListener('input', () => {
+    updateUI(pwdInput.value);
+    // clear error
+    pwdInput.classList.remove('is-error');
+    document.getElementById('err-np').classList.remove('show');
+    // re-check confirm match
+    if (confInput.value) checkConfirm();
+});
+
+function checkConfirm() {
+    const err = document.getElementById('err-nc');
+    if (confInput.value && pwdInput.value !== confInput.value) {
+        confInput.classList.add('is-error');
+        err.textContent = 'Les mots de passe ne correspondent pas';
+        err.classList.add('show');
+    } else {
+        confInput.classList.remove('is-error');
+        err.classList.remove('show');
+    }
+}
+
+confInput.addEventListener('input', checkConfirm);
+
+/* Form submit */
+document.getElementById('vaultForm').addEventListener('submit', function(e) {
+    let ok = true;
+
+    if (!pwdInput.value) {
+        pwdInput.classList.add('is-error');
+        const err = document.getElementById('err-np');
+        err.textContent = 'Le nouveau mot de passe est requis';
+        err.classList.add('show');
+        ok = false;
+    } else if (pwdInput.value.length < 8) {
+        pwdInput.classList.add('is-error');
+        const err = document.getElementById('err-np');
+        err.textContent = 'Minimum 8 caractères requis';
+        err.classList.add('show');
+        ok = false;
+    }
+
+    if (pwdInput.value && confInput.value && pwdInput.value !== confInput.value) {
+        confInput.classList.add('is-error');
+        const err = document.getElementById('err-nc');
+        err.textContent = 'Les mots de passe ne correspondent pas';
+        err.classList.add('show');
+        ok = false;
+    }
+
+    if (!ok) { e.preventDefault(); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Sécurisation en cours&hellip;`;
+});
+</script>
 </body>
 </html>

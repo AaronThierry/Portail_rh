@@ -753,10 +753,8 @@ class UserController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'current_password' => 'required',
             'new_password' => 'required|min:8|confirmed',
         ], [
-            'current_password.required' => 'Le mot de passe actuel est requis',
             'new_password.required' => 'Le nouveau mot de passe est requis',
             'new_password.min' => 'Le nouveau mot de passe doit contenir au moins 8 caractères',
             'new_password.confirmed' => 'La confirmation du mot de passe ne correspond pas',
@@ -766,17 +764,10 @@ class UserController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        // Vérifier que le mot de passe actuel est correct
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors([
-                'current_password' => 'Le mot de passe actuel est incorrect'
-            ])->withInput();
-        }
-
-        // Vérifier que le nouveau mot de passe est différent de l'ancien
+        // Vérifier que le nouveau mot de passe est différent du mot de passe temporaire
         if (Hash::check($request->new_password, $user->password)) {
             return back()->withErrors([
-                'new_password' => 'Le nouveau mot de passe doit être différent de l\'ancien'
+                'new_password' => 'Le nouveau mot de passe doit être différent de votre mot de passe temporaire.'
             ])->withInput();
         }
 

@@ -536,6 +536,7 @@
     @endif
 
 </div>
+@endsection
 
 @section('scripts')
 <script>

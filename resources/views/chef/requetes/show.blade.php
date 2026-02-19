@@ -525,5 +525,4 @@ if (replyForm && btnReply) {
     });
 }
 </script>
-@append
 @endsection

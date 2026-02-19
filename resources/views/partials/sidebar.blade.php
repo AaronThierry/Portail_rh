@@ -25,14 +25,22 @@
     </div>
 
     <!-- Quick Stats Panel (collapsed on hover) -->
+    @php
+        $sidebarQuery = \App\Models\Personnel::query();
+        if (!auth()->user()->hasRole('Super Admin') && auth()->user()->entreprise_id) {
+            $sidebarQuery->where('entreprise_id', auth()->user()->entreprise_id);
+        }
+        $personnelCount = $sidebarQuery->count();
+        $activeCount    = (clone $sidebarQuery)->actif()->count();
+    @endphp
     <div class="sidebar-quick-stats">
         <div class="quick-stat-item">
-            <span class="quick-stat-value">{{ $personnelCount ?? '0' }}</span>
+            <span class="quick-stat-value">{{ $personnelCount }}</span>
             <span class="quick-stat-label">Employés</span>
         </div>
         <div class="quick-stat-divider"></div>
         <div class="quick-stat-item">
-            <span class="quick-stat-value success">{{ $activeCount ?? '0' }}</span>
+            <span class="quick-stat-value success">{{ $activeCount }}</span>
             <span class="quick-stat-label">Actifs</span>
         </div>
     </div>

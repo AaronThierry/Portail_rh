@@ -12,7 +12,7 @@
 @section('styles')
 <style>
 /* ── Layout ── */
-.rq-show { padding: 8px 0 56px; max-width: 860px; display: flex; flex-direction: column; gap: 20px; }
+.rq-show { padding: 8px 0 56px; width: 100%; display: flex; flex-direction: column; gap: 20px; }
 
 /* ── Breadcrumb ── */
 .rq-bc { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-muted); }

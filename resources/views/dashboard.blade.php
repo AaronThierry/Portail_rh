@@ -665,7 +665,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="position: relative; flex: 1; min-height: 200px;">
+                <div style="position: relative; height: 260px;">
                     <canvas id="chartCongesAbsences"></canvas>
                 </div>
             </div>

@@ -7,6 +7,8 @@
 @endsection
 
 @section('styles')
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* ==================== DASHBOARD PREMIUM ==================== */
 .ee-dashboard {
@@ -17,43 +19,55 @@
 
 /* ==================== WELCOME BANNER ==================== */
 .ee-welcome-banner {
-    background: linear-gradient(135deg, var(--e-slate-900) 0%, #1a2744 50%, var(--e-slate-800) 100%);
+    background: #07111e;
     border-radius: var(--e-radius-xl);
-    padding: 2.5rem;
+    padding: 2.75rem 2.5rem;
     color: white;
     position: relative;
     overflow: hidden;
-    box-shadow: var(--e-shadow-lg);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.06);
 }
 
 .ee-welcome-banner::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--e-amber), #f59e0b, var(--e-amber));
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 5%, var(--e-amber) 35%, #f59e0b 65%, transparent 95%);
 }
 
-.ee-welcome-banner::after {
-    content: '';
+.ee-welcome-banner::after { content: none; }
+
+.ee-welcome-pattern { display: none; }
+
+/* Ambient glow blobs */
+.ee-wb-glow {
     position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 15% 85%, rgba(232, 133, 12, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 85% 15%, rgba(59, 125, 216, 0.08) 0%, transparent 50%);
+    border-radius: 50%;
+    filter: blur(72px);
     pointer-events: none;
+    will-change: transform;
 }
 
-.ee-welcome-pattern {
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-    background-size: 32px 32px;
-    pointer-events: none;
+.ee-wb-glow--amber {
+    width: 350px; height: 350px;
+    bottom: -130px; left: -70px;
+    background: radial-gradient(circle, rgba(232,133,12,0.22) 0%, transparent 65%);
+    animation: ee-glow-shift 16s ease-in-out infinite;
+}
+
+.ee-wb-glow--blue {
+    width: 420px; height: 420px;
+    top: -180px; right: -100px;
+    background: radial-gradient(circle, rgba(59,125,216,0.15) 0%, transparent 65%);
+    animation: ee-glow-shift 16s ease-in-out infinite reverse;
+    animation-delay: -8s;
+}
+
+@keyframes ee-glow-shift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(18px, -22px) scale(1.04); }
 }
 
 .ee-welcome-content {
@@ -62,118 +76,217 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
+    gap: 3rem;
 }
 
-.ee-welcome-left {
-    flex: 1;
-}
+.ee-welcome-left { flex: 1; min-width: 0; }
 
-.ee-welcome-greeting {
+/* Eyebrow */
+.ee-welcome-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 0.75rem;
-}
-
-.ee-welcome-greeting .wave {
-    font-size: 1.25rem;
-    animation: wave 2s ease-in-out infinite;
-    transform-origin: 70% 70%;
-}
-
-@keyframes wave {
-    0%, 100% { transform: rotate(0deg); }
-    10%, 30% { transform: rotate(14deg); }
-    20% { transform: rotate(-8deg); }
-    40% { transform: rotate(-4deg); }
-    50%, 100% { transform: rotate(0deg); }
-}
-
-.ee-welcome-title {
-    font-size: 2rem;
-    font-weight: 700;
-    font-family: var(--e-font-display);
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.5px;
-    line-height: 1.2;
-}
-
-.ee-welcome-title .highlight {
+    gap: 0.625rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
     color: var(--e-amber);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-family: 'DM Sans', sans-serif;
 }
 
-.ee-welcome-subtitle {
+.ee-wb-dot {
+    width: 6px; height: 6px;
+    background: var(--e-amber);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: ee-dot-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes ee-dot-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,133,12,0.5); }
+    50% { box-shadow: 0 0 0 5px rgba(232,133,12,0); }
+}
+
+/* Title */
+.ee-welcome-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 1.25rem;
+}
+
+.ee-welcome-title-prefix {
     font-size: 1rem;
-    color: rgba(255, 255, 255, 0.75);
-    max-width: 400px;
-    line-height: 1.6;
+    font-weight: 300;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.3px;
+    font-family: 'DM Sans', sans-serif;
 }
 
+.ee-welcome-title-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 3.25rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.5px;
+    background: linear-gradient(140deg, #ffffff 0%, rgba(255,255,255,0.82) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Divider */
+.ee-welcome-divider {
+    width: 44px;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--e-amber), rgba(232,133,12,0.05));
+    border-radius: 2px;
+    margin-bottom: 1.125rem;
+}
+
+/* Subtitle */
+.ee-welcome-subtitle {
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.42);
+    line-height: 1.75;
+    max-width: 390px;
+    margin-bottom: 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* Context tag */
+.ee-welcome-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.ee-welcome-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    color: rgba(255,255,255,0.5);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    padding: 0.4rem 0.875rem;
+    border-radius: 100px;
+    letter-spacing: 0.25px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.ee-welcome-tag svg { width: 11px; height: 11px; fill: none; color: var(--e-amber); }
+
+/* Right: premium date-time widget */
 .ee-welcome-right {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    flex-shrink: 0;
 }
 
-.ee-date-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 1.5rem 2rem;
-    border-radius: var(--e-radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+.ee-datetime-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 1.875rem 2.25rem;
     text-align: center;
-    min-width: 120px;
+    min-width: 205px;
+    position: relative;
+    overflow: hidden;
 }
 
-.ee-date-day {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1;
-    color: white;
+.ee-datetime-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 15%; right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
 }
 
-.ee-date-month {
-    font-size: 0.8125rem;
+.ee-dt-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.5625rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: 0.5rem;
+    letter-spacing: 2.5px;
+    color: rgba(255,255,255,0.32);
+    margin-bottom: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
 }
 
-.ee-date-year {
-    font-size: 0.6875rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 0.25rem;
-}
+.ee-dt-sep { color: var(--e-amber); }
 
-.ee-time-card {
-    background: rgba(255, 255, 255, 0.08);
-    padding: 1rem 1.25rem;
-    border-radius: var(--e-radius);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
-}
-
-.ee-time-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    font-family: 'SF Mono', 'Roboto Mono', monospace;
+.ee-dt-day {
+    font-family: 'DM Sans', var(--e-font-display);
+    font-size: 5.25rem;
+    font-weight: 200;
+    line-height: 1;
     color: white;
+    letter-spacing: -5px;
+    margin: 0.125rem 0;
 }
 
-.ee-time-label {
-    font-size: 0.6875rem;
-    color: rgba(255, 255, 255, 0.5);
+.ee-dt-month {
+    font-size: 0.625rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 0.25rem;
+    letter-spacing: 3.5px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 1rem;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.ee-dt-line {
+    width: 24px;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 0 auto 0.875rem;
+}
+
+.ee-dt-time {
+    font-family: 'DM Sans', monospace;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 3px;
+    margin-bottom: 1.25rem;
+}
+
+.ee-dt-seconds {
+    font-size: 0.875rem;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+}
+
+.ee-dt-progress {
+    height: 2px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 100px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.ee-dt-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--e-amber), #fbbf24);
+    border-radius: 100px;
+    box-shadow: 0 0 6px rgba(232,133,12,0.5);
+    transition: width 1s linear;
+}
+
+.ee-dt-label {
+    font-size: 0.5625rem;
+    color: rgba(255,255,255,0.22);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: 'DM Sans', sans-serif;
 }
 
 /* ==================== STATS GRID ==================== */
@@ -1044,17 +1157,39 @@
         text-align: center;
     }
 
+    .ee-welcome-eyebrow {
+        justify-content: center;
+    }
+
+    .ee-welcome-title {
+        align-items: center;
+    }
+
+    .ee-welcome-divider {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .ee-welcome-subtitle {
         max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .ee-welcome-tags {
+        justify-content: center;
     }
 
     .ee-welcome-right {
-        flex-direction: column;
         width: 100%;
     }
 
-    .ee-date-card {
+    .ee-datetime-card {
         width: 100%;
+    }
+
+    .ee-welcome-title-name {
+        font-size: 2.5rem;
     }
 
     .ee-stats-grid {
@@ -1063,10 +1198,6 @@
 
     .ee-actions-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-
-    .ee-welcome-title {
-        font-size: 1.5rem;
     }
 }
 
@@ -1077,6 +1208,15 @@
 
     .ee-welcome-banner {
         padding: 1.5rem;
+    }
+
+    .ee-welcome-title-name {
+        font-size: 2rem;
+    }
+
+    .ee-dt-day {
+        font-size: 4rem;
+        letter-spacing: -3px;
     }
 
     .ee-stat-card {
@@ -1244,29 +1384,46 @@
 <div class="ee-dashboard">
     <!-- Welcome Banner -->
     <div class="ee-welcome-banner animate-fade-in">
-        <div class="ee-welcome-pattern"></div>
+        <div class="ee-wb-glow ee-wb-glow--amber"></div>
+        <div class="ee-wb-glow ee-wb-glow--blue"></div>
         <div class="ee-welcome-content">
             <div class="ee-welcome-left">
-                <div class="ee-welcome-greeting">
-                    <span class="wave">👋</span>
-                    <span>Bienvenue dans votre espace</span>
+                <div class="ee-welcome-eyebrow">
+                    <span class="ee-wb-dot"></span>
+                    <span id="greetingLabel">Bienvenue</span>
                 </div>
                 <h2 class="ee-welcome-title">
-                    Bonjour, <span class="highlight">{{ $personnel ? $personnel->prenoms : auth()->user()->name }}</span> !
+                    <span class="ee-welcome-title-prefix">Bonjour,</span>
+                    <span class="ee-welcome-title-name">{{ $personnel ? $personnel->prenoms : auth()->user()->name }}</span>
                 </h2>
+                <div class="ee-welcome-divider"></div>
                 <p class="ee-welcome-subtitle">
-                    Consultez vos informations personnelles, vos documents et gerez vos demandes en toute simplicite.
+                    Consultez vos informations, gérez vos demandes<br>et accédez à vos documents en toute simplicité.
                 </p>
+                <div class="ee-welcome-tags">
+                    <span class="ee-welcome-tag" id="dayContextTag">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                        Espace personnel actif
+                    </span>
+                </div>
             </div>
             <div class="ee-welcome-right">
-                <div class="ee-date-card">
-                    <span class="ee-date-day">{{ now()->format('d') }}</span>
-                    <span class="ee-date-month">{{ now()->translatedFormat('F') }}</span>
-                    <span class="ee-date-year">{{ now()->format('Y') }}</span>
-                </div>
-                <div class="ee-time-card">
-                    <div class="ee-time-value" id="currentTime">--:--</div>
-                    <div class="ee-time-label">Heure actuelle</div>
+                <div class="ee-datetime-card">
+                    <div class="ee-dt-top">
+                        <span id="dayName">—</span>
+                        <span class="ee-dt-sep">·</span>
+                        <span>{{ now()->translatedFormat('F Y') }}</span>
+                    </div>
+                    <div class="ee-dt-day">{{ now()->format('d') }}</div>
+                    <div class="ee-dt-month">{{ now()->translatedFormat('F') }}</div>
+                    <div class="ee-dt-line"></div>
+                    <div class="ee-dt-time" id="currentTime">--:--<span class="ee-dt-seconds">:--</span></div>
+                    <div class="ee-dt-progress">
+                        <div class="ee-dt-progress-fill" id="dayProgressFill" style="width:0%"></div>
+                    </div>
+                    <div class="ee-dt-label" id="dayProgressLabel">Journée en cours</div>
                 </div>
             </div>
         </div>
@@ -1596,14 +1753,47 @@
 
 @section('scripts')
 <script>
-    // Update current time
-    function updateTime() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
+    // Dynamic greeting based on time of day
+    function initDashboard() {
+        const hour = new Date().getHours();
+        const greetingEl = document.getElementById('greetingLabel');
+        if (greetingEl) {
+            if (hour < 12) greetingEl.textContent = 'Bonjour';
+            else if (hour < 18) greetingEl.textContent = 'Bon après-midi';
+            else greetingEl.textContent = 'Bonsoir';
+        }
+
+        const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+        const dayNameEl = document.getElementById('dayName');
+        if (dayNameEl) dayNameEl.textContent = days[new Date().getDay()];
     }
 
+    function updateTime() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+
+        const timeEl = document.getElementById('currentTime');
+        if (timeEl) timeEl.innerHTML = `${h}:${m}<span class="ee-dt-seconds">:${s}</span>`;
+
+        // Day progress bar (6h → 23h range)
+        const totalMin = now.getHours() * 60 + now.getMinutes();
+        const start = 6 * 60, end = 23 * 60;
+        const pct = Math.min(100, Math.max(0, ((totalMin - start) / (end - start)) * 100));
+        const bar = document.getElementById('dayProgressFill');
+        if (bar) bar.style.width = pct.toFixed(1) + '%';
+
+        const label = document.getElementById('dayProgressLabel');
+        if (label) {
+            const rem = end - totalMin;
+            if (rem > 60) label.textContent = `${Math.floor(rem / 60)}h ${rem % 60}min restantes`;
+            else if (rem > 0) label.textContent = `${rem} min avant la fin de journée`;
+            else label.textContent = 'Bonne soirée !';
+        }
+    }
+
+    initDashboard();
     updateTime();
     setInterval(updateTime, 1000);
 </script>

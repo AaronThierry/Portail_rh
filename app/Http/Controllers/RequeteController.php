@@ -55,7 +55,7 @@ class RequeteController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'sujet'     => 'required|string|max:150',
             'categorie' => 'required|in:question,facturation,support,autre',
             'priorite'  => 'required|in:normale,urgente',
@@ -65,6 +65,13 @@ class RequeteController extends Controller
             'message.required'   => 'Le message est obligatoire.',
             'message.min'        => 'Le message doit contenir au moins 10 caractères.',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->route('admin.requetes.index')
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         $user = Auth::user();
 

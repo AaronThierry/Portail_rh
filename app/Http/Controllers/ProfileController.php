@@ -32,7 +32,7 @@ class ProfileController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'telephone' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|max:20',
         ], [
             'name.required' => 'Le nom est requis',
             'email.required' => 'L\'email est requis',
@@ -47,7 +47,7 @@ class ProfileController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'telephone' => $request->telephone,
+            'phone' => $request->phone,
         ]);
 
         return back()->with('success', 'Profil mis à jour avec succès');

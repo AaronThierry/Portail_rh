@@ -135,7 +135,7 @@
                             <div class="form-row">
                                 <div class="form-field">
                                     <label>Téléphone</label>
-                                    <input type="tel" name="telephone" value="{{ old('telephone', $user->telephone ?? '') }}" placeholder="+225 XX XX XX XX XX">
+                                    <input type="tel" name="phone" value="{{ old('phone', $user->phone ?? '') }}" placeholder="+225 XX XX XX XX XX">
                                 </div>
                             </div>
                             <button type="submit" class="btn-save">

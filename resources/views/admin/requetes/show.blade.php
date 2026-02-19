@@ -336,6 +336,88 @@
 }
 .back-btn:hover { border-color: #10b981; color: #10b981; background: rgba(16,185,129,0.04); }
 
+/* ── Confirm Modal ── */
+.confirm-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+.confirm-overlay.active { opacity: 1; visibility: visible; }
+.confirm-box {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  width: 420px;
+  max-width: 90vw;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  transform: scale(0.95) translateY(10px);
+  transition: transform 0.2s;
+}
+.confirm-overlay.active .confirm-box { transform: scale(1) translateY(0); }
+.confirm-icon-wrap {
+  display: flex; justify-content: center;
+  padding: 28px 24px 0;
+}
+.confirm-icon {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.15);
+  display: flex; align-items: center; justify-content: center;
+  color: #ef4444;
+}
+.confirm-body {
+  padding: 18px 28px 6px;
+  text-align: center;
+}
+.confirm-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.confirm-desc {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.confirm-actions {
+  padding: 20px 28px 24px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.confirm-cancel {
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.confirm-cancel:hover { border-color: var(--text-muted); }
+.confirm-ok {
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.confirm-ok:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(239,68,68,0.35); }
+
 .dark .msg-bubble.chef  { background: rgba(59,130,246,0.1); }
 .dark .msg-bubble.admin { background: rgba(16,185,129,0.09); }
 
@@ -528,6 +610,28 @@
         @csrf
     </form>
 
+    {{-- Modal confirmation fermeture --}}
+    <div class="confirm-overlay" id="confirmModal">
+        <div class="confirm-box">
+            <div class="confirm-icon-wrap">
+                <div class="confirm-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+            </div>
+            <div class="confirm-body">
+                <div class="confirm-title">Fermer ce ticket ?</div>
+                <div class="confirm-desc">Cette action est irréversible. Le client ne pourra plus envoyer de messages sur cette requête.</div>
+            </div>
+            <div class="confirm-actions">
+                <button type="button" class="confirm-cancel" id="confirmCancel">Annuler</button>
+                <button type="button" class="confirm-ok" id="confirmOk">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Fermer le ticket
+                </button>
+            </div>
+        </div>
+    </div>
+
     @else
     <a href="{{ route('admin.admin-requetes.index') }}" class="back-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -541,12 +645,14 @@
 @section('scripts')
 <script>
 const closeBtn = document.getElementById('btnCloseTicket');
-if (closeBtn) {
-    closeBtn.addEventListener('click', function() {
-        if (confirm('Fermer définitivement ce ticket ? Le client ne pourra plus répondre.')) {
-            document.getElementById('closeForm').submit();
-        }
-    });
+const modal = document.getElementById('confirmModal');
+const confirmCancel = document.getElementById('confirmCancel');
+const confirmOk = document.getElementById('confirmOk');
+if (closeBtn && modal) {
+    closeBtn.addEventListener('click', function() { modal.classList.add('active'); });
+    confirmCancel.addEventListener('click', function() { modal.classList.remove('active'); });
+    modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('active'); });
+    confirmOk.addEventListener('click', function() { document.getElementById('closeForm').submit(); });
 }
 
 const replyForm = document.getElementById('replyForm');

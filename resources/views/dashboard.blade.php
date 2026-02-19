@@ -643,7 +643,7 @@
     </div>
 
     {{-- Graphiques + Activites --}}
-    <div class="main-charts" style="display: grid; grid-template-columns: 3fr 2fr; gap: 24px; margin-bottom: 24px; align-items: stretch;">
+    <div class="main-charts" style="display: grid; grid-template-columns: 3fr 2fr; gap: 24px; margin-bottom: 24px; align-items: stretch; height: 360px;">
 
         {{-- Graphique conges/absences par mois --}}
         <div class="chart-card">
@@ -665,7 +665,7 @@
                         </div>
                     </div>
                 </div>
-                <div style="position: relative; height: 260px;">
+                <div style="position: relative; flex: 1; min-height: 150px;">
                     <canvas id="chartCongesAbsences"></canvas>
                 </div>
             </div>

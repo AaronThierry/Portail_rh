@@ -3,91 +3,89 @@
 namespace App\Services;
 
 use App\Models\Personnel;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Exception;
+use Twilio\Rest\Client;
+use Twilio\Exceptions\TwilioException;
 
 /**
- * WhatsApp Cloud API Service (Meta officiel)
+ * WhatsApp Notification Service — Twilio
  *
- * Utilise l'API Graph de Meta pour envoyer des notifications WhatsApp
- * via des templates approuvés (actif 24h/24, sans téléphone branché).
+ * Envoie des messages WhatsApp via l'API Twilio (actif 24h/24).
+ * Utilise le SDK officiel Twilio PHP pour la fiabilité et la simplicité.
  *
  * Configuration requise dans .env :
+ *   TWILIO_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ *   TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ *   TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
  *   WHATSAPP_ENABLED=true
- *   WHATSAPP_TOKEN=<system_user_access_token>
- *   WHATSAPP_PHONE_ID=<phone_number_id>
  *   WHATSAPP_DEFAULT_COUNTRY_CODE=226
  */
 class WhatsAppService
 {
     protected bool $enabled;
-    protected string $token;
-    protected string $phoneId;
+    protected string $from;
     protected string $defaultCountryCode;
-    protected string $apiVersion = 'v19.0';
+    protected ?Client $client = null;
 
     public function __construct()
     {
         $this->enabled            = config('services.whatsapp.enabled', false);
-        $this->token              = config('services.whatsapp.token', '');
-        $this->phoneId            = config('services.whatsapp.phone_id', '');
+        $this->from               = config('services.twilio.whatsapp_from', '');
         $this->defaultCountryCode = config('services.whatsapp.default_country_code', '226');
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Méthodes publiques d'envoi
+    // Envoi de base
     // ─────────────────────────────────────────────────────────────────────────
 
     /**
-     * Envoyer un message via template approuvé (pour notifications proactives)
+     * Envoyer un message texte WhatsApp
      *
-     * @param string $phone     Numéro complet avec indicatif (ex: 22607123456)
-     * @param string $template  Nom du template dans Meta Business Manager
-     * @param array  $vars      Variables du corps du template ({{1}}, {{2}}, ...)
-     * @param string $lang      Code langue du template (ex: fr, fr_FR)
+     * @param string $phone Numéro complet avec indicatif (ex: 22607123456)
+     * @param string $body  Contenu du message
      */
-    public function sendTemplate(string $phone, string $template, array $vars = [], string $lang = 'fr'): bool
+    public function sendMessage(string $phone, string $body): bool
     {
-        $payload = [
-            'messaging_product' => 'whatsapp',
-            'to'                => $this->formatPhone($phone),
-            'type'              => 'template',
-            'template'          => [
-                'name'     => $template,
-                'language' => ['code' => $lang],
-            ],
-        ];
-
-        if (!empty($vars)) {
-            $payload['template']['components'] = [
-                [
-                    'type'       => 'body',
-                    'parameters' => array_map(fn($v) => ['type' => 'text', 'text' => (string) $v], $vars),
-                ],
-            ];
+        if (!$this->isEnabled()) {
+            Log::info('WhatsApp désactivé — message non envoyé', ['to' => $phone]);
+            return false;
         }
 
-        return $this->send($payload);
+        try {
+            $message = $this->client()->messages->create(
+                'whatsapp:+' . $this->formatPhone($phone),
+                [
+                    'from' => $this->from,
+                    'body' => $body,
+                ]
+            );
+
+            Log::info('WhatsApp envoyé', [
+                'to'  => $phone,
+                'sid' => $message->sid,
+            ]);
+
+            return true;
+
+        } catch (TwilioException $e) {
+            Log::error('WhatsApp: erreur Twilio', [
+                'to'    => $phone,
+                'code'  => $e->getCode(),
+                'error' => $e->getMessage(),
+            ]);
+            return false;
+
+        } catch (\Exception $e) {
+            Log::error('WhatsApp: exception inattendue', [
+                'to'    => $phone,
+                'error' => $e->getMessage(),
+            ]);
+            return false;
+        }
     }
 
     /**
-     * Envoyer un message texte libre
-     * Fonctionne uniquement dans la fenêtre de 24h après un message de l'utilisateur.
-     * À utiliser pour les tests ou les réponses.
-     */
-    public function sendText(string $phone, string $message): bool
-    {
-        return $this->send([
-            'messaging_product' => 'whatsapp',
-            'to'                => $this->formatPhone($phone),
-            'type'              => 'text',
-            'text'              => ['body' => $message, 'preview_url' => false],
-        ]);
-    }
-
-    /**
-     * Envoyer un message texte à un personnel (via son profil)
+     * Envoyer à un personnel via son profil
      */
     public function sendToPersonnel(Personnel $personnel, string $message): bool
     {
@@ -95,11 +93,11 @@ class WhatsAppService
             return false;
         }
 
-        return $this->sendText($this->buildPhone($personnel), $message);
+        return $this->sendMessage($this->buildPhone($personnel), $message);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Notifications métier (toutes via template)
+    // Notifications métier
     // ─────────────────────────────────────────────────────────────────────────
 
     /**
@@ -108,18 +106,22 @@ class WhatsAppService
     public function notifyCongeValidation($conge, Personnel $personnel): bool
     {
         $statut = $conge->statut === 'approuve' ? 'approuvée ✅' : 'refusée ❌';
-        $detail = "Du {$conge->date_debut->format('d/m/Y')} au {$conge->date_fin->format('d/m/Y')} "
-                . "({$conge->nombre_jours} jour(s)) — statut : {$statut}";
+
+        $body  = "*Portail RH+ — Demande de congé*\n\n";
+        $body .= "Bonjour {$personnel->prenoms},\n\n";
+        $body .= "Votre demande de congé ";
+        $body .= "du *{$conge->date_debut->format('d/m/Y')}* ";
+        $body .= "au *{$conge->date_fin->format('d/m/Y')}* ";
+        $body .= "({$conge->nombre_jours} jour(s)) ";
+        $body .= "a été *{$statut}*.\n";
 
         if ($conge->statut === 'refuse' && $conge->motif_refus) {
-            $detail .= "\nMotif : {$conge->motif_refus}";
+            $body .= "\n_Motif :_ {$conge->motif_refus}\n";
         }
 
-        return $this->sendTemplate(
-            $this->buildPhone($personnel),
-            config('services.whatsapp.templates.conge', 'notification_rh'),
-            [$personnel->prenoms, $detail]
-        );
+        $body .= "\nCordialement,\nService RH";
+
+        return $this->sendToPersonnel($personnel, $body);
     }
 
     /**
@@ -129,52 +131,56 @@ class WhatsAppService
     {
         $statut  = $absence->statut === 'approuvee' ? 'approuvée ✅' : 'refusée ❌';
         $typeNom = $absence->typeAbsence->nom ?? 'Absence';
-        $detail  = "Absence ({$typeNom}) du {$absence->date_absence->format('d/m/Y')} — statut : {$statut}";
+
+        $body  = "*Portail RH+ — Déclaration d'absence*\n\n";
+        $body .= "Bonjour {$personnel->prenoms},\n\n";
+        $body .= "Votre déclaration d'absence ({$typeNom}) ";
+        $body .= "du *{$absence->date_absence->format('d/m/Y')}* ";
+        $body .= "a été *{$statut}*.\n";
 
         if ($absence->statut === 'refusee' && $absence->motif_refus) {
-            $detail .= "\nMotif : {$absence->motif_refus}";
+            $body .= "\n_Motif :_ {$absence->motif_refus}\n";
         }
 
-        return $this->sendTemplate(
-            $this->buildPhone($personnel),
-            config('services.whatsapp.templates.absence', 'notification_rh'),
-            [$personnel->prenoms, $detail]
-        );
+        $body .= "\nCordialement,\nService RH";
+
+        return $this->sendToPersonnel($personnel, $body);
     }
 
     /**
-     * Notification nouvelle demande de congé (pour les admins)
+     * Notifier les admins d'une nouvelle demande de congé
      */
     public function notifyNewConge($conge, Personnel $adminPersonnel): bool
     {
         $employe = $conge->personnel->nom . ' ' . $conge->personnel->prenoms;
         $typeNom = $conge->typeConge->nom ?? 'Congé';
-        $detail  = "Nouvelle demande de {$typeNom} de {$employe} — "
-                 . "du {$conge->date_debut->format('d/m/Y')} au {$conge->date_fin->format('d/m/Y')} "
-                 . "({$conge->nombre_jours} jours). Connectez-vous au portail pour traiter.";
 
-        return $this->sendTemplate(
-            $this->buildPhone($adminPersonnel),
-            config('services.whatsapp.templates.conge', 'notification_rh'),
-            [$adminPersonnel->prenoms, $detail]
-        );
+        $body  = "*Portail RH+ — Nouvelle demande de congé*\n\n";
+        $body .= "Bonjour {$adminPersonnel->prenoms},\n\n";
+        $body .= "*{$employe}* a soumis une demande de {$typeNom}\n";
+        $body .= "📅 Du *{$conge->date_debut->format('d/m/Y')}* ";
+        $body .= "au *{$conge->date_fin->format('d/m/Y')}* ";
+        $body .= "({$conge->nombre_jours} jours)\n\n";
+        $body .= "Connectez-vous sur le portail pour traiter cette demande.";
+
+        return $this->sendToPersonnel($adminPersonnel, $body);
     }
 
     /**
-     * Notification nouvelle absence déclarée (pour les admins)
+     * Notifier les admins d'une nouvelle déclaration d'absence
      */
     public function notifyNewAbsence($absence, Personnel $adminPersonnel): bool
     {
         $employe = $absence->personnel->nom . ' ' . $absence->personnel->prenoms;
         $typeNom = $absence->typeAbsence->nom ?? 'Absence';
-        $detail  = "Nouvelle absence déclarée par {$employe} ({$typeNom}) "
-                 . "le {$absence->date_absence->format('d/m/Y')}. Connectez-vous au portail.";
 
-        return $this->sendTemplate(
-            $this->buildPhone($adminPersonnel),
-            config('services.whatsapp.templates.absence', 'notification_rh'),
-            [$adminPersonnel->prenoms, $detail]
-        );
+        $body  = "*Portail RH+ — Nouvelle absence déclarée*\n\n";
+        $body .= "Bonjour {$adminPersonnel->prenoms},\n\n";
+        $body .= "*{$employe}* a déclaré une absence ({$typeNom})\n";
+        $body .= "📅 Le *{$absence->date_absence->format('d/m/Y')}*\n\n";
+        $body .= "Connectez-vous sur le portail pour traiter cette déclaration.";
+
+        return $this->sendToPersonnel($adminPersonnel, $body);
     }
 
     /**
@@ -183,14 +189,14 @@ class WhatsAppService
     public function notifyBulletinPaie($bulletin, Personnel $personnel): bool
     {
         $moisNom = $bulletin->mois_nom ?? $bulletin->mois;
-        $detail  = "Votre bulletin de paie de {$moisNom} {$bulletin->annee} est disponible. "
-                 . "Connectez-vous sur le portail RH+ pour le consulter et le télécharger.";
 
-        return $this->sendTemplate(
-            $this->buildPhone($personnel),
-            config('services.whatsapp.templates.bulletin', 'notification_rh'),
-            [$personnel->prenoms, $detail]
-        );
+        $body  = "*Portail RH+ — Bulletin de paie disponible* 📄\n\n";
+        $body .= "Bonjour {$personnel->prenoms},\n\n";
+        $body .= "Votre bulletin de paie de *{$moisNom} {$bulletin->annee}* est disponible.\n\n";
+        $body .= "Connectez-vous sur le portail RH+ pour le consulter et le télécharger.\n\n";
+        $body .= "Cordialement,\nService RH";
+
+        return $this->sendToPersonnel($personnel, $body);
     }
 
     /**
@@ -200,15 +206,16 @@ class WhatsAppService
     {
         $titre     = $document->titre ?? $document->nom_original;
         $categorie = $document->categorie->nom ?? 'Document';
-        $detail    = "Un nouveau document a été ajouté à votre dossier :\n"
-                   . "• {$titre} ({$categorie})\n"
-                   . "Connectez-vous sur le portail RH+ pour le consulter.";
 
-        return $this->sendTemplate(
-            $this->buildPhone($personnel),
-            config('services.whatsapp.templates.document', 'notification_rh'),
-            [$personnel->prenoms, $detail]
-        );
+        $body  = "*Portail RH+ — Nouveau document disponible* 📎\n\n";
+        $body .= "Bonjour {$personnel->prenoms},\n\n";
+        $body .= "Un nouveau document a été ajouté à votre dossier :\n";
+        $body .= "• *{$titre}*\n";
+        $body .= "• Catégorie : {$categorie}\n\n";
+        $body .= "Connectez-vous sur le portail RH+ pour le consulter.\n\n";
+        $body .= "Cordialement,\nService RH";
+
+        return $this->sendToPersonnel($personnel, $body);
     }
 
     /**
@@ -216,16 +223,16 @@ class WhatsAppService
      */
     public function notifyAccountCreation($user, Personnel $personnel, string $temporaryPassword): bool
     {
-        $detail = "Votre compte Portail RH+ a été créé.\n"
-                . "Email : {$user->email}\n"
-                . "Mot de passe temporaire : {$temporaryPassword}\n"
-                . "Changez votre mot de passe à la première connexion : " . config('app.url');
+        $body  = "*Bienvenue sur le Portail RH+* 🎉\n\n";
+        $body .= "Bonjour {$personnel->prenoms},\n\n";
+        $body .= "Votre compte a été créé avec succès !\n\n";
+        $body .= "📧 Email : {$user->email}\n";
+        $body .= "🔑 Mot de passe temporaire : *{$temporaryPassword}*\n\n";
+        $body .= "⚠️ Changez votre mot de passe dès votre première connexion.\n";
+        $body .= "🔗 " . config('app.url') . "\n\n";
+        $body .= "Cordialement,\nService RH";
 
-        return $this->sendTemplate(
-            $this->buildPhone($personnel),
-            config('services.whatsapp.templates.compte', 'notification_rh'),
-            [$personnel->prenoms, $detail]
-        );
+        return $this->sendToPersonnel($personnel, $body);
     }
 
     /**
@@ -233,11 +240,9 @@ class WhatsAppService
      */
     public function notifyCustom(Personnel $personnel, string $title, string $content): bool
     {
-        return $this->sendTemplate(
-            $this->buildPhone($personnel),
-            config('services.whatsapp.templates.custom', 'notification_rh'),
-            [$personnel->prenoms, "{$title}\n{$content}"]
-        );
+        $body = "*Portail RH+ — {$title}*\n\n{$content}";
+
+        return $this->sendToPersonnel($personnel, $body);
     }
 
     /**
@@ -251,9 +256,11 @@ class WhatsAppService
             ->get();
 
         foreach ($personnels as $personnel) {
-            $success = $this->sendToPersonnel($personnel, $message);
-            $success ? $results['sent']++ : $results['failed']++;
-            usleep(300_000); // 300 ms entre chaque envoi (rate limit)
+            $this->sendToPersonnel($personnel, $message)
+                ? $results['sent']++
+                : $results['failed']++;
+
+            usleep(300_000); // 300 ms entre chaque envoi (rate limit Twilio)
         }
 
         $results['skipped'] = count($personnelIds) - $personnels->count();
@@ -267,7 +274,10 @@ class WhatsAppService
 
     public function isEnabled(): bool
     {
-        return $this->enabled && !empty($this->token) && !empty($this->phoneId);
+        $sid   = config('services.twilio.sid', '');
+        $token = config('services.twilio.token', '');
+
+        return $this->enabled && !empty($sid) && !empty($token) && !empty($this->from);
     }
 
     public function isValidPhoneNumber(string $phone): bool
@@ -277,7 +287,7 @@ class WhatsAppService
     }
 
     /**
-     * Construire le numéro complet pour un personnel
+     * Construire le numéro complet depuis un personnel
      */
     protected function buildPhone(Personnel $personnel): string
     {
@@ -289,8 +299,8 @@ class WhatsAppService
     }
 
     /**
-     * Nettoyer un numéro de téléphone (chiffres uniquement)
-     * Format attendu par Meta : indicatif + numéro sans le 0 initial (ex: 22607123456)
+     * Nettoyer un numéro (chiffres uniquement, sans le +)
+     * Twilio attend : whatsapp:+22607123456
      */
     protected function formatPhone(string $phone): string
     {
@@ -298,49 +308,17 @@ class WhatsAppService
     }
 
     /**
-     * Appel HTTP vers l'API Graph de Meta
+     * Client Twilio (instanciation lazy)
      */
-    protected function send(array $payload): bool
+    protected function client(): Client
     {
-        if (!$this->isEnabled()) {
-            Log::info('WhatsApp désactivé — message non envoyé', ['to' => $payload['to'] ?? '']);
-            return false;
+        if ($this->client === null) {
+            $this->client = new Client(
+                config('services.twilio.sid'),
+                config('services.twilio.token')
+            );
         }
 
-        try {
-            $url = "https://graph.facebook.com/{$this->apiVersion}/{$this->phoneId}/messages";
-
-            $response = Http::timeout(15)
-                ->withToken($this->token)
-                ->acceptJson()
-                ->post($url, $payload);
-
-            if ($response->successful()) {
-                Log::info('WhatsApp envoyé avec succès', [
-                    'to'       => $payload['to'] ?? '',
-                    'type'     => $payload['type'] ?? '',
-                    'template' => $payload['template']['name'] ?? null,
-                    'wamid'    => $response->json('messages.0.id'),
-                ]);
-                return true;
-            }
-
-            $error = $response->json('error');
-            Log::error('WhatsApp: erreur API Meta', [
-                'to'     => $payload['to'] ?? '',
-                'status' => $response->status(),
-                'code'   => $error['code'] ?? null,
-                'msg'    => $error['message'] ?? $response->body(),
-            ]);
-
-            return false;
-
-        } catch (Exception $e) {
-            Log::error('WhatsApp: exception lors de l\'envoi', [
-                'to'    => $payload['to'] ?? '',
-                'error' => $e->getMessage(),
-            ]);
-            return false;
-        }
+        return $this->client;
     }
 }

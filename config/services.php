@@ -32,10 +32,18 @@ return [
     ],
 
     'whatsapp' => [
-        'enabled' => env('WHATSAPP_ENABLED', false),
-        'api_url' => env('WAHA_API_URL', 'http://localhost:3000'),
-        'session' => env('WAHA_SESSION', 'default'),
-        'api_key' => env('WAHA_API_KEY', ''),
+        'enabled'              => env('WHATSAPP_ENABLED', false),
+        'token'                => env('WHATSAPP_TOKEN', ''),
+        'phone_id'             => env('WHATSAPP_PHONE_ID', ''),
+        'default_country_code' => env('WHATSAPP_DEFAULT_COUNTRY_CODE', '226'),
+        'templates' => [
+            'conge'    => env('WHATSAPP_TEMPLATE_CONGE',    'notification_rh'),
+            'absence'  => env('WHATSAPP_TEMPLATE_ABSENCE',  'notification_rh'),
+            'bulletin' => env('WHATSAPP_TEMPLATE_BULLETIN', 'notification_rh'),
+            'document' => env('WHATSAPP_TEMPLATE_DOCUMENT', 'notification_rh'),
+            'compte'   => env('WHATSAPP_TEMPLATE_COMPTE',   'notification_rh'),
+            'custom'   => env('WHATSAPP_TEMPLATE_CUSTOM',   'notification_rh'),
+        ],
     ],
 
 ];

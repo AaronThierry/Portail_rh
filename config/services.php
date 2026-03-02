@@ -31,6 +31,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'ollama' => [
+        'url'   => env('OLLAMA_URL', 'http://localhost:11434'),
+        'model' => env('OLLAMA_MODEL', 'llama3.2'),
+    ],
+
     'twilio' => [
         'sid'           => env('TWILIO_SID', ''),
         'token'         => env('TWILIO_AUTH_TOKEN', ''),

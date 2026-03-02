@@ -7,6 +7,7 @@ use App\Models\RequeteMessage;
 use App\Models\User;
 use App\Notifications\NouvelleRequeteNotification;
 use App\Notifications\ReponseRequeteNotification;
+use App\Services\OllamaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,8 +87,50 @@ class RequeteController extends Controller
             }
         }
 
+        // Vider l'historique du chat assistant après soumission
+        session()->forget('requete_chat');
+
         return redirect()->route('admin.requetes.index')
             ->with('success', 'Votre requête a été envoyée avec succès. Nous vous répondrons dans les plus brefs délais.');
+    }
+
+    /**
+     * Endpoint AJAX pour l'assistant IA (Ollama)
+     * Gère la conversation avant soumission du formulaire.
+     */
+    public function assistantChat(Request $request)
+    {
+        $request->validate([
+            'message' => 'required|string|max:1000',
+            'reset'   => 'sometimes|boolean',
+        ]);
+
+        // Réinitialiser la session si demandé (retour au chat)
+        if ($request->boolean('reset')) {
+            session()->forget('requete_chat');
+            return response()->json(['ok' => true]);
+        }
+
+        $ollama  = app(OllamaService::class);
+        $history = session('requete_chat', []);
+
+        // Ajouter le message de l'utilisateur
+        $history[] = ['role' => 'user', 'content' => $request->message];
+
+        // Obtenir la réponse du bot
+        $reply = $ollama->chat($history);
+
+        // Sauvegarder la réponse dans l'historique
+        $history[] = ['role' => 'assistant', 'content' => $reply];
+
+        // Limiter l'historique à 20 échanges (mémoire session)
+        if (count($history) > 20) {
+            $history = array_slice($history, -20);
+        }
+
+        session(['requete_chat' => $history]);
+
+        return response()->json(['reply' => $reply]);
     }
 
     public function show(Requete $requete)
@@ -134,7 +177,7 @@ class RequeteController extends Controller
             'requete_id' => $requete->id,
             'user_id'    => Auth::id(),
             'role'       => 'chef',
-            'content'    => $request->content,
+            'content'    => $request->input('content'),
         ]);
 
         // Remettre en cours + admin non-lu

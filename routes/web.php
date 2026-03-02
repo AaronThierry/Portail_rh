@@ -230,9 +230,10 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
 
     // ── Requêtes Chef d'Entreprise ──────────────────────────
     Route::middleware("role:Super Admin|Chef d'Entreprise")->group(function () {
-        Route::get('requetes',           [RequeteController::class, 'index'])->name('requetes.index');
-        Route::get('requetes/nouvelle',  [RequeteController::class, 'create'])->name('requetes.create');
-        Route::post('requetes',          [RequeteController::class, 'store'])->name('requetes.store');
+        Route::get('requetes',                    [RequeteController::class, 'index'])->name('requetes.index');
+        Route::get('requetes/nouvelle',           [RequeteController::class, 'create'])->name('requetes.create');
+        Route::post('requetes',                   [RequeteController::class, 'store'])->name('requetes.store');
+        Route::post('requetes/assistant',         [RequeteController::class, 'assistantChat'])->name('requetes.assistant');
         Route::get('requetes/{requete}',          [RequeteController::class, 'show'])->name('requetes.show');
         Route::post('requetes/{requete}/reply',   [RequeteController::class, 'chefReply'])->name('requetes.chef-reply');
     });

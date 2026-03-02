@@ -388,10 +388,10 @@
             <a href="{{ route('admin.requetes.index', ['statut' => 'repondue']) }}" class="filter-btn {{ $statut === 'repondue' ? 'active' : '' }}">Répondues</a>
             <a href="{{ route('admin.requetes.index', ['statut' => 'fermee']) }}" class="filter-btn {{ $statut === 'fermee' ? 'active' : '' }}">Fermées</a>
         </div>
-        <button type="button" class="btn-new" id="openModalBtn">
+        <a href="{{ route('admin.requetes.create') }}" class="btn-new">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             Nouvelle requête
-        </button>
+        </a>
     </div>
 
     {{-- Liste --}}
@@ -439,7 +439,7 @@
             </svg>
             <div class="rq-empty-title">Aucune requête</div>
             <p style="font-size:0.85rem; margin-bottom:20px;">Vous n'avez pas encore envoyé de requête.</p>
-            <button type="button" class="btn-new" onclick="openModal()" style="margin: 0 auto;">Envoyer votre première requête</button>
+            <a href="{{ route('admin.requetes.create') }}" class="btn-new" style="margin: 0 auto;">Envoyer votre première requête</a>
         </div>
         @endforelse
     </div>

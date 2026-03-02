@@ -3,34 +3,31 @@
 namespace App\Services;
 
 use App\Models\Personnel;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Twilio\Rest\Client;
-use Twilio\Exceptions\TwilioException;
 
 /**
- * WhatsApp Notification Service — Twilio
+ * WhatsApp Notification Service — CallMeBot
  *
- * Envoie des messages WhatsApp via l'API Twilio (actif 24h/24).
- * Utilise le SDK officiel Twilio PHP pour la fiabilité et la simplicité.
+ * Envoie des messages WhatsApp gratuitement via CallMeBot.
+ * Aucune configuration serveur, aucun abonnement.
  *
- * Configuration requise dans .env :
- *   TWILIO_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- *   TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- *   TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
- *   WHATSAPP_ENABLED=true
- *   WHATSAPP_DEFAULT_COUNTRY_CODE=226
+ * Prérequis par employé (une seule fois) :
+ *   1. Envoyer "I allow callmebot to send me messages" au +34 644 45 77 87
+ *   2. Recevoir l'API key par WhatsApp
+ *   3. L'admin saisit cette key dans la fiche personnel (champ callmebot_apikey)
+ *
+ * Doc : https://www.callmebot.com/blog/free-api-whatsapp-messages/
  */
 class WhatsAppService
 {
+    protected const API_URL = 'https://api.callmebot.com/whatsapp.php';
     protected bool $enabled;
-    protected string $from;
     protected string $defaultCountryCode;
-    protected ?Client $client = null;
 
     public function __construct()
     {
         $this->enabled            = config('services.whatsapp.enabled', false);
-        $this->from               = config('services.twilio.whatsapp_from', '');
         $this->defaultCountryCode = config('services.whatsapp.default_country_code', '226');
     }
 
@@ -39,12 +36,13 @@ class WhatsAppService
     // ─────────────────────────────────────────────────────────────────────────
 
     /**
-     * Envoyer un message texte WhatsApp
+     * Envoyer un message WhatsApp via CallMeBot
      *
-     * @param string $phone Numéro complet avec indicatif (ex: 22607123456)
-     * @param string $body  Contenu du message
+     * @param string $phone  Numéro complet avec indicatif (ex: 22607123456)
+     * @param string $apiKey API key CallMeBot de l'employé
+     * @param string $body   Contenu du message
      */
-    public function sendMessage(string $phone, string $body): bool
+    public function sendMessage(string $phone, string $apiKey, string $body): bool
     {
         if (!$this->isEnabled()) {
             Log::info('WhatsApp désactivé — message non envoyé', ['to' => $phone]);
@@ -52,31 +50,26 @@ class WhatsAppService
         }
 
         try {
-            $message = $this->client()->messages->create(
-                'whatsapp:+' . $this->formatPhone($phone),
-                [
-                    'from' => $this->from,
-                    'body' => $body,
-                ]
-            );
-
-            Log::info('WhatsApp envoyé', [
-                'to'  => $phone,
-                'sid' => $message->sid,
+            $response = Http::timeout(15)->get(self::API_URL, [
+                'phone'  => '+' . preg_replace('/[^0-9]/', '', $phone),
+                'text'   => $body,
+                'apikey' => $apiKey,
             ]);
 
-            return true;
+            if ($response->successful()) {
+                Log::info('WhatsApp envoyé', ['to' => $phone]);
+                return true;
+            }
 
-        } catch (TwilioException $e) {
-            Log::error('WhatsApp: erreur Twilio', [
-                'to'    => $phone,
-                'code'  => $e->getCode(),
-                'error' => $e->getMessage(),
+            Log::error('WhatsApp: erreur CallMeBot', [
+                'to'     => $phone,
+                'status' => $response->status(),
+                'body'   => $response->body(),
             ]);
             return false;
 
         } catch (\Exception $e) {
-            Log::error('WhatsApp: exception inattendue', [
+            Log::error('WhatsApp: exception', [
                 'to'    => $phone,
                 'error' => $e->getMessage(),
             ]);
@@ -85,15 +78,19 @@ class WhatsAppService
     }
 
     /**
-     * Envoyer à un personnel via son profil
+     * Envoyer à un personnel (vérifie qu'il a une API key CallMeBot)
      */
     public function sendToPersonnel(Personnel $personnel, string $message): bool
     {
-        if (!$personnel->telephone) {
+        if (!$personnel->telephone || !$personnel->callmebot_apikey) {
             return false;
         }
 
-        return $this->sendMessage($this->buildPhone($personnel), $message);
+        return $this->sendMessage(
+            $this->buildPhone($personnel),
+            $personnel->callmebot_apikey,
+            $message
+        );
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -107,19 +104,19 @@ class WhatsAppService
     {
         $statut = $conge->statut === 'approuve' ? 'approuvée ✅' : 'refusée ❌';
 
-        $body  = "*Portail RH+ — Demande de congé*\n\n";
+        $body  = "Portail RH+ — Demande de congé\n\n";
         $body .= "Bonjour {$personnel->prenoms},\n\n";
         $body .= "Votre demande de congé ";
-        $body .= "du *{$conge->date_debut->format('d/m/Y')}* ";
-        $body .= "au *{$conge->date_fin->format('d/m/Y')}* ";
+        $body .= "du {$conge->date_debut->format('d/m/Y')} ";
+        $body .= "au {$conge->date_fin->format('d/m/Y')} ";
         $body .= "({$conge->nombre_jours} jour(s)) ";
-        $body .= "a été *{$statut}*.\n";
+        $body .= "a été {$statut}";
 
         if ($conge->statut === 'refuse' && $conge->motif_refus) {
-            $body .= "\n_Motif :_ {$conge->motif_refus}\n";
+            $body .= "\n\nMotif : {$conge->motif_refus}";
         }
 
-        $body .= "\nCordialement,\nService RH";
+        $body .= "\n\nCordialement, Service RH";
 
         return $this->sendToPersonnel($personnel, $body);
     }
@@ -132,53 +129,53 @@ class WhatsAppService
         $statut  = $absence->statut === 'approuvee' ? 'approuvée ✅' : 'refusée ❌';
         $typeNom = $absence->typeAbsence->nom ?? 'Absence';
 
-        $body  = "*Portail RH+ — Déclaration d'absence*\n\n";
+        $body  = "Portail RH+ — Absence\n\n";
         $body .= "Bonjour {$personnel->prenoms},\n\n";
         $body .= "Votre déclaration d'absence ({$typeNom}) ";
-        $body .= "du *{$absence->date_absence->format('d/m/Y')}* ";
-        $body .= "a été *{$statut}*.\n";
+        $body .= "du {$absence->date_absence->format('d/m/Y')} ";
+        $body .= "a été {$statut}";
 
         if ($absence->statut === 'refusee' && $absence->motif_refus) {
-            $body .= "\n_Motif :_ {$absence->motif_refus}\n";
+            $body .= "\n\nMotif : {$absence->motif_refus}";
         }
 
-        $body .= "\nCordialement,\nService RH";
+        $body .= "\n\nCordialement, Service RH";
 
         return $this->sendToPersonnel($personnel, $body);
     }
 
     /**
-     * Notifier les admins d'une nouvelle demande de congé
+     * Notifier un admin d'une nouvelle demande de congé
      */
     public function notifyNewConge($conge, Personnel $adminPersonnel): bool
     {
         $employe = $conge->personnel->nom . ' ' . $conge->personnel->prenoms;
         $typeNom = $conge->typeConge->nom ?? 'Congé';
 
-        $body  = "*Portail RH+ — Nouvelle demande de congé*\n\n";
+        $body  = "Portail RH+ — Nouvelle demande\n\n";
         $body .= "Bonjour {$adminPersonnel->prenoms},\n\n";
-        $body .= "*{$employe}* a soumis une demande de {$typeNom}\n";
-        $body .= "📅 Du *{$conge->date_debut->format('d/m/Y')}* ";
-        $body .= "au *{$conge->date_fin->format('d/m/Y')}* ";
+        $body .= "{$employe} a soumis une demande de {$typeNom}\n";
+        $body .= "Du {$conge->date_debut->format('d/m/Y')} ";
+        $body .= "au {$conge->date_fin->format('d/m/Y')} ";
         $body .= "({$conge->nombre_jours} jours)\n\n";
-        $body .= "Connectez-vous sur le portail pour traiter cette demande.";
+        $body .= "Connectez-vous sur le portail pour traiter.";
 
         return $this->sendToPersonnel($adminPersonnel, $body);
     }
 
     /**
-     * Notifier les admins d'une nouvelle déclaration d'absence
+     * Notifier un admin d'une nouvelle déclaration d'absence
      */
     public function notifyNewAbsence($absence, Personnel $adminPersonnel): bool
     {
         $employe = $absence->personnel->nom . ' ' . $absence->personnel->prenoms;
         $typeNom = $absence->typeAbsence->nom ?? 'Absence';
 
-        $body  = "*Portail RH+ — Nouvelle absence déclarée*\n\n";
+        $body  = "Portail RH+ — Nouvelle absence\n\n";
         $body .= "Bonjour {$adminPersonnel->prenoms},\n\n";
-        $body .= "*{$employe}* a déclaré une absence ({$typeNom})\n";
-        $body .= "📅 Le *{$absence->date_absence->format('d/m/Y')}*\n\n";
-        $body .= "Connectez-vous sur le portail pour traiter cette déclaration.";
+        $body .= "{$employe} a déclaré une absence ({$typeNom})\n";
+        $body .= "Le {$absence->date_absence->format('d/m/Y')}\n\n";
+        $body .= "Connectez-vous sur le portail pour traiter.";
 
         return $this->sendToPersonnel($adminPersonnel, $body);
     }
@@ -190,11 +187,11 @@ class WhatsAppService
     {
         $moisNom = $bulletin->mois_nom ?? $bulletin->mois;
 
-        $body  = "*Portail RH+ — Bulletin de paie disponible* 📄\n\n";
+        $body  = "Portail RH+ — Bulletin de paie 📄\n\n";
         $body .= "Bonjour {$personnel->prenoms},\n\n";
-        $body .= "Votre bulletin de paie de *{$moisNom} {$bulletin->annee}* est disponible.\n\n";
-        $body .= "Connectez-vous sur le portail RH+ pour le consulter et le télécharger.\n\n";
-        $body .= "Cordialement,\nService RH";
+        $body .= "Votre bulletin de paie de {$moisNom} {$bulletin->annee} est disponible.\n\n";
+        $body .= "Connectez-vous sur le portail RH+ pour le consulter.\n\n";
+        $body .= "Cordialement, Service RH";
 
         return $this->sendToPersonnel($personnel, $body);
     }
@@ -207,30 +204,29 @@ class WhatsAppService
         $titre     = $document->titre ?? $document->nom_original;
         $categorie = $document->categorie->nom ?? 'Document';
 
-        $body  = "*Portail RH+ — Nouveau document disponible* 📎\n\n";
+        $body  = "Portail RH+ — Nouveau document 📎\n\n";
         $body .= "Bonjour {$personnel->prenoms},\n\n";
-        $body .= "Un nouveau document a été ajouté à votre dossier :\n";
-        $body .= "• *{$titre}*\n";
-        $body .= "• Catégorie : {$categorie}\n\n";
-        $body .= "Connectez-vous sur le portail RH+ pour le consulter.\n\n";
-        $body .= "Cordialement,\nService RH";
+        $body .= "Un document a été ajouté à votre dossier :\n";
+        $body .= "- {$titre} ({$categorie})\n\n";
+        $body .= "Connectez-vous sur le portail pour le consulter.\n\n";
+        $body .= "Cordialement, Service RH";
 
         return $this->sendToPersonnel($personnel, $body);
     }
 
     /**
-     * Notification de création de compte
+     * Notification création de compte
      */
     public function notifyAccountCreation($user, Personnel $personnel, string $temporaryPassword): bool
     {
-        $body  = "*Bienvenue sur le Portail RH+* 🎉\n\n";
+        $body  = "Bienvenue sur le Portail RH+ 🎉\n\n";
         $body .= "Bonjour {$personnel->prenoms},\n\n";
-        $body .= "Votre compte a été créé avec succès !\n\n";
-        $body .= "📧 Email : {$user->email}\n";
-        $body .= "🔑 Mot de passe temporaire : *{$temporaryPassword}*\n\n";
-        $body .= "⚠️ Changez votre mot de passe dès votre première connexion.\n";
-        $body .= "🔗 " . config('app.url') . "\n\n";
-        $body .= "Cordialement,\nService RH";
+        $body .= "Votre compte a été créé !\n\n";
+        $body .= "Email : {$user->email}\n";
+        $body .= "Mot de passe : {$temporaryPassword}\n\n";
+        $body .= "Changez votre mot de passe à la première connexion.\n";
+        $body .= config('app.url') . "\n\n";
+        $body .= "Cordialement, Service RH";
 
         return $this->sendToPersonnel($personnel, $body);
     }
@@ -240,19 +236,18 @@ class WhatsAppService
      */
     public function notifyCustom(Personnel $personnel, string $title, string $content): bool
     {
-        $body = "*Portail RH+ — {$title}*\n\n{$content}";
-
-        return $this->sendToPersonnel($personnel, $body);
+        return $this->sendToPersonnel($personnel, "Portail RH+ — {$title}\n\n{$content}");
     }
 
     /**
-     * Envoi en masse à plusieurs personnels
+     * Envoi en masse
      */
     public function sendBulkToPersonnels(array $personnelIds, string $message): array
     {
         $results   = ['sent' => 0, 'failed' => 0, 'skipped' => 0];
         $personnels = Personnel::whereIn('id', $personnelIds)
             ->whereNotNull('telephone')
+            ->whereNotNull('callmebot_apikey')
             ->get();
 
         foreach ($personnels as $personnel) {
@@ -260,7 +255,7 @@ class WhatsAppService
                 ? $results['sent']++
                 : $results['failed']++;
 
-            usleep(300_000); // 300 ms entre chaque envoi (rate limit Twilio)
+            usleep(300_000); // 300 ms entre chaque envoi
         }
 
         $results['skipped'] = count($personnelIds) - $personnels->count();
@@ -274,21 +269,15 @@ class WhatsAppService
 
     public function isEnabled(): bool
     {
-        $sid   = config('services.twilio.sid', '');
-        $token = config('services.twilio.token', '');
-
-        return $this->enabled && !empty($sid) && !empty($token) && !empty($this->from);
+        return $this->enabled;
     }
 
     public function isValidPhoneNumber(string $phone): bool
     {
         $cleaned = preg_replace('/[^0-9]/', '', $phone);
-        return strlen($cleaned) >= 8 && strlen($cleaned) <= 15;
+        return \strlen($cleaned) >= 8 && \strlen($cleaned) <= 15;
     }
 
-    /**
-     * Construire le numéro complet depuis un personnel
-     */
     protected function buildPhone(Personnel $personnel): string
     {
         $code = $personnel->telephone_code_pays
@@ -296,29 +285,5 @@ class WhatsAppService
             : $this->defaultCountryCode;
 
         return $code . preg_replace('/[^0-9]/', '', $personnel->telephone);
-    }
-
-    /**
-     * Nettoyer un numéro (chiffres uniquement, sans le +)
-     * Twilio attend : whatsapp:+22607123456
-     */
-    protected function formatPhone(string $phone): string
-    {
-        return preg_replace('/[^0-9]/', '', $phone);
-    }
-
-    /**
-     * Client Twilio (instanciation lazy)
-     */
-    protected function client(): Client
-    {
-        if ($this->client === null) {
-            $this->client = new Client(
-                config('services.twilio.sid'),
-                config('services.twilio.token')
-            );
-        }
-
-        return $this->client;
     }
 }

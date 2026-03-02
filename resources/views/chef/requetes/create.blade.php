@@ -669,7 +669,7 @@ Comment puis-je vous aider aujourd'hui ?
     'use strict';
 
     const CSRF      = '{{ csrf_token() }}';
-    const BOT_URL   = '{{ route("requetes.assistant") }}';
+    const BOT_URL   = '{{ route("admin.requetes.assistant") }}';
 
     // State
     let chatHistory = []; // [{role:'user'|'bot', text:'...'}]

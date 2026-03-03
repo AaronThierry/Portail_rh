@@ -1125,177 +1125,6 @@
 
 @section('scripts')
 <script>
-// Multi-step form logic
-let currentStep = 1;
-const totalSteps = 3;
-
-// Open modal
-document.getElementById('btnAddPersonnel').addEventListener('click', () => {
-    document.getElementById('personnelModal').classList.add('show');
-    resetForm();
-});
-
-// Close modal
-function closeModal() {
-    document.getElementById('personnelModal').classList.remove('show');
-    resetForm();
-}
-
-// Reset form
-function resetForm() {
-    currentStep = 1;
-    const form = document.getElementById('personnelForm');
-    if (form) form.reset();
-    updateStepDisplay();
-}
-
-function nextStep() {
-    if (validateStep(currentStep) && currentStep < totalSteps) {
-        currentStep++;
-        updateStepDisplay();
-    }
-}
-
-function prevStep() {
-    if (currentStep > 1) {
-        currentStep--;
-        updateStepDisplay();
-    }
-}
-
-function goToStep(targetStep) {
-    if (targetStep < currentStep) {
-        currentStep = targetStep;
-        updateStepDisplay();
-    } else if (targetStep > currentStep) {
-        for (let i = currentStep; i < targetStep; i++) {
-            if (!validateStep(i)) return;
-        }
-        currentStep = targetStep;
-        updateStepDisplay();
-    }
-}
-
-function updateStepDisplay() {
-    // Update step content
-    document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-    });
-    const activeStep = document.querySelector(`.form-step[data-step="${currentStep}"]`);
-    if (activeStep) activeStep.classList.add('active');
-
-    // Update step indicators
-    document.querySelectorAll('.step').forEach(indicator => {
-        const step = parseInt(indicator.dataset.step);
-        indicator.classList.remove('active', 'completed');
-        if (step === currentStep) indicator.classList.add('active');
-        if (step < currentStep) indicator.classList.add('completed');
-    });
-
-    // Update progress indicator
-    const stepIndicator = document.getElementById('stepIndicator');
-    if (stepIndicator) {
-        stepIndicator.className = `step-indicator progress-${Math.round((currentStep / totalSteps) * 100)}`;
-    }
-
-    // Update navigation buttons
-    const prevBtn = document.getElementById('btnPrev');
-    const nextBtn = document.getElementById('btnNext');
-    const submitBtn = document.getElementById('btnSubmit');
-    const stepText = document.getElementById('stepIndicatorText');
-
-    if (prevBtn) prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-flex';
-    if (nextBtn) nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-flex';
-    if (submitBtn) submitBtn.style.display = currentStep === totalSteps ? 'inline-flex' : 'none';
-    if (stepText) stepText.textContent = `Etape ${currentStep} sur ${totalSteps}`;
-}
-
-function validateStep(step) {
-    const stepEl = document.querySelector(`.form-step[data-step="${step}"]`);
-    if (!stepEl) return true;
-
-    const requiredFields = stepEl.querySelectorAll('[required]');
-    let valid = true;
-
-    requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-            field.classList.add('error');
-            valid = false;
-        } else {
-            field.classList.remove('error');
-        }
-    });
-
-    if (!valid) {
-        showNotification('Veuillez remplir tous les champs requis', 'error');
-    }
-
-    return valid;
-}
-
-function addRealTimeValidation() {
-    document.querySelectorAll('.form-step [required]').forEach(field => {
-        field.addEventListener('input', () => {
-            if (field.value.trim()) {
-                field.classList.remove('error');
-            }
-        });
-    });
-}
-
-function initCountryFlagSelector() {
-    const countrySelect = document.getElementById('telephone_code_pays');
-    if (!countrySelect) return;
-    countrySelect.addEventListener('change', function () {
-        const selectedOption = this.options[this.selectedIndex];
-        if (selectedOption && selectedOption.dataset.flag) {
-            this.style.backgroundImage = `url('https://flagcdn.com/w20/${selectedOption.dataset.flag}.png')`;
-        }
-    });
-}
-
-function initKeyboardNavigation() {
-    document.addEventListener('keydown', (e) => {
-        const modal = document.getElementById('personnelModal');
-        const isModalVisible = modal && modal.classList.contains('show');
-
-        if (!isModalVisible) return;
-
-        // Escape to close modal
-        if (e.key === 'Escape') {
-            closeModal();
-            return;
-        }
-
-        // Ctrl+Enter to submit or go to next step
-        if (e.ctrlKey && e.key === 'Enter') {
-            e.preventDefault();
-            if (currentStep === totalSteps) {
-                document.getElementById('personnelForm').dispatchEvent(new Event('submit'));
-            } else {
-                nextStep();
-            }
-        }
-
-        // Ctrl+Backspace to go to previous step
-        if (e.ctrlKey && e.key === 'Backspace') {
-            e.preventDefault();
-            prevStep();
-        }
-    });
-}
-
-function addKeyboardHints() {
-    const hintsContainer = document.querySelector('#modalAddPersonnel .keyboard-hints-footer');
-    if (hintsContainer) {
-        hintsContainer.innerHTML = `
-            <span class="kbd-hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> Suivant</span>
-            <span class="kbd-hint"><kbd>Ctrl</kbd>+<kbd>Back</kbd> Precedent</span>
-            <span class="kbd-hint"><kbd>Esc</kbd> Fermer</span>
-        `;
-    }
-}
-
 // Animate stat counters
 function animateStats() {
     document.querySelectorAll('.pp-stat-value[data-count]').forEach(el => {
@@ -1314,125 +1143,6 @@ function animateStats() {
         requestAnimationFrame(tick);
     });
 }
-
-function toggleDateFinContrat() {
-    const typeContrat = document.getElementById('type_contrat');
-    const dateFinGroup = document.getElementById('dateFinContratGroup');
-
-    if (typeContrat && dateFinGroup) {
-        if (typeContrat.value === 'CDD') {
-            dateFinGroup.style.display = 'block';
-        } else {
-            dateFinGroup.style.display = 'none';
-        }
-    }
-}
-
-// Load services by department (OLD - for edit modal)
-async function loadServicesOld(departementId) {
-    const serviceSelect = document.getElementById('service_id');
-
-    if (!departementId) {
-        serviceSelect.disabled = true;
-        serviceSelect.innerHTML = '<option value="">Selectionner d\'abord un departement</option>';
-        return;
-    }
-
-    serviceSelect.disabled = true;
-    serviceSelect.innerHTML = '<option value="">Chargement...</option>';
-
-    try {
-        const response = await fetch(`/personnels/services/${departementId}`);
-        const data = await response.json();
-        if (data.success && data.data.length > 0) {
-            serviceSelect.disabled = false;
-            serviceSelect.innerHTML = '<option value="">Selectionner un service (optionnel)</option>';
-            data.data.forEach(service => {
-                const option = document.createElement('option');
-                option.value = service.id;
-                option.textContent = service.nom;
-                serviceSelect.appendChild(option);
-            });
-        } else {
-            serviceSelect.disabled = false;
-            serviceSelect.innerHTML = '<option value="">Aucun service disponible</option>';
-        }
-    } catch (error) {
-        console.error('Erreur lors du chargement des services:', error);
-        serviceSelect.disabled = false;
-        serviceSelect.innerHTML = '<option value="">Erreur de chargement</option>';
-        showNotification('Erreur lors du chargement des services', 'error');
-    }
-}
-
-// Preview photo
-function previewPhoto(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('photoPreviewImg').src = e.target.result;
-            document.getElementById('photoPreview').classList.add('show');
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-// Submit form
-document.getElementById('personnelForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Validate final step
-    if (!validateStep(currentStep)) {
-        showNotification('Veuillez remplir tous les champs requis', 'error');
-        return;
-    }
-
-    const formData = new FormData(e.target);
-    const submitBtn = document.getElementById('btnSubmit');
-
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<svg class="pp-spin" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg> Enregistrement...';
-
-    try {
-        const response = await fetch('{{ route("admin.personnels.store") }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Accept': 'application/json'
-            },
-            body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.success) {
-            const nomComplet = (data.data?.prenoms ?? '') + ' ' + (data.data?.nom ?? '');
-            // Stocker le message de succès avant le rechargement
-            sessionStorage.setItem('personnel_flash', JSON.stringify({
-                type: 'success',
-                message: `✅ Personnel ${nomComplet.trim() || ''} enregistré avec succès !`
-            }));
-            closeModal();
-            window.location.reload();
-        } else {
-            // Afficher les erreurs de validation
-            if (data.errors) {
-                const lines = Object.values(data.errors).map(msgs => `• ${msgs[0]}`);
-                showNotification('Erreurs de validation :\n' + lines.join('\n'), 'error', 0);
-            } else {
-                showNotification(data.message || "Une erreur est survenue lors de l'enregistrement.", 'error', 0);
-            }
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Enregistrer';
-        }
-    } catch (error) {
-        console.error('Erreur:', error);
-        showNotification('Erreur de connexion au serveur. Veuillez réessayer.', 'error', 0);
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Enregistrer';
-    }
-});
 
 // ══════════════════════════════════════════════════════════════════
 //  PREMIUM NOTIFICATION  —  showNotification(message, type, duration)
@@ -1516,20 +1226,6 @@ function showNotification(message, type = 'info', duration = 6000) {
     }
 }
 
-// Close modal on escape key
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-});
-
-// Close modal on overlay click
-document.getElementById('personnelModal').addEventListener('click', (e) => {
-    if (e.target.id === 'personnelModal') {
-        closeModal();
-    }
-});
-
 // Delete personnel
 async function deletePersonnel(id) {
     if (!confirm('Etes-vous sur de vouloir supprimer ce personnel?')) {
@@ -1575,23 +1271,17 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // ⚡ Flash message après rechargement — EN PREMIER pour ne pas être bloqué
+    // ⚡ Flash message après rechargement (sessionStorage → notification premium)
     try {
         const flash = sessionStorage.getItem('personnel_flash');
         if (flash) {
             sessionStorage.removeItem('personnel_flash');
             const { type, message } = JSON.parse(flash);
-            // Délai suffisant pour que le DOM soit stable
             setTimeout(() => showNotification(message, type, type === 'success' ? 7000 : 0), 600);
         }
     } catch(e) { console.error('Flash error:', e); }
 
-    updateStepDisplay();
     animateStats();
-    addRealTimeValidation();
-    initCountryFlagSelector();
-    initKeyboardNavigation();
-    addKeyboardHints();
 });
 </script>
 @endsection

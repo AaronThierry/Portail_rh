@@ -1371,7 +1371,8 @@ document.getElementById('personnelFormV3').addEventListener('submit', async func
                 showModalAlert('<strong>Erreurs de validation :</strong><ul>' + errorLines.join('') + '</ul>', 'error');
             } else {
                 const msg = data.message || "Une erreur est survenue lors de l'enregistrement.";
-                showModalAlert('<strong>Erreur</strong><br>' + msg, 'error');
+                const detail = data.error ? '<br><small style="opacity:.75;font-family:monospace">' + data.error + '</small>' : '';
+                showModalAlert('<strong>Erreur</strong><br>' + msg + detail, 'error');
             }
 
             submitBtn.disabled = false;

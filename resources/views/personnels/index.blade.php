@@ -1267,61 +1267,66 @@ document.getElementById('personnelForm').addEventListener('submit', async (e) =>
         const data = await response.json();
 
         if (response.ok && data.success) {
-            showNotification('Personnel enregistre avec succes!', 'success');
+            const nomComplet = (data.data?.prenoms ?? '') + ' ' + (data.data?.nom ?? '');
+            // Stocker le message de succès avant le rechargement
+            sessionStorage.setItem('personnel_flash', JSON.stringify({
+                type: 'success',
+                message: `✅ Personnel ${nomComplet.trim() || ''} enregistré avec succès !`
+            }));
             closeModal();
-            setTimeout(() => {
-                window.location.href = window.location.href;
-            }, 800);
+            window.location.reload();
         } else {
-            // Display validation errors
+            // Afficher les erreurs de validation
             if (data.errors) {
-                let errorMessage = 'Erreurs de validation:\n';
-                Object.keys(data.errors).forEach(key => {
-                    errorMessage += `- ${data.errors[key][0]}\n`;
-                });
-                showNotification(errorMessage, 'error');
+                const lines = Object.values(data.errors).map(msgs => `• ${msgs[0]}`);
+                showNotification('Erreurs de validation :\n' + lines.join('\n'), 'error', 0);
             } else {
-                showNotification(data.message || 'Une erreur est survenue lors de l\'enregistrement', 'error');
+                showNotification(data.message || "Une erreur est survenue lors de l'enregistrement.", 'error', 0);
             }
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Enregistrer';
         }
     } catch (error) {
         console.error('Erreur:', error);
-        showNotification('Erreur de connexion au serveur', 'error');
-    } finally {
+        showNotification('Erreur de connexion au serveur. Veuillez réessayer.', 'error', 0);
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Enregistrer';
     }
 });
 
 // Notification system
-function showNotification(message, type = 'info') {
-    // Remove existing notifications
-    const existingNotif = document.querySelector('.notification-toast');
-    if (existingNotif) {
-        existingNotif.remove();
-    }
+// duration : ms avant fermeture automatique (0 = persistant, fermeture manuelle uniquement)
+function showNotification(message, type = 'info', duration = 5000) {
+    // Supprimer toute notification existante du même type
+    document.querySelectorAll('.notification-toast').forEach(n => n.remove());
+
+    const icons = {
+        success: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>',
+        error:   '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+        info:    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    };
 
     const notif = document.createElement('div');
     notif.className = `notification-toast notification-${type}`;
     notif.innerHTML = `
         <div class="notification-content">
-            <div class="notification-icon">
-                ${type === 'success' ? '&#10003;' : type === 'error' ? '&#10005;' : '&#8505;'}
-            </div>
+            <div class="notification-icon">${icons[type] ?? icons.info}</div>
             <div class="notification-message">${message.replace(/\n/g, '<br>')}</div>
         </div>
-        <button class="notification-close" onclick="this.parentElement.remove()">&times;</button>
+        <button class="notification-close" onclick="this.closest('.notification-toast').remove()" title="Fermer">&times;</button>
     `;
     document.body.appendChild(notif);
 
-    setTimeout(() => {
-        notif.classList.add('show');
-    }, 100);
+    // Animation d'entrée
+    requestAnimationFrame(() => notif.classList.add('show'));
 
-    setTimeout(() => {
-        notif.classList.remove('show');
-        setTimeout(() => notif.remove(), 300);
-    }, 5000);
+    // Fermeture automatique uniquement si duration > 0
+    if (duration > 0) {
+        setTimeout(() => {
+            notif.classList.remove('show');
+            setTimeout(() => notif.remove(), 350);
+        }, duration);
+    }
 }
 
 // Close modal on escape key
@@ -1356,14 +1361,17 @@ async function deletePersonnel(id) {
         const data = await response.json();
 
         if (data.success) {
-            showNotification('Personnel supprime avec succes!', 'success');
-            setTimeout(() => window.location.reload(), 800);
+            sessionStorage.setItem('personnel_flash', JSON.stringify({
+                type: 'success',
+                message: '✅ Personnel supprimé avec succès.'
+            }));
+            window.location.reload();
         } else {
-            showNotification('Erreur: ' + (data.message || 'Une erreur est survenue'), 'error');
+            showNotification('Erreur : ' + (data.message || 'Une erreur est survenue'), 'error', 0);
         }
     } catch (error) {
         console.error('Erreur:', error);
-        showNotification('Erreur lors de la suppression', 'error');
+        showNotification('Erreur lors de la suppression. Veuillez réessayer.', 'error', 0);
     }
 }
 
@@ -1380,14 +1388,22 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Initializing personnel form...');
     updateStepDisplay();
     animateStats();
     addRealTimeValidation();
     initCountryFlagSelector();
     initKeyboardNavigation();
     addKeyboardHints();
-    console.log('Personnel form initialized - Step 1 active');
+
+    // Afficher le message flash stocké après un rechargement (succès / erreur)
+    const flash = sessionStorage.getItem('personnel_flash');
+    if (flash) {
+        sessionStorage.removeItem('personnel_flash');
+        try {
+            const { type, message } = JSON.parse(flash);
+            setTimeout(() => showNotification(message, type, type === 'success' ? 6000 : 0), 300);
+        } catch(e) {}
+    }
 });
 </script>
 @endsection

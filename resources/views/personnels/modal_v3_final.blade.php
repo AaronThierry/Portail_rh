@@ -727,6 +727,58 @@
     border-color: rgba(255, 149, 0, 0.2);
 }
 
+/* ==================== ALERT BANNER (inline in modal) ==================== */
+.pm-alert-banner {
+    display: none;
+    margin: 0 0 1rem 0;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.5;
+    border-left: 4px solid transparent;
+    animation: pmAlertIn 0.25s ease;
+}
+
+@keyframes pmAlertIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.pm-alert-banner.show { display: block; }
+
+.pm-alert-error {
+    background: #fef2f2;
+    border-color: #ef4444;
+    color: #991b1b;
+}
+
+.pm-alert-success {
+    background: #f0fdf4;
+    border-color: #10b981;
+    color: #065f46;
+}
+
+.pm-alert-banner strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.pm-alert-banner ul {
+    margin: 4px 0 0 0;
+    padding-left: 1.2em;
+}
+
+.dark .pm-alert-error {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+}
+
+.dark .pm-alert-success {
+    background: rgba(16, 185, 129, 0.12);
+    color: #6ee7b7;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .pm-form-grid {
@@ -807,6 +859,9 @@
             <input type="hidden" name="personnel_id">
 
             <div class="pm-modal-body">
+                <!-- Bannière d'alerte inline (erreurs / succès) -->
+                <div id="pm_alert_banner" class="pm-alert-banner" role="alert"></div>
+
                 <!-- ÉTAPE 1: Identité -->
                 <div class="pm-step-content active" data-step="1">
                     @if(auth()->user()->hasRole('Super Admin'))
@@ -1101,6 +1156,8 @@ function closePersonnelModalV3() {
 // Reset Form
 function resetFormV3() {
     document.getElementById('personnelFormV3').reset();
+    clearErrorsV3();
+    clearModalAlert();
     currentStepV3 = 1;
     showStepV3(1);
     selectContractType('CDI');
@@ -1232,6 +1289,25 @@ function selectContractType(type) {
     dateFin.required = type === 'CDD';
 }
 
+// ─── Bannière d'alerte inline ────────────────────────────────────────────────
+function showModalAlert(message, type = 'error') {
+    const banner = document.getElementById('pm_alert_banner');
+    if (!banner) return;
+    banner.className = 'pm-alert-banner show pm-alert-' + type;
+    banner.innerHTML = message;
+    // Scroll the modal body to top so the banner is visible
+    const body = banner.closest('.pm-modal-body');
+    if (body) body.scrollTop = 0;
+}
+
+function clearModalAlert() {
+    const banner = document.getElementById('pm_alert_banner');
+    if (banner) {
+        banner.className = 'pm-alert-banner';
+        banner.innerHTML = '';
+    }
+}
+
 // Form Submit
 document.getElementById('personnelFormV3').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -1239,6 +1315,7 @@ document.getElementById('personnelFormV3').addEventListener('submit', async func
     if (!validateStepV3(currentStepV3)) return;
 
     clearErrorsV3();
+    clearModalAlert();
 
     const formData = new FormData(this);
     const submitBtn = document.getElementById('pm_btn_submit');
@@ -1277,7 +1354,7 @@ document.getElementById('personnelFormV3').addEventListener('submit', async func
                 Object.keys(data.errors).forEach(fieldName => {
                     const field = document.querySelector(`[name="${fieldName}"]`);
                     const msg = data.errors[fieldName][0];
-                    errorLines.push('• ' + msg);
+                    errorLines.push('<li>' + msg + '</li>');
 
                     if (field) {
                         const stepEl = field.closest('.pm-step-content');
@@ -1291,17 +1368,10 @@ document.getElementById('personnelFormV3').addEventListener('submit', async func
 
                 if (firstStep !== null) showStepV3(firstStep);
 
-                // Afficher le toast d'erreur (fonction définie dans index.blade.php)
-                if (typeof showNotification === 'function') {
-                    showNotification('Erreurs de validation :\n' + errorLines.join('\n'), 'error', 0);
-                }
+                showModalAlert('<strong>Erreurs de validation :</strong><ul>' + errorLines.join('') + '</ul>', 'error');
             } else {
                 const msg = data.message || "Une erreur est survenue lors de l'enregistrement.";
-                if (typeof showNotification === 'function') {
-                    showNotification(msg, 'error', 0);
-                } else {
-                    alert('Erreur : ' + msg);
-                }
+                showModalAlert('<strong>Erreur</strong><br>' + msg, 'error');
             }
 
             submitBtn.disabled = false;
@@ -1309,12 +1379,7 @@ document.getElementById('personnelFormV3').addEventListener('submit', async func
         }
     } catch (error) {
         console.error('Error:', error);
-        const msg = 'Erreur de connexion au serveur. Veuillez réessayer.';
-        if (typeof showNotification === 'function') {
-            showNotification(msg, 'error', 0);
-        } else {
-            alert(msg);
-        }
+        showModalAlert('<strong>Erreur de connexion</strong><br>Impossible de joindre le serveur. Vérifiez votre connexion et réessayez.', 'error');
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalHTML;
     }

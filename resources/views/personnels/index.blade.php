@@ -677,7 +677,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    z-index: 10000;
+    z-index: 100001;
     transform: translateX(120%);
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     font-family: var(--e-font-body);

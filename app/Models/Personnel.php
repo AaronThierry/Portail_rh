@@ -325,8 +325,9 @@ class Personnel extends Model
         $prefix = "{$codeEntreprise}-{$annee}-";
 
         do {
-            // Récupérer le dernier matricule de cette année pour cette entreprise
-            $lastPersonnel = static::where('entreprise_id', $entrepriseId)
+            // Récupérer le dernier matricule de cette année (inclure les supprimés pour éviter les doublons)
+            $lastPersonnel = static::withTrashed()
+                ->where('entreprise_id', $entrepriseId)
                 ->where('matricule', 'like', $prefix . '%')
                 ->orderBy('matricule', 'desc')
                 ->first();
@@ -335,7 +336,8 @@ class Personnel extends Model
             $number = $lastPersonnel ? (intval(substr($lastPersonnel->matricule, -5)) + 1) : 1;
             $matricule = sprintf('%s%05d', $prefix, $number);
 
-        } while (static::where('matricule', $matricule)->exists());
+        // Vérifier l'unicité y compris les enregistrements supprimés
+        } while (static::withTrashed()->where('matricule', $matricule)->exists());
 
         return $matricule;
     }

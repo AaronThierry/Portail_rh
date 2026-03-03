@@ -1260,27 +1260,48 @@ document.getElementById('personnelFormV3').addEventListener('submit', async func
         const data = await response.json();
 
         if (response.ok && data.success !== false) {
-            submitBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Créé avec succès!';
-
-            setTimeout(() => {
-                closePersonnelModalV3();
-                window.location.reload();
-            }, 1000);
+            // Stocker le message de succès avant le rechargement (lu par index.blade.php)
+            const nomComplet = ((data.data?.prenoms ?? '') + ' ' + (data.data?.nom ?? '')).trim();
+            sessionStorage.setItem('personnel_flash', JSON.stringify({
+                type: 'success',
+                message: '✅ Personnel' + (nomComplet ? ' ' + nomComplet : '') + ' enregistré avec succès !'
+            }));
+            closePersonnelModalV3();
+            window.location.reload();
         } else {
             if (data.errors) {
+                // Naviguer vers l'étape contenant la première erreur
+                let firstStep = null;
+                const errorLines = [];
+
                 Object.keys(data.errors).forEach(fieldName => {
                     const field = document.querySelector(`[name="${fieldName}"]`);
+                    const msg = data.errors[fieldName][0];
+                    errorLines.push('• ' + msg);
+
                     if (field) {
                         const stepEl = field.closest('.pm-step-content');
                         if (stepEl) {
                             const stepNum = parseInt(stepEl.dataset.step);
-                            showStepV3(stepNum);
+                            if (firstStep === null || stepNum < firstStep) firstStep = stepNum;
                         }
-                        showFieldError(field, data.errors[fieldName][0]);
+                        showFieldError(field, msg);
                     }
                 });
+
+                if (firstStep !== null) showStepV3(firstStep);
+
+                // Afficher le toast d'erreur (fonction définie dans index.blade.php)
+                if (typeof showNotification === 'function') {
+                    showNotification('Erreurs de validation :\n' + errorLines.join('\n'), 'error', 0);
+                }
             } else {
-                alert('Erreur: ' + (data.message || 'Une erreur est survenue'));
+                const msg = data.message || "Une erreur est survenue lors de l'enregistrement.";
+                if (typeof showNotification === 'function') {
+                    showNotification(msg, 'error', 0);
+                } else {
+                    alert('Erreur : ' + msg);
+                }
             }
 
             submitBtn.disabled = false;
@@ -1288,7 +1309,12 @@ document.getElementById('personnelFormV3').addEventListener('submit', async func
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Erreur de connexion au serveur');
+        const msg = 'Erreur de connexion au serveur. Veuillez réessayer.';
+        if (typeof showNotification === 'function') {
+            showNotification(msg, 'error', 0);
+        } else {
+            alert(msg);
+        }
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalHTML;
     }

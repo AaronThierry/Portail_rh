@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePersonnelRequest extends FormRequest
 {
@@ -27,8 +28,8 @@ class StorePersonnelRequest extends FormRequest
             'departement_id' => ['nullable', 'exists:departements,id'],
             'service_id' => ['nullable', 'exists:services,id'],
 
-            // Informations personnelles
-            'matricule' => ['nullable', 'string', 'max:50', 'unique:personnels,matricule'],
+            // Informations personnelles — les règles unique ignorent les enregistrements soft-deleted
+            'matricule' => ['nullable', 'string', 'max:50', Rule::unique('personnels', 'matricule')->whereNull('deleted_at')],
             'nom' => ['required', 'string', 'max:100'],
             'prenoms' => ['required', 'string', 'max:150'],
             'sexe' => ['nullable', 'in:M,F'],
@@ -36,13 +37,13 @@ class StorePersonnelRequest extends FormRequest
 
             // Coordonnées
             'adresse' => ['nullable', 'string'],
-            'email' => ['nullable', 'email', 'max:255', 'unique:personnels,email'],
+            'email' => ['nullable', 'email', 'max:255', Rule::unique('personnels', 'email')->whereNull('deleted_at')],
             'telephone' => ['nullable', 'string', 'max:20'],
             'telephone_code_pays' => ['nullable', 'string', 'max:10'],
             'telephone_whatsapp' => ['nullable', 'boolean'],
 
             // Documents
-            'numero_identification' => ['nullable', 'string', 'max:100', 'unique:personnels,numero_identification'],
+            'numero_identification' => ['nullable', 'string', 'max:100', Rule::unique('personnels', 'numero_identification')->whereNull('deleted_at')],
 
             // Poste et contrat
             'poste' => ['nullable', 'string', 'max:150'],

@@ -1317,8 +1317,8 @@ function showNotification(message, type = 'info', duration = 5000) {
     `;
     document.body.appendChild(notif);
 
-    // Animation d'entrée
-    requestAnimationFrame(() => notif.classList.add('show'));
+    // Animation d'entrée (double RAF pour garantir la transition CSS)
+    requestAnimationFrame(() => requestAnimationFrame(() => notif.classList.add('show')));
 
     // Fermeture automatique uniquement si duration > 0
     if (duration > 0) {
@@ -1388,22 +1388,23 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // ⚡ Flash message après rechargement — EN PREMIER pour ne pas être bloqué
+    try {
+        const flash = sessionStorage.getItem('personnel_flash');
+        if (flash) {
+            sessionStorage.removeItem('personnel_flash');
+            const { type, message } = JSON.parse(flash);
+            // Délai suffisant pour que le DOM soit stable
+            setTimeout(() => showNotification(message, type, type === 'success' ? 7000 : 0), 600);
+        }
+    } catch(e) { console.error('Flash error:', e); }
+
     updateStepDisplay();
     animateStats();
     addRealTimeValidation();
     initCountryFlagSelector();
     initKeyboardNavigation();
     addKeyboardHints();
-
-    // Afficher le message flash stocké après un rechargement (succès / erreur)
-    const flash = sessionStorage.getItem('personnel_flash');
-    if (flash) {
-        sessionStorage.removeItem('personnel_flash');
-        try {
-            const { type, message } = JSON.parse(flash);
-            setTimeout(() => showNotification(message, type, type === 'success' ? 6000 : 0), 300);
-        } catch(e) {}
-    }
 });
 </script>
 @endsection

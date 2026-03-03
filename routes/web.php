@@ -22,6 +22,7 @@ use App\Http\Controllers\AbsenceAdminController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ChefEntrepriseController;
 use App\Http\Controllers\RequeteController;
+use App\Http\Controllers\BulletinImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -245,6 +246,10 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
         Route::post('admin-requetes/{requete}/reply', [RequeteController::class, 'adminReply'])->name('admin-requetes.reply');
         Route::post('admin-requetes/{requete}/close', [RequeteController::class, 'adminClose'])->name('admin-requetes.close');
     });
+
+    // Import automatique des bulletins de paie
+    Route::get('bulletins-paie/import',  [BulletinImportController::class, 'index'])->name('bulletins-paie.import.index');
+    Route::post('bulletins-paie/import', [BulletinImportController::class, 'store'])->name('bulletins-paie.import.store');
 
     // Gestion des bulletins de paie
     Route::get('bulletins-paie', [BulletinPaieController::class, 'index'])->name('bulletins-paie.index');

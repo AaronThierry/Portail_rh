@@ -12,7 +12,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Import automatique des bulletins de paie : le 1er du mois à 01h00
+        // Place les PDFs dans storage/app/imports/bulletins/{entreprise_id}/ avant l'exécution
+        // $schedule->command('bulletins:import --notify')->monthlyOn(1, '01:00');
     }
 
     /**

@@ -662,85 +662,225 @@
     font-size: 0.8125rem;
 }
 
-/* ==================== NOTIFICATION TOAST ==================== */
-.notification-toast {
+/* ==================== PREMIUM NOTIFICATION (hrp-notif) ==================== */
+.hrp-notif {
     position: fixed;
-    top: 24px;
-    right: 24px;
-    min-width: 320px;
-    max-width: 440px;
-    padding: 16px 20px;
-    border-radius: var(--e-radius);
-    background: var(--e-surface);
-    border: 1px solid var(--e-border);
-    box-shadow: var(--e-shadow-lg);
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    bottom: 28px;
+    right: 28px;
+    width: 360px;
+    background: rgba(255, 255, 255, 0.93);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 18px;
+    box-shadow:
+        0 24px 48px rgba(0, 0, 0, 0.12),
+        0 8px 16px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(0, 0, 0, 0.04);
+    padding: 18px 18px 0 18px;
     z-index: 100001;
-    transform: translateX(120%);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
     font-family: var(--e-font-body);
+    transform: translateY(calc(100% + 48px)) scale(0.94);
+    opacity: 0;
+    transition:
+        transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity   0.3s ease;
 }
 
-.notification-toast.show {
-    transform: translateX(0);
+.hrp-notif.hrp-show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
 }
 
-.notification-toast .notification-content {
+.hrp-notif.hrp-hide {
+    transform: translateY(calc(100% + 48px)) scale(0.94);
+    opacity: 0;
+    transition:
+        transform 0.35s cubic-bezier(0.55, 0, 1, 0.45),
+        opacity   0.25s ease;
+}
+
+.hrp-notif-inner {
     display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
+    align-items: flex-start;
+    gap: 14px;
+    padding-bottom: 16px;
 }
 
-.notification-toast .notification-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    font-weight: 700;
+/* ── Icon ──────────────────────────────── */
+.hrp-notif-icon-wrap {
+    position: relative;
+    width: 42px;
+    height: 42px;
     flex-shrink: 0;
 }
 
-.notification-success .notification-icon {
-    background: var(--e-emerald-pale);
-    color: var(--e-emerald);
+.hrp-notif-icon-bg {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.notification-error .notification-icon {
-    background: var(--e-red-pale);
-    color: var(--e-red);
+.hrp-notif-success .hrp-notif-icon-bg {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
 }
 
-.notification-info .notification-icon {
-    background: var(--e-blue-pale);
-    color: var(--e-blue);
+.hrp-notif-error .hrp-notif-icon-bg {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
 }
 
-.notification-toast .notification-message {
-    font-size: 0.8125rem;
-    color: var(--e-text);
+.hrp-notif-info .hrp-notif-icon-bg {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+/* Animated check stroke */
+.hrp-check-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+}
+
+.hrp-notif-success .hrp-check-path {
+    animation: hrp-draw-check 0.5s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+}
+
+@keyframes hrp-draw-check {
+    to { stroke-dashoffset: 0; }
+}
+
+/* Icon ring pulse */
+.hrp-notif-ring {
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 2.5px solid #10b981;
+    opacity: 0;
+}
+
+.hrp-notif-success .hrp-notif-ring {
+    animation: hrp-ring-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) 0.4s both;
+}
+
+@keyframes hrp-ring-pulse {
+    0%   { opacity: 0.8; transform: scale(0.85); }
+    100% { opacity: 0;   transform: scale(1.55); }
+}
+
+/* ── Body ──────────────────────────────── */
+.hrp-notif-body {
+    flex: 1;
+    min-width: 0;
+    padding-top: 1px;
+}
+
+.hrp-notif-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.hrp-notif-success .hrp-notif-label { color: #059669; }
+.hrp-notif-error   .hrp-notif-label { color: #dc2626; }
+.hrp-notif-info    .hrp-notif-label { color: #2563eb; }
+
+.hrp-notif-msg {
+    font-size: 0.875rem;
+    color: #1e293b;
     font-weight: 500;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
-.notification-toast .notification-close {
+/* ── Close ─────────────────────────────── */
+.hrp-notif-close {
     background: none;
     border: none;
-    font-size: 1.25rem;
-    color: var(--e-text-tertiary);
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
     cursor: pointer;
-    padding: 4px;
-    line-height: 1;
-    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+    margin-top: -1px;
 }
 
-.notification-toast .notification-close:hover {
-    color: var(--e-text);
+.hrp-notif-close:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #475569;
+}
+
+/* ── Progress bar ──────────────────────── */
+.hrp-notif-progress {
+    height: 3px;
+    background: rgba(0, 0, 0, 0.05);
+    margin: 0 -18px;
+}
+
+.hrp-notif-bar {
+    height: 100%;
+    transform-origin: left;
+    transform: scaleX(1);
+    border-radius: 0 3px 3px 0;
+}
+
+.hrp-notif-success .hrp-notif-bar {
+    background: linear-gradient(90deg, #059669 0%, #10b981 50%, #34d399 100%);
+}
+
+.hrp-notif-error .hrp-notif-bar {
+    background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+}
+
+.hrp-notif-info .hrp-notif-bar {
+    background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 100%);
+}
+
+/* ── Dark mode ─────────────────────────── */
+.dark .hrp-notif {
+    background: rgba(15, 23, 42, 0.92);
+    border-color: rgba(255, 255, 255, 0.07);
+    box-shadow:
+        0 24px 48px rgba(0, 0, 0, 0.45),
+        0 8px 16px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.dark .hrp-notif-msg { color: #e2e8f0; }
+
+.dark .hrp-notif-success .hrp-notif-icon-bg {
+    background: linear-gradient(135deg, rgba(16,185,129,0.22) 0%, rgba(52,211,153,0.14) 100%);
+}
+
+.dark .hrp-notif-error .hrp-notif-icon-bg {
+    background: linear-gradient(135deg, rgba(239,68,68,0.22) 0%, rgba(248,113,113,0.14) 100%);
+}
+
+.dark .hrp-notif-info .hrp-notif-icon-bg {
+    background: linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(96,165,250,0.14) 100%);
+}
+
+.dark .hrp-notif-close:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #94a3b8;
+}
+
+.dark .hrp-notif-progress { background: rgba(255,255,255,0.06); }
+
+/* ── Responsive ────────────────────────── */
+@media (max-width: 480px) {
+    .hrp-notif {
+        right: 12px;
+        bottom: 12px;
+        width: calc(100vw - 24px);
+    }
 }
 
 /* ==================== SPINNER ==================== */
@@ -1294,37 +1434,84 @@ document.getElementById('personnelForm').addEventListener('submit', async (e) =>
     }
 });
 
-// Notification system
-// duration : ms avant fermeture automatique (0 = persistant, fermeture manuelle uniquement)
-function showNotification(message, type = 'info', duration = 5000) {
-    // Supprimer toute notification existante du même type
-    document.querySelectorAll('.notification-toast').forEach(n => n.remove());
+// ══════════════════════════════════════════════════════════════════
+//  PREMIUM NOTIFICATION  —  showNotification(message, type, duration)
+//  duration : ms avant fermeture auto (0 = persistant)
+// ══════════════════════════════════════════════════════════════════
+function showNotification(message, type = 'info', duration = 6000) {
+    // Fermer les notifications existantes avec animation
+    document.querySelectorAll('.hrp-notif').forEach(n => {
+        n.classList.add('hrp-hide');
+        setTimeout(() => n.remove(), 400);
+    });
+
+    const labels = { success: 'Succès', error: 'Erreur', info: 'Information', warning: 'Attention' };
 
     const icons = {
-        success: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>',
-        error:   '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-        info:    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+        success: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="hrp-check-path" d="M20 6L9 17L4 12"
+                          stroke="#10b981" stroke-width="2.5"
+                          stroke-linecap="round" stroke-linejoin="round"
+                          pathLength="1"/>
+                  </svg>`,
+        error:   `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="18" y1="6" x2="6"  y2="18" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="6"  y1="6" x2="18" y2="18" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>`,
+        info:    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="#3b82f6" stroke-width="2.2"/>
+                    <line x1="12" y1="8"  x2="12"    y2="12"   stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"   stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>`,
     };
 
+    const progressHTML = duration > 0
+        ? `<div class="hrp-notif-progress"><div class="hrp-notif-bar"></div></div>`
+        : '';
+
     const notif = document.createElement('div');
-    notif.className = `notification-toast notification-${type}`;
+    notif.className = `hrp-notif hrp-notif-${type}`;
+    notif.setAttribute('role', 'status');
+    notif.setAttribute('aria-live', 'polite');
     notif.innerHTML = `
-        <div class="notification-content">
-            <div class="notification-icon">${icons[type] ?? icons.info}</div>
-            <div class="notification-message">${message.replace(/\n/g, '<br>')}</div>
+        <div class="hrp-notif-inner">
+            <div class="hrp-notif-icon-wrap">
+                <div class="hrp-notif-icon-bg">${icons[type] ?? icons.info}</div>
+                <div class="hrp-notif-ring"></div>
+            </div>
+            <div class="hrp-notif-body">
+                <div class="hrp-notif-label">${labels[type] ?? type}</div>
+                <div class="hrp-notif-msg">${message.replace(/\n/g, '<br>')}</div>
+            </div>
+            <button class="hrp-notif-close"
+                    onclick="this.closest('.hrp-notif').classList.add('hrp-hide'); setTimeout(() => this.closest('.hrp-notif').remove(), 400)"
+                    title="Fermer" aria-label="Fermer">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
         </div>
-        <button class="notification-close" onclick="this.closest('.notification-toast').remove()" title="Fermer">&times;</button>
+        ${progressHTML}
     `;
     document.body.appendChild(notif);
 
-    // Animation d'entrée (double RAF pour garantir la transition CSS)
-    requestAnimationFrame(() => requestAnimationFrame(() => notif.classList.add('show')));
+    // ① Entrée avec ressort (spring)
+    requestAnimationFrame(() => requestAnimationFrame(() => notif.classList.add('hrp-show')));
 
-    // Fermeture automatique uniquement si duration > 0
+    // ② Progress bar : shrink de gauche à droite
     if (duration > 0) {
+        const bar = notif.querySelector('.hrp-notif-bar');
+        if (bar) {
+            bar.style.transition = `transform ${duration}ms linear`;
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                bar.style.transform = 'scaleX(0)';
+            }));
+        }
+        // ③ Auto-dismiss
         setTimeout(() => {
-            notif.classList.remove('show');
-            setTimeout(() => notif.remove(), 350);
+            notif.classList.add('hrp-hide');
+            notif.classList.remove('hrp-show');
+            setTimeout(() => notif.remove(), 400);
         }, duration);
     }
 }

@@ -31,7 +31,7 @@ class UpdatePersonnelRequest extends FormRequest
             'service_id' => ['nullable', 'exists:services,id'],
 
             // Informations personnelles
-            'matricule' => ['sometimes', 'string', 'max:50', Rule::unique('personnels', 'matricule')->ignore($personnelId)],
+            'matricule' => ['sometimes', 'string', 'max:50', Rule::unique('personnels', 'matricule')->ignore($personnelId)->whereNull('deleted_at')],
             'nom' => ['sometimes', 'string', 'max:100'],
             'prenoms' => ['sometimes', 'string', 'max:150'],
             'sexe' => ['nullable', 'in:M,F'],
@@ -39,13 +39,13 @@ class UpdatePersonnelRequest extends FormRequest
 
             // Coordonnées
             'adresse' => ['nullable', 'string'],
-            'email' => ['sometimes', 'email', 'max:255', Rule::unique('personnels', 'email')->ignore($personnelId)],
+            'email' => ['sometimes', 'email', 'max:255', Rule::unique('personnels', 'email')->ignore($personnelId)->whereNull('deleted_at')],
             'telephone' => ['nullable', 'string', 'max:20'],
             'telephone_code_pays' => ['nullable', 'string', 'max:10'],
             'telephone_whatsapp' => ['nullable', 'boolean'],
 
             // Documents
-            'numero_identification' => ['nullable', 'string', 'max:100', Rule::unique('personnels', 'numero_identification')->ignore($personnelId)],
+            'numero_identification' => ['nullable', 'string', 'max:100', Rule::unique('personnels', 'numero_identification')->ignore($personnelId)->whereNull('deleted_at')],
 
             // Poste et contrat
             'poste' => ['nullable', 'string', 'max:150'],

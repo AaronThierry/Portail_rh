@@ -79,7 +79,9 @@ class BulletinPaie extends Model
 
     public function personnel()
     {
-        return $this->belongsTo(Personnel::class);
+        // withTrashed() : un bulletin doit toujours afficher les infos du
+        // personnel même si celui-ci a été soft-deleted depuis l'émission.
+        return $this->belongsTo(Personnel::class)->withTrashed();
     }
 
     public function entreprise()

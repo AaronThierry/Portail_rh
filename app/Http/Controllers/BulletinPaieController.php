@@ -298,7 +298,7 @@ class BulletinPaieController extends Controller
         );
 
         $fileName = sprintf('%s_%d_%02d.pdf',
-            Str::slug($bulletin->personnel->matricule),
+            Str::slug($bulletin->personnel?->matricule ?? 'inconnu'),
             $bulletin->annee,
             $bulletin->mois
         );
@@ -340,7 +340,7 @@ class BulletinPaieController extends Controller
         }
 
         $nomTelecharge = sprintf('Bulletin_%s_%s_%d.pdf',
-            Str::slug($bulletin->personnel->nom_complet),
+            Str::slug($bulletin->personnel?->nom_complet ?? 'inconnu'),
             BulletinPaie::MOIS_COURTS[$bulletin->mois],
             $bulletin->annee
         );
@@ -410,9 +410,9 @@ class BulletinPaieController extends Controller
             foreach ($bulletins as $bulletin) {
                 fputcsv($file, [
                     $bulletin->reference,
-                    $bulletin->personnel->matricule,
-                    $bulletin->personnel->nom,
-                    $bulletin->personnel->prenoms,
+                    $bulletin->personnel?->matricule ?? '',
+                    $bulletin->personnel?->nom ?? '',
+                    $bulletin->personnel?->prenoms ?? '',
                     $bulletin->mois_nom,
                     $bulletin->annee,
                     $bulletin->salaire_brut,

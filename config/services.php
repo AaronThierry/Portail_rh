@@ -36,10 +36,9 @@ return [
         'model' => env('OLLAMA_MODEL', 'llama3.2'),
     ],
 
-    'twilio' => [
-        'sid'           => env('TWILIO_SID', ''),
-        'token'         => env('TWILIO_AUTH_TOKEN', ''),
-        'whatsapp_from' => env('TWILIO_WHATSAPP_FROM', ''),
+    'whatchimp' => [
+        'api_key'  => env('WHATCHIMP_API_KEY', ''),
+        'base_url' => 'https://app.whatchimp.com/api/v1',
     ],
 
     'whatsapp' => [

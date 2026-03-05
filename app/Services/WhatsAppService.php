@@ -3,35 +3,33 @@
 namespace App\Services;
 
 use App\Models\Personnel;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Twilio\Rest\Client;
-use Twilio\Exceptions\TwilioException;
 
 /**
- * WhatsApp Notification Service — Twilio
+ * WhatsApp Notification Service — WhatChimp
  *
- * Envoie des messages WhatsApp via l'API Twilio (actif 24h/24).
- * Utilise le SDK officiel Twilio PHP pour la fiabilité et la simplicité.
+ * Envoie des messages WhatsApp via l'API officielle WhatChimp
+ * (Meta WhatsApp Business API).
  *
  * Configuration requise dans .env :
- *   TWILIO_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- *   TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- *   TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
+ *   WHATCHIMP_API_KEY=xxxxx|xxxxxxxxxxxxxxxx
  *   WHATSAPP_ENABLED=true
  *   WHATSAPP_DEFAULT_COUNTRY_CODE=226
  */
 class WhatsAppService
 {
     protected bool $enabled;
-    protected string $from;
     protected string $defaultCountryCode;
-    protected ?Client $client = null;
+    protected string $apiKey;
+    protected string $baseUrl;
 
     public function __construct()
     {
         $this->enabled            = config('services.whatsapp.enabled', false);
-        $this->from               = config('services.twilio.whatsapp_from', '');
         $this->defaultCountryCode = config('services.whatsapp.default_country_code', '226');
+        $this->apiKey             = config('services.whatchimp.api_key', '');
+        $this->baseUrl            = config('services.whatchimp.base_url', 'https://app.whatchimp.com/api/v1');
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -51,32 +49,34 @@ class WhatsAppService
             return false;
         }
 
+        $phone = $this->formatPhone($phone);
+
         try {
-            $message = $this->client()->messages->create(
-                'whatsapp:+' . $this->formatPhone($phone),
-                [
-                    'from' => $this->from,
-                    'body' => $body,
-                ]
-            );
+            $response = Http::withToken($this->apiKey)
+                ->acceptJson()
+                ->post("{$this->baseUrl}/whatsapp/send", [
+                    'phone'   => $phone,
+                    'message' => $body,
+                ]);
 
-            Log::info('WhatsApp envoyé', [
-                'to'  => $phone,
-                'sid' => $message->sid,
+            $data = $response->json();
+
+            if ($response->successful() && ($data['status'] ?? null) !== '0') {
+                Log::info('WhatChimp: message envoyé', ['to' => $phone]);
+                return true;
+            }
+
+            Log::warning('WhatChimp: envoi échoué', [
+                'to'       => $phone,
+                'status'   => $data['status'] ?? null,
+                'message'  => $data['message'] ?? 'Réponse inconnue',
+                'http_code'=> $response->status(),
             ]);
 
-            return true;
-
-        } catch (TwilioException $e) {
-            Log::error('WhatsApp: erreur Twilio', [
-                'to'    => $phone,
-                'code'  => $e->getCode(),
-                'error' => $e->getMessage(),
-            ]);
             return false;
 
         } catch (\Exception $e) {
-            Log::error('WhatsApp: exception inattendue', [
+            Log::error('WhatChimp: exception', [
                 'to'    => $phone,
                 'error' => $e->getMessage(),
             ]);
@@ -248,7 +248,7 @@ class WhatsAppService
      */
     public function sendBulkToPersonnels(array $personnelIds, string $message): array
     {
-        $results   = ['sent' => 0, 'failed' => 0, 'skipped' => 0];
+        $results    = ['sent' => 0, 'failed' => 0, 'skipped' => 0];
         $personnels = Personnel::whereIn('id', $personnelIds)
             ->whereNotNull('telephone')
             ->get();
@@ -258,7 +258,7 @@ class WhatsAppService
                 ? $results['sent']++
                 : $results['failed']++;
 
-            usleep(300_000); // 300 ms entre chaque envoi (rate limit Twilio)
+            usleep(200_000); // 200 ms entre chaque envoi (rate limit API)
         }
 
         $results['skipped'] = count($personnelIds) - $personnels->count();
@@ -272,16 +272,13 @@ class WhatsAppService
 
     public function isEnabled(): bool
     {
-        $sid   = config('services.twilio.sid', '');
-        $token = config('services.twilio.token', '');
-
-        return $this->enabled && !empty($sid) && !empty($token) && !empty($this->from);
+        return $this->enabled && !empty($this->apiKey);
     }
 
     public function isValidPhoneNumber(string $phone): bool
     {
         $cleaned = preg_replace('/[^0-9]/', '', $phone);
-        return \strlen($cleaned) >= 8 && \strlen($cleaned) <= 15;
+        return strlen($cleaned) >= 8 && strlen($cleaned) <= 15;
     }
 
     protected function buildPhone(Personnel $personnel): string
@@ -296,17 +293,5 @@ class WhatsAppService
     protected function formatPhone(string $phone): string
     {
         return preg_replace('/[^0-9]/', '', $phone);
-    }
-
-    protected function client(): Client
-    {
-        if ($this->client === null) {
-            $this->client = new Client(
-                config('services.twilio.sid'),
-                config('services.twilio.token')
-            );
-        }
-
-        return $this->client;
     }
 }

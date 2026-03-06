@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Conge;
 use App\Notifications\CongeStatusNotification;
+use App\Services\WhatsAppService;
 
 class CongeAdminController extends Controller
 {
@@ -126,6 +127,9 @@ class CongeAdminController extends Controller
         if ($conge->user) {
             $conge->user->notify(new CongeStatusNotification($conge, 'approuve'));
         }
+        if ($conge->personnel) {
+            app(WhatsAppService::class)->notifyCongeValidation($conge, $conge->personnel);
+        }
 
         return back()->with('success', 'La demande de congé a été approuvée définitivement.');
     }
@@ -164,6 +168,9 @@ class CongeAdminController extends Controller
         $conge->load('personnel', 'typeConge');
         if ($conge->user) {
             $conge->user->notify(new CongeStatusNotification($conge, 'refuse'));
+        }
+        if ($conge->personnel) {
+            app(WhatsAppService::class)->notifyCongeValidation($conge, $conge->personnel);
         }
 
         return back()->with('success', 'La demande de congé a été refusée.');

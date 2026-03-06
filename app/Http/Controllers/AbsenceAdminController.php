@@ -9,6 +9,7 @@ use App\Models\TypeAbsence;
 use App\Models\Personnel;
 use App\Models\User;
 use App\Notifications\AbsenceStatusNotification;
+use App\Services\WhatsAppService;
 
 class AbsenceAdminController extends Controller
 {
@@ -209,6 +210,9 @@ class AbsenceAdminController extends Controller
         if ($userEmploye) {
             $userEmploye->notify(new AbsenceStatusNotification($absence, 'approuvee'));
         }
+        if ($absence->personnel) {
+            app(WhatsAppService::class)->notifyAbsenceValidation($absence, $absence->personnel);
+        }
 
         return back()->with('success', 'L\'absence a été approuvée et justifiée.');
     }
@@ -260,6 +264,9 @@ class AbsenceAdminController extends Controller
         $userEmploye = User::where('personnel_id', $absence->personnel_id)->first();
         if ($userEmploye) {
             $userEmploye->notify(new AbsenceStatusNotification($absence, 'refusee'));
+        }
+        if ($absence->personnel && $absence->source === 'employe') {
+            app(WhatsAppService::class)->notifyAbsenceValidation($absence, $absence->personnel);
         }
 
         return back()->with('success', 'L\'absence a été refusée.');

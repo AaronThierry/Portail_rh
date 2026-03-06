@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Notifications\BulletinPaieNotification;
+use App\Services\WhatsAppService;
 
 class BulletinPaieController extends Controller
 {
@@ -152,11 +153,12 @@ class BulletinPaieController extends Controller
             'commentaire' => $request->commentaire,
         ]);
 
-        // Envoyer notification WhatsApp automatiquement
+        // Envoyer notifications (DB + WhatsApp)
         if ($personnel->user) {
             $personnel->user->notify(new BulletinPaieNotification($bulletin));
             $bulletin->update(['notifie_at' => now()]);
         }
+        app(WhatsAppService::class)->notifyBulletinPaie($bulletin, $personnel);
 
         return redirect()->route('admin.bulletins-paie.index', [
             'annee' => $request->annee,
@@ -216,11 +218,12 @@ class BulletinPaieController extends Controller
                     'notifier_employe' => true,
                 ]);
 
-                // Notification WhatsApp
+                // Notifications (DB + WhatsApp)
                 if ($personnel->user) {
                     $personnel->user->notify(new BulletinPaieNotification($bulletin));
                     $bulletin->update(['notifie_at' => now()]);
                 }
+                app(WhatsAppService::class)->notifyBulletinPaie($bulletin, $personnel);
 
                 $resultats['success']++;
             }

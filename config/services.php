@@ -36,9 +36,8 @@ return [
         'model' => env('OLLAMA_MODEL', 'llama3.2'),
     ],
 
-    'whatchimp' => [
-        'api_key'  => env('WHATCHIMP_API_KEY', ''),
-        'base_url' => 'https://app.whatchimp.com/api/v1',
+    'wasender' => [
+        'api_key' => env('WASENDER_API_KEY', ''),
     ],
 
     'whatsapp' => [

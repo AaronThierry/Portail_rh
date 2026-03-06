@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * WhatsApp Notification Service — WhatChimp
+ * WhatsApp Notification Service — WASenderAPI
  *
- * Envoie des messages WhatsApp via l'API officielle WhatChimp
- * (Meta WhatsApp Business API).
+ * Envoie des messages WhatsApp via WASenderAPI (connexion QR code).
+ * Pas de templates Meta requis — envoi direct comme WhatsApp Web.
  *
  * Configuration requise dans .env :
- *   WHATCHIMP_API_KEY=xxxxx|xxxxxxxxxxxxxxxx
+ *   WASENDER_API_KEY=your_api_key_here
  *   WHATSAPP_ENABLED=true
  *   WHATSAPP_DEFAULT_COUNTRY_CODE=226
  */
@@ -22,26 +22,20 @@ class WhatsAppService
     protected bool $enabled;
     protected string $defaultCountryCode;
     protected string $apiKey;
-    protected string $baseUrl;
+
+    const API_URL = 'https://wasenderapi.com/api/send-message';
 
     public function __construct()
     {
         $this->enabled            = config('services.whatsapp.enabled', false);
         $this->defaultCountryCode = config('services.whatsapp.default_country_code', '226');
-        $this->apiKey             = config('services.whatchimp.api_key', '');
-        $this->baseUrl            = config('services.whatchimp.base_url', 'https://app.whatchimp.com/api/v1');
+        $this->apiKey             = config('services.wasender.api_key', '');
     }
 
     // ─────────────────────────────────────────────────────────────────────────
     // Envoi de base
     // ─────────────────────────────────────────────────────────────────────────
 
-    /**
-     * Envoyer un message texte WhatsApp
-     *
-     * @param string $phone Numéro complet avec indicatif (ex: 22607123456)
-     * @param string $body  Contenu du message
-     */
     public function sendMessage(string $phone, string $body): bool
     {
         if (!$this->isEnabled()) {
@@ -53,30 +47,26 @@ class WhatsAppService
 
         try {
             $response = Http::withToken($this->apiKey)
-                ->acceptJson()
-                ->post("{$this->baseUrl}/whatsapp/send", [
-                    'phone'   => $phone,
-                    'message' => $body,
+                ->post(self::API_URL, [
+                    'to'   => $phone,
+                    'text' => $body,
                 ]);
 
-            $data = $response->json();
-
-            if ($response->successful() && ($data['status'] ?? null) !== '0') {
-                Log::info('WhatChimp: message envoyé', ['to' => $phone]);
+            if ($response->successful()) {
+                Log::info('WASender: message envoyé', ['to' => $phone]);
                 return true;
             }
 
-            Log::warning('WhatChimp: envoi échoué', [
+            Log::warning('WASender: envoi échoué', [
                 'to'       => $phone,
-                'status'   => $data['status'] ?? null,
-                'message'  => $data['message'] ?? 'Réponse inconnue',
-                'http_code'=> $response->status(),
+                'status'   => $response->status(),
+                'body'     => $response->body(),
             ]);
 
             return false;
 
         } catch (\Exception $e) {
-            Log::error('WhatChimp: exception', [
+            Log::error('WASender: exception', [
                 'to'    => $phone,
                 'error' => $e->getMessage(),
             ]);
@@ -84,9 +74,6 @@ class WhatsAppService
         }
     }
 
-    /**
-     * Envoyer à un personnel via son profil
-     */
     public function sendToPersonnel(Personnel $personnel, string $message): bool
     {
         if (!$personnel->telephone) {
@@ -100,9 +87,6 @@ class WhatsAppService
     // Notifications métier
     // ─────────────────────────────────────────────────────────────────────────
 
-    /**
-     * Notification statut congé (approuvé ou refusé)
-     */
     public function notifyCongeValidation($conge, Personnel $personnel): bool
     {
         $statut = $conge->statut === 'approuve' ? 'approuvée ✅' : 'refusée ❌';
@@ -124,9 +108,6 @@ class WhatsAppService
         return $this->sendToPersonnel($personnel, $body);
     }
 
-    /**
-     * Notification statut absence (approuvée ou refusée)
-     */
     public function notifyAbsenceValidation($absence, Personnel $personnel): bool
     {
         $statut  = $absence->statut === 'approuvee' ? 'approuvée ✅' : 'refusée ❌';
@@ -147,9 +128,6 @@ class WhatsAppService
         return $this->sendToPersonnel($personnel, $body);
     }
 
-    /**
-     * Notifier les admins d'une nouvelle demande de congé
-     */
     public function notifyNewConge($conge, Personnel $adminPersonnel): bool
     {
         $employe = $conge->personnel->nom . ' ' . $conge->personnel->prenoms;
@@ -166,9 +144,6 @@ class WhatsAppService
         return $this->sendToPersonnel($adminPersonnel, $body);
     }
 
-    /**
-     * Notifier les admins d'une nouvelle déclaration d'absence
-     */
     public function notifyNewAbsence($absence, Personnel $adminPersonnel): bool
     {
         $employe = $absence->personnel->nom . ' ' . $absence->personnel->prenoms;
@@ -183,9 +158,6 @@ class WhatsAppService
         return $this->sendToPersonnel($adminPersonnel, $body);
     }
 
-    /**
-     * Notification bulletin de paie disponible
-     */
     public function notifyBulletinPaie($bulletin, Personnel $personnel): bool
     {
         $moisNom = $bulletin->mois_nom ?? $bulletin->mois;
@@ -193,15 +165,13 @@ class WhatsAppService
         $body  = "*Portail RH+ — Bulletin de paie disponible* 📄\n\n";
         $body .= "Bonjour {$personnel->prenoms},\n\n";
         $body .= "Votre bulletin de paie de *{$moisNom} {$bulletin->annee}* est disponible.\n\n";
-        $body .= "Connectez-vous sur le portail RH+ pour le consulter et le télécharger.\n\n";
+        $body .= "Connectez-vous sur le portail RH+ pour le consulter et le télécharger.\n";
+        $body .= "🔗 " . config('app.url') . "\n\n";
         $body .= "Cordialement,\nService RH";
 
         return $this->sendToPersonnel($personnel, $body);
     }
 
-    /**
-     * Notification nouveau document dans le dossier agent
-     */
     public function notifyDocumentAgent($document, Personnel $personnel): bool
     {
         $titre     = $document->titre ?? $document->nom_original;
@@ -218,9 +188,6 @@ class WhatsAppService
         return $this->sendToPersonnel($personnel, $body);
     }
 
-    /**
-     * Notification de création de compte
-     */
     public function notifyAccountCreation($user, Personnel $personnel, string $temporaryPassword): bool
     {
         $body  = "*Bienvenue sur le Portail RH+* 🎉\n\n";
@@ -235,17 +202,11 @@ class WhatsAppService
         return $this->sendToPersonnel($personnel, $body);
     }
 
-    /**
-     * Notification personnalisée
-     */
     public function notifyCustom(Personnel $personnel, string $title, string $content): bool
     {
         return $this->sendToPersonnel($personnel, "*Portail RH+ — {$title}*\n\n{$content}");
     }
 
-    /**
-     * Envoi en masse à plusieurs personnels
-     */
     public function sendBulkToPersonnels(array $personnelIds, string $message): array
     {
         $results    = ['sent' => 0, 'failed' => 0, 'skipped' => 0];
@@ -258,7 +219,7 @@ class WhatsAppService
                 ? $results['sent']++
                 : $results['failed']++;
 
-            usleep(200_000); // 200 ms entre chaque envoi (rate limit API)
+            usleep(500_000); // 500ms entre envois (anti-spam WhatsApp)
         }
 
         $results['skipped'] = count($personnelIds) - $personnels->count();

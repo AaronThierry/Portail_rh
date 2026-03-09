@@ -211,14 +211,11 @@ class DossierAgentController extends Controller
 
             DB::commit();
 
-            // Notification WhatsApp si document visible par l'employe
-            if ($document->visible_employe && !$document->confidentiel && $personnel->user) {
+            // Notification WhatsApp à l'employé si document visible
+            if ($document->visible_employe && !$document->confidentiel) {
                 try {
-                    $whatsapp = app(WhatsAppService::class);
-                    if ($whatsapp->isEnabled()) {
-                        $document->load('categorie');
-                        $whatsapp->notifyDocumentAgent($document, $personnel);
-                    }
+                    $document->load('categorie');
+                    app(WhatsAppService::class)->notifyDocumentAgent($document, $personnel);
                 } catch (\Throwable $e) {
                     Log::warning('WhatsApp notification document echouee', ['error' => $e->getMessage()]);
                 }
@@ -531,29 +528,28 @@ class DossierAgentController extends Controller
                 Storage::disk('dossiers_agents')->put($chemin, file_get_contents($file));
 
                 $document = DocumentAgent::create([
-                    'personnel_id' => $personnel->id,
-                    'categorie_id' => $request->categorie_id,
-                    'uploaded_by' => auth()->id(),
-                    'nom_original' => $nomOriginal,
-                    'nom_fichier' => $nomFichier,
-                    'chemin' => $chemin,
-                    'extension' => $extension,
-                    'mime_type' => $file->getMimeType(),
-                    'taille' => $file->getSize(),
-                    'titre' => pathinfo($nomOriginal, PATHINFO_FILENAME),
+                    'personnel_id'  => $personnel->id,
+                    'categorie_id'  => $request->categorie_id,
+                    'uploaded_by'   => auth()->id(),
+                    'nom_original'  => $nomOriginal,
+                    'nom_fichier'   => $nomFichier,
+                    'chemin'        => $chemin,
+                    'extension'     => $extension,
+                    'mime_type'     => $file->getMimeType(),
+                    'taille'        => $file->getSize(),
+                    'titre'         => pathinfo($nomOriginal, PATHINFO_FILENAME),
+                    'visible_employe' => true,
+                    'confidentiel'  => false,
                 ]);
 
                 $document->logAction('upload');
                 $uploaded[] = $document;
 
-                // Notification WhatsApp si visible par l'employe
-                if ($document->visible_employe && !$document->confidentiel && $personnel->user) {
+                // Notification WhatsApp à l'employé si document visible
+                if ($document->visible_employe && !$document->confidentiel) {
                     try {
-                        $whatsapp = app(WhatsAppService::class);
-                        if ($whatsapp->isEnabled()) {
-                            $document->load('categorie');
-                            $whatsapp->notifyDocumentAgent($document, $personnel);
-                        }
+                        $document->load('categorie');
+                        app(WhatsAppService::class)->notifyDocumentAgent($document, $personnel);
                     } catch (\Throwable $e2) {
                         Log::warning('WhatsApp notification document echouee', ['error' => $e2->getMessage()]);
                     }

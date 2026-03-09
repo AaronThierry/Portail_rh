@@ -188,11 +188,6 @@ class WhatsAppService
         $body .= "Bonjour *{$personnel->prenoms}*,\n\n";
         $body .= "Votre bulletin de paie est disponible sur le portail.\n\n";
         $body .= "📄 *Période :* {$moisNom} {$bulletin->annee}\n";
-
-        if (!empty($bulletin->salaire_net)) {
-            $body .= "💵 *Salaire net :* " . number_format($bulletin->salaire_net, 0, ',', ' ') . " FCFA\n";
-        }
-
         $body .= "\n📥 *Téléchargez votre bulletin en vous connectant :*\n";
         $body .= "https://portail-rh.com/\n\n";
         $body .= "_(Rubrique Mon Espace → Bulletins de paie)_\n\n";

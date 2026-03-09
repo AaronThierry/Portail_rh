@@ -20,6 +20,7 @@ use App\Models\TypeAbsence;
 use App\Http\Requests\StoreCongeRequest;
 use App\Notifications\NouvelleDemandeCongeNotification;
 use App\Notifications\NouvelleDemandeAbsenceNotification;
+use App\Services\WhatsAppService;
 
 class EspaceEmployeController extends Controller
 {
@@ -509,6 +510,14 @@ class EspaceEmployeController extends Controller
 
         if ($adminsRH->isNotEmpty()) {
             Notification::send($adminsRH, new NouvelleDemandeCongeNotification($conge));
+
+            // Notification WhatsApp au Super Admin
+            $whatsapp = app(WhatsAppService::class);
+            foreach ($adminsRH as $admin) {
+                if ($admin->personnel) {
+                    $whatsapp->notifyNewConge($conge, $admin->personnel);
+                }
+            }
         }
 
         return redirect()->route('espace-employe.conges')
@@ -766,6 +775,14 @@ class EspaceEmployeController extends Controller
 
         if ($adminsRH->isNotEmpty()) {
             Notification::send($adminsRH, new NouvelleDemandeAbsenceNotification($absence));
+
+            // Notification WhatsApp au Super Admin
+            $whatsapp = app(WhatsAppService::class);
+            foreach ($adminsRH as $admin) {
+                if ($admin->personnel) {
+                    $whatsapp->notifyNewAbsence($absence, $admin->personnel);
+                }
+            }
         }
 
         return redirect()->route('espace-employe.absences')

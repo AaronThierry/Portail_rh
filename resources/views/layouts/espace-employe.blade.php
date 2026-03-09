@@ -11,373 +11,332 @@
     <!-- Theme init — must run BEFORE any render to prevent FOUC -->
     <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark');}})();</script>
 
-    <!-- Google Fonts — Swiss Editorial Design System -->
+    <!-- Google Fonts — Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         /* ============================================================
-           ESPACE EMPLOYE — Swiss Corporate Editorial Design System
-           Geometric precision · Warm accents · Editorial typography
+           PORTAIL RH+ — ESPACE EMPLOYÉ
+           Charte Orange · Bleu · Gris — Simple, Pro, Élégant
            ============================================================ */
+
         :root {
             color-scheme: light;
-            --e-slate-50: #f8fafc;
-            --e-slate-100: #f1f5f9;
-            --e-slate-200: #e2e8f0;
-            --e-slate-300: #cbd5e1;
-            --e-slate-400: #94a3b8;
-            --e-slate-500: #64748b;
-            --e-slate-600: #475569;
-            --e-slate-700: #334155;
-            --e-slate-800: #1e293b;
-            --e-slate-900: #0f172a;
-            --e-slate-950: #020617;
-            --e-blue: #3b7dd8;
-            --e-blue-deep: #2563a0;
-            --e-blue-pale: #dbeafe;
-            --e-blue-wash: #eff6ff;
-            --e-amber: #e8850c;
-            --e-amber-bright: #f59e0b;
-            --e-amber-pale: #fef3c7;
-            --e-amber-wash: #fffbeb;
-            --e-emerald: #059669;
-            --e-emerald-pale: #d1fae5;
-            --e-red: #dc2626;
-            --e-red-pale: #fee2e2;
-            --e-surface: #ffffff;
-            --e-surface-elevated: #ffffff;
-            --e-bg: var(--e-slate-50);
-            --e-text: var(--e-slate-900);
-            --e-text-secondary: var(--e-slate-500);
-            --e-text-tertiary: var(--e-slate-400);
-            --e-border: var(--e-slate-200);
-            --e-border-light: var(--e-slate-100);
-            --e-shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-            --e-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-            --e-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
-            --e-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
-            --e-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
-            --e-radius: 12px;
-            --e-radius-lg: 16px;
-            --e-radius-xl: 20px;
-            --e-font-body: 'DM Sans', system-ui, sans-serif;
-            --e-font-display: 'DM Serif Display', Georgia, serif;
 
-            /* Layout */
-            --ee-sidebar-width: 272px;
+            /* ── Orange ── */
+            --o-500: #f97316;
+            --o-600: #ea580c;
+            --o-100: #ffedd5;
+            --o-50:  #fff7ed;
+
+            /* ── Bleu ── */
+            --b-600: #2563eb;
+            --b-700: #1d4ed8;
+            --b-100: #dbeafe;
+            --b-50:  #eff6ff;
+
+            /* ── Gris ── */
+            --g-50:  #f9fafb;
+            --g-100: #f3f4f6;
+            --g-200: #e5e7eb;
+            --g-300: #d1d5db;
+            --g-400: #9ca3af;
+            --g-500: #6b7280;
+            --g-600: #4b5563;
+            --g-700: #374151;
+            --g-800: #1f2937;
+            --g-900: #111827;
+
+            /* ── Sémantique ── */
+            --success:      #16a34a;
+            --success-pale: #dcfce7;
+            --danger:       #dc2626;
+            --danger-pale:  #fee2e2;
+            --warning:      #d97706;
+            --warning-pale: #fef3c7;
+
+            /* ── Layout ── */
+            --bg:       #f0f2f5;
+            --surface:  #ffffff;
+            --border:   #e5e7eb;
+            --border-light: #f3f4f6;
+            --text:     #111827;
+            --text-2:   #6b7280;
+            --text-3:   #9ca3af;
+
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow:    0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
+
+            --radius:    8px;
+            --radius-sm: 6px;
+            --radius-lg: 12px;
+
+            --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --sidebar-w: 256px;
         }
 
+        /* ── DARK MODE ── */
         .dark {
             color-scheme: dark;
-            --e-surface: #1a2236;
-            --e-surface-elevated: #1f2d42;
-            --e-bg: #0d1520;
-            --e-text: #e8edf5;
-            --e-text-secondary: #8fa3bd;
-            --e-text-tertiary: #5d7a9a;
-            --e-border: #2a3a52;
-            --e-border-light: #1a2a3e;
-            --e-blue: #5b9cf6;
-            --e-blue-deep: #3d7de8;
-            --e-blue-pale: rgba(91, 156, 246, 0.18);
-            --e-blue-wash: rgba(91, 156, 246, 0.09);
-            --e-amber-pale: rgba(232, 133, 12, 0.18);
-            --e-amber-wash: rgba(232, 133, 12, 0.09);
-            --e-emerald-pale: rgba(5, 150, 105, 0.18);
-            --e-red-pale: rgba(220, 38, 38, 0.18);
-            --e-shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
-            --e-shadow: 0 1px 4px rgba(0,0,0,0.4);
-            --e-shadow-md: 0 4px 10px rgba(0,0,0,0.35);
-            --e-shadow-lg: 0 12px 24px rgba(0,0,0,0.4);
-            --e-shadow-xl: 0 24px 40px rgba(0,0,0,0.45);
+            --bg:       #0d1117;
+            --surface:  #161b22;
+            --border:   #30363d;
+            --border-light: #21262d;
+            --text:     #e6edf3;
+            --text-2:   #8b949e;
+            --text-3:   #6e7681;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow:    0 1px 4px rgba(0,0,0,0.4);
+            --shadow-md: 0 4px 10px rgba(0,0,0,0.35);
+            --shadow-lg: 0 12px 24px rgba(0,0,0,0.4);
+            --shadow-xl: 0 24px 40px rgba(0,0,0,0.45);
+            --o-50:      rgba(249,115,22,0.08);
+            --o-100:     rgba(249,115,22,0.15);
+            --b-50:      rgba(37,99,235,0.08);
+            --b-100:     rgba(37,99,235,0.15);
+            --success-pale: rgba(22,163,74,0.15);
+            --danger-pale:  rgba(220,38,38,0.15);
+            --warning-pale: rgba(217,119,6,0.15);
         }
 
-        /* ==================== ANIMATIONS ==================== */
-        @keyframes ee-fadeUp {
-            from { opacity: 0; transform: translateY(14px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeUp 0.35s ease both; }
 
-        @keyframes ee-slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes ee-scaleIn {
-            from { opacity: 0; transform: scale(0.97); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes ee-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .6; }
-        }
-
-        .animate-fade-in {
-            animation: ee-fadeUp 0.5s ease both;
-        }
-
-        /* ==================== BASE ==================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ── RESET ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: var(--e-font-body);
-            background: var(--e-bg);
-            color: var(--e-text);
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            overflow-x: hidden;
             font-size: 0.9375rem;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
         }
 
-        /* ==================== LAYOUT ==================== */
+        /* ════════════════════════════════════════
+           LAYOUT
+        ════════════════════════════════════════ */
         .ee-layout {
             display: flex;
             min-height: 100vh;
         }
 
-        /* ==================== SIDEBAR ==================== */
+        /* ════════════════════════════════════════
+           SIDEBAR
+        ════════════════════════════════════════ */
         .ee-sidebar {
-            width: var(--ee-sidebar-width);
-            background: var(--e-slate-900);
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
             position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
+            top: 0; left: 0; bottom: 0;
             z-index: 100;
             display: flex;
             flex-direction: column;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+            overflow: hidden;
         }
 
-        /* Sidebar Brand */
+        /* ── Brand ── */
         .ee-sidebar-brand {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 1.25rem 1.25rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            gap: 0.625rem;
+            padding: 1rem 1rem 0.875rem;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
         .ee-brand-logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--e-amber) 0%, #f59e0b 100%);
-            border-radius: 10px;
+            width: 36px; height: 36px;
+            background: var(--o-500);
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--e-slate-900);
+            color: white;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(232, 133, 12, 0.3);
         }
-
-        .ee-brand-logo svg {
-            width: 22px;
-            height: 22px;
-        }
-
-        .ee-brand-text {
-            display: flex;
-            flex-direction: column;
-        }
+        .ee-brand-logo svg { width: 19px; height: 19px; }
 
         .ee-brand-name {
-            font-size: 1.0625rem;
-            font-weight: 400;
-            color: white;
-            letter-spacing: -0.01em;
-        }
-
-        .ee-brand-name strong {
+            font-size: 0.9375rem;
             font-weight: 700;
-            color: var(--e-amber);
+            color: var(--text);
+            letter-spacing: -0.02em;
         }
-
+        .ee-brand-name span { color: var(--o-500); }
         .ee-brand-label {
+            display: block;
             font-size: 0.6875rem;
-            color: var(--e-slate-500);
             font-weight: 500;
+            color: var(--text-3);
+            letter-spacing: 0.5px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        /* Sidebar Header */
-        .ee-sidebar-header {
-            padding: 1.25rem 1.25rem 1.125rem;
+        /* ── User Profile ── */
+        .ee-sidebar-user {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--border);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .ee-user-avatar-wrapper {
-            position: relative;
-            margin-bottom: 0.875rem;
+            gap: 0.75rem;
+            flex-shrink: 0;
         }
 
         .ee-user-avatar {
-            width: 72px;
-            height: 72px;
+            width: 40px; height: 40px;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.15);
             object-fit: cover;
-            background: rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+            transition: border-color 0.2s;
         }
+        .ee-sidebar-user:hover .ee-user-avatar { border-color: var(--o-500); }
 
-        .ee-user-avatar:hover {
-            border-color: var(--e-amber);
-        }
-
-        .ee-user-status {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 14px;
-            height: 14px;
-            background: var(--e-emerald);
-            border: 2.5px solid var(--e-slate-900);
-            border-radius: 50%;
-        }
-
-        .ee-user-info { width: 100%; }
-
+        .ee-user-details { flex: 1; min-width: 0; }
         .ee-user-name {
-            font-family: var(--e-font-display);
-            font-size: 1.0625rem;
-            font-weight: 400;
-            color: white;
-            margin-bottom: 0.125rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+        }
+        .ee-user-role {
+            font-size: 0.75rem;
+            color: var(--text-2);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .ee-user-role {
-            font-size: 0.8125rem;
-            color: var(--e-slate-400);
-            margin-bottom: 0.625rem;
-        }
-
-        .ee-user-matricule {
+        .ee-user-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.375rem;
-            font-size: 0.6875rem;
-            font-weight: 600;
-            color: var(--e-slate-900);
-            background: var(--e-amber);
-            padding: 0.3rem 0.75rem;
-            border-radius: 6px;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: white;
+            background: var(--o-500);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
 
-        .ee-user-matricule svg {
-            width: 11px;
-            height: 11px;
-        }
-
-        /* Sidebar Nav */
+        /* ── Navigation ── */
         .ee-sidebar-nav {
             flex: 1;
-            padding: 0.75rem 0.75rem;
+            padding: 0.75rem 0.625rem;
             overflow-y: auto;
         }
-
         .ee-sidebar-nav::-webkit-scrollbar { width: 3px; }
-        .ee-sidebar-nav::-webkit-scrollbar-track { background: transparent; }
-        .ee-sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
+        .ee-sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-        .ee-nav-section { margin-bottom: 1.25rem; }
+        .ee-nav-section { margin-bottom: 1rem; }
 
         .ee-nav-title {
             font-size: 0.625rem;
             font-weight: 700;
-            color: var(--e-slate-500);
+            color: var(--text-3);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 0 0.75rem;
-            margin-bottom: 0.5rem;
+            letter-spacing: 1.2px;
+            padding: 0 0.625rem;
+            margin-bottom: 0.375rem;
         }
 
         .ee-nav-link {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.6875rem 0.75rem;
-            border-radius: 8px;
-            color: var(--e-slate-400);
+            gap: 0.625rem;
+            padding: 0.5625rem 0.625rem;
+            border-radius: var(--radius-sm);
+            color: var(--text-2);
             text-decoration: none;
             font-size: 0.8125rem;
             font-weight: 500;
-            transition: all 0.2s ease;
-            margin-bottom: 2px;
+            transition: all 0.15s ease;
+            margin-bottom: 1px;
             position: relative;
         }
-
         .ee-nav-link:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--e-slate-200);
+            background: var(--g-50);
+            color: var(--text);
         }
-
+        .dark .ee-nav-link:hover {
+            background: rgba(255,255,255,0.04);
+            color: var(--text);
+        }
         .ee-nav-link.active {
-            background: rgba(59, 125, 216, 0.12);
-            color: white;
+            background: var(--o-50);
+            color: var(--o-600);
+            font-weight: 600;
         }
-
+        .dark .ee-nav-link.active {
+            background: rgba(249,115,22,0.1);
+            color: #fb923c;
+        }
         .ee-nav-link.active::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 50%;
+            left: 0; top: 50%;
             transform: translateY(-50%);
-            width: 3px;
-            height: 20px;
-            background: var(--e-amber);
+            width: 3px; height: 18px;
+            background: var(--o-500);
             border-radius: 0 3px 3px 0;
         }
-
         .ee-nav-link svg {
-            width: 18px;
-            height: 18px;
+            width: 17px; height: 17px;
             flex-shrink: 0;
-            opacity: 0.7;
+            opacity: 0.65;
+            transition: opacity 0.15s;
         }
-
-        .ee-nav-link.active svg { opacity: 1; }
+        .ee-nav-link.active svg, .ee-nav-link:hover svg { opacity: 1; }
 
         .ee-nav-badge {
             margin-left: auto;
-            background: rgba(255, 255, 255, 0.12);
-            color: var(--e-slate-300);
+            background: var(--o-100);
+            color: var(--o-600);
             font-size: 0.625rem;
             font-weight: 700;
-            padding: 0.2rem 0.5rem;
-            border-radius: 6px;
-            min-width: 20px;
-            text-align: center;
+            padding: 0.15rem 0.45rem;
+            border-radius: 10px;
+        }
+        .dark .ee-nav-badge {
+            background: rgba(249,115,22,0.18);
+            color: #fb923c;
         }
 
-        .ee-nav-badge.warning { background: rgba(232, 133, 12, 0.25); color: var(--e-amber-bright); }
-        .ee-nav-badge.danger { background: rgba(220, 38, 38, 0.25); color: #fca5a5; }
-
-        /* Sidebar Footer */
+        /* ── Sidebar Footer ── */
         .ee-sidebar-footer {
-            padding: 1rem 0.75rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.75rem 0.625rem;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
         }
 
         .ee-btn-portal {
@@ -386,25 +345,32 @@
             justify-content: center;
             gap: 0.5rem;
             width: 100%;
-            padding: 0.6875rem;
-            background: rgba(59, 125, 216, 0.1);
-            border: 1px solid rgba(59, 125, 216, 0.2);
-            border-radius: 8px;
-            color: var(--e-blue);
+            padding: 0.5625rem;
+            background: var(--b-50);
+            border: 1px solid var(--b-100);
+            border-radius: var(--radius-sm);
+            color: var(--b-600);
             font-size: 0.8125rem;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.2s ease;
-            margin-bottom: 0.5rem;
+            transition: all 0.15s;
+            font-family: var(--font);
         }
-
         .ee-btn-portal:hover {
-            background: rgba(59, 125, 216, 0.18);
-            border-color: rgba(59, 125, 216, 0.3);
+            background: var(--b-100);
+            border-color: var(--b-600);
         }
-
-        .ee-btn-portal svg { width: 16px; height: 16px; }
+        .dark .ee-btn-portal {
+            background: rgba(37,99,235,0.08);
+            border-color: rgba(37,99,235,0.2);
+            color: #60a5fa;
+        }
+        .dark .ee-btn-portal:hover {
+            background: rgba(37,99,235,0.15);
+            border-color: rgba(37,99,235,0.4);
+        }
+        .ee-btn-portal svg { width: 15px; height: 15px; }
 
         .ee-btn-logout {
             display: flex;
@@ -412,462 +378,359 @@
             justify-content: center;
             gap: 0.5rem;
             width: 100%;
-            padding: 0.6875rem;
-            background: rgba(220, 38, 38, 0.08);
-            border: 1px solid rgba(220, 38, 38, 0.15);
-            border-radius: 8px;
-            color: #f87171;
+            padding: 0.5625rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-2);
             font-size: 0.8125rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s;
+            font-family: var(--font);
         }
-
         .ee-btn-logout:hover {
-            background: rgba(220, 38, 38, 0.15);
-            border-color: rgba(220, 38, 38, 0.3);
-            color: #fca5a5;
+            background: var(--danger-pale);
+            border-color: var(--danger);
+            color: var(--danger);
         }
+        .ee-btn-logout svg { width: 15px; height: 15px; }
 
-        .ee-btn-logout svg { width: 16px; height: 16px; }
-
-        /* ==================== MAIN CONTENT ==================== */
+        /* ════════════════════════════════════════
+           MAIN
+        ════════════════════════════════════════ */
         .ee-main {
             flex: 1;
-            margin-left: var(--ee-sidebar-width);
+            margin-left: var(--sidebar-w);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: var(--e-bg);
         }
 
-        /* ==================== HEADER ==================== */
+        /* ════════════════════════════════════════
+           HEADER
+        ════════════════════════════════════════ */
         .ee-header {
-            background: var(--e-surface);
-            border-bottom: 1px solid var(--e-border);
-            padding: 0.875rem 2rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 1.5rem;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 50;
-            box-shadow: var(--e-shadow-sm);
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
         }
 
         .ee-header-left {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.875rem;
         }
 
         .ee-mobile-toggle {
             display: none;
-            width: 40px;
-            height: 40px;
-            border: 1px solid var(--e-border);
-            border-radius: 8px;
-            background: var(--e-surface);
-            color: var(--e-text);
+            width: 36px; height: 36px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            color: var(--text-2);
             cursor: pointer;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: all 0.15s;
         }
-
         .ee-mobile-toggle:hover {
-            background: var(--e-blue-wash);
-            color: var(--e-blue);
-            border-color: var(--e-blue);
+            background: var(--o-50);
+            border-color: var(--o-500);
+            color: var(--o-600);
         }
+        .ee-mobile-toggle svg { width: 18px; height: 18px; }
 
-        .ee-mobile-toggle svg { width: 20px; height: 20px; }
-
-        .ee-page-info { display: flex; flex-direction: column; gap: 0.125rem; }
+        .ee-page-info { display: flex; flex-direction: column; gap: 1px; }
 
         .ee-page-title {
-            font-family: var(--e-font-display);
-            font-size: 1.375rem;
-            font-weight: 400;
-            color: var(--e-text);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
             letter-spacing: -0.01em;
+            line-height: 1.2;
         }
 
         .ee-breadcrumb {
             display: flex;
             align-items: center;
             gap: 0.375rem;
-            font-size: 0.8125rem;
-            color: var(--e-text-secondary);
+            font-size: 0.75rem;
+            color: var(--text-3);
         }
-
-        .ee-breadcrumb a {
-            color: var(--e-blue);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .ee-breadcrumb a:hover { color: var(--e-blue-deep); }
-        .ee-breadcrumb svg { width: 12px; height: 12px; opacity: 0.5; }
+        .ee-breadcrumb a { color: var(--b-600); text-decoration: none; font-weight: 500; }
+        .ee-breadcrumb a:hover { color: var(--b-700); }
+        .ee-breadcrumb svg { width: 10px; height: 10px; opacity: 0.5; }
 
         .ee-header-right {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.375rem;
         }
 
         .ee-header-btn {
             position: relative;
-            width: 40px;
-            height: 40px;
-            border: 1px solid var(--e-border);
-            border-radius: 8px;
-            background: var(--e-surface);
-            color: var(--e-text-secondary);
+            width: 36px; height: 36px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            color: var(--text-2);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: all 0.15s;
         }
-
         .ee-header-btn:hover {
-            background: var(--e-blue-wash);
-            color: var(--e-blue);
-            border-color: var(--e-blue);
+            background: var(--o-50);
+            border-color: var(--o-500);
+            color: var(--o-600);
         }
-
-        .ee-header-btn svg { width: 20px; height: 20px; }
+        .ee-header-btn svg { width: 18px; height: 18px; }
 
         .ee-header-btn .badge {
             position: absolute;
-            top: -4px;
-            right: -4px;
-            min-width: 18px;
-            height: 18px;
-            background: var(--e-red);
+            top: -5px; right: -5px;
+            min-width: 17px; height: 17px;
+            background: var(--danger);
             color: white;
-            font-size: 0.625rem;
+            font-size: 0.5625rem;
             font-weight: 700;
             border-radius: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0 4px;
-            border: 2px solid var(--e-surface);
+            padding: 0 3px;
+            border: 2px solid var(--surface);
         }
 
+        /* Theme toggle */
         .ee-theme-toggle {
-            width: 40px;
-            height: 40px;
-            border: 1px solid var(--e-border);
-            border-radius: 8px;
-            background: var(--e-surface);
-            color: var(--e-text-secondary);
+            width: 36px; height: 36px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            color: var(--text-2);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: all 0.15s;
             position: relative;
             overflow: hidden;
         }
-
         .ee-theme-toggle:hover {
-            background: rgba(245, 158, 11, 0.08);
-            color: #F59E0B;
-            border-color: rgba(245, 158, 11, 0.3);
+            background: var(--o-50);
+            border-color: var(--o-500);
+            color: var(--o-500);
         }
-
         .dark .ee-theme-toggle:hover {
-            background: rgba(147, 197, 253, 0.1);
-            color: #93C5FD;
-            border-color: rgba(147, 197, 253, 0.25);
+            background: rgba(96,165,250,0.1);
+            border-color: rgba(96,165,250,0.3);
+            color: #60a5fa;
         }
-
         .ee-theme-toggle .sun-icon,
         .ee-theme-toggle .moon-icon {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 18px; height: 18px;
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
         }
+        .ee-theme-toggle .sun-icon  { opacity: 1; transform: rotate(0) scale(1); color: var(--o-500); }
+        .ee-theme-toggle .moon-icon { opacity: 0; transform: rotate(-90deg) scale(0.5); color: #60a5fa; }
+        .dark .ee-theme-toggle .sun-icon  { opacity: 0; transform: rotate(90deg) scale(0.5); }
+        .dark .ee-theme-toggle .moon-icon { opacity: 1; transform: rotate(0) scale(1); }
 
-        .ee-theme-toggle .sun-icon {
-            opacity: 1;
-            transform: rotate(0deg) scale(1);
-            color: #F59E0B;
-        }
-
-        .ee-theme-toggle .moon-icon {
-            opacity: 0;
-            transform: rotate(-90deg) scale(0.5);
-            color: #93C5FD;
-        }
-
-        .dark .ee-theme-toggle .sun-icon {
-            opacity: 0;
-            transform: rotate(90deg) scale(0.5);
-        }
-
-        .dark .ee-theme-toggle .moon-icon {
-            opacity: 1;
-            transform: rotate(0deg) scale(1);
-        }
-
-        @keyframes ee-twinkle {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        .dark .ee-theme-toggle .moon-icon [fill="currentColor"]:not([stroke]) {
-            animation: ee-twinkle 3s ease-in-out infinite;
-        }
-
-        /* Header Avatar */
+        /* Header avatar */
         .ee-header-avatar {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            transition: all 0.2s ease;
+            margin-left: 0.25rem;
         }
-
         .ee-header-avatar img {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 32px; height: 32px;
+            border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--e-border);
-            transition: all 0.2s ease;
+            border: 2px solid var(--border);
+            transition: border-color 0.15s;
         }
-
-        .ee-header-avatar:hover img {
-            border-color: var(--e-blue);
-            box-shadow: 0 2px 8px rgba(59, 125, 216, 0.2);
-        }
-
+        .ee-header-avatar:hover img { border-color: var(--o-500); }
         .ee-header-avatar-status {
             position: absolute;
-            bottom: -1px;
-            right: -1px;
-            width: 10px;
-            height: 10px;
-            background: var(--e-emerald);
-            border: 2px solid var(--e-surface);
+            bottom: -1px; right: -1px;
+            width: 9px; height: 9px;
+            background: var(--success);
+            border: 2px solid var(--surface);
             border-radius: 50%;
         }
 
-        /* Notification btn active state */
+        /* Notification dot */
         .ee-notif-btn.has-notif::after {
             content: '';
             position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 8px;
-            height: 8px;
-            background: var(--e-red);
+            top: 7px; right: 7px;
+            width: 7px; height: 7px;
+            background: var(--danger);
             border-radius: 50%;
-            border: 2px solid var(--e-surface);
+            border: 1.5px solid var(--surface);
         }
 
-        @media (max-width: 640px) {
-            .ee-header-avatar { display: none; }
-        }
-
-        /* ==================== CONTENT ==================== */
-        .ee-content {
-            flex: 1;
-            padding: 1.75rem 2rem;
-            background: var(--e-bg);
-        }
-
-        /* ==================== DARK MODE — composants ==================== */
-        .dark .ee-header {
-            background: var(--e-surface);
-            border-bottom-color: var(--e-border);
-            box-shadow: 0 1px 0 var(--e-border), 0 4px 16px rgba(0,0,0,0.25);
-        }
-
-        .dark .ee-header-btn {
-            background: var(--e-surface-elevated);
-            border-color: var(--e-border);
-            color: var(--e-text-secondary);
-        }
-
-        .dark .ee-header-btn:hover {
-            background: var(--e-blue-pale);
-            color: var(--e-blue);
-            border-color: var(--e-blue-pale);
-        }
-
-        .dark .ee-theme-toggle {
-            background: var(--e-surface-elevated);
-            border-color: var(--e-border);
-        }
-
-        .dark .ee-mobile-toggle {
-            background: var(--e-surface-elevated);
-            border-color: var(--e-border);
-        }
-
-        .dark .ee-header-avatar img {
-            border-color: var(--e-border);
-        }
-
-        /* Notification dropdown dark mode */
-        .dark .ee-notif-dropdown {
-            background: var(--e-surface-elevated);
-            border-color: var(--e-border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-
-        .dark .ee-notif-dropdown-header {
-            border-bottom-color: var(--e-border);
-        }
-
-        .dark .ee-notif-item {
-            border-bottom-color: var(--e-border-light);
-        }
-
-        .dark .ee-notif-item:hover {
-            background: rgba(255,255,255,0.04);
-        }
-
-        /* ==================== FOOTER ==================== */
-        .ee-footer {
-            padding: 1.25rem 2rem;
-            background: var(--e-surface);
-            border-top: 1px solid var(--e-border);
-            text-align: center;
-        }
-
-        .ee-footer-text {
-            font-size: 0.8125rem;
-            color: var(--e-text-secondary);
-        }
-
-        .ee-footer-link {
-            color: var(--e-blue);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .ee-footer-link:hover { color: var(--e-blue-deep); }
-
-        /* ==================== OVERLAY MOBILE ==================== */
-        .ee-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 90;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .ee-overlay.active {
-            display: block;
-            opacity: 1;
-        }
-
-        /* ==================== RESPONSIVE ==================== */
-        @media (max-width: 1024px) {
-            .ee-sidebar { transform: translateX(-100%); }
-            .ee-sidebar.open { transform: translateX(0); }
-            .ee-main { margin-left: 0; }
-            .ee-mobile-toggle { display: flex; }
-            .ee-content { padding: 1.25rem; }
-        }
-
-        @media (max-width: 640px) {
-            .ee-header { padding: 0.75rem 1rem; }
-            .ee-content { padding: 1rem; }
-            .ee-page-title { font-size: 1.125rem; }
-            .ee-breadcrumb { display: none; }
-        }
-
-        /* ==================== NOTIFICATION DROPDOWN ==================== */
+        /* ════════════════════════════════════════
+           NOTIFICATION DROPDOWN
+        ════════════════════════════════════════ */
         .ee-notif-wrapper { position: relative; }
 
         .ee-notif-dropdown {
             display: none;
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 6px);
             right: 0;
-            width: 360px;
+            width: 340px;
             max-width: calc(100vw - 2rem);
-            background: var(--e-surface);
-            border: 1px solid var(--e-border);
-            border-radius: var(--e-radius-lg);
-            box-shadow: var(--e-shadow-xl);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
             z-index: 200;
             overflow: hidden;
         }
-        .ee-notif-dropdown.open { display: block; animation: ee-slideDown 0.2s ease; }
+        .ee-notif-dropdown.open { display: block; animation: slideDown 0.2s ease; }
 
         .ee-notif-dropdown-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--e-border);
+            padding: 0.875rem 1.125rem;
+            border-bottom: 1px solid var(--border);
         }
-        .ee-notif-dropdown-title { font-size: 0.9375rem; font-weight: 700; color: var(--e-text); }
+        .ee-notif-dropdown-title { font-size: 0.875rem; font-weight: 700; color: var(--text); }
         .ee-notif-mark-all {
-            font-size: 0.8125rem; font-weight: 500; color: var(--e-blue);
-            background: none; border: none; cursor: pointer; padding: 0;
+            font-size: 0.75rem; font-weight: 600; color: var(--b-600);
+            background: none; border: none; cursor: pointer; padding: 0; font-family: var(--font);
         }
         .ee-notif-mark-all:hover { text-decoration: underline; }
 
-        .ee-notif-dropdown-body {
-            max-height: 320px;
-            overflow-y: auto;
-        }
+        .ee-notif-dropdown-body { max-height: 300px; overflow-y: auto; }
 
         .ee-notif-item {
             display: flex;
             gap: 0.75rem;
-            padding: 0.875rem 1.25rem;
-            border-bottom: 1px solid var(--e-border-light);
+            padding: 0.75rem 1.125rem;
+            border-bottom: 1px solid var(--border-light);
             cursor: pointer;
             transition: background 0.15s;
         }
-        .ee-notif-item:hover { background: var(--e-bg); }
+        .ee-notif-item:hover { background: var(--g-50); }
+        .dark .ee-notif-item:hover { background: rgba(255,255,255,0.03); }
         .ee-notif-item:last-child { border-bottom: none; }
 
         .ee-notif-item-icon {
-            width: 36px; height: 36px; border-radius: var(--e-radius);
+            width: 34px; height: 34px; border-radius: var(--radius-sm);
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        .ee-notif-item-icon svg { width: 18px; height: 18px; }
-        .ee-notif-item-icon.success { background: var(--e-emerald-pale); color: var(--e-emerald); }
-        .ee-notif-item-icon.info { background: var(--e-blue-wash); color: var(--e-blue); }
-        .ee-notif-item-icon.warning { background: var(--e-amber-pale); color: var(--e-amber); }
-        .ee-notif-item-icon.danger { background: var(--e-red-pale); color: var(--e-red); }
+        .ee-notif-item-icon svg { width: 16px; height: 16px; }
+        .ee-notif-item-icon.success { background: var(--success-pale); color: var(--success); }
+        .ee-notif-item-icon.info    { background: var(--b-50); color: var(--b-600); }
+        .ee-notif-item-icon.warning { background: var(--warning-pale); color: var(--warning); }
+        .ee-notif-item-icon.danger  { background: var(--danger-pale); color: var(--danger); }
 
         .ee-notif-item-content { flex: 1; min-width: 0; }
         .ee-notif-item-msg {
-            font-size: 0.875rem; font-weight: 500; color: var(--e-text);
-            margin-bottom: 0.25rem;
+            font-size: 0.8125rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .ee-notif-item-time { font-size: 0.75rem; color: var(--e-text-secondary); }
+        .ee-notif-item-time { font-size: 0.6875rem; color: var(--text-3); }
 
         .ee-notif-empty {
-            padding: 2rem;
-            text-align: center;
-            font-size: 0.875rem;
-            color: var(--e-text-secondary);
+            padding: 2rem; text-align: center;
+            font-size: 0.8125rem; color: var(--text-2);
         }
 
-        /* ==================== SCROLLBAR ==================== */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        /* ════════════════════════════════════════
+           CONTENT & FOOTER
+        ════════════════════════════════════════ */
+        .ee-content {
+            flex: 1;
+            padding: 1.5rem;
+        }
+
+        .ee-footer {
+            padding: 1rem 1.5rem;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .ee-footer-text { font-size: 0.75rem; color: var(--text-3); }
+        .ee-footer-link { color: var(--o-500); text-decoration: none; font-weight: 600; }
+        .ee-footer-link:hover { color: var(--o-600); }
+
+        /* ════════════════════════════════════════
+           OVERLAY MOBILE
+        ════════════════════════════════════════ */
+        .ee-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(2px);
+            z-index: 90;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .ee-overlay.active { display: block; opacity: 1; }
+
+        /* ════════════════════════════════════════
+           SCROLLBAR
+        ════════════════════════════════════════ */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--e-border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--e-text-tertiary); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+        /* ════════════════════════════════════════
+           DARK MODE — composants
+        ════════════════════════════════════════ */
+        .dark .ee-sidebar { background: #161b22; border-right-color: #30363d; }
+        .dark .ee-header  { background: #161b22; border-bottom-color: #30363d; box-shadow: 0 1px 0 #30363d; }
+        .dark .ee-header-btn { background: #161b22; border-color: #30363d; }
+        .dark .ee-header-btn:hover { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); color: #fb923c; }
+        .dark .ee-mobile-toggle { background: #161b22; border-color: #30363d; }
+        .dark .ee-mobile-toggle:hover { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); color: #fb923c; }
+        .dark .ee-header-avatar img { border-color: #30363d; }
+        .dark .ee-notif-dropdown { background: #1c2128; border-color: #30363d; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .dark .ee-notif-dropdown-header { border-bottom-color: #30363d; }
+        .dark .ee-notif-item { border-bottom-color: #21262d; }
+        .dark .ee-footer { background: #161b22; border-top-color: #30363d; }
+        .dark .ee-brand-logo { background: var(--o-500); }
+        .dark .ee-btn-logout { border-color: #30363d; color: #8b949e; }
+
+        /* ════════════════════════════════════════
+           RESPONSIVE
+        ════════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .ee-sidebar { transform: translateX(-100%); }
+            .ee-sidebar.open { transform: translateX(0); box-shadow: var(--shadow-xl); }
+            .ee-main { margin-left: 0; }
+            .ee-mobile-toggle { display: flex; }
+            .ee-content { padding: 1rem; }
+        }
+        @media (max-width: 640px) {
+            .ee-header { padding: 0 1rem; }
+            .ee-content { padding: 0.875rem; }
+            .ee-page-title { font-size: 0.9375rem; }
+            .ee-breadcrumb { display: none; }
+            .ee-header-avatar { display: none; }
+        }
     </style>
     @yield('styles')
 </head>
@@ -876,178 +739,121 @@
         <!-- Overlay Mobile -->
         <div class="ee-overlay" id="eeOverlay" onclick="toggleSidebar()"></div>
 
-        <!-- Sidebar -->
+        <!-- ════ SIDEBAR ════ -->
         <aside class="ee-sidebar" id="eeSidebar">
-            <!-- App Branding -->
+
+            <!-- Brand -->
             <div class="ee-sidebar-brand">
                 <div class="ee-brand-logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         <path d="M21 21v-2a4 4 0 0 0-3-3.87"></path>
                     </svg>
                 </div>
-                <div class="ee-brand-text">
-                    <span class="ee-brand-name">Portail <strong>RH+</strong></span>
+                <div>
+                    <div class="ee-brand-name">Portail <span>RH+</span></div>
                     <span class="ee-brand-label">Espace Employ&eacute;</span>
                 </div>
             </div>
 
-            <div class="ee-sidebar-header">
-                @php
-                    $personnel = auth()->user()->personnel;
-                @endphp
-                <div class="ee-user-avatar-wrapper">
-                    <img src="{{ $personnel && $personnel->photo ? asset('storage/' . $personnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=200&background=1e293b&color=e2e8f0&bold=true' }}"
-                         alt="Photo"
-                         class="ee-user-avatar"
-                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=200&background=1e293b&color=e2e8f0&bold=true'">
-                    <span class="ee-user-status"></span>
-                </div>
-                <div class="ee-user-info">
-                    <div class="ee-user-name">{{ $personnel ? $personnel->civilite . ' ' . $personnel->nom . ' ' . $personnel->prenoms : auth()->user()->name }}</div>
+            <!-- User -->
+            <div class="ee-sidebar-user">
+                @php $personnel = auth()->user()->personnel; @endphp
+                <img src="{{ $personnel && $personnel->photo ? asset('storage/' . $personnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=200&background=f97316&color=ffffff&bold=true' }}"
+                     alt="Photo" class="ee-user-avatar"
+                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=200&background=f97316&color=ffffff&bold=true'">
+                <div class="ee-user-details">
+                    <div class="ee-user-name">{{ $personnel ? $personnel->nom . ' ' . $personnel->prenoms : auth()->user()->name }}</div>
                     <div class="ee-user-role">{{ $personnel->poste ?? 'Employ&eacute;' }}</div>
-                    @if($personnel && $personnel->matricule)
-                        <span class="ee-user-matricule">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
-                            {{ $personnel->matricule }}
-                        </span>
-                    @endif
                 </div>
+                @if($personnel && $personnel->matricule)
+                    <span class="ee-user-badge">{{ $personnel->matricule }}</span>
+                @endif
             </div>
 
+            <!-- Nav -->
             <nav class="ee-sidebar-nav">
-                <!-- Mon Espace -->
                 <div class="ee-nav-section">
                     <div class="ee-nav-title">Mon Espace</div>
                     <a href="{{ route('espace-employe.dashboard') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.dashboard') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                         Tableau de bord
                     </a>
                     <a href="{{ route('espace-employe.profil') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.profil') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         Mon Profil
                     </a>
                 </div>
 
-                <!-- Documents -->
                 <div class="ee-nav-section">
                     <div class="ee-nav-title">Documents</div>
                     <a href="{{ route('espace-employe.documents') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.documents') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
                         Mes Documents
                     </a>
                     <a href="{{ route('espace-employe.bulletins') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.bulletins') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                            <line x1="8" y1="21" x2="16" y2="21"></line>
-                            <line x1="12" y1="17" x2="12" y2="21"></line>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                         Bulletins de paie
                     </a>
                     <a href="{{ route('espace-employe.attestations') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.attestations') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                            <path d="M9 12l2 2 4-4"></path>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
                         Attestations
                     </a>
                 </div>
 
-                <!-- Demandes -->
                 <div class="ee-nav-section">
                     <div class="ee-nav-title">Demandes</div>
                     <a href="{{ route('espace-employe.conges') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.conges') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                         Mes Cong&eacute;s
                     </a>
                     <a href="{{ route('espace-employe.absences') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.absences') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="15" y1="9" x2="9" y2="15"></line>
-                            <line x1="9" y1="9" x2="15" y2="15"></line>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
                         Mes Absences
                     </a>
                     <a href="{{ route('espace-employe.demandes') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.demandes') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                            <path d="M9 14l2 2 4-4"></path>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 14l2 2 4-4"></path></svg>
                         Mes Demandes
                     </a>
                 </div>
 
-                <!-- Compte -->
                 <div class="ee-nav-section">
                     <div class="ee-nav-title">Compte</div>
                     <a href="{{ route('espace-employe.parametres') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.parametres') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                         Param&egrave;tres
                     </a>
                 </div>
             </nav>
 
+            <!-- Footer -->
             <div class="ee-sidebar-footer">
                 @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH']))
                 <a href="{{ route('admin.dashboard') }}" class="ee-btn-portal">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5M12 19l-7-7 7-7"></path>
-                    </svg>
-                    Portail RH
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
+                    Portail RH Admin
                 </a>
                 @endif
-                <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                     @csrf
                     <button type="submit" class="ee-btn-logout">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                            <polyline points="16 17 21 12 16 7"></polyline>
-                            <line x1="21" y1="12" x2="9" y2="12"></line>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         D&eacute;connexion
                     </button>
                 </form>
             </div>
         </aside>
 
-        <!-- Main Content -->
+        <!-- ════ MAIN ════ -->
         <main class="ee-main">
+
             <!-- Header -->
             <header class="ee-header">
                 <div class="ee-header-left">
                     <button class="ee-mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                     </button>
                     <div class="ee-page-info">
                         <h1 class="ee-page-title">@yield('page-title', 'Mon Espace')</h1>
@@ -1058,15 +864,12 @@
                         @endif
                     </div>
                 </div>
-                <div class="ee-header-right">
-                    <!-- Search (placeholder for future) -->
 
+                <div class="ee-header-right">
+                    <!-- Notifications -->
                     <div class="ee-notif-wrapper">
                         <button class="ee-header-btn ee-notif-btn" id="eeNotifBtn" title="Notifications">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                             <span class="badge" id="eeNotifBadge" style="display:none;">0</span>
                         </button>
                         <div class="ee-notif-dropdown" id="eeNotifDropdown">
@@ -1079,18 +882,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Theme -->
                     <button class="ee-theme-toggle" onclick="toggleTheme()" title="Changer le th&egrave;me">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
                             <circle cx="12" cy="12" r="4" fill="currentColor" opacity="0.15"></circle>
                             <circle cx="12" cy="12" r="4"></circle>
-                            <path d="M12 2v2"></path>
-                            <path d="M12 20v2"></path>
-                            <path d="M4.93 4.93l1.41 1.41"></path>
-                            <path d="M17.66 17.66l1.41 1.41"></path>
-                            <path d="M2 12h2"></path>
-                            <path d="M20 12h2"></path>
-                            <path d="M6.34 17.66l-1.41 1.41"></path>
-                            <path d="M19.07 4.93l-1.41 1.41"></path>
+                            <path d="M12 2v2"></path><path d="M12 20v2"></path>
+                            <path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path>
+                            <path d="M2 12h2"></path><path d="M20 12h2"></path>
+                            <path d="M6.34 17.66l-1.41 1.41"></path><path d="M19.07 4.93l-1.41 1.41"></path>
                         </svg>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" opacity="0.1"></path>
@@ -1099,26 +900,27 @@
                             <circle cx="20" cy="10" r="0.6" fill="currentColor" stroke="none"></circle>
                         </svg>
                     </button>
-                    <!-- User Quick Avatar -->
+
+                    <!-- Avatar -->
                     <a href="{{ route('espace-employe.profil') }}" class="ee-header-avatar" title="Mon Profil">
                         @php $headerPersonnel = auth()->user()->personnel; @endphp
-                        <img src="{{ $headerPersonnel && $headerPersonnel->photo ? asset('storage/' . $headerPersonnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=80&background=1e293b&color=e2e8f0&bold=true' }}"
+                        <img src="{{ $headerPersonnel && $headerPersonnel->photo ? asset('storage/' . $headerPersonnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=80&background=f97316&color=ffffff&bold=true' }}"
                              alt="Photo"
-                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=80&background=1e293b&color=e2e8f0&bold=true'">
+                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=80&background=f97316&color=ffffff&bold=true'">
                         <span class="ee-header-avatar-status"></span>
                     </a>
                 </div>
             </header>
 
             <!-- Content -->
-            <div class="ee-content">
+            <div class="ee-content animate-in">
                 @yield('content')
             </div>
 
             <!-- Footer -->
             <footer class="ee-footer">
                 <p class="ee-footer-text">
-                    &copy; {{ date('Y') }} <a href="{{ route('espace-employe.dashboard') }}" class="ee-footer-link">Portail RH</a> - Tous droits r&eacute;serv&eacute;s
+                    &copy; {{ date('Y') }} <a href="{{ route('espace-employe.dashboard') }}" class="ee-footer-link">Portail RH+</a> &mdash; Tous droits r&eacute;serv&eacute;s
                 </p>
             </footer>
         </main>
@@ -1138,7 +940,6 @@
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
 
-        // Close sidebar on window resize (desktop)
         window.addEventListener('resize', () => {
             if (window.innerWidth > 1024) {
                 const sidebar = document.getElementById('eeSidebar');
@@ -1151,12 +952,12 @@
 
         // === NOTIFICATIONS AJAX ===
         (function() {
-            const btn = document.getElementById('eeNotifBtn');
-            const dropdown = document.getElementById('eeNotifDropdown');
-            const badge = document.getElementById('eeNotifBadge');
-            const list = document.getElementById('eeNotifList');
+            const btn        = document.getElementById('eeNotifBtn');
+            const dropdown   = document.getElementById('eeNotifDropdown');
+            const badge      = document.getElementById('eeNotifBadge');
+            const list       = document.getElementById('eeNotifList');
             const markAllBtn = document.getElementById('eeMarkAllRead');
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            const csrfToken  = document.querySelector('meta[name="csrf-token"]')?.content;
 
             function fetchNotifications() {
                 fetch('/api/notifications', { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
@@ -1226,9 +1027,7 @@
                     fetch('/api/notifications/read-all', {
                         method: 'POST',
                         headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
-                    }).then(() => {
-                        fetchNotifications();
-                    }).catch(() => {});
+                    }).then(() => fetchNotifications()).catch(() => {});
                 });
             }
 

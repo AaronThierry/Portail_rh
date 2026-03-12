@@ -130,7 +130,17 @@ class RequeteController extends Controller
 
         session(['requete_chat' => $history]);
 
-        return response()->json(['reply' => $reply]);
+        // Analyser si un ticket doit être créé automatiquement
+        $escalation = $ollama->detectEscalation($history);
+
+        return response()->json([
+            'reply'               => $reply,
+            'requires_ticket'     => $escalation['requires_ticket'],
+            'suggested_sujet'     => $escalation['suggested_sujet'],
+            'suggested_categorie' => $escalation['suggested_categorie'],
+            'suggested_priorite'  => $escalation['suggested_priorite'],
+            'exchange_count'      => collect($history)->where('role', 'user')->count(),
+        ]);
     }
 
     public function show(Requete $requete)

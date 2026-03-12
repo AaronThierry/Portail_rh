@@ -132,6 +132,88 @@ PROMPT;
             ->implode(' — ');
     }
 
+    /**
+     * Analyse l'historique et détecte si la conversation nécessite une escalade vers un agent humain.
+     * Retourne un tableau avec : requires_ticket, suggested_sujet, suggested_categorie, suggested_priorite
+     */
+    public function detectEscalation(array $history): array
+    {
+        // Concaténer tous les messages utilisateur pour analyse
+        $userText = collect($history)
+            ->where('role', 'user')
+            ->pluck('content')
+            ->implode(' ')
+            ->lower();
+
+        $botText = collect($history)
+            ->where('role', 'assistant')
+            ->pluck('content')
+            ->implode(' ')
+            ->lower();
+
+        // ── Détection de priorité urgente ──────────────────────────────
+        $urgentKeywords = [
+            'urgent', 'critique', 'bloquant', 'bloqué', 'panne', 'impossible',
+            'immédiatement', 'maintenant', 'aujourd\'hui', 'grave', 'sérieux',
+            'perdu', 'disparu', 'corrompu', 'inaccessible', 'ne peut plus',
+        ];
+        $isUrgent = collect($urgentKeywords)->contains(fn($k) => str_contains($userText, $k));
+
+        // ── Détection de catégorie ─────────────────────────────────────
+        $facturationKeywords = [
+            'facture', 'paiement', 'abonnement', 'prix', 'tarif', 'remboursement',
+            'facturation', 'double débit', 'prélevé', 'erreur de paiement', 'billing',
+        ];
+        $supportKeywords = [
+            'bug', 'erreur', 'problème technique', 'ne fonctionne pas', 'ne s\'affiche pas',
+            'connexion', 'login', 'mot de passe', 'accès refusé', 'crash', '500', '404',
+            'lent', 'bloqué', 'page blanche',
+        ];
+
+        $categorie = 'question';
+        if (collect($facturationKeywords)->contains(fn($k) => str_contains($userText, $k))) {
+            $categorie = 'facturation';
+        } elseif (collect($supportKeywords)->contains(fn($k) => str_contains($userText, $k))) {
+            $categorie = 'support';
+        }
+
+        // ── Détection d'escalade nécessaire ───────────────────────────
+        $escaladeKeywords = [
+            // Problèmes que l'IA ne peut pas résoudre
+            'supprimer', 'modifier mes données', 'rembourse', 'annuler mon abonnement',
+            'données perdues', 'bug bloquant', 'ne fonctionne pas du tout', 'panne totale',
+            'depuis plusieurs jours', 'toujours pas résolu', 'plusieurs fois',
+            // Signal de frustration
+            'très en colère', 'insatisfait', 'inacceptable', 'honteux',
+            // Bot lui-même suggère l'escalade
+            'contacter le support', 'soumettre une requête', 'agent humain',
+            'je vous recommande de', 'je vous suggère de contacter',
+        ];
+
+        $requiresTicket = collect($escaladeKeywords)->contains(
+            fn($k) => str_contains($userText, $k) || str_contains($botText, $k)
+        );
+
+        // Toujours escalader après 4+ échanges sans résolution
+        $userMsgCount = collect($history)->where('role', 'user')->count();
+        if ($userMsgCount >= 4) {
+            $requiresTicket = true;
+        }
+
+        // ── Suggestion de sujet ────────────────────────────────────────
+        $firstUserMsg = collect($history)->where('role', 'user')->first()['content'] ?? '';
+        $sujet = mb_strlen($firstUserMsg) > 100
+            ? mb_substr($firstUserMsg, 0, 97) . '…'
+            : $firstUserMsg;
+
+        return [
+            'requires_ticket'     => $requiresTicket,
+            'suggested_sujet'     => $sujet,
+            'suggested_categorie' => $categorie,
+            'suggested_priorite'  => $isUrgent ? 'urgente' : 'normale',
+        ];
+    }
+
     public function isEnabled(): bool
     {
         return !empty($this->url) && !empty($this->model);

@@ -80,7 +80,7 @@
             --radius-lg: 12px;
 
             --font: 'Plus Jakarta Sans', system-ui, sans-serif;
-            --sidebar-w: 256px;
+            --sidebar-w: 64px;
         }
 
         /* ── DARK MODE ── */
@@ -141,89 +141,65 @@
         }
 
         /* ════════════════════════════════════════
-           SIDEBAR — Carbon Ember (always dark)
+           SIDEBAR — Icon Rail (always dark)
+           Inspiré du sidebar admin: slim, icônes
         ════════════════════════════════════════ */
         .ee-sidebar {
             width: var(--sidebar-w);
-            background: #0c0c11;
-            border-right: 1px solid rgba(255,255,255,.055);
+            background: #0a0a0f;
+            border-right: 1px solid rgba(255,255,255,.05);
             position: fixed;
             top: 0; left: 0; bottom: 0;
             z-index: 100;
             display: flex;
             flex-direction: column;
+            align-items: center;
             transition: transform .3s cubic-bezier(.4,0,.2,1);
-            overflow: hidden;
+            overflow: visible; /* needed for CSS tooltips */
         }
 
         /* ── Brand ── */
         .ee-sidebar-brand {
+            width: 100%;
+            padding: 14px 0 12px;
             display: flex;
             align-items: center;
-            gap: 11px;
-            padding: 18px 16px 16px;
+            justify-content: center;
             border-bottom: 1px solid rgba(255,255,255,.04);
             flex-shrink: 0;
-            position: relative;
-        }
-        .ee-sidebar-brand::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 16px; right: 16px;
-            height: 1px;
-            background: linear-gradient(90deg, rgba(255,105,48,.35), transparent);
         }
 
         .ee-brand-logo {
-            width: 34px; height: 34px;
+            width: 36px; height: 36px;
             background: #ff6930;
-            border-radius: 9px;
+            border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             color: white;
             flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(255,105,48,.3);
-        }
-        .ee-brand-logo svg { width: 17px; height: 17px; }
-
-        .ee-brand-name {
-            font-family: 'Syne', var(--font);
-            font-size: .95rem;
-            font-weight: 800;
-            color: #f0f0f5;
-            letter-spacing: -.03em;
-            line-height: 1.1;
-        }
-        .ee-brand-name span { color: #ff6930; }
-
-        .ee-brand-label {
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: .56rem;
-            font-weight: 500;
-            color: #2d2d40;
-            letter-spacing: .11em;
-            text-transform: uppercase;
-            margin-top: 3px;
-        }
-
-        /* ── User Profile ── */
-        .ee-sidebar-user {
-            padding: 14px 16px;
-            border-bottom: 1px solid rgba(255,255,255,.04);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-            transition: background .15s;
+            box-shadow: 0 4px 14px rgba(255,105,48,.35);
+            transition: transform .15s, box-shadow .15s;
             cursor: default;
         }
-        .ee-sidebar-user:hover { background: rgba(255,255,255,.02); }
+        .ee-brand-logo:hover {
+            transform: scale(1.06);
+            box-shadow: 0 6px 20px rgba(255,105,48,.45);
+        }
+        .ee-brand-logo svg { width: 18px; height: 18px; }
 
-        /* Ring wrapper */
+        /* ── User avatar ── */
+        .ee-sidebar-user {
+            width: 100%;
+            padding: 11px 0;
+            display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            flex-shrink: 0;
+            position: relative;
+        }
+
         .ee-user-av-wrap {
             position: relative;
-            width: 38px; height: 38px;
-            flex-shrink: 0;
+            width: 34px; height: 34px;
+            cursor: default;
         }
         .ee-user-av-wrap::before {
             content: '';
@@ -238,7 +214,7 @@
             position: absolute;
             inset: 1px;
             border-radius: 50%;
-            background: #0c0c11;
+            background: #0a0a0f;
             z-index: 1;
         }
         @keyframes sb-av-spin { to { transform: rotate(360deg); } }
@@ -255,189 +231,203 @@
             border: none;
         }
 
-        .ee-user-details { flex: 1; min-width: 0; }
-
-        .ee-user-name {
-            font-size: .79rem;
-            font-weight: 700;
-            color: #e0e0ec;
+        /* Tooltip on avatar */
+        .ee-sidebar-user::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%) translateX(-4px);
+            background: #18181f;
+            color: #d8d8e8;
+            font-size: .72rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 7px;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            letter-spacing: -.01em;
-            line-height: 1.3;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .14s, transform .14s;
+            border: 1px solid rgba(255,255,255,.07);
+            box-shadow: 0 4px 16px rgba(0,0,0,.5);
+            z-index: 2000;
+            font-family: 'Instrument Sans', var(--font);
         }
-        .ee-user-role {
-            font-size: .69rem;
-            color: #3f3f52;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-top: 1px;
+        .ee-sidebar-user:hover::after {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
         }
 
-        .ee-user-badge {
-            display: inline-flex;
-            align-items: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: .59rem;
-            font-weight: 500;
-            color: #ff6930;
-            background: rgba(255,105,48,.1);
-            border: 1px solid rgba(255,105,48,.18);
-            padding: 2px 6px;
-            border-radius: 4px;
-            flex-shrink: 0;
-            letter-spacing: .03em;
-        }
+        /* Hide old text elements */
+        .ee-user-details,
+        .ee-user-name,
+        .ee-user-role,
+        .ee-user-badge,
+        .ee-brand-name,
+        .ee-brand-label { display: none; }
 
         /* ── Navigation ── */
         .ee-sidebar-nav {
             flex: 1;
-            padding: 8px 8px;
-            overflow-y: auto;
-            scrollbar-width: none;
-        }
-        .ee-sidebar-nav::-webkit-scrollbar { display: none; }
-
-        .ee-nav-section { margin-bottom: 2px; }
-
-        .ee-nav-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: .57rem;
-            font-weight: 500;
-            color: #252535;
-            text-transform: uppercase;
-            letter-spacing: .13em;
-            padding: 8px 10px 5px;
+            width: 100%;
+            padding: 8px 0;
+            overflow: visible;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
         }
-        .ee-nav-title::after {
-            content: '';
-            flex: 1;
+
+        .ee-nav-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Section separator */
+        .ee-nav-title {
+            width: 24px;
             height: 1px;
-            background: rgba(255,255,255,.03);
+            background: rgba(255,255,255,.06);
+            margin: 6px 0;
+            font-size: 0; /* hide text */
         }
 
         .ee-nav-link {
+            position: relative;
+            width: 40px; height: 40px;
             display: flex;
             align-items: center;
-            gap: 9px;
-            padding: 7.5px 10px;
-            border-radius: 8px;
-            color: #4a4a62;
-            text-decoration: none;
-            font-size: .785rem;
-            font-weight: 500;
-            transition: all .13s ease;
-            margin-bottom: 1px;
-            position: relative;
-            letter-spacing: -.005em;
-        }
-        .ee-nav-link:hover {
-            background: rgba(255,255,255,.038);
-            color: #9898b0;
-        }
-        .ee-nav-link.active {
-            background: rgba(255,105,48,.08);
-            color: #fb923c;
-            font-weight: 600;
-        }
-        .ee-nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 50%;
-            transform: translateY(-50%);
-            width: 2.5px; height: 16px;
-            background: #ff6930;
-            border-radius: 0 3px 3px 0;
-            box-shadow: 0 0 6px rgba(255,105,48,.5);
-        }
-        .ee-nav-link svg {
-            width: 15px; height: 15px;
-            flex-shrink: 0;
-            opacity: .45;
-            transition: opacity .13s;
-        }
-        .ee-nav-link.active svg { opacity: 1; color: #ff6930; }
-        .ee-nav-link:hover svg  { opacity: .75; }
-
-        .ee-nav-badge {
-            margin-left: auto;
-            background: rgba(255,105,48,.1);
-            color: #fb923c;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: .58rem;
-            font-weight: 500;
-            padding: 1px 6px;
+            justify-content: center;
             border-radius: 10px;
-            border: 1px solid rgba(255,105,48,.15);
+            color: #2e2e46;
+            text-decoration: none;
+            margin-bottom: 2px;
+            transition: background .13s, color .13s, transform .13s;
+            font-size: 0; /* hide text labels */
         }
+
+        .ee-nav-link:hover {
+            background: rgba(255,255,255,.06);
+            color: #7878a0;
+            transform: scale(1.06);
+        }
+
+        .ee-nav-link.active {
+            background: rgba(255,105,48,.12);
+            color: #ff6930;
+            box-shadow: inset -2px 0 0 #ff6930, inset -2px 0 8px rgba(255,105,48,.15);
+        }
+
+        .ee-nav-link svg {
+            width: 17px; height: 17px;
+            flex-shrink: 0;
+            transition: transform .13s;
+        }
+
+        .ee-nav-link.active svg { color: #ff6930; }
+
+        /* Tooltip */
+        .ee-nav-link::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%) translateX(-4px);
+            background: #18181f;
+            color: #d8d8e8;
+            font-size: .72rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 7px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .14s, transform .14s;
+            border: 1px solid rgba(255,255,255,.07);
+            box-shadow: 0 4px 16px rgba(0,0,0,.5);
+            z-index: 2000;
+            font-family: 'Instrument Sans', var(--font);
+            letter-spacing: .01em;
+        }
+
+        .ee-nav-link:hover::after {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* Hide badge in icon rail (covered by icon) */
+        .ee-nav-badge { display: none; }
 
         /* ── Sidebar Footer ── */
         .ee-sidebar-footer {
-            padding: 10px 8px;
+            width: 100%;
+            padding: 8px 0 12px;
             border-top: 1px solid rgba(255,255,255,.04);
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            align-items: center;
+            gap: 4px;
         }
 
-        .ee-btn-portal {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            width: 100%;
-            padding: 8px 12px;
-            background: rgba(56,189,248,.06);
-            border: 1px solid rgba(56,189,248,.1);
-            border-radius: 8px;
-            color: rgba(56,189,248,.7);
-            font-size: .74rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all .15s;
-            font-family: var(--font);
-            letter-spacing: .01em;
-        }
-        .ee-btn-portal:hover {
-            background: rgba(56,189,248,.11);
-            border-color: rgba(56,189,248,.22);
-            color: #38bdf8;
-            transform: translateY(-1px);
-        }
-        .ee-btn-portal svg { width: 13px; height: 13px; }
-
-        .ee-btn-logout {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 7px;
-            width: 100%;
-            padding: 8px 12px;
+        .ee-btn-portal, .ee-btn-logout {
+            position: relative;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
             background: transparent;
-            border: 1px solid rgba(255,255,255,.04);
-            border-radius: 8px;
-            color: #2d2d40;
-            font-size: .74rem;
-            font-weight: 600;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all .15s;
+            transition: background .13s, color .13s, transform .13s;
+            text-decoration: none;
+            font-size: 0;
             font-family: var(--font);
+        }
+
+        .ee-btn-portal { color: rgba(56,189,248,.3); }
+        .ee-btn-portal:hover {
+            background: rgba(56,189,248,.1);
+            color: #38bdf8;
+            transform: scale(1.06);
+        }
+
+        .ee-btn-logout { color: #242436; }
+        .ee-btn-logout:hover {
+            background: rgba(244,63,94,.1);
+            color: #f87171;
+            transform: scale(1.06);
+        }
+
+        .ee-btn-portal svg, .ee-btn-logout svg { width: 17px; height: 17px; }
+
+        /* Tooltips on footer buttons */
+        .ee-btn-portal::after, .ee-btn-logout::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: calc(100% + 12px);
+            top: 50%;
+            transform: translateY(-50%) translateX(-4px);
+            background: #18181f;
+            color: #d8d8e8;
+            font-size: .72rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 7px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .14s, transform .14s;
+            border: 1px solid rgba(255,255,255,.07);
+            box-shadow: 0 4px 16px rgba(0,0,0,.5);
+            z-index: 2000;
+            font-family: 'Instrument Sans', var(--font);
             letter-spacing: .01em;
         }
-        .ee-btn-logout:hover {
-            background: rgba(244,63,94,.09);
-            border-color: rgba(244,63,94,.18);
-            color: #f87171;
-            transform: translateY(-1px);
+        .ee-btn-portal:hover::after, .ee-btn-logout:hover::after {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
         }
-        .ee-btn-logout svg { width: 13px; height: 13px; }
 
         /* ════════════════════════════════════════
            MAIN
@@ -788,104 +778,101 @@
             <!-- Brand -->
             <div class="ee-sidebar-brand">
                 <div class="ee-brand-logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        <path d="M21 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
-                </div>
-                <div>
-                    <div class="ee-brand-name">Portail <span>RH+</span></div>
-                    <span class="ee-brand-label">Espace Employ&eacute;</span>
                 </div>
             </div>
 
-            <!-- User -->
-            <div class="ee-sidebar-user">
-                @php $personnel = auth()->user()->personnel; @endphp
+            <!-- User avatar -->
+            @php $personnel = auth()->user()->personnel; @endphp
+            <div class="ee-sidebar-user"
+                 data-tooltip="{{ $personnel ? $personnel->prenoms . ' · ' . ($personnel->poste ?? 'Employé') : auth()->user()->name }}">
                 <div class="ee-user-av-wrap">
-                    <img src="{{ $personnel?->photo ? asset('storage/' . $personnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=200&background=ff6930&color=fff&bold=true' }}"
+                    <img src="{{ $personnel?->photo ? asset('storage/'.$personnel->photo) : 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&size=200&background=ff6930&color=fff&bold=true' }}"
                          alt="Photo" class="ee-user-avatar"
                          onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=200&background=ff6930&color=fff&bold=true'">
                 </div>
-                <div class="ee-user-details">
-                    <div class="ee-user-name">{{ $personnel ? $personnel->nom . ' ' . $personnel->prenoms : auth()->user()->name }}</div>
-                    <div class="ee-user-role">{{ $personnel?->poste ?? 'Employé' }}</div>
-                </div>
-                @if($personnel?->matricule)
-                    <span class="ee-user-badge">{{ $personnel->matricule }}</span>
-                @endif
             </div>
 
             <!-- Nav -->
             <nav class="ee-sidebar-nav">
+
                 <div class="ee-nav-section">
-                    <div class="ee-nav-title">Mon Espace</div>
-                    <a href="{{ route('espace-employe.dashboard') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.dashboard') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                        Tableau de bord
+                    <div class="ee-nav-title">Espace</div>
+                    <a href="{{ route('espace-employe.dashboard') }}"
+                       class="ee-nav-link {{ request()->routeIs('espace-employe.dashboard') ? 'active' : '' }}"
+                       data-tooltip="Tableau de bord">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     </a>
-                    <a href="{{ route('espace-employe.profil') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.profil') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        Mon Profil
+                    <a href="{{ route('espace-employe.profil') }}"
+                       class="ee-nav-link {{ request()->routeIs('espace-employe.profil') ? 'active' : '' }}"
+                       data-tooltip="Mon Profil">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     </a>
                 </div>
 
                 <div class="ee-nav-section">
-                    <div class="ee-nav-title">Documents</div>
-                    <a href="{{ route('espace-employe.documents') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.documents') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                        Mes Documents
+                    <div class="ee-nav-title">Docs</div>
+                    <a href="{{ route('espace-employe.documents') }}"
+                       class="ee-nav-link {{ request()->routeIs('espace-employe.documents') ? 'active' : '' }}"
+                       data-tooltip="Mes Documents">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                     </a>
-                    <a href="{{ route('espace-employe.bulletins') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.bulletins') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                        Bulletins de paie
+                    <a href="{{ route('espace-employe.bulletins') }}"
+                       class="ee-nav-link {{ request()->routeIs('espace-employe.bulletins') ? 'active' : '' }}"
+                       data-tooltip="Bulletins de paie">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                     </a>
-                    <a href="{{ route('espace-employe.attestations') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.attestations') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
-                        Attestations
+                    <a href="{{ route('espace-employe.attestations') }}"
+                       class="ee-nav-link {{ request()->routeIs('espace-employe.attestations') ? 'active' : '' }}"
+                       data-tooltip="Attestations">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
                     </a>
                 </div>
 
                 <div class="ee-nav-section">
                     <div class="ee-nav-title">Demandes</div>
-                    <a href="{{ route('espace-employe.conges') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.conges') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                        Mes Cong&eacute;s
+                    <a href="{{ route('espace-employe.conges') }}"
+                       class="ee-nav-link {{ request()->routeIs('espace-employe.conges') ? 'active' : '' }}"
+                       data-tooltip="Mes Congés">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     </a>
-                    <a href="{{ route('espace-employe.absences') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.absences') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                        Mes Absences
+                    <a href="{{ route('espace-employe.absences') }}"
+                       class="ee-nav-link {{ request()->routeIs('espace-employe.absences') ? 'active' : '' }}"
+                       data-tooltip="Mes Absences">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                     </a>
-                    <a href="{{ route('espace-employe.demandes') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.demandes') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 14l2 2 4-4"></path></svg>
-                        Mes Demandes
+                    <a href="{{ route('espace-employe.demandes') }}"
+                       class="ee-nav-link {{ request()->routeIs('espace-employe.demandes') ? 'active' : '' }}"
+                       data-tooltip="Mes Demandes">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
                     </a>
                 </div>
 
                 <div class="ee-nav-section">
                     <div class="ee-nav-title">Compte</div>
-                    <a href="{{ route('espace-employe.parametres') }}" class="ee-nav-link {{ request()->routeIs('espace-employe.parametres') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                        Param&egrave;tres
+                    <a href="{{ route('espace-employe.parametres') }}"
+                       class="ee-nav-link {{ request()->routeIs('espace-employe.parametres') ? 'active' : '' }}"
+                       data-tooltip="Paramètres">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     </a>
                 </div>
+
             </nav>
 
             <!-- Footer -->
             <div class="ee-sidebar-footer">
                 @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH']))
-                <a href="{{ route('admin.dashboard') }}" class="ee-btn-portal">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
-                    Portail RH Admin
+                <a href="{{ route('admin.dashboard') }}" class="ee-btn-portal" data-tooltip="Portail Admin">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17h7M17 14v7"/></svg>
                 </a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}" style="margin:0;">
                     @csrf
-                    <button type="submit" class="ee-btn-logout">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                        D&eacute;connexion
+                    <button type="submit" class="ee-btn-logout" data-tooltip="Déconnexion">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                     </button>
                 </form>
             </div>

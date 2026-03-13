@@ -14,7 +14,7 @@
     <!-- Google Fonts — Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -141,18 +141,18 @@
         }
 
         /* ════════════════════════════════════════
-           SIDEBAR
+           SIDEBAR — Carbon Ember (always dark)
         ════════════════════════════════════════ */
         .ee-sidebar {
             width: var(--sidebar-w);
-            background: var(--surface);
-            border-right: 1px solid var(--border);
+            background: #0c0c11;
+            border-right: 1px solid rgba(255,255,255,.055);
             position: fixed;
             top: 0; left: 0; bottom: 0;
             z-index: 100;
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+            transition: transform .3s cubic-bezier(.4,0,.2,1);
             overflow: hidden;
         }
 
@@ -160,241 +160,284 @@
         .ee-sidebar-brand {
             display: flex;
             align-items: center;
-            gap: 0.625rem;
-            padding: 1rem 1rem 0.875rem;
-            border-bottom: 1px solid var(--border);
+            gap: 11px;
+            padding: 18px 16px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.04);
             flex-shrink: 0;
+            position: relative;
+        }
+        .ee-sidebar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 16px; right: 16px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,105,48,.35), transparent);
         }
 
         .ee-brand-logo {
-            width: 36px; height: 36px;
-            background: var(--o-500);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 34px; height: 34px;
+            background: #ff6930;
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
             color: white;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(255,105,48,.3);
         }
-        .ee-brand-logo svg { width: 19px; height: 19px; }
+        .ee-brand-logo svg { width: 17px; height: 17px; }
 
         .ee-brand-name {
-            font-size: 0.9375rem;
-            font-weight: 700;
-            color: var(--text);
-            letter-spacing: -0.02em;
+            font-family: 'Syne', var(--font);
+            font-size: .95rem;
+            font-weight: 800;
+            color: #f0f0f5;
+            letter-spacing: -.03em;
+            line-height: 1.1;
         }
-        .ee-brand-name span { color: var(--o-500); }
+        .ee-brand-name span { color: #ff6930; }
+
         .ee-brand-label {
             display: block;
-            font-size: 0.6875rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .56rem;
             font-weight: 500;
-            color: var(--text-3);
-            letter-spacing: 0.5px;
+            color: #2d2d40;
+            letter-spacing: .11em;
             text-transform: uppercase;
+            margin-top: 3px;
         }
 
         /* ── User Profile ── */
         .ee-sidebar-user {
-            padding: 0.875rem 1rem;
-            border-bottom: 1px solid var(--border);
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.04);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 10px;
+            flex-shrink: 0;
+            transition: background .15s;
+            cursor: default;
+        }
+        .ee-sidebar-user:hover { background: rgba(255,255,255,.02); }
+
+        /* Ring wrapper */
+        .ee-user-av-wrap {
+            position: relative;
+            width: 38px; height: 38px;
             flex-shrink: 0;
         }
+        .ee-user-av-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: conic-gradient(#ff6930 0deg, #f59e0b 100deg, rgba(255,255,255,.04) 160deg, rgba(255,255,255,.04) 360deg);
+            animation: sb-av-spin 5s linear infinite;
+        }
+        .ee-user-av-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            border-radius: 50%;
+            background: #0c0c11;
+            z-index: 1;
+        }
+        @keyframes sb-av-spin { to { transform: rotate(360deg); } }
 
         .ee-user-avatar {
-            width: 40px; height: 40px;
+            position: absolute;
+            inset: 2px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--border);
-            flex-shrink: 0;
-            transition: border-color 0.2s;
+            z-index: 2;
+            display: block;
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+            border: none;
         }
-        .ee-sidebar-user:hover .ee-user-avatar { border-color: var(--o-500); }
 
         .ee-user-details { flex: 1; min-width: 0; }
+
         .ee-user-name {
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: var(--text);
+            font-size: .79rem;
+            font-weight: 700;
+            color: #e0e0ec;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            letter-spacing: -.01em;
             line-height: 1.3;
         }
         .ee-user-role {
-            font-size: 0.75rem;
-            color: var(--text-2);
+            font-size: .69rem;
+            color: #3f3f52;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            margin-top: 1px;
         }
 
         .ee-user-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
-            font-size: 0.625rem;
-            font-weight: 700;
-            color: white;
-            background: var(--o-500);
-            padding: 0.2rem 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .59rem;
+            font-weight: 500;
+            color: #ff6930;
+            background: rgba(255,105,48,.1);
+            border: 1px solid rgba(255,105,48,.18);
+            padding: 2px 6px;
             border-radius: 4px;
-            letter-spacing: 0.5px;
             flex-shrink: 0;
+            letter-spacing: .03em;
         }
 
         /* ── Navigation ── */
         .ee-sidebar-nav {
             flex: 1;
-            padding: 0.75rem 0.625rem;
+            padding: 8px 8px;
             overflow-y: auto;
+            scrollbar-width: none;
         }
-        .ee-sidebar-nav::-webkit-scrollbar { width: 3px; }
-        .ee-sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .ee-sidebar-nav::-webkit-scrollbar { display: none; }
 
-        .ee-nav-section { margin-bottom: 1rem; }
+        .ee-nav-section { margin-bottom: 2px; }
 
         .ee-nav-title {
-            font-size: 0.625rem;
-            font-weight: 700;
-            color: var(--text-3);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .57rem;
+            font-weight: 500;
+            color: #252535;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
-            padding: 0 0.625rem;
-            margin-bottom: 0.375rem;
+            letter-spacing: .13em;
+            padding: 8px 10px 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ee-nav-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,.03);
         }
 
         .ee-nav-link {
             display: flex;
             align-items: center;
-            gap: 0.625rem;
-            padding: 0.5625rem 0.625rem;
-            border-radius: var(--radius-sm);
-            color: var(--text-2);
+            gap: 9px;
+            padding: 7.5px 10px;
+            border-radius: 8px;
+            color: #4a4a62;
             text-decoration: none;
-            font-size: 0.8125rem;
+            font-size: .785rem;
             font-weight: 500;
-            transition: all 0.15s ease;
+            transition: all .13s ease;
             margin-bottom: 1px;
             position: relative;
+            letter-spacing: -.005em;
         }
         .ee-nav-link:hover {
-            background: var(--g-50);
-            color: var(--text);
-        }
-        .dark .ee-nav-link:hover {
-            background: rgba(255,255,255,0.04);
-            color: var(--text);
+            background: rgba(255,255,255,.038);
+            color: #9898b0;
         }
         .ee-nav-link.active {
-            background: var(--o-50);
-            color: var(--o-600);
-            font-weight: 600;
-        }
-        .dark .ee-nav-link.active {
-            background: rgba(249,115,22,0.1);
+            background: rgba(255,105,48,.08);
             color: #fb923c;
+            font-weight: 600;
         }
         .ee-nav-link.active::before {
             content: '';
             position: absolute;
             left: 0; top: 50%;
             transform: translateY(-50%);
-            width: 3px; height: 18px;
-            background: var(--o-500);
+            width: 2.5px; height: 16px;
+            background: #ff6930;
             border-radius: 0 3px 3px 0;
+            box-shadow: 0 0 6px rgba(255,105,48,.5);
         }
         .ee-nav-link svg {
-            width: 17px; height: 17px;
+            width: 15px; height: 15px;
             flex-shrink: 0;
-            opacity: 0.65;
-            transition: opacity 0.15s;
+            opacity: .45;
+            transition: opacity .13s;
         }
-        .ee-nav-link.active svg, .ee-nav-link:hover svg { opacity: 1; }
+        .ee-nav-link.active svg { opacity: 1; color: #ff6930; }
+        .ee-nav-link:hover svg  { opacity: .75; }
 
         .ee-nav-badge {
             margin-left: auto;
-            background: var(--o-100);
-            color: var(--o-600);
-            font-size: 0.625rem;
-            font-weight: 700;
-            padding: 0.15rem 0.45rem;
-            border-radius: 10px;
-        }
-        .dark .ee-nav-badge {
-            background: rgba(249,115,22,0.18);
+            background: rgba(255,105,48,.1);
             color: #fb923c;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .58rem;
+            font-weight: 500;
+            padding: 1px 6px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,105,48,.15);
         }
 
         /* ── Sidebar Footer ── */
         .ee-sidebar-footer {
-            padding: 0.75rem 0.625rem;
-            border-top: 1px solid var(--border);
+            padding: 10px 8px;
+            border-top: 1px solid rgba(255,255,255,.04);
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            gap: 0.375rem;
+            gap: 5px;
         }
 
         .ee-btn-portal {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 7px;
             width: 100%;
-            padding: 0.5625rem;
-            background: var(--b-50);
-            border: 1px solid var(--b-100);
-            border-radius: var(--radius-sm);
-            color: var(--b-600);
-            font-size: 0.8125rem;
+            padding: 8px 12px;
+            background: rgba(56,189,248,.06);
+            border: 1px solid rgba(56,189,248,.1);
+            border-radius: 8px;
+            color: rgba(56,189,248,.7);
+            font-size: .74rem;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.15s;
+            transition: all .15s;
             font-family: var(--font);
+            letter-spacing: .01em;
         }
         .ee-btn-portal:hover {
-            background: var(--b-100);
-            border-color: var(--b-600);
+            background: rgba(56,189,248,.11);
+            border-color: rgba(56,189,248,.22);
+            color: #38bdf8;
+            transform: translateY(-1px);
         }
-        .dark .ee-btn-portal {
-            background: rgba(37,99,235,0.08);
-            border-color: rgba(37,99,235,0.2);
-            color: #60a5fa;
-        }
-        .dark .ee-btn-portal:hover {
-            background: rgba(37,99,235,0.15);
-            border-color: rgba(37,99,235,0.4);
-        }
-        .ee-btn-portal svg { width: 15px; height: 15px; }
+        .ee-btn-portal svg { width: 13px; height: 13px; }
 
         .ee-btn-logout {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 7px;
             width: 100%;
-            padding: 0.5625rem;
+            padding: 8px 12px;
             background: transparent;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-2);
-            font-size: 0.8125rem;
+            border: 1px solid rgba(255,255,255,.04);
+            border-radius: 8px;
+            color: #2d2d40;
+            font-size: .74rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all .15s;
             font-family: var(--font);
+            letter-spacing: .01em;
         }
         .ee-btn-logout:hover {
-            background: var(--danger-pale);
-            border-color: var(--danger);
-            color: var(--danger);
+            background: rgba(244,63,94,.09);
+            border-color: rgba(244,63,94,.18);
+            color: #f87171;
+            transform: translateY(-1px);
         }
-        .ee-btn-logout svg { width: 15px; height: 15px; }
+        .ee-btn-logout svg { width: 13px; height: 13px; }
 
         /* ════════════════════════════════════════
            MAIN
@@ -700,7 +743,7 @@
         /* ════════════════════════════════════════
            DARK MODE — composants
         ════════════════════════════════════════ */
-        .dark .ee-sidebar { background: #161b22; border-right-color: #30363d; }
+        /* sidebar always dark — no dark-mode override needed */
         .dark .ee-header  { background: #161b22; border-bottom-color: #30363d; box-shadow: 0 1px 0 #30363d; }
         .dark .ee-header-btn { background: #161b22; border-color: #30363d; }
         .dark .ee-header-btn:hover { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); color: #fb923c; }
@@ -761,14 +804,16 @@
             <!-- User -->
             <div class="ee-sidebar-user">
                 @php $personnel = auth()->user()->personnel; @endphp
-                <img src="{{ $personnel && $personnel->photo ? asset('storage/' . $personnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=200&background=f97316&color=ffffff&bold=true' }}"
-                     alt="Photo" class="ee-user-avatar"
-                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=200&background=f97316&color=ffffff&bold=true'">
+                <div class="ee-user-av-wrap">
+                    <img src="{{ $personnel?->photo ? asset('storage/' . $personnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&size=200&background=ff6930&color=fff&bold=true' }}"
+                         alt="Photo" class="ee-user-avatar"
+                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=200&background=ff6930&color=fff&bold=true'">
+                </div>
                 <div class="ee-user-details">
                     <div class="ee-user-name">{{ $personnel ? $personnel->nom . ' ' . $personnel->prenoms : auth()->user()->name }}</div>
-                    <div class="ee-user-role">{{ $personnel->poste ?? 'Employ&eacute;' }}</div>
+                    <div class="ee-user-role">{{ $personnel?->poste ?? 'Employé' }}</div>
                 </div>
-                @if($personnel && $personnel->matricule)
+                @if($personnel?->matricule)
                     <span class="ee-user-badge">{{ $personnel->matricule }}</span>
                 @endif
             </div>

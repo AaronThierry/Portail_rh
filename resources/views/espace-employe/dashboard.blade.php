@@ -7,1798 +7,1051 @@
 @endsection
 
 @section('styles')
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-/* ==================== DASHBOARD PREMIUM ==================== */
-.ee-dashboard {
+/* ============================================================
+   DASHBOARD — Espace Employé · Clarity Pro
+   Orange · Bleu · Gris — Épuré, Dense, Élégant
+   ============================================================ */
+
+@keyframes db-fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes db-scale-in {
+    from { opacity: 0; transform: scale(.97); }
+    to   { opacity: 1; transform: scale(1); }
+}
+@keyframes db-dot-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: .55; transform: scale(.85); }
+}
+@keyframes db-tick {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: .35; }
+}
+
+.db-anim { animation: db-fade-up .4s ease both; }
+
+/* ── Layout ───────────────────────────────────────────── */
+.db-page {
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
+    gap: 18px;
+    max-width: 1100px;
 }
 
-/* ==================== WELCOME BANNER ==================== */
-.ee-welcome-banner {
-    background: #07111e;
-    border-radius: var(--e-radius-xl);
-    padding: 2.75rem 2.5rem;
-    color: white;
-    position: relative;
+/* ── Hero ─────────────────────────────────────────────── */
+.db-hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    min-height: 148px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
-
-.ee-welcome-banner::before {
+.db-hero::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 5%, var(--e-amber) 35%, #f59e0b 65%, transparent 95%);
+    height: 3px;
+    background: linear-gradient(90deg, var(--o-500) 0%, #fb923c 60%, var(--o-500) 100%);
+    background-size: 200% 100%;
+    animation: db-stripe-slide 4s linear infinite;
+}
+@keyframes db-stripe-slide {
+    0%   { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
 }
 
-.ee-welcome-banner::after { content: none; }
-
-.ee-welcome-pattern { display: none; }
-
-/* Ambient glow blobs */
-.ee-wb-glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(72px);
-    pointer-events: none;
-    will-change: transform;
-}
-
-.ee-wb-glow--amber {
-    width: 350px; height: 350px;
-    bottom: -130px; left: -70px;
-    background: radial-gradient(circle, rgba(232,133,12,0.22) 0%, transparent 65%);
-    animation: ee-glow-shift 16s ease-in-out infinite;
-}
-
-.ee-wb-glow--blue {
-    width: 420px; height: 420px;
-    top: -180px; right: -100px;
-    background: radial-gradient(circle, rgba(59,125,216,0.15) 0%, transparent 65%);
-    animation: ee-glow-shift 16s ease-in-out infinite reverse;
-    animation-delay: -8s;
-}
-
-@keyframes ee-glow-shift {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(18px, -22px) scale(1.04); }
-}
-
-.ee-welcome-content {
-    position: relative;
-    z-index: 2;
+.db-hero-left {
+    padding: 28px 32px 26px;
+    flex: 1;
+    min-width: 0;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 3rem;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.ee-welcome-left { flex: 1; min-width: 0; }
-
-/* Eyebrow */
-.ee-welcome-eyebrow {
+.db-greeting-label {
     display: inline-flex;
     align-items: center;
-    gap: 0.625rem;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    color: var(--e-amber);
-    letter-spacing: 2.5px;
+    gap: 6px;
+    font-size: .68rem;
+    font-weight: 700;
     text-transform: uppercase;
-    margin-bottom: 1rem;
-    font-family: 'DM Sans', sans-serif;
+    letter-spacing: .12em;
+    color: var(--o-500);
+    margin-bottom: 8px;
 }
-
-.ee-wb-dot {
+.db-greeting-dot {
     width: 6px; height: 6px;
-    background: var(--e-amber);
+    background: var(--o-500);
     border-radius: 50%;
-    flex-shrink: 0;
-    animation: ee-dot-pulse 2.5s ease-in-out infinite;
+    animation: db-dot-pulse 2s ease-in-out infinite;
 }
 
-@keyframes ee-dot-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(232,133,12,0.5); }
-    50% { box-shadow: 0 0 0 5px rgba(232,133,12,0); }
-}
-
-/* Title */
-.ee-welcome-title {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    margin-bottom: 1.25rem;
-}
-
-.ee-welcome-title-prefix {
-    font-size: 1rem;
-    font-weight: 300;
-    color: rgba(255,255,255,0.45);
-    letter-spacing: 0.3px;
-    font-family: 'DM Sans', sans-serif;
-}
-
-.ee-welcome-title-name {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-style: italic;
-    font-size: 3.25rem;
-    font-weight: 600;
-    line-height: 1;
-    letter-spacing: -0.5px;
-    background: linear-gradient(140deg, #ffffff 0%, rgba(255,255,255,0.82) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Divider */
-.ee-welcome-divider {
-    width: 44px;
-    height: 1.5px;
-    background: linear-gradient(90deg, var(--e-amber), rgba(232,133,12,0.05));
-    border-radius: 2px;
-    margin-bottom: 1.125rem;
-}
-
-/* Subtitle */
-.ee-welcome-subtitle {
-    font-size: 0.875rem;
-    font-weight: 300;
-    color: rgba(255,255,255,0.42);
-    line-height: 1.75;
-    max-width: 390px;
-    margin-bottom: 1.5rem;
-    font-family: 'DM Sans', sans-serif;
-}
-
-/* Context tag */
-.ee-welcome-tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.ee-welcome-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.09);
-    color: rgba(255,255,255,0.5);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    padding: 0.4rem 0.875rem;
-    border-radius: 100px;
-    letter-spacing: 0.25px;
-    font-family: 'DM Sans', sans-serif;
-}
-
-.ee-welcome-tag svg { width: 11px; height: 11px; fill: none; color: var(--e-amber); }
-
-/* Right: premium date-time widget */
-.ee-welcome-right {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.ee-datetime-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 1.875rem 2.25rem;
-    text-align: center;
-    min-width: 205px;
-    position: relative;
-    overflow: hidden;
-}
-
-.ee-datetime-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 15%; right: 15%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-}
-
-.ee-dt-top {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.5625rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2.5px;
-    color: rgba(255,255,255,0.32);
-    margin-bottom: 0.5rem;
-    font-family: 'DM Sans', sans-serif;
-}
-
-.ee-dt-sep { color: var(--e-amber); }
-
-.ee-dt-day {
-    font-family: 'DM Sans', var(--e-font-display);
-    font-size: 5.25rem;
-    font-weight: 200;
-    line-height: 1;
-    color: white;
-    letter-spacing: -5px;
-    margin: 0.125rem 0;
-}
-
-.ee-dt-month {
-    font-size: 0.625rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 3.5px;
-    color: rgba(255,255,255,0.35);
-    margin-bottom: 1rem;
-    font-family: 'DM Sans', sans-serif;
-}
-
-.ee-dt-line {
-    width: 24px;
-    height: 1px;
-    background: rgba(255,255,255,0.1);
-    margin: 0 auto 0.875rem;
-}
-
-.ee-dt-time {
-    font-family: 'DM Sans', monospace;
-    font-size: 1.5rem;
-    font-weight: 300;
-    color: rgba(255,255,255,0.9);
-    letter-spacing: 3px;
-    margin-bottom: 1.25rem;
-}
-
-.ee-dt-seconds {
-    font-size: 0.875rem;
-    letter-spacing: 2px;
-    color: rgba(255,255,255,0.3);
-}
-
-.ee-dt-progress {
-    height: 2px;
-    background: rgba(255,255,255,0.07);
-    border-radius: 100px;
-    margin-bottom: 0.5rem;
-    overflow: hidden;
-}
-
-.ee-dt-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--e-amber), #fbbf24);
-    border-radius: 100px;
-    box-shadow: 0 0 6px rgba(232,133,12,0.5);
-    transition: width 1s linear;
-}
-
-.ee-dt-label {
-    font-size: 0.5625rem;
-    color: rgba(255,255,255,0.22);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-family: 'DM Sans', sans-serif;
-}
-
-/* ==================== STATS GRID ==================== */
-.ee-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.25rem;
-}
-
-.ee-stat-card {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-lg);
-    padding: 1.5rem;
-    border: 1px solid var(--e-border);
-    display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.ee-stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--stat-color);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.ee-stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--e-shadow-lg);
-    border-color: var(--e-border-light);
-}
-
-.ee-stat-card:hover::before {
-    transform: scaleX(1);
-}
-
-.ee-stat-card:hover .ee-stat-icon {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.ee-stat-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: var(--e-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.ee-stat-icon::after {
-    content: none;
-}
-
-.ee-stat-icon svg {
-    width: 28px;
-    height: 28px;
-}
-
-.ee-stat-icon.primary {
-    background: var(--e-blue);
-    color: white;
-    --stat-color: var(--e-blue);
-}
-
-.ee-stat-icon.success {
-    background: var(--e-emerald);
-    color: white;
-    --stat-color: var(--e-emerald);
-}
-
-.ee-stat-icon.warning {
-    background: var(--e-amber);
-    color: white;
-    --stat-color: var(--e-amber);
-}
-
-.ee-stat-icon.info {
-    background: var(--e-blue);
-    color: white;
-    --stat-color: var(--e-blue);
-}
-
-.ee-stat-card:nth-child(1) { --stat-color: var(--e-blue); }
-.ee-stat-card:nth-child(2) { --stat-color: var(--e-emerald); }
-.ee-stat-card:nth-child(3) { --stat-color: var(--e-amber); }
-.ee-stat-card:nth-child(4) { --stat-color: var(--e-blue); }
-
-.ee-stat-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.ee-stat-value {
+.db-greeting-name {
     font-size: 2rem;
-    font-weight: 700;
-    color: var(--e-text);
-    line-height: 1;
-    letter-spacing: -1px;
-}
-
-.ee-stat-label {
-    font-size: 0.875rem;
-    color: var(--e-text-secondary);
-    margin-top: 0.5rem;
-    font-weight: 500;
-}
-
-.ee-stat-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    margin-top: 0.75rem;
-    padding: 0.375rem 0.75rem;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.ee-stat-badge.success {
-    background: var(--e-emerald-pale);
-    color: var(--e-emerald);
-}
-
-.ee-stat-badge.warning {
-    background: var(--e-amber-pale);
-    color: var(--e-amber);
-}
-
-.ee-stat-badge.info {
-    background: var(--e-blue-pale);
-    color: var(--e-blue);
-}
-
-.ee-stat-badge svg {
-    width: 12px;
-    height: 12px;
-}
-
-/* ==================== QUICK ACTIONS ==================== */
-.ee-quick-actions {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-xl);
-    border: 1px solid var(--e-border);
-    padding: 1.75rem;
-    box-shadow: var(--e-shadow);
-}
-
-.ee-section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-}
-
-.ee-section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.ee-section-title-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--e-radius);
-    background: var(--e-blue);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
-.ee-section-title-icon svg {
-    width: 20px;
-    height: 20px;
-}
-
-.ee-section-title h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--e-text);
-}
-
-.ee-section-subtitle {
-    font-size: 0.8125rem;
-    color: var(--e-text-secondary);
-    margin-top: 0.125rem;
-}
-
-.ee-actions-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-}
-
-.ee-action-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.75rem 1.25rem;
-    background: var(--e-bg);
-    border: 2px solid transparent;
-    border-radius: var(--e-radius-lg);
-    text-decoration: none;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.ee-action-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--action-color);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.ee-action-card:hover {
-    border-color: var(--action-color);
-    transform: translateY(-4px);
-    box-shadow: var(--e-shadow-lg);
-}
-
-.ee-action-card:hover::before {
-    opacity: 0.04;
-}
-
-.ee-action-card:active {
-    transform: translateY(-1px);
-}
-
-.ee-action-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: var(--e-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
-    transition: transform 0.3s ease;
-}
-
-.ee-action-card:hover .ee-action-icon {
-    transform: scale(1.05);
-}
-
-.ee-action-icon svg {
-    width: 32px;
-    height: 32px;
-}
-
-.ee-action-icon.purple {
-    background: var(--e-blue);
-    color: white;
-    --action-color: var(--e-blue);
-}
-
-.ee-action-icon.green {
-    background: var(--e-emerald);
-    color: white;
-    --action-color: var(--e-emerald);
-}
-
-.ee-action-icon.blue {
-    background: var(--e-blue);
-    color: white;
-    --action-color: var(--e-blue);
-}
-
-.ee-action-icon.orange {
-    background: var(--e-amber);
-    color: white;
-    --action-color: var(--e-amber);
-}
-
-.ee-action-card:nth-child(1) { --action-color: var(--e-blue); }
-.ee-action-card:nth-child(2) { --action-color: var(--e-emerald); }
-.ee-action-card:nth-child(3) { --action-color: var(--e-blue); }
-.ee-action-card:nth-child(4) { --action-color: var(--e-amber); }
-
-.ee-action-text {
-    text-align: center;
-    position: relative;
-    z-index: 1;
-}
-
-.ee-action-label {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--e-text);
-    margin-bottom: 0.25rem;
-}
-
-.ee-action-desc {
-    font-size: 0.75rem;
-    color: var(--e-text-secondary);
-}
-
-/* ==================== MAIN GRID ==================== */
-.ee-main-grid {
-    display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 1.5rem;
-}
-
-/* ==================== ACTIVITIES CARD ==================== */
-.ee-activities-card {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-xl);
-    border: 1px solid var(--e-border);
-    padding: 1.75rem;
-    box-shadow: var(--e-shadow);
-}
-
-.ee-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-}
-
-.ee-card-title-group {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.ee-card-title-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--e-radius);
-    background: var(--e-emerald);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
-.ee-card-title-icon svg {
-    width: 20px;
-    height: 20px;
-}
-
-.ee-card-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--e-text);
-}
-
-.ee-card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-size: 0.8125rem;
-    color: var(--e-blue);
-    text-decoration: none;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    background: var(--e-blue-wash);
-    transition: all 0.3s ease;
-}
-
-.ee-card-link:hover {
-    background: var(--e-blue);
-    color: white;
-}
-
-.ee-card-link svg {
-    width: 16px;
-    height: 16px;
-}
-
-.ee-activity-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.875rem;
-}
-
-.ee-activity-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1.25rem;
-    background: var(--e-bg);
-    border-radius: var(--e-radius);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid transparent;
-    cursor: pointer;
-    animation: ee-fadeUp 0.4s ease both;
-}
-
-.ee-activity-item:nth-child(1) { animation-delay: 0.1s; }
-.ee-activity-item:nth-child(2) { animation-delay: 0.15s; }
-.ee-activity-item:nth-child(3) { animation-delay: 0.2s; }
-.ee-activity-item:nth-child(4) { animation-delay: 0.25s; }
-.ee-activity-item:nth-child(5) { animation-delay: 0.3s; }
-
-.ee-activity-item:hover {
-    transform: translateX(4px);
-    border-color: var(--e-border);
-    box-shadow: var(--e-shadow);
-}
-
-.ee-activity-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--e-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.ee-activity-icon.file {
-    background: var(--e-blue-wash);
-    color: var(--e-blue);
-}
-
-.ee-activity-icon.calendar {
-    background: var(--e-emerald-pale);
-    color: var(--e-emerald);
-}
-
-.ee-activity-icon.user {
-    background: var(--e-amber-wash);
-    color: var(--e-amber);
-}
-
-.ee-activity-icon svg {
-    width: 24px;
-    height: 24px;
-}
-
-.ee-activity-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.ee-activity-title {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--e-text);
-    margin-bottom: 0.25rem;
-}
-
-.ee-activity-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.ee-activity-date {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-size: 0.75rem;
-    color: var(--e-text-secondary);
-}
-
-.ee-activity-date svg {
-    width: 12px;
-    height: 12px;
-}
-
-.ee-activity-badge {
-    font-size: 0.625rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 0.25rem 0.625rem;
-    border-radius: 6px;
-}
-
-.ee-activity-badge.new {
-    background: var(--e-emerald-pale);
-    color: var(--e-emerald);
-}
-
-.ee-empty-state {
-    text-align: center;
-    padding: 3rem;
-    color: var(--e-text-secondary);
-}
-
-.ee-empty-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 1rem;
-    background: var(--e-bg);
-    border-radius: var(--e-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.ee-empty-icon svg {
-    width: 32px;
-    height: 32px;
-    opacity: 0.5;
-}
-
-.ee-empty-text {
-    font-size: 0.9375rem;
-    font-weight: 500;
-}
-
-/* ==================== PROFILE CARD — PREMIUM ==================== */
-.ee-profile-card {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-xl);
-    border: 1px solid var(--e-border);
-    overflow: hidden;
-    box-shadow: var(--e-shadow-lg);
-    transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.ee-profile-card:hover {
-    box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.18);
-    transform: translateY(-2px);
-}
-
-.ee-profile-header {
-    background: linear-gradient(135deg, var(--e-slate-900) 0%, var(--e-slate-800) 50%, #243349 100%);
-    padding: 2.25rem 2rem 2rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.ee-profile-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--e-amber), #f59e0b, var(--e-amber));
-}
-
-.ee-profile-header::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 20% 80%, rgba(232, 133, 12, 0.06) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(59, 125, 216, 0.06) 0%, transparent 50%);
-    pointer-events: none;
-}
-
-/* Subtle geometric grid pattern */
-.ee-profile-header .ee-profile-pattern {
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 24px 24px;
-    pointer-events: none;
-}
-
-.ee-profile-avatar-wrapper {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 1.125rem;
-    z-index: 1;
-}
-
-/* Gold accent ring around avatar */
-.ee-profile-avatar-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    background: conic-gradient(
-        from 0deg,
-        var(--e-amber) 0%,
-        #f59e0b 25%,
-        var(--e-amber) 50%,
-        #d97706 75%,
-        var(--e-amber) 100%
-    );
-    opacity: 0.7;
-    animation: ee-ring-rotate 8s linear infinite;
-}
-
-@keyframes ee-ring-rotate {
-    to { transform: rotate(360deg); }
-}
-
-.ee-profile-avatar-wrapper::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    background: var(--e-slate-900);
-    z-index: 0;
-}
-
-.ee-profile-avatar {
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.15);
-    object-fit: cover;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    z-index: 1;
-}
-
-.ee-profile-avatar:hover {
-    transform: scale(1.04);
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-}
-
-.ee-profile-status {
-    position: absolute;
-    bottom: 6px;
-    right: 6px;
-    width: 18px;
-    height: 18px;
-    background: #22c55e;
-    border: 3px solid var(--e-slate-900);
-    border-radius: 50%;
-    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25), 0 2px 8px rgba(34, 197, 94, 0.4);
-    z-index: 2;
-    animation: ee-status-pulse 3s ease-in-out infinite;
-}
-
-@keyframes ee-status-pulse {
-    0%, 100% { box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25), 0 2px 8px rgba(34, 197, 94, 0.4); }
-    50% { box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15), 0 2px 12px rgba(34, 197, 94, 0.5); }
-}
-
-.ee-profile-name {
-    font-family: var(--e-font-display);
-    font-size: 1.375rem;
-    font-weight: 400;
-    color: white;
-    position: relative;
-    z-index: 1;
-    margin-bottom: 0.375rem;
-    letter-spacing: 0.01em;
-}
-
-.ee-profile-role {
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.65);
-    position: relative;
-    z-index: 1;
-    margin-bottom: 0.875rem;
-    letter-spacing: 0.02em;
-}
-
-.ee-profile-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    color: var(--e-slate-900);
-    background: linear-gradient(135deg, var(--e-amber), #f59e0b);
-    padding: 0.375rem 1rem;
-    border-radius: 20px;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 2px 8px rgba(232, 133, 12, 0.3);
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.ee-profile-badge svg {
-    width: 12px;
-    height: 12px;
-}
-
-.ee-profile-body {
-    padding: 1.375rem 1.5rem;
-}
-
-.ee-profile-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
-}
-
-.ee-info-item {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    padding: 0.875rem 1rem;
-    background: var(--e-bg);
-    border-radius: var(--e-radius);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid transparent;
-    position: relative;
-    overflow: hidden;
-}
-
-.ee-info-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--e-blue);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: 0 2px 2px 0;
-}
-
-.ee-info-item:hover {
-    background: var(--e-blue-wash);
-    border-color: var(--e-blue-pale);
-    transform: translateX(3px);
-}
-
-.ee-info-item:hover::before {
-    opacity: 1;
-}
-
-.ee-info-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: var(--e-surface);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--e-blue);
-    flex-shrink: 0;
-    box-shadow: var(--e-shadow-sm);
-    border: 1px solid var(--e-border-light);
-    transition: all 0.3s ease;
-}
-
-.ee-info-item:hover .ee-info-icon {
-    background: var(--e-blue);
-    color: white;
-    border-color: var(--e-blue);
-    box-shadow: 0 4px 12px rgba(59, 125, 216, 0.25);
-}
-
-.ee-info-icon svg {
-    width: 18px;
-    height: 18px;
-}
-
-.ee-info-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.ee-info-label {
-    font-size: 0.625rem;
-    color: var(--e-text-tertiary);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-}
-
-.ee-info-value {
-    font-size: 0.8125rem;
-    color: var(--e-text);
-    font-weight: 600;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.03em;
+    line-height: 1.1;
+    margin-bottom: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 0.125rem;
 }
 
-.ee-profile-footer {
-    padding: 0 1.5rem 1.5rem;
-}
-
-.ee-profile-btn {
+.db-hero-tags {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.625rem;
-    width: 100%;
-    padding: 0.875rem 1rem;
-    background: linear-gradient(135deg, var(--e-slate-800), var(--e-slate-900));
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: var(--e-radius);
-    font-size: 0.875rem;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.db-hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .72rem;
     font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--e-shadow);
-    letter-spacing: 0.01em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    background: var(--bg);
+}
+.db-hero-tag svg { width: 11px; height: 11px; flex-shrink: 0; }
+.db-hero-tag.orange { border-color: var(--o-100); color: var(--o-600); background: var(--o-50); }
+.dark .db-hero-tag.orange { background: rgba(249,115,22,.08); border-color: rgba(249,115,22,.2); }
+
+/* Clock widget */
+.db-clock-wrap {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: 24px 32px;
+    border-left: 1px solid var(--border);
+    background: var(--bg);
+    min-width: 196px;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
     position: relative;
-    overflow: hidden;
 }
 
-.ee-profile-btn::before {
+.db-clock-day-num {
+    font-size: 3.75rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.06em;
+    line-height: 1;
+}
+.db-clock-day-name {
+    font-size: .625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--text-2);
+    margin-top: 2px;
+}
+.db-clock-sep {
+    width: 24px; height: 1px;
+    background: var(--border);
+    border-radius: 1px;
+    align-self: center;
+}
+.db-clock-time {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: .04em;
+    font-variant-numeric: tabular-nums;
+}
+.db-clock-secs {
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--text-2);
+    animation: db-tick 1s ease-in-out infinite;
+}
+.db-clock-month {
+    font-size: .7rem;
+    font-weight: 600;
+    color: var(--o-500);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+/* Day progress */
+.db-day-progress {
+    width: 100%;
+    margin-top: 4px;
+}
+.db-day-progress-bar {
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 3px;
+}
+.db-day-progress-fill {
+    height: 100%;
+    background: var(--o-500);
+    border-radius: 2px;
+    transition: width 1s linear;
+}
+.db-day-progress-label {
+    font-size: .6rem;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 500;
+}
+
+/* ── Stats grid ───────────────────────────────────────── */
+.db-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.db-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+    border-left-width: 3px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.db-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+}
+.db-stat.s-orange { border-left-color: var(--o-500); }
+.db-stat.s-green  { border-left-color: #16a34a; }
+.db-stat.s-yellow { border-left-color: #d97706; }
+.db-stat.s-blue   { border-left-color: var(--b-600); }
+
+.db-stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.db-stat-icon svg { width: 20px; height: 20px; }
+.db-stat.s-orange .db-stat-icon { background: var(--o-50); color: var(--o-500); }
+.db-stat.s-green  .db-stat-icon { background: #dcfce7; color: #16a34a; }
+.db-stat.s-yellow .db-stat-icon { background: #fef3c7; color: #d97706; }
+.db-stat.s-blue   .db-stat-icon { background: var(--b-50); color: var(--b-600); }
+.dark .db-stat.s-orange .db-stat-icon { background: rgba(249,115,22,.1); }
+.dark .db-stat.s-green  .db-stat-icon { background: rgba(22,163,74,.1); }
+.dark .db-stat.s-yellow .db-stat-icon { background: rgba(217,119,6,.1); }
+.dark .db-stat.s-blue   .db-stat-icon { background: rgba(37,99,235,.1); }
+
+.db-stat-body { flex: 1; min-width: 0; }
+.db-stat-val {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.04em;
+    line-height: 1;
+    margin-bottom: 3px;
+}
+.db-stat-label {
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--text-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.db-stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: .65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+.db-stat-badge svg { width: 9px; height: 9px; }
+.s-orange .db-stat-badge { background: var(--o-50); color: var(--o-600); border: 1px solid var(--o-100); }
+.s-green  .db-stat-badge { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.s-yellow .db-stat-badge { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+.s-blue   .db-stat-badge { background: var(--b-50); color: var(--b-600); border: 1px solid var(--b-100); }
+.dark .s-orange .db-stat-badge { background: rgba(249,115,22,.1); border-color: rgba(249,115,22,.2); }
+.dark .s-green  .db-stat-badge { background: rgba(22,163,74,.1); border-color: rgba(22,163,74,.2); color: #4ade80; }
+.dark .s-yellow .db-stat-badge { background: rgba(217,119,6,.1); border-color: rgba(217,119,6,.2); color: #fbbf24; }
+.dark .s-blue   .db-stat-badge { background: rgba(37,99,235,.1); border-color: rgba(37,99,235,.2); color: #60a5fa; }
+
+/* ── Quick actions ────────────────────────────────────── */
+.db-actions-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.db-actions-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+.db-section-title {
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.db-section-title::before {
+    content: '';
+    display: block;
+    width: 3px; height: 14px;
+    background: var(--o-500);
+    border-radius: 2px;
+}
+
+.db-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.db-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    text-decoration: none;
+    background: var(--bg);
+    transition: all .18s ease;
+    position: relative;
+    overflow: hidden;
+    group: true;
+}
+.db-action:hover {
+    border-color: transparent;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0,0,0,.09);
+}
+.db-action.a-orange:hover { background: var(--o-50); border-color: var(--o-100); }
+.db-action.a-blue:hover   { background: var(--b-50); border-color: var(--b-100); }
+.db-action.a-green:hover  { background: #f0fdf4; border-color: #bbf7d0; }
+.db-action.a-violet:hover { background: #faf5ff; border-color: #e9d5ff; }
+.dark .db-action.a-orange:hover { background: rgba(249,115,22,.08); border-color: rgba(249,115,22,.2); }
+.dark .db-action.a-blue:hover   { background: rgba(37,99,235,.08); border-color: rgba(37,99,235,.2); }
+.dark .db-action.a-green:hover  { background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.2); }
+.dark .db-action.a-violet:hover { background: rgba(139,92,246,.08); border-color: rgba(139,92,246,.2); }
+
+.db-action-icon {
+    width: 38px; height: 38px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform .18s ease;
+}
+.db-action:hover .db-action-icon { transform: scale(1.08); }
+.db-action-icon svg { width: 18px; height: 18px; }
+.a-orange .db-action-icon { background: var(--o-100); color: var(--o-600); }
+.a-blue   .db-action-icon { background: var(--b-100); color: var(--b-600); }
+.a-green  .db-action-icon { background: #dcfce7; color: #16a34a; }
+.a-violet .db-action-icon { background: #ede9fe; color: #7c3aed; }
+.dark .a-orange .db-action-icon { background: rgba(249,115,22,.15); }
+.dark .a-blue   .db-action-icon { background: rgba(37,99,235,.15); }
+.dark .a-green  .db-action-icon { background: rgba(22,163,74,.15); }
+.dark .a-violet .db-action-icon { background: rgba(139,92,246,.15); }
+
+.db-action-text { flex: 1; min-width: 0; }
+.db-action-label {
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.db-action-desc {
+    font-size: .7rem;
+    color: var(--text-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.db-action-arrow {
+    flex-shrink: 0;
+    color: var(--text-2);
+    opacity: .4;
+    transition: all .18s ease;
+}
+.db-action:hover .db-action-arrow {
+    opacity: 1;
+    transform: translateX(3px);
+}
+.db-action-arrow svg { width: 14px; height: 14px; }
+
+/* ── Bottom grid ──────────────────────────────────────── */
+.db-bottom {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 12px;
+    align-items: start;
+}
+
+/* ── Activity feed ────────────────────────────────────── */
+.db-feed {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.db-feed-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+.db-feed-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--b-600);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: background .15s;
+}
+.db-feed-link:hover { background: var(--b-50); }
+.db-feed-link svg { width: 12px; height: 12px; transition: transform .15s; }
+.db-feed-link:hover svg { transform: translateX(2px); }
+
+.db-feed-list { padding: 6px 0; }
+
+.db-feed-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 20px;
+    transition: background .15s;
+    border-bottom: 1px solid var(--border);
+}
+.db-feed-item:last-child { border-bottom: none; }
+.db-feed-item:hover { background: var(--bg); }
+
+.db-feed-icon {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.db-feed-icon svg { width: 15px; height: 15px; }
+.db-feed-icon.file     { background: var(--o-50); color: var(--o-500); }
+.db-feed-icon.calendar { background: var(--b-50); color: var(--b-600); }
+.db-feed-icon.user     { background: #f3f4f6; color: #6b7280; }
+.dark .db-feed-icon.file     { background: rgba(249,115,22,.1); }
+.dark .db-feed-icon.calendar { background: rgba(37,99,235,.1); }
+.dark .db-feed-icon.user     { background: rgba(255,255,255,.06); color: #9ca3af; }
+
+.db-feed-body { flex: 1; min-width: 0; }
+.db-feed-title {
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+.db-feed-meta {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.db-feed-date {
+    font-size: .72rem;
+    color: var(--text-2);
+}
+.db-feed-badge-new {
+    display: inline-flex;
+    align-items: center;
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border-radius: 8px;
+    background: var(--o-50);
+    color: var(--o-600);
+    border: 1px solid var(--o-100);
+}
+.dark .db-feed-badge-new { background: rgba(249,115,22,.1); border-color: rgba(249,115,22,.2); }
+
+.db-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 10px;
+}
+.db-empty-icon {
+    width: 52px; height: 52px;
+    background: var(--bg);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border);
+}
+.db-empty-icon svg { width: 24px; height: 24px; color: var(--text-2); opacity: .5; }
+.db-empty-text {
+    font-size: .82rem;
+    font-weight: 500;
+    color: var(--text-2);
+}
+
+/* ── Profile card ─────────────────────────────────────── */
+.db-profile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.db-profile-head {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 22px 20px 18px;
+    text-align: center;
+    position: relative;
+}
+.db-profile-head::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--o-500);
+}
+
+.db-avatar-ring {
+    display: inline-block;
+    position: relative;
+    margin-bottom: 10px;
+}
+.db-avatar-ring::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: conic-gradient(var(--o-500) 0%, #fb923c 50%, var(--o-500) 100%);
+    animation: db-ring-spin 8s linear infinite;
+    opacity: .7;
+}
+@keyframes db-ring-spin { to { transform: rotate(360deg); } }
+.db-avatar-ring::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--e-blue), var(--e-blue-deep));
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    border-radius: 50%;
+    background: var(--bg);
 }
-
-.ee-profile-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
-    border-color: rgba(255, 255, 255, 0.12);
-}
-
-.ee-profile-btn:hover::before {
-    opacity: 1;
-}
-
-.ee-profile-btn svg,
-.ee-profile-btn span {
+.db-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
     position: relative;
     z-index: 1;
+    border: 2px solid var(--surface);
+}
+.db-status-dot {
+    position: absolute;
+    bottom: 3px; right: 3px;
+    width: 11px; height: 11px;
+    background: #16a34a;
+    border: 2px solid var(--bg);
+    border-radius: 50%;
+    z-index: 2;
 }
 
-.ee-profile-btn svg {
-    width: 18px;
-    height: 18px;
+.db-profile-name {
+    font-size: .95rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.02em;
+    margin-bottom: 2px;
 }
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 1280px) {
-    .ee-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .ee-main-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .ee-actions-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.db-profile-role {
+    font-size: .75rem;
+    color: var(--text-2);
+    margin-bottom: 8px;
 }
-
-@media (max-width: 768px) {
-    .ee-welcome-content {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .ee-welcome-eyebrow {
-        justify-content: center;
-    }
-
-    .ee-welcome-title {
-        align-items: center;
-    }
-
-    .ee-welcome-divider {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .ee-welcome-subtitle {
-        max-width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .ee-welcome-tags {
-        justify-content: center;
-    }
-
-    .ee-welcome-right {
-        width: 100%;
-    }
-
-    .ee-datetime-card {
-        width: 100%;
-    }
-
-    .ee-welcome-title-name {
-        font-size: 2.5rem;
-    }
-
-    .ee-stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .ee-actions-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    .ee-actions-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .ee-welcome-banner {
-        padding: 1.5rem;
-    }
-
-    .ee-welcome-title-name {
-        font-size: 2rem;
-    }
-
-    .ee-dt-day {
-        font-size: 4rem;
-        letter-spacing: -3px;
-    }
-
-    .ee-stat-card {
-        padding: 1.25rem;
-    }
-
-    .ee-stat-value {
-        font-size: 1.5rem;
-    }
-}
-
-/* ==================== DARK MODE — DASHBOARD ==================== */
-/* Stat cards */
-.dark .ee-stat-card {
-    background: var(--e-surface);
-    border-color: var(--e-border);
-}
-
-.dark .ee-stat-card:hover {
-    border-color: var(--e-border);
-    box-shadow: var(--e-shadow-lg);
-}
-
-/* Quick actions */
-.dark .ee-quick-actions {
-    background: var(--e-surface);
-    border-color: var(--e-border);
-}
-
-.dark .ee-action-card {
-    background: var(--e-surface-elevated);
-    border-color: transparent;
-}
-
-.dark .ee-action-card:hover {
-    background: var(--e-surface-elevated);
-    box-shadow: var(--e-shadow-lg);
-}
-
-/* Activities card */
-.dark .ee-activities-card {
-    background: var(--e-surface);
-    border-color: var(--e-border);
-}
-
-.dark .ee-activity-item {
-    background: rgba(255,255,255,0.035);
-}
-
-.dark .ee-activity-item:hover {
-    background: rgba(255,255,255,0.06);
-    border-color: var(--e-border);
-}
-
-/* Activity icons — plus lisibles en dark */
-.dark .ee-activity-icon.file {
-    background: var(--e-blue-pale);
-    color: var(--e-blue);
-}
-
-.dark .ee-activity-icon.calendar {
-    background: var(--e-emerald-pale);
-    color: #34d399;
-}
-
-.dark .ee-activity-icon.user {
-    background: var(--e-amber-pale);
-    color: var(--e-amber);
-}
-
-/* Card link — visible en dark */
-.dark .ee-card-link {
-    background: var(--e-blue-pale);
-    color: var(--e-blue);
-}
-
-.dark .ee-card-link:hover {
-    background: var(--e-blue);
+.db-profile-matricule {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: .65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    padding: 3px 9px;
+    border-radius: 10px;
+    background: var(--o-500);
     color: white;
 }
+.db-profile-matricule svg { width: 9px; height: 9px; }
 
-/* Profile card */
-.dark .ee-profile-card {
-    background: var(--e-surface);
-    border-color: var(--e-border);
+.db-profile-info { padding: 6px 0; }
+.db-profile-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--border);
+    transition: background .15s;
+}
+.db-profile-row:last-child { border-bottom: none; }
+.db-profile-row:hover { background: var(--bg); }
+
+.db-profile-row-icon {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-2);
+    transition: all .15s;
+}
+.db-profile-row:hover .db-profile-row-icon {
+    background: var(--o-50);
+    border-color: var(--o-100);
+    color: var(--o-500);
+}
+.db-profile-row-icon svg { width: 13px; height: 13px; }
+
+.db-profile-row-body { flex: 1; min-width: 0; }
+.db-profile-row-label {
+    font-size: .6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--text-2);
+}
+.db-profile-row-val {
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
 }
 
-.dark .ee-profile-body {
-    background: var(--e-surface);
-}
-
-.dark .ee-info-item {
-    background: rgba(255,255,255,0.035);
-    border-color: transparent;
-}
-
-.dark .ee-info-item:hover {
-    background: var(--e-blue-pale);
-    border-color: var(--e-blue-pale);
-}
-
-.dark .ee-info-icon {
-    background: var(--e-surface-elevated);
-    border-color: var(--e-border);
-    color: var(--e-blue);
-}
-
-.dark .ee-info-item:hover .ee-info-icon {
-    background: var(--e-blue);
+.db-profile-footer { padding: 12px 16px; }
+.db-profile-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    width: 100%;
+    padding: 9px;
+    background: var(--b-600);
     color: white;
-    border-color: var(--e-blue);
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .8rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s, transform .15s, box-shadow .15s;
+    letter-spacing: -.01em;
+}
+.db-profile-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37,99,235,.3);
+}
+.db-profile-btn svg { width: 14px; height: 14px; }
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 1100px) {
+    .db-hero { flex-direction: column; min-height: auto; }
+    .db-clock-wrap { border-left: none; border-top: 1px solid var(--border); flex-direction: row; justify-content: space-around; padding: 16px 24px; }
+    .db-clock-sep { width: 1px; height: 40px; }
+    .db-stats { grid-template-columns: repeat(2, 1fr); }
+    .db-actions-grid { grid-template-columns: repeat(2, 1fr); }
+    .db-bottom { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+    .db-hero-left { padding: 20px; }
+    .db-greeting-name { font-size: 1.6rem; }
+    .db-stats { grid-template-columns: 1fr; }
+    .db-actions-grid { grid-template-columns: 1fr; }
 }
 
-/* Profile button — contraste correct en dark */
-.dark .ee-profile-btn {
-    background: linear-gradient(135deg, var(--e-surface-elevated), var(--e-border));
-    border-color: var(--e-border);
-    color: var(--e-text);
-}
-
-.dark .ee-profile-btn:hover {
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    border-color: var(--e-blue-pale);
-}
-
-/* Empty state */
-.dark .ee-empty-icon {
-    background: rgba(255,255,255,0.05);
-}
-
-/* Stat badges */
-.dark .ee-stat-badge.success {
-    background: var(--e-emerald-pale);
-    color: #34d399;
-}
-
-.dark .ee-stat-badge.warning {
-    background: var(--e-amber-pale);
-    color: var(--e-amber-bright);
-}
-
-.dark .ee-stat-badge.info {
-    background: var(--e-blue-pale);
-    color: var(--e-blue);
-}
-
-/* Section title icon */
-.dark .ee-section-title-icon {
-    background: var(--e-blue);
-}
-
-.dark .ee-card-title-icon {
-    background: #059669;
-}
-
-/* Nav badge */
-.dark .ee-nav-badge {
-    background: rgba(255,255,255,0.08);
-    color: var(--e-text-secondary);
-}
+/* ── Dark mode ────────────────────────────────────────── */
+.dark .db-stat       { background: var(--surface); border-color: var(--border); }
+.dark .db-actions-card { background: var(--surface); border-color: var(--border); }
+.dark .db-hero        { background: var(--surface); border-color: var(--border); }
+.dark .db-clock-wrap  { background: rgba(255,255,255,.03); border-color: var(--border); }
+.dark .db-feed        { background: var(--surface); border-color: var(--border); }
+.dark .db-profile     { background: var(--surface); border-color: var(--border); }
+.dark .db-profile-head { background: rgba(255,255,255,.03); border-bottom-color: var(--border); }
+.dark .db-action      { background: rgba(255,255,255,.03); border-color: var(--border); }
 </style>
 @endsection
 
 @section('content')
-<div class="ee-dashboard">
-    <!-- Welcome Banner -->
-    <div class="ee-welcome-banner animate-fade-in">
-        <div class="ee-wb-glow ee-wb-glow--amber"></div>
-        <div class="ee-wb-glow ee-wb-glow--blue"></div>
-        <div class="ee-welcome-content">
-            <div class="ee-welcome-left">
-                <div class="ee-welcome-eyebrow">
-                    <span class="ee-wb-dot"></span>
-                    <span id="greetingLabel">Bienvenue</span>
-                </div>
-                <h2 class="ee-welcome-title">
-                    <span class="ee-welcome-title-prefix" id="greetingPrefix">Bonjour,</span>
-                    <span class="ee-welcome-title-name">{{ $personnel ? $personnel->prenoms : auth()->user()->name }}</span>
-                </h2>
-                <div class="ee-welcome-divider"></div>
-                <p class="ee-welcome-subtitle">
-                    Consultez vos informations, gérez vos demandes<br>et accédez à vos documents en toute simplicité.
-                </p>
-                <div class="ee-welcome-tags">
-                    <span class="ee-welcome-tag" id="dayContextTag">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                        </svg>
-                        Espace personnel actif
-                    </span>
-                </div>
+@php
+    $prenomDisplay = $personnel ? $personnel->prenoms : auth()->user()->name;
+    $dayNum   = now()->format('d');
+    $dayMonth = now()->translatedFormat('F Y');
+    $dayShort = now()->translatedFormat('F');
+@endphp
+
+<div class="db-page">
+
+    {{-- ══ HERO ══ --}}
+    <div class="db-hero db-anim" style="animation-delay:.02s">
+        <div class="db-hero-left">
+            <div class="db-greeting-label">
+                <span class="db-greeting-dot"></span>
+                <span id="db-greeting-word">Bonjour</span>
             </div>
-            <div class="ee-welcome-right">
-                <div class="ee-datetime-card">
-                    <div class="ee-dt-top">
-                        <span id="dayName">—</span>
-                        <span class="ee-dt-sep">·</span>
-                        <span>{{ now()->translatedFormat('F Y') }}</span>
+            <div class="db-greeting-name" id="db-greeting-name">{{ $prenomDisplay }}</div>
+            <div class="db-hero-tags">
+                <span class="db-hero-tag orange">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Espace actif
+                </span>
+                @if($personnel && $personnel->poste)
+                <span class="db-hero-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    {{ $personnel->poste }}
+                </span>
+                @endif
+                <span class="db-hero-tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    {{ $dayMonth }}
+                </span>
+            </div>
+        </div>
+
+        <div class="db-clock-wrap">
+            <div style="text-align:center">
+                <div class="db-clock-day-num">{{ $dayNum }}</div>
+                <div class="db-clock-month">{{ $dayShort }}</div>
+            </div>
+            <div class="db-clock-sep"></div>
+            <div style="text-align:center">
+                <div class="db-clock-time" id="db-time">--:--<span class="db-clock-secs" id="db-secs">:--</span></div>
+                <div class="db-clock-day-name" id="db-dayname">—</div>
+                <div class="db-day-progress" style="margin-top:8px">
+                    <div class="db-day-progress-bar">
+                        <div class="db-day-progress-fill" id="db-prog" style="width:0%"></div>
                     </div>
-                    <div class="ee-dt-day">{{ now()->format('d') }}</div>
-                    <div class="ee-dt-month">{{ now()->translatedFormat('F') }}</div>
-                    <div class="ee-dt-line"></div>
-                    <div class="ee-dt-time" id="currentTime">--:--<span class="ee-dt-seconds">:--</span></div>
-                    <div class="ee-dt-progress">
-                        <div class="ee-dt-progress-fill" id="dayProgressFill" style="width:0%"></div>
-                    </div>
-                    <div class="ee-dt-label" id="dayProgressLabel">Journée en cours</div>
+                    <div class="db-day-progress-label" id="db-prog-lbl">Journée en cours</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="ee-stats-grid">
-        <div class="ee-stat-card animate-fade-in" style="animation-delay: 0.1s;">
-            <div class="ee-stat-icon primary">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                </svg>
+    {{-- ══ STATS ══ --}}
+    <div class="db-stats">
+        <div class="db-stat s-orange db-anim" style="animation-delay:.07s">
+            <div class="db-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
-            <div class="ee-stat-content">
-                <div class="ee-stat-value">{{ $stats['documents'] }}</div>
-                <div class="ee-stat-label">Documents disponibles</div>
-                <span class="ee-stat-badge info">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    </svg>
+            <div class="db-stat-body">
+                <div class="db-stat-val">{{ $stats['documents'] }}</div>
+                <div class="db-stat-label">Documents disponibles</div>
+                <div class="db-stat-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
                     Dossier actif
-                </span>
+                </div>
             </div>
         </div>
 
-        <div class="ee-stat-card animate-fade-in" style="animation-delay: 0.2s;">
-            <div class="ee-stat-icon success">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
+        <div class="db-stat s-green db-anim" style="animation-delay:.12s">
+            <div class="db-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
             </div>
-            <div class="ee-stat-content">
-                <div class="ee-stat-value">{{ $stats['conges_restants'] }}</div>
-                <div class="ee-stat-label">Jours de conges</div>
-                <span class="ee-stat-badge success">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+            <div class="db-stat-body">
+                <div class="db-stat-val">{{ $stats['conges_restants'] }}</div>
+                <div class="db-stat-label">Jours de cong&eacute;s restants</div>
+                <div class="db-stat-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                     Disponibles
-                </span>
+                </div>
             </div>
         </div>
 
-        <div class="ee-stat-card animate-fade-in" style="animation-delay: 0.3s;">
-            <div class="ee-stat-icon warning">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
+        <div class="db-stat s-yellow db-anim" style="animation-delay:.17s">
+            <div class="db-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
-            <div class="ee-stat-content">
-                <div class="ee-stat-value">{{ $stats['demandes_en_cours'] }}</div>
-                <div class="ee-stat-label">Demandes en cours</div>
-                <span class="ee-stat-badge warning">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
+            <div class="db-stat-body">
+                <div class="db-stat-val">{{ $stats['demandes_en_cours'] }}</div>
+                <div class="db-stat-label">Demandes en cours</div>
+                <div class="db-stat-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     En attente
-                </span>
+                </div>
             </div>
         </div>
 
-        <div class="ee-stat-card animate-fade-in" style="animation-delay: 0.4s;">
-            <div class="ee-stat-icon info">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
+        <div class="db-stat s-blue db-anim" style="animation-delay:.22s">
+            <div class="db-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
             </div>
-            <div class="ee-stat-content">
-                <div class="ee-stat-value">{{ $stats['anciennete'] }}</div>
-                <div class="ee-stat-label">Annees d'anciennete</div>
-                <span class="ee-stat-badge info">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                    Fidelite
-                </span>
+            <div class="db-stat-body">
+                <div class="db-stat-val">{{ $stats['anciennete'] }}</div>
+                <div class="db-stat-label">Ann&eacute;es d'anciennet&eacute;</div>
+                <div class="db-stat-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    Fid&eacute;lit&eacute;
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="ee-quick-actions animate-fade-in" style="animation-delay: 0.5s;">
-        <div class="ee-section-header">
-            <div class="ee-section-title">
-                <div class="ee-section-title-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                    </svg>
-                </div>
-                <div>
-                    <h3>Actions rapides</h3>
-                    <div class="ee-section-subtitle">Acces direct a vos services</div>
-                </div>
-            </div>
+    {{-- ══ QUICK ACTIONS ══ --}}
+    <div class="db-actions-card db-anim" style="animation-delay:.27s">
+        <div class="db-actions-header">
+            <div class="db-section-title">Actions rapides</div>
         </div>
-        <div class="ee-actions-grid">
-            <a href="{{ route('espace-employe.conges') }}" class="ee-action-card">
-                <div class="ee-action-icon purple">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                        <path d="M9 16h6"></path>
-                    </svg>
+        <div class="db-actions-grid">
+            <a href="{{ route('espace-employe.conges') }}" class="db-action a-orange">
+                <div class="db-action-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16h6"/></svg>
                 </div>
-                <div class="ee-action-text">
-                    <div class="ee-action-label">Demander un conge</div>
-                    <div class="ee-action-desc">Poser une demande</div>
+                <div class="db-action-text">
+                    <div class="db-action-label">Demander un cong&eacute;</div>
+                    <div class="db-action-desc">Poser une demande</div>
                 </div>
+                <div class="db-action-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
             </a>
-            <a href="{{ route('espace-employe.attestations') }}" class="ee-action-card">
-                <div class="ee-action-icon green">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <path d="M9 15l2 2 4-4"></path>
-                    </svg>
+            <a href="{{ route('espace-employe.bulletins') }}" class="db-action a-blue">
+                <div class="db-action-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                 </div>
-                <div class="ee-action-text">
-                    <div class="ee-action-label">Attestations</div>
-                    <div class="ee-action-desc">Travail, salaire...</div>
+                <div class="db-action-text">
+                    <div class="db-action-label">Bulletins de paie</div>
+                    <div class="db-action-desc">Consulter mes fiches</div>
                 </div>
+                <div class="db-action-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
             </a>
-            <a href="{{ route('espace-employe.bulletins') }}" class="ee-action-card">
-                <div class="ee-action-icon blue">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                        <line x1="8" y1="21" x2="16" y2="21"></line>
-                        <line x1="12" y1="17" x2="12" y2="21"></line>
-                    </svg>
+            <a href="{{ route('espace-employe.attestations') }}" class="db-action a-green">
+                <div class="db-action-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
                 </div>
-                <div class="ee-action-text">
-                    <div class="ee-action-label">Bulletins de paie</div>
-                    <div class="ee-action-desc">Consulter mes fiches</div>
+                <div class="db-action-text">
+                    <div class="db-action-label">Attestations</div>
+                    <div class="db-action-desc">Travail, salaire&hellip;</div>
                 </div>
+                <div class="db-action-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
             </a>
-            <a href="{{ route('espace-employe.profil') }}" class="ee-action-card">
-                <div class="ee-action-icon orange">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+            <a href="{{ route('espace-employe.documents') }}" class="db-action a-violet">
+                <div class="db-action-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                 </div>
-                <div class="ee-action-text">
-                    <div class="ee-action-label">Mon profil</div>
-                    <div class="ee-action-desc">Modifier mes infos</div>
+                <div class="db-action-text">
+                    <div class="db-action-label">Mes documents</div>
+                    <div class="db-action-desc">Dossier personnel</div>
                 </div>
+                <div class="db-action-arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
             </a>
         </div>
     </div>
 
-    <!-- Main Grid -->
-    <div class="ee-main-grid">
-        <!-- Activities -->
-        <div class="ee-activities-card animate-fade-in" style="animation-delay: 0.6s;">
-            <div class="ee-card-header">
-                <div class="ee-card-title-group">
-                    <div class="ee-card-title-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                        </svg>
-                    </div>
-                    <h3 class="ee-card-title">Activites recentes</h3>
-                </div>
-                <a href="{{ route('espace-employe.documents') }}" class="ee-card-link">
+    {{-- ══ BOTTOM GRID ══ --}}
+    <div class="db-bottom">
+
+        {{-- Activity feed --}}
+        <div class="db-feed db-anim" style="animation-delay:.32s">
+            <div class="db-feed-header">
+                <div class="db-section-title">Activit&eacute;s r&eacute;centes</div>
+                <a href="{{ route('espace-employe.documents') }}" class="db-feed-link">
                     Voir tout
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>
             </div>
-            <div class="ee-activity-list">
+            <div class="db-feed-list">
                 @forelse($activities as $activity)
-                    <div class="ee-activity-item">
-                        <div class="ee-activity-icon {{ $activity['icon'] }}">
-                            @if($activity['icon'] === 'file')
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>
-                            @elseif($activity['icon'] === 'calendar')
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                </svg>
-                            @else
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
+                <div class="db-feed-item">
+                    <div class="db-feed-icon {{ $activity['icon'] }}">
+                        @if($activity['icon'] === 'file')
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        @elseif($activity['icon'] === 'calendar')
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        @else
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        @endif
+                    </div>
+                    <div class="db-feed-body">
+                        <div class="db-feed-title">{{ $activity['title'] }}</div>
+                        <div class="db-feed-meta">
+                            <span class="db-feed-date">{{ $activity['date']->diffForHumans() }}</span>
+                            @if($activity['date']->isToday())
+                                <span class="db-feed-badge-new">Nouveau</span>
                             @endif
                         </div>
-                        <div class="ee-activity-content">
-                            <div class="ee-activity-title">{{ $activity['title'] }}</div>
-                            <div class="ee-activity-meta">
-                                <span class="ee-activity-date">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
-                                    {{ $activity['date']->diffForHumans() }}
-                                </span>
-                                @if($activity['date']->isToday())
-                                    <span class="ee-activity-badge new">Nouveau</span>
-                                @endif
-                            </div>
-                        </div>
                     </div>
+                </div>
                 @empty
-                    <div class="ee-empty-state">
-                        <div class="ee-empty-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                            </svg>
-                        </div>
-                        <div class="ee-empty-text">Aucune activite recente</div>
+                <div class="db-empty">
+                    <div class="db-empty-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                     </div>
+                    <div class="db-empty-text">Aucune activit&eacute; r&eacute;cente</div>
+                </div>
                 @endforelse
             </div>
         </div>
 
-        <!-- Profile Card -->
-        <div class="ee-profile-card animate-fade-in" style="animation-delay: 0.7s;">
-            <div class="ee-profile-header">
-                <div class="ee-profile-pattern"></div>
-                <div class="ee-profile-avatar-wrapper">
-                    <img src="{{ $personnel && $personnel->photo ? asset('storage/' . $personnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode($personnel ? $personnel->nom . ' ' . $personnel->prenoms : auth()->user()->name) . '&size=200&background=1e293b&color=e2e8f0&bold=true' }}"
+        {{-- Profile card --}}
+        <div class="db-profile db-anim" style="animation-delay:.37s">
+            <div class="db-profile-head">
+                <div class="db-avatar-ring">
+                    <img src="{{ $personnel && $personnel->photo ? asset('storage/' . $personnel->photo) : 'https://ui-avatars.com/api/?name=' . urlencode($personnel ? $personnel->nom . ' ' . $personnel->prenoms : auth()->user()->name) . '&size=200&background=f97316&color=ffffff&bold=true' }}"
                          alt="Photo"
-                         class="ee-profile-avatar"
-                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=200&background=1e293b&color=e2e8f0&bold=true'">
-                    <span class="ee-profile-status"></span>
+                         class="db-avatar"
+                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&size=200&background=f97316&color=ffffff&bold=true'">
+                    <span class="db-status-dot"></span>
                 </div>
-                <div class="ee-profile-name">{{ $personnel ? $personnel->nom_complet : auth()->user()->name }}</div>
-                <div class="ee-profile-role">{{ $personnel ? $personnel->poste : 'Employe' }}</div>
+                <div class="db-profile-name">{{ $personnel ? $personnel->nom_complet : auth()->user()->name }}</div>
+                <div class="db-profile-role">{{ $personnel ? $personnel->poste : 'Employ&eacute;' }}</div>
                 @if($personnel && $personnel->matricule)
-                    <span class="ee-profile-badge">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                        </svg>
-                        {{ $personnel->matricule }}
-                    </span>
+                <span class="db-profile-matricule">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+                    {{ $personnel->matricule }}
+                </span>
                 @endif
             </div>
-            <div class="ee-profile-body">
-                <div class="ee-profile-info">
-                    @if($personnel)
-                        <div class="ee-info-item">
-                            <div class="ee-info-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                            </div>
-                            <div class="ee-info-content">
-                                <div class="ee-info-label">Departement</div>
-                                <div class="ee-info-value">{{ $personnel->departement->nom ?? 'Non assigne' }}</div>
-                            </div>
-                        </div>
-                        <div class="ee-info-item">
-                            <div class="ee-info-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                                </svg>
-                            </div>
-                            <div class="ee-info-content">
-                                <div class="ee-info-label">Service</div>
-                                <div class="ee-info-value">{{ $personnel->service->nom ?? 'Non assigne' }}</div>
-                            </div>
-                        </div>
-                        <div class="ee-info-item">
-                            <div class="ee-info-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                </svg>
-                            </div>
-                            <div class="ee-info-content">
-                                <div class="ee-info-label">Date d'embauche</div>
-                                <div class="ee-info-value">{{ $personnel->date_embauche ? $personnel->date_embauche->format('d/m/Y') : 'Non renseignee' }}</div>
-                            </div>
-                        </div>
-                    @endif
-                    <div class="ee-info-item">
-                        <div class="ee-info-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
-                        </div>
-                        <div class="ee-info-content">
-                            <div class="ee-info-label">Email</div>
-                            <div class="ee-info-value">{{ auth()->user()->email }}</div>
-                        </div>
+
+            <div class="db-profile-info">
+                @if($personnel)
+                <div class="db-profile-row">
+                    <div class="db-profile-row-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    </div>
+                    <div class="db-profile-row-body">
+                        <div class="db-profile-row-label">D&eacute;partement</div>
+                        <div class="db-profile-row-val">{{ $personnel->departement->nom ?? 'Non assign&eacute;' }}</div>
+                    </div>
+                </div>
+                <div class="db-profile-row">
+                    <div class="db-profile-row-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    </div>
+                    <div class="db-profile-row-body">
+                        <div class="db-profile-row-label">Service</div>
+                        <div class="db-profile-row-val">{{ $personnel->service->nom ?? 'Non assign&eacute;' }}</div>
+                    </div>
+                </div>
+                <div class="db-profile-row">
+                    <div class="db-profile-row-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <div class="db-profile-row-body">
+                        <div class="db-profile-row-label">Embauche</div>
+                        <div class="db-profile-row-val">{{ $personnel->date_embauche ? $personnel->date_embauche->format('d/m/Y') : 'Non renseign&eacute;e' }}</div>
+                    </div>
+                </div>
+                @endif
+                <div class="db-profile-row">
+                    <div class="db-profile-row-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div class="db-profile-row-body">
+                        <div class="db-profile-row-label">Email</div>
+                        <div class="db-profile-row-val">{{ auth()->user()->email }}</div>
                     </div>
                 </div>
             </div>
-            <div class="ee-profile-footer">
-                <a href="{{ route('espace-employe.profil') }}" class="ee-profile-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    <span>Voir mon profil complet</span>
+
+            <div class="db-profile-footer">
+                <a href="{{ route('espace-employe.profil') }}" class="db-profile-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Voir mon profil complet
                 </a>
             </div>
         </div>
-    </div>
-</div>
+
+    </div>{{-- /.db-bottom --}}
+
+</div>{{-- /.db-page --}}
 @endsection
 
 @section('scripts')
 <script>
-    // Dynamic greeting based on time of day
-    function initDashboard() {
-        const hour = new Date().getHours();
-        let greeting, prefix;
-        if (hour < 12)       { greeting = 'Bonjour';        prefix = 'Bonjour,'; }
-        else if (hour < 18)  { greeting = 'Bon après-midi'; prefix = 'Bon après-midi,'; }
-        else                 { greeting = 'Bonsoir';        prefix = 'Bonsoir,'; }
+(function() {
+    const DAYS_FR = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
 
-        const greetingEl = document.getElementById('greetingLabel');
-        if (greetingEl) greetingEl.textContent = greeting;
+    function pad(n) { return String(n).padStart(2,'0'); }
 
-        const prefixEl = document.getElementById('greetingPrefix');
-        if (prefixEl) prefixEl.textContent = prefix;
+    // Greeting dynamic
+    (function setGreeting() {
+        const h = new Date().getHours();
+        const word = h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir';
+        const el = document.getElementById('db-greeting-word');
+        if (el) el.textContent = word;
+    })();
 
-        const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-        const dayNameEl = document.getElementById('dayName');
-        if (dayNameEl) dayNameEl.textContent = days[new Date().getDay()];
-    }
+    // Day name
+    const dayEl = document.getElementById('db-dayname');
+    if (dayEl) dayEl.textContent = DAYS_FR[new Date().getDay()];
 
-    function updateTime() {
+    // Live clock
+    function tick() {
         const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const s = String(now.getSeconds()).padStart(2, '0');
+        const h = pad(now.getHours()), m = pad(now.getMinutes()), s = pad(now.getSeconds());
+        const timeEl = document.getElementById('db-time');
+        const secsEl = document.getElementById('db-secs');
+        if (timeEl) timeEl.childNodes[0].textContent = h + ':' + m;
+        if (secsEl) secsEl.textContent = ':' + s;
 
-        const timeEl = document.getElementById('currentTime');
-        if (timeEl) timeEl.innerHTML = `${h}:${m}<span class="ee-dt-seconds">:${s}</span>`;
-
-        // Day progress bar (6h → 23h range)
+        // Day progress (6h–23h)
         const totalMin = now.getHours() * 60 + now.getMinutes();
-        const start = 6 * 60, end = 23 * 60;
-        const pct = Math.min(100, Math.max(0, ((totalMin - start) / (end - start)) * 100));
-        const bar = document.getElementById('dayProgressFill');
-        if (bar) bar.style.width = pct.toFixed(1) + '%';
+        const START = 6 * 60, END = 23 * 60;
+        const pct = Math.min(100, Math.max(0, ((totalMin - START) / (END - START)) * 100));
+        const prog = document.getElementById('db-prog');
+        if (prog) prog.style.width = pct.toFixed(1) + '%';
 
-        const label = document.getElementById('dayProgressLabel');
-        if (label) {
-            const rem = end - totalMin;
-            if (rem > 60) label.textContent = `${Math.floor(rem / 60)}h ${rem % 60}min restantes`;
-            else if (rem > 0) label.textContent = `${rem} min avant la fin de journée`;
-            else label.textContent = 'Bonne soirée !';
+        const lbl = document.getElementById('db-prog-lbl');
+        if (lbl) {
+            const rem = END - totalMin;
+            if (rem > 60)      lbl.textContent = Math.floor(rem/60) + 'h ' + (rem%60) + 'min restantes';
+            else if (rem > 0)  lbl.textContent = rem + ' min restantes';
+            else               lbl.textContent = 'Bonne soirée !';
         }
     }
-
-    initDashboard();
-    updateTime();
-    setInterval(updateTime, 1000);
+    tick();
+    setInterval(tick, 1000);
+})();
 </script>
 @endsection

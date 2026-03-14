@@ -44,10 +44,9 @@
     font-family: var(--fb);
     background: var(--void);
     color: var(--t1);
-    min-height: calc(100vh - 90px);
+    min-height: calc(100vh - 54px - 3rem);
     padding: 20px;
-    margin: -8px;
-    border-radius: 12px;
+    border-radius: 14px;
 }
 
 /* ── Hero ──────────────────────────────────────────────────────── */

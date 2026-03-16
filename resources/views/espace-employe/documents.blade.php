@@ -16,1140 +16,988 @@
 
 @section('styles')
 <style>
-/* ==================== DOCUMENTS PAGE - FILE EXPLORER STYLE ==================== */
-.ee-documents-page {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
+/* ════════════════════════════════════════════════════
+   DOCUMENTS — Charte Portail RH+
+   Indigo × Teal × Neutres · Syne · DM Sans · DM Mono
+   ════════════════════════════════════════════════════ */
 
-/* ==================== HEADER BANNER ==================== */
-.ee-docs-banner {
-    background: var(--e-slate-800);
-    border-radius: var(--e-radius-xl);
-    padding: 2rem;
-    color: white;
+.doc-page { display: flex; flex-direction: column; gap: 1.5rem; animation: fadeUp .4s ease both; }
+
+/* ── Hero ─────────────────────────────────────────── */
+.doc-hero {
+    background: linear-gradient(135deg, var(--ind-900) 0%, var(--ind-700) 60%, #1a3a5c 100%);
+    border-radius: var(--r-xl);
+    padding: 2rem 2.5rem;
+    color: #fff;
     position: relative;
     overflow: hidden;
-    box-shadow: var(--e-shadow-lg);
-    border-top: 3px solid var(--e-amber);
 }
 
-.ee-docs-banner-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-}
-
-.ee-docs-banner-left {
-    flex: 1;
-}
-
-.ee-docs-banner-icon {
-    width: 56px;
-    height: 56px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--e-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.ee-docs-banner-icon svg {
-    width: 28px;
-    height: 28px;
-}
-
-.ee-docs-banner-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.5px;
-}
-
-.ee-docs-banner-subtitle {
-    font-size: 0.9375rem;
-    color: rgba(255, 255, 255, 0.75);
-    max-width: 400px;
-    line-height: 1.5;
-}
-
-.ee-docs-banner-stats {
-    display: flex;
-    gap: 1rem;
-}
-
-.ee-banner-stat {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 1.25rem 1.5rem;
-    border-radius: var(--e-radius);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    text-align: center;
-    min-width: 90px;
-}
-
-.ee-banner-stat-value {
-    font-size: 1.75rem;
-    font-weight: 700;
-    line-height: 1;
-    color: white;
-}
-
-.ee-banner-stat-label {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
-    margin-top: 0.375rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* ==================== NAVIGATION BAR ==================== */
-.ee-nav-bar {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-lg);
-    border: 1px solid var(--e-border);
-    padding: 1rem 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    box-shadow: var(--e-shadow-sm);
-}
-
-.ee-nav-back {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1rem;
-    background: var(--e-bg);
-    border: 2px solid var(--e-border);
-    border-radius: var(--e-radius);
-    color: var(--e-text);
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.ee-nav-back:hover {
-    border-color: var(--e-blue);
-    color: var(--e-blue);
-    background: var(--e-blue-wash);
-}
-
-.ee-nav-back svg {
-    width: 18px;
-    height: 18px;
-}
-
-.ee-nav-path {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex: 1;
-    overflow-x: auto;
-}
-
-.ee-nav-path::-webkit-scrollbar {
-    display: none;
-}
-
-.ee-path-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.875rem;
-    background: var(--e-bg);
-    border-radius: 10px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--e-text);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: all 0.3s ease;
-}
-
-.ee-path-item:hover {
-    background: var(--e-blue-wash);
-    color: var(--e-blue);
-}
-
-.ee-path-item.current {
-    background: var(--e-blue);
-    color: white;
-}
-
-.ee-path-item svg {
-    width: 16px;
-    height: 16px;
-}
-
-.ee-path-separator {
-    color: var(--e-text-tertiary);
-}
-
-.ee-path-separator svg {
-    width: 16px;
-    height: 16px;
-}
-
-.ee-nav-search {
-    position: relative;
-    width: 280px;
-}
-
-.ee-nav-search-icon {
+.doc-hero::before {
+    content: '';
     position: absolute;
-    left: 0.875rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    color: var(--e-text-secondary);
+    inset: 0;
+    background: radial-gradient(ellipse 55% 80% at 90% 50%, rgba(10,175,162,.18) 0%, transparent 70%);
     pointer-events: none;
 }
 
-.ee-nav-search input {
-    width: 100%;
-    padding: 0.625rem 1rem 0.625rem 2.5rem;
-    background: var(--e-bg);
-    border: 2px solid var(--e-border);
-    border-radius: var(--e-radius);
-    font-size: 0.875rem;
-    color: var(--e-text);
-    transition: all 0.3s ease;
+.doc-hero::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--teal-400), var(--teal-300));
 }
 
-.ee-nav-search input::placeholder {
-    color: var(--e-text-tertiary);
-}
-
-.ee-nav-search input:focus {
-    outline: none;
-    border-color: var(--e-blue);
-    box-shadow: 0 0 0 4px var(--e-blue-wash);
-}
-
-/* ==================== FOLDERS GRID ==================== */
-.ee-folders-section {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-lg);
-    border: 1px solid var(--e-border);
-    overflow: hidden;
-    box-shadow: var(--e-shadow);
-}
-
-.ee-folders-header {
+.doc-hero-inner {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--e-border);
-    background: var(--e-bg);
+    flex-wrap: wrap;
+    gap: 1.5rem;
 }
 
-.ee-folders-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--e-text);
-}
+.doc-hero-left { display: flex; align-items: center; gap: 1.25rem; }
 
-.ee-folders-title-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: var(--e-blue);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
-.ee-folders-title-icon svg {
-    width: 18px;
-    height: 18px;
-}
-
-.ee-folders-count {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--e-text-secondary);
-    background: var(--e-bg);
-    padding: 0.375rem 0.75rem;
-    border-radius: 8px;
-}
-
-.ee-folders-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    padding: 1.5rem;
-}
-
-/* Folder Card */
-.ee-folder-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.5rem 1rem;
-    background: var(--e-bg);
-    border: 2px solid transparent;
-    border-radius: var(--e-radius-lg);
-    text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    position: relative;
-    border-top: 3px solid var(--folder-color, var(--e-blue));
-}
-
-.ee-folder-card:hover {
-    border-color: var(--folder-color, var(--e-blue));
-    border-top-color: var(--folder-color, var(--e-blue));
-    transform: translateY(-2px);
-    box-shadow: var(--e-shadow-lg);
-}
-
-.ee-folder-icon {
-    width: 72px;
-    height: 72px;
-    margin-bottom: 1rem;
-    position: relative;
-    z-index: 1;
-}
-
-.ee-folder-icon-bg {
-    width: 100%;
-    height: 100%;
-    border-radius: var(--e-radius);
-    background: var(--folder-color, var(--e-blue));
-    opacity: 0.15;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.ee-folder-icon svg {
-    width: 100%;
-    height: 100%;
-    color: var(--folder-color, var(--e-blue));
-    position: relative;
-    z-index: 1;
-}
-
-.ee-folder-info {
-    text-align: center;
-    position: relative;
-    z-index: 1;
-    width: 100%;
-}
-
-.ee-folder-name {
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: var(--e-text);
-    margin-bottom: 0.375rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.ee-folder-count {
-    font-size: 0.75rem;
-    color: var(--e-text-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.375rem;
-}
-
-.ee-folder-count svg {
-    width: 14px;
-    height: 14px;
-}
-
-.ee-folder-badge {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    background: var(--folder-color, var(--e-blue));
-    color: white;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    z-index: 2;
-}
-
-/* ==================== FILES LIST ==================== */
-.ee-files-section {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-lg);
-    border: 1px solid var(--e-border);
-    overflow: hidden;
-    box-shadow: var(--e-shadow);
-}
-
-.ee-files-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--e-border);
-    background: var(--e-bg);
-}
-
-.ee-files-title {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.ee-category-badge {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: white;
-}
-
-.ee-category-badge svg {
-    width: 18px;
-    height: 18px;
-}
-
-.ee-files-count {
-    font-size: 0.8125rem;
-    color: var(--e-text-secondary);
-}
-
-.ee-view-toggle {
-    display: flex;
-    gap: 0.25rem;
-    background: var(--e-bg);
-    padding: 0.25rem;
-    border-radius: 10px;
-}
-
-.ee-view-btn {
-    padding: 0.5rem;
-    border: none;
-    background: transparent;
-    border-radius: 8px;
-    color: var(--e-text-secondary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.ee-view-btn:hover {
-    color: var(--e-blue);
-}
-
-.ee-view-btn.active {
-    background: var(--e-surface);
-    color: var(--e-blue);
-    box-shadow: var(--e-shadow-sm);
-}
-
-.ee-view-btn svg {
-    width: 18px;
-    height: 18px;
-}
-
-/* Files Grid View */
-.ee-files-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
-    padding: 1.5rem;
-}
-
-/* Files List View */
-.ee-files-list {
-    display: flex;
-    flex-direction: column;
-}
-
-.ee-file-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--e-border);
-    transition: all 0.3s ease;
-}
-
-.ee-file-row:last-child {
-    border-bottom: none;
-}
-
-.ee-file-row:hover {
-    background: var(--e-bg);
-}
-
-/* File Card (Grid) */
-.ee-file-card {
-    background: var(--e-bg);
-    border-radius: var(--e-radius);
-    padding: 1.25rem;
-    border: 2px solid transparent;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-}
-
-.ee-file-card:hover {
-    border-color: var(--file-color, var(--e-blue));
-    transform: translateY(-2px);
-    box-shadow: var(--e-shadow-lg);
-}
-
-.ee-file-card-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.ee-file-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--e-radius);
+.doc-hero-ico {
+    width: 56px;
+    height: 56px;
+    background: rgba(10,175,162,.20);
+    border: 1px solid rgba(10,175,162,.35);
+    border-radius: var(--r-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    position: relative;
+    color: var(--teal-300);
 }
 
-.ee-file-icon svg {
-    width: 24px;
-    height: 24px;
-}
+.doc-hero-ico svg { width: 26px; height: 26px; }
 
-.ee-file-icon.pdf {
-    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-    color: white;
-    --file-color: #EF4444;
-}
-
-.ee-file-icon.doc {
-    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-    color: white;
-    --file-color: #3B82F6;
-}
-
-.ee-file-icon.img {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    color: white;
-    --file-color: #10B981;
-}
-
-.ee-file-icon.xls {
-    background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
-    color: white;
-    --file-color: #22C55E;
-}
-
-.ee-file-icon.default {
-    background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
-    color: white;
-    --file-color: #6B7280;
-}
-
-.ee-file-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.ee-file-name {
-    font-size: 0.9375rem;
+.doc-hero-title {
+    font-family: var(--font-d);
+    font-size: 1.625rem;
     font-weight: 700;
-    color: var(--e-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 0.25rem;
+    letter-spacing: -.01em;
+    margin: 0 0 .3rem;
+    color: #fff;
 }
 
-.ee-file-ext {
-    font-size: 0.6875rem;
+.doc-hero-sub { font-size: .9rem; color: rgba(255,255,255,.62); margin: 0; }
+
+.doc-hero-stats { display: flex; gap: 2rem; }
+
+.doc-stat { text-align: center; }
+
+.doc-stat-val {
+    font-family: var(--font-d);
+    font-size: 2rem;
     font-weight: 700;
-    color: var(--e-text-secondary);
+    line-height: 1;
+    color: #fff;
+}
+
+.doc-stat-lbl {
+    font-size: .75rem;
+    color: rgba(255,255,255,.5);
+    margin-top: .3rem;
     text-transform: uppercase;
-    background: var(--e-surface);
-    padding: 0.125rem 0.5rem;
-    border-radius: 4px;
+    letter-spacing: .05em;
 }
 
-.ee-file-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
-.ee-file-meta-item {
+/* ── Nav Bar ──────────────────────────────────────── */
+.doc-navbar {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: .875rem 1.25rem;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    font-size: 0.75rem;
-    color: var(--e-text-secondary);
+    gap: .875rem;
+    box-shadow: var(--shadow-sm);
+    flex-wrap: wrap;
 }
 
-.ee-file-meta-item svg {
-    width: 14px;
-    height: 14px;
-    opacity: 0.7;
+.doc-back {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .5rem .875rem;
+    background: var(--n-50);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    color: var(--text-2);
+    font-size: .8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .2s ease;
+    white-space: nowrap;
 }
 
-.ee-file-actions {
+.doc-back:hover { border-color: var(--ind-400); color: var(--ind-500); background: var(--ind-50); }
+.doc-back svg { width: 16px; height: 16px; }
+
+.doc-path {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    gap: .375rem;
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.doc-path::-webkit-scrollbar { display: none; }
+
+.doc-path-item {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .4rem .75rem;
+    border-radius: var(--r-f);
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--text-2);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all .2s ease;
+    background: var(--n-50);
 }
 
-.ee-file-btn {
-    flex: 1;
+.doc-path-item:hover { background: var(--ind-50); color: var(--ind-500); }
+
+.doc-path-item.active {
+    background: var(--ind-900);
+    color: #fff;
+}
+
+.doc-path-item svg { width: 14px; height: 14px; }
+
+.doc-path-sep { color: var(--text-3); display: flex; align-items: center; }
+.doc-path-sep svg { width: 14px; height: 14px; }
+
+.doc-search {
+    position: relative;
+    width: 260px;
+    flex-shrink: 0;
+}
+
+.doc-search-ico {
+    position: absolute;
+    left: .75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-3);
+    pointer-events: none;
+}
+
+.doc-search input {
+    width: 100%;
+    padding: .55rem 1rem .55rem 2.25rem;
+    background: var(--n-50);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    font-size: .875rem;
+    font-family: var(--font);
+    color: var(--text);
+    transition: all .2s ease;
+}
+
+.doc-search input::placeholder { color: var(--text-3); }
+
+.doc-search input:focus {
+    outline: none;
+    border-color: var(--ind-400);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(55,72,200,.10);
+}
+
+/* ── Section wrapper ──────────────────────────────── */
+.doc-section {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.doc-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.125rem 1.5rem;
+    border-bottom: 1.5px solid var(--border-2);
+    background: var(--n-50);
+}
+
+.doc-section-title {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-family: var(--font-d);
+    font-size: .9375rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.doc-section-icon {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--ind-900), var(--ind-700));
+    border-radius: var(--r);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.375rem;
-    padding: 0.625rem;
-    border-radius: 10px;
-    font-size: 0.75rem;
+    color: #fff;
+}
+
+.doc-section-icon svg { width: 16px; height: 16px; }
+
+.doc-count {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--text-3);
+    background: var(--n-100);
+    padding: .25rem .625rem;
+    border-radius: var(--r-f);
+    font-family: var(--font-m);
+}
+
+/* ── Folders Grid ─────────────────────────────────── */
+.doc-folders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.doc-folder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem 1rem 1.125rem;
+    background: var(--n-50);
+    border: 1.5px solid var(--border-2);
+    border-radius: var(--r-xl);
+    border-top: 3px solid var(--folder-color, var(--ind-400));
+    text-decoration: none;
+    transition: transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s ease, border-color .25s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.doc-folder:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--folder-color, var(--ind-400));
+    border-top-color: var(--folder-color, var(--ind-400));
+}
+
+.doc-folder-ico {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--r-lg);
+    background: color-mix(in srgb, var(--folder-color, var(--ind-400)) 14%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: .875rem;
+    color: var(--folder-color, var(--ind-400));
+    transition: transform .25s ease;
+}
+
+.doc-folder:hover .doc-folder-ico { transform: scale(1.08) rotate(-4deg); }
+.doc-folder-ico svg { width: 30px; height: 30px; }
+
+.doc-folder-name {
+    font-family: var(--font-d);
+    font-size: .9375rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    margin-bottom: .35rem;
+}
+
+.doc-folder-meta {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .75rem;
+    color: var(--text-3);
+}
+
+.doc-folder-meta svg { width: 13px; height: 13px; }
+
+.doc-folder-new {
+    position: absolute;
+    top: .625rem;
+    right: .625rem;
+    background: rgba(10,175,162,.15);
+    color: var(--teal-500);
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    padding: .2rem .45rem;
+    border-radius: var(--r-f);
+}
+
+/* ── Files View toggle ────────────────────────────── */
+.doc-view-toggle {
+    display: flex;
+    gap: .25rem;
+    background: var(--n-100);
+    padding: .2rem;
+    border-radius: var(--r);
+}
+
+.doc-view-btn {
+    padding: .4rem .5rem;
+    border: none;
+    background: transparent;
+    border-radius: calc(var(--r) - 2px);
+    color: var(--text-3);
+    cursor: pointer;
+    transition: all .2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.doc-view-btn:hover { color: var(--ind-500); }
+
+.doc-view-btn.active {
+    background: var(--surface);
+    color: var(--ind-600);
+    box-shadow: var(--shadow-sm);
+}
+
+.doc-view-btn svg { width: 16px; height: 16px; }
+
+/* ── Category badge ───────────────────────────────── */
+.doc-cat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .4rem .875rem;
+    border-radius: var(--r-f);
+    font-size: .8125rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.doc-cat-badge svg { width: 14px; height: 14px; }
+
+/* ── File Cards (Grid) ────────────────────────────── */
+.doc-files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.doc-file-card {
+    background: var(--n-50);
+    border: 1.5px solid var(--border-2);
+    border-radius: var(--r-xl);
+    padding: 1.25rem;
+    transition: transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s ease, border-color .25s ease;
+    position: relative;
+}
+
+.doc-file-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border);
+}
+
+.doc-file-top {
+    display: flex;
+    align-items: flex-start;
+    gap: .875rem;
+    margin-bottom: .875rem;
+}
+
+.doc-file-ico {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #fff;
+}
+
+.doc-file-ico svg { width: 22px; height: 22px; }
+.doc-file-ico.pdf  { background: linear-gradient(135deg, #EF4444, #DC2626); }
+.doc-file-ico.doc  { background: linear-gradient(135deg, var(--ind-400), var(--ind-600)); }
+.doc-file-ico.img  { background: linear-gradient(135deg, var(--teal-400), var(--teal-300)); }
+.doc-file-ico.xls  { background: linear-gradient(135deg, #22C55E, #16A34A); }
+.doc-file-ico.def  { background: linear-gradient(135deg, var(--n-400), var(--n-500)); }
+
+.doc-file-info { flex: 1; min-width: 0; }
+
+.doc-file-name {
+    font-weight: 700;
+    font-size: .9375rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: .25rem;
+}
+
+.doc-file-ext {
+    display: inline-block;
+    font-family: var(--font-m);
+    font-size: .65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--text-3);
+    background: var(--n-100);
+    padding: .1rem .4rem;
+    border-radius: var(--r-sm);
+}
+
+.doc-file-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .625rem;
+    margin-bottom: .875rem;
+}
+
+.doc-file-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    font-family: var(--font-m);
+    font-size: .72rem;
+    color: var(--text-3);
+}
+
+.doc-file-meta-item svg { width: 12px; height: 12px; }
+
+.doc-file-actions { display: flex; gap: .5rem; }
+
+.doc-fbtn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+    padding: .575rem;
+    border-radius: var(--r);
+    font-size: .75rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all .2s ease;
     text-decoration: none;
     border: none;
 }
 
-.ee-file-btn svg {
-    width: 16px;
-    height: 16px;
+.doc-fbtn svg { width: 14px; height: 14px; }
+
+.doc-fbtn.primary {
+    background: linear-gradient(135deg, var(--ind-500), var(--ind-600));
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(55,72,200,.25);
 }
 
-.ee-file-btn.primary {
-    background: var(--e-blue);
-    color: white;
+.doc-fbtn.primary:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(55,72,200,.35); color: #fff; }
+
+.doc-fbtn.secondary {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    color: var(--text-2);
 }
 
-.ee-file-btn.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--e-shadow);
+.doc-fbtn.secondary:hover { border-color: var(--teal-400); color: var(--teal-500); }
+
+/* ── File rows (List view) ────────────────────────── */
+.doc-files-list { display: flex; flex-direction: column; }
+
+.doc-file-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .875rem 1.5rem;
+    border-bottom: 1px solid var(--border-2);
+    transition: background .15s ease;
 }
 
-.ee-file-btn.secondary {
-    background: var(--e-surface);
-    color: var(--e-text);
-    border: 1px solid var(--e-border);
+.doc-file-row:last-child { border-bottom: none; }
+.doc-file-row:hover { background: var(--n-50); }
+
+.doc-file-row .doc-file-ico { width: 40px; height: 40px; border-radius: var(--r); }
+
+.doc-file-row-name {
+    flex: 1;
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.ee-file-btn.secondary:hover {
-    border-color: var(--e-blue);
-    color: var(--e-blue);
+.doc-file-row-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-m);
+    font-size: .72rem;
+    color: var(--text-3);
+    white-space: nowrap;
 }
 
-/* ==================== EMPTY STATES ==================== */
-.ee-empty-state {
+.doc-file-row-actions { display: flex; gap: .5rem; }
+
+.doc-row-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .4rem .75rem;
+    border-radius: var(--r);
+    font-size: .75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .2s ease;
+    white-space: nowrap;
+}
+
+.doc-row-btn svg { width: 13px; height: 13px; }
+.doc-row-btn.primary { background: rgba(55,72,200,.10); color: var(--ind-500); }
+.doc-row-btn.primary:hover { background: rgba(55,72,200,.18); }
+.doc-row-btn.secondary { background: var(--n-100); color: var(--text-2); }
+.doc-row-btn.secondary:hover { background: rgba(10,175,162,.10); color: var(--teal-500); }
+
+/* ── Empty State ──────────────────────────────────── */
+.doc-empty {
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 4.5rem 2rem;
 }
 
-.ee-empty-illustration {
-    width: 120px;
-    height: 120px;
+.doc-empty-ico {
+    width: 96px;
+    height: 96px;
     margin: 0 auto 1.5rem;
-    background: var(--e-bg);
+    background: rgba(55,72,200,.07);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    color: var(--ind-400);
 }
 
-.ee-empty-illustration svg {
-    width: 56px;
-    height: 56px;
-    color: var(--e-text-secondary);
-    opacity: 0.5;
-}
+.doc-empty-ico svg { width: 44px; height: 44px; opacity: .65; }
 
-.ee-empty-title {
+.doc-empty h3 {
+    font-family: var(--font-d);
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--e-text);
-    margin-bottom: 0.5rem;
+    color: var(--text);
+    margin: 0 0 .625rem;
 }
 
-.ee-empty-text {
-    font-size: 0.9375rem;
-    color: var(--e-text-secondary);
-    max-width: 320px;
+.doc-empty p {
+    color: var(--text-2);
+    max-width: 380px;
     margin: 0 auto;
-    line-height: 1.6;
+    line-height: 1.65;
 }
 
-/* ==================== RESPONSIVE ==================== */
+/* ── Responsive ───────────────────────────────────── */
 @media (max-width: 1024px) {
-    .ee-docs-banner-content {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .ee-docs-banner-stats {
-        justify-content: center;
-    }
-
-    .ee-nav-bar {
-        flex-wrap: wrap;
-    }
-
-    .ee-nav-search {
-        width: 100%;
-        order: 3;
-        margin-top: 0.5rem;
-    }
-
-    .ee-folders-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    }
+    .doc-hero-inner  { flex-direction: column; text-align: center; }
+    .doc-hero-left   { flex-direction: column; align-items: center; }
+    .doc-hero-stats  { justify-content: center; }
+    .doc-navbar      { flex-wrap: wrap; }
+    .doc-search      { width: 100%; order: 3; }
 }
 
 @media (max-width: 768px) {
-    .ee-docs-banner {
-        padding: 1.5rem;
-    }
-
-    .ee-docs-banner-title {
-        font-size: 1.375rem;
-    }
-
-    .ee-banner-stat {
-        padding: 1rem;
-        min-width: 70px;
-    }
-
-    .ee-banner-stat-value {
-        font-size: 1.5rem;
-    }
-
-    .ee-files-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .ee-folders-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-        padding: 1rem;
-    }
-
-    .ee-folder-card {
-        padding: 1rem 0.75rem;
-    }
-
-    .ee-folder-icon {
-        width: 56px;
-        height: 56px;
-    }
+    .doc-folders-grid { grid-template-columns: repeat(2, 1fr); gap: .75rem; padding: 1rem; }
+    .doc-files-grid   { grid-template-columns: 1fr; padding: 1rem; }
+    .doc-file-row-meta { display: none; }
 }
 
 @media (max-width: 480px) {
-    .ee-folders-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .ee-docs-banner-stats {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-
-    .ee-banner-stat {
-        flex: 1;
-        min-width: 70px;
-    }
+    .doc-folders-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 @endsection
 
 @section('content')
-<div class="ee-documents-page">
-    <!-- Header Banner -->
-    <div class="ee-docs-banner animate-fade-in">
-        <div class="ee-docs-banner-content">
-            <div class="ee-docs-banner-left">
-                <div class="ee-docs-banner-icon">
+<div class="doc-page">
+
+    {{-- ── Hero ── --}}
+    <div class="doc-hero">
+        <div class="doc-hero-inner">
+            <div class="doc-hero-left">
+                <div class="doc-hero-ico">
                     @if($currentCategory)
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
                         </svg>
                     @else
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 3h18v18H3zM3 9h18M9 21V9"></path>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                            <rect x="2" y="3" width="20" height="18" rx="2"/>
+                            <path d="M8 3v18M2 9h6M2 15h6"/>
                         </svg>
                     @endif
                 </div>
-                <h1 class="ee-docs-banner-title">
-                    {{ $currentCategory ? $currentCategory->nom : 'Mon Dossier Personnel' }}
-                </h1>
-                <p class="ee-docs-banner-subtitle">
-                    @if($currentCategory)
-                        {{ $currentCategory->description ?? 'Documents de la categorie ' . $currentCategory->nom }}
-                    @else
-                        Vos documents sont organises par categories pour un acces rapide et facile.
-                    @endif
-                </p>
+                <div>
+                    <h1 class="doc-hero-title">
+                        {{ $currentCategory ? $currentCategory->nom : 'Mon Dossier Personnel' }}
+                    </h1>
+                    <p class="doc-hero-sub">
+                        @if($currentCategory)
+                            {{ $currentCategory->description ?? 'Documents de la catégorie ' . $currentCategory->nom }}
+                        @else
+                            Vos documents sont organisés par catégories pour un accès rapide et sécurisé
+                        @endif
+                    </p>
+                </div>
             </div>
-            <div class="ee-docs-banner-stats">
-                <div class="ee-banner-stat">
-                    <div class="ee-banner-stat-value">{{ $stats['total'] }}</div>
-                    <div class="ee-banner-stat-label">Documents</div>
+            <div class="doc-hero-stats">
+                <div class="doc-stat">
+                    <div class="doc-stat-val">{{ $stats['total'] }}</div>
+                    <div class="doc-stat-lbl">Documents</div>
                 </div>
-                <div class="ee-banner-stat">
-                    <div class="ee-banner-stat-value">{{ $stats['categories'] }}</div>
-                    <div class="ee-banner-stat-label">Dossiers</div>
+                <div class="doc-stat">
+                    <div class="doc-stat-val">{{ $stats['categories'] }}</div>
+                    <div class="doc-stat-lbl">Dossiers</div>
                 </div>
-                <div class="ee-banner-stat">
-                    <div class="ee-banner-stat-value">{{ $stats['recent'] }}</div>
-                    <div class="ee-banner-stat-label">Recents</div>
+                <div class="doc-stat">
+                    <div class="doc-stat-val">{{ $stats['recent'] }}</div>
+                    <div class="doc-stat-lbl">Récents</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Navigation Bar -->
-    <div class="ee-nav-bar animate-fade-in" style="animation-delay: 0.1s;">
+    {{-- ── Nav Bar ── --}}
+    <div class="doc-navbar">
         @if($currentCategory)
-            <a href="{{ route('espace-employe.documents') }}" class="ee-nav-back">
+            <a href="{{ route('espace-employe.documents') }}" class="doc-back">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="15 18 9 12 15 6"></polyline>
+                    <polyline points="15 18 9 12 15 6"/>
                 </svg>
                 Retour
             </a>
         @endif
 
-        <div class="ee-nav-path">
-            <a href="{{ route('espace-employe.documents') }}" class="ee-path-item {{ !$currentCategory ? 'current' : '' }}">
+        <div class="doc-path">
+            <a href="{{ route('espace-employe.documents') }}" class="doc-path-item {{ !$currentCategory ? 'active' : '' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 </svg>
                 Mon Dossier
             </a>
             @if($currentCategory)
-                <span class="ee-path-separator">
+                <span class="doc-path-sep">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"></polyline>
+                        <polyline points="9 18 15 12 9 6"/>
                     </svg>
                 </span>
-                <span class="ee-path-item current">
+                <span class="doc-path-item active">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
                     </svg>
                     {{ $currentCategory->nom }}
                 </span>
             @endif
         </div>
 
-        <div class="ee-nav-search">
-            <svg class="ee-nav-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <div class="doc-search">
+            <svg class="doc-search-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
-            <input type="text" placeholder="Rechercher un document..." id="searchInput">
+            <input type="text" id="searchInput" placeholder="Rechercher…">
         </div>
     </div>
 
     @if(!$currentCategory)
-        <!-- FOLDERS VIEW -->
-        @if($categoriesWithDocs->count() > 0 || $uncategorizedDocs->count() > 0)
-            <div class="ee-folders-section animate-fade-in" style="animation-delay: 0.2s;">
-                <div class="ee-folders-header">
-                    <div class="ee-folders-title">
-                        <div class="ee-folders-title-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+    {{-- ═══════════════════════
+         FOLDERS VIEW
+    ═══════════════════════ --}}
+    @if($categoriesWithDocs->count() > 0 || $uncategorizedDocs->count() > 0)
+        <div class="doc-section">
+            <div class="doc-section-head">
+                <div class="doc-section-title">
+                    <div class="doc-section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    Mes Dossiers
+                </div>
+                <span class="doc-count">{{ $categoriesWithDocs->count() + ($uncategorizedDocs->count() > 0 ? 1 : 0) }}</span>
+            </div>
+
+            <div class="doc-folders-grid">
+                @foreach($categoriesWithDocs as $category)
+                    @php
+                        $cnt = $documentsByCategory->get($category->id, collect([]))->count();
+                        $fc  = $category->couleur ?? '#3748C8';
+                        $isNew = $documentsByCategory->get($category->id, collect([]))->where('created_at', '>=', now()->subDays(7))->count() > 0;
+                    @endphp
+                    <a href="{{ route('espace-employe.documents', ['categorie' => $category->id]) }}"
+                       class="doc-folder"
+                       style="--folder-color: {{ $fc }};"
+                       data-name="{{ strtolower($category->nom) }}">
+                        @if($isNew)
+                            <span class="doc-folder-new">Nouveau</span>
+                        @endif
+                        <div class="doc-folder-ico">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
                             </svg>
                         </div>
-                        Mes Dossiers
-                    </div>
-                    <span class="ee-folders-count">{{ $categoriesWithDocs->count() + ($uncategorizedDocs->count() > 0 ? 1 : 0) }} dossier(s)</span>
-                </div>
+                        <div class="doc-folder-name">{{ $category->nom }}</div>
+                        <div class="doc-folder-meta">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            {{ $cnt }} document{{ $cnt > 1 ? 's' : '' }}
+                        </div>
+                    </a>
+                @endforeach
 
-                <div class="ee-folders-grid">
-                    @foreach($categoriesWithDocs as $category)
-                        @php
-                            $docsCount = $documentsByCategory->get($category->id, collect([]))->count();
-                            $folderColor = $category->couleur ?? '#6366F1';
-                        @endphp
-                        <a href="{{ route('espace-employe.documents', ['categorie' => $category->id]) }}"
-                           class="ee-folder-card"
-                           style="--folder-color: {{ $folderColor }};"
-                           data-name="{{ strtolower($category->nom) }}">
-                            @if($documentsByCategory->get($category->id, collect([]))->where('created_at', '>=', now()->subDays(7))->count() > 0)
-                                <span class="ee-folder-badge">Nouveau</span>
-                            @endif
-                            <div class="ee-folder-icon">
-                                <div class="ee-folder-icon-bg"></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
-                                </svg>
-                            </div>
-                            <div class="ee-folder-info">
-                                <div class="ee-folder-name">{{ $category->nom }}</div>
-                                <div class="ee-folder-count">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                    </svg>
-                                    {{ $docsCount }} document{{ $docsCount > 1 ? 's' : '' }}
-                                </div>
-                            </div>
-                        </a>
-                    @endforeach
-
-                    @if($uncategorizedDocs->count() > 0)
-                        <a href="{{ route('espace-employe.documents', ['categorie' => '0']) }}"
-                           class="ee-folder-card"
-                           style="--folder-color: #6B7280;"
-                           data-name="autres documents">
-                            <div class="ee-folder-icon">
-                                <div class="ee-folder-icon-bg"></div>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
-                                </svg>
-                            </div>
-                            <div class="ee-folder-info">
-                                <div class="ee-folder-name">Autres Documents</div>
-                                <div class="ee-folder-count">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                    </svg>
-                                    {{ $uncategorizedDocs->count() }} document{{ $uncategorizedDocs->count() > 1 ? 's' : '' }}
-                                </div>
-                            </div>
-                        </a>
-                    @endif
-                </div>
+                @if($uncategorizedDocs->count() > 0)
+                    @php $uc = $uncategorizedDocs->count(); @endphp
+                    <a href="{{ route('espace-employe.documents', ['categorie' => '0']) }}"
+                       class="doc-folder"
+                       style="--folder-color: var(--n-400);"
+                       data-name="autres documents">
+                        <div class="doc-folder-ico">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                            </svg>
+                        </div>
+                        <div class="doc-folder-name">Autres Documents</div>
+                        <div class="doc-folder-meta">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            {{ $uc }} document{{ $uc > 1 ? 's' : '' }}
+                        </div>
+                    </a>
+                @endif
             </div>
-        @else
-            <div class="ee-folders-section animate-fade-in" style="animation-delay: 0.2s;">
-                <div class="ee-empty-state">
-                    <div class="ee-empty-illustration">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="ee-empty-title">Aucun document disponible</h3>
-                    <p class="ee-empty-text">
-                        Votre dossier personnel est vide pour le moment.
-                        Les documents seront affiches ici une fois ajoutes par l'administration.
-                    </p>
-                </div>
-            </div>
-        @endif
+        </div>
 
     @else
-        <!-- FILES VIEW (Inside a category) -->
-        @php
-            $filesToShow = $selectedCategory == '0' ? $uncategorizedDocs : $documents;
-            $categoryColor = $currentCategory ? ($currentCategory->couleur ?? '#6366F1') : '#6B7280';
-        @endphp
-
-        <div class="ee-files-section animate-fade-in" style="animation-delay: 0.2s;">
-            <div class="ee-files-header">
-                <div class="ee-files-title">
-                    <span class="ee-category-badge" style="background: {{ $categoryColor }};">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                        </svg>
-                        {{ $currentCategory ? $currentCategory->nom : 'Autres Documents' }}
-                    </span>
-                    <span class="ee-files-count">{{ $filesToShow->count() }} document{{ $filesToShow->count() > 1 ? 's' : '' }}</span>
+        <div class="doc-section">
+            <div class="doc-empty">
+                <div class="doc-empty-ico">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
                 </div>
-                <div class="ee-view-toggle">
-                    <button class="ee-view-btn active" data-view="grid" title="Vue grille">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="3" width="7" height="7"></rect>
-                            <rect x="14" y="14" width="7" height="7"></rect>
-                            <rect x="3" y="14" width="7" height="7"></rect>
-                        </svg>
-                    </button>
-                    <button class="ee-view-btn" data-view="list" title="Vue liste">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="8" y1="6" x2="21" y2="6"></line>
-                            <line x1="8" y1="12" x2="21" y2="12"></line>
-                            <line x1="8" y1="18" x2="21" y2="18"></line>
-                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
+                <h3>Aucun document disponible</h3>
+                <p>Votre dossier personnel est vide pour le moment. Les documents seront affichés ici une fois ajoutés par l'administration.</p>
             </div>
-
-            @if($filesToShow->count() > 0)
-                <div class="ee-files-grid" id="filesContainer">
-                    @foreach($filesToShow as $document)
-                        @php
-                            $extension = strtolower($document->extension ?? pathinfo($document->chemin ?? '', PATHINFO_EXTENSION));
-                            $iconClass = 'default';
-                            if (in_array($extension, ['pdf'])) $iconClass = 'pdf';
-                            elseif (in_array($extension, ['doc', 'docx'])) $iconClass = 'doc';
-                            elseif (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) $iconClass = 'img';
-                            elseif (in_array($extension, ['xls', 'xlsx', 'csv'])) $iconClass = 'xls';
-                        @endphp
-                        <div class="ee-file-card" data-name="{{ strtolower($document->titre ?? $document->nom_original ?? '') }}">
-                            <div class="ee-file-card-header">
-                                <div class="ee-file-icon {{ $iconClass }}">
-                                    @if($iconClass === 'pdf')
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                            <polyline points="14 2 14 8 20 8"></polyline>
-                                        </svg>
-                                    @elseif($iconClass === 'img')
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                            <polyline points="21 15 16 10 5 21"></polyline>
-                                        </svg>
-                                    @elseif($iconClass === 'xls')
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                            <polyline points="14 2 14 8 20 8"></polyline>
-                                            <rect x="8" y="12" width="8" height="6" rx="1"></rect>
-                                        </svg>
-                                    @elseif($iconClass === 'doc')
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                            <polyline points="14 2 14 8 20 8"></polyline>
-                                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                                        </svg>
-                                    @else
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                            <polyline points="14 2 14 8 20 8"></polyline>
-                                        </svg>
-                                    @endif
-                                </div>
-                                <div class="ee-file-info">
-                                    <div class="ee-file-name">{{ $document->titre ?? $document->nom_original ?? 'Document' }}</div>
-                                    <span class="ee-file-ext">.{{ $extension ?: 'fichier' }}</span>
-                                </div>
-                            </div>
-
-                            <div class="ee-file-meta">
-                                <span class="ee-file-meta-item">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                                    </svg>
-                                    {{ $document->created_at->format('d/m/Y') }}
-                                </span>
-                                @if($document->taille)
-                                    <span class="ee-file-meta-item">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                            <polyline points="17 8 12 3 7 8"></polyline>
-                                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                                        </svg>
-                                        {{ number_format($document->taille / 1024, 0) }} Ko
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="ee-file-actions">
-                                <a href="{{ route('espace-employe.documents.preview', $document->id) }}" class="ee-file-btn primary" target="_blank">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
-                                    Voir
-                                </a>
-                                <a href="{{ route('espace-employe.documents.download', $document->id) }}" class="ee-file-btn secondary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="7 10 12 15 17 10"></polyline>
-                                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                                    </svg>
-                                    Telecharger
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="ee-empty-state">
-                    <div class="ee-empty-illustration">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                        </svg>
-                    </div>
-                    <h3 class="ee-empty-title">Dossier vide</h3>
-                    <p class="ee-empty-text">
-                        Ce dossier ne contient aucun document pour le moment.
-                    </p>
-                </div>
-            @endif
         </div>
     @endif
+
+    @else
+    {{-- ═══════════════════════
+         FILES VIEW
+    ═══════════════════════ --}}
+    @php
+        $filesToShow   = $selectedCategory == '0' ? $uncategorizedDocs : $documents;
+        $categoryColor = $currentCategory ? ($currentCategory->couleur ?? '#3748C8') : 'var(--n-400)';
+    @endphp
+
+    <div class="doc-section">
+        <div class="doc-section-head">
+            <div class="doc-section-title">
+                <span class="doc-cat-badge" style="background: {{ $categoryColor }};">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    {{ $currentCategory ? $currentCategory->nom : 'Autres Documents' }}
+                </span>
+                <span class="doc-count">{{ $filesToShow->count() }}</span>
+            </div>
+            <div class="doc-view-toggle">
+                <button class="doc-view-btn active" data-view="grid" title="Grille">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                </button>
+                <button class="doc-view-btn" data-view="list" title="Liste">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+                        <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+                        <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        @if($filesToShow->count() > 0)
+        <div class="doc-files-grid" id="filesContainer">
+            @foreach($filesToShow as $document)
+                @php
+                    $ext = strtolower($document->extension ?? pathinfo($document->chemin ?? '', PATHINFO_EXTENSION));
+                    $ico = 'def';
+                    if ($ext === 'pdf')                              $ico = 'pdf';
+                    elseif (in_array($ext, ['doc','docx']))         $ico = 'doc';
+                    elseif (in_array($ext, ['jpg','jpeg','png','gif','webp'])) $ico = 'img';
+                    elseif (in_array($ext, ['xls','xlsx','csv']))   $ico = 'xls';
+                @endphp
+                {{-- GRID CARD --}}
+                <div class="doc-file-card" data-name="{{ strtolower($document->titre ?? $document->nom_original ?? '') }}">
+                    <div class="doc-file-top">
+                        <div class="doc-file-ico {{ $ico }}">
+                            @if($ico === 'pdf')
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            @elseif($ico === 'img')
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                            @elseif($ico === 'xls')
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <rect x="8" y="12" width="8" height="6" rx="1"/>
+                                </svg>
+                            @elseif($ico === 'doc')
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                </svg>
+                            @else
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            @endif
+                        </div>
+                        <div class="doc-file-info">
+                            <div class="doc-file-name">{{ $document->titre ?? $document->nom_original ?? 'Document' }}</div>
+                            <span class="doc-file-ext">.{{ $ext ?: 'fichier' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="doc-file-meta">
+                        <span class="doc-file-meta-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            {{ $document->created_at->format('d/m/Y') }}
+                        </span>
+                        @if($document->taille)
+                            <span class="doc-file-meta-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                {{ number_format($document->taille / 1024, 0) }} Ko
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="doc-file-actions">
+                        <a href="{{ route('espace-employe.documents.preview', $document->id) }}" class="doc-fbtn primary" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            Voir
+                        </a>
+                        <a href="{{ route('espace-employe.documents.download', $document->id) }}" class="doc-fbtn secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Télécharger
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        @else
+        <div class="doc-empty">
+            <div class="doc-empty-ico">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                </svg>
+            </div>
+            <h3>Dossier vide</h3>
+            <p>Ce dossier ne contient aucun document pour le moment.</p>
+        </div>
+        @endif
+    </div>
+    @endif
+
 </div>
 @endsection
 
 @section('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality
+document.addEventListener('DOMContentLoaded', function () {
+    // ── Search ──
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            const query = this.value.toLowerCase();
-            const items = document.querySelectorAll('.ee-folder-card, .ee-file-card');
-
-            items.forEach(item => {
-                const name = item.dataset.name || '';
-                if (name.includes(query) || query === '') {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
+        searchInput.addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('.doc-folder, .doc-file-card, .doc-file-row').forEach(el => {
+                el.style.display = (!q || (el.dataset.name || '').includes(q)) ? '' : 'none';
             });
         });
     }
 
-    // View toggle (grid/list)
-    const viewBtns = document.querySelectorAll('.ee-view-btn');
-    const filesContainer = document.getElementById('filesContainer');
+    // ── View toggle ──
+    const viewBtns = document.querySelectorAll('.doc-view-btn');
+    const container = document.getElementById('filesContainer');
 
     viewBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             viewBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
+            if (!container) return;
 
-            const view = this.dataset.view;
-            if (filesContainer) {
-                if (view === 'list') {
-                    filesContainer.classList.remove('ee-files-grid');
-                    filesContainer.classList.add('ee-files-list');
-                } else {
-                    filesContainer.classList.remove('ee-files-list');
-                    filesContainer.classList.add('ee-files-grid');
-                }
+            if (this.dataset.view === 'list') {
+                container.classList.remove('doc-files-grid');
+                container.classList.add('doc-files-list');
+                // Convert cards → rows
+                container.querySelectorAll('.doc-file-card').forEach(card => {
+                    card.classList.remove('doc-file-card');
+                    card.classList.add('doc-file-row');
+                });
+            } else {
+                container.classList.remove('doc-files-list');
+                container.classList.add('doc-files-grid');
+                container.querySelectorAll('.doc-file-row').forEach(row => {
+                    row.classList.remove('doc-file-row');
+                    row.classList.add('doc-file-card');
+                });
             }
         });
     });

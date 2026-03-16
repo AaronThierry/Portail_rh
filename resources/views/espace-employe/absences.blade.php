@@ -10,735 +10,928 @@
 
 @section('styles')
 <style>
-.ee-absences-page {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
+/* ════════════════════════════════════════════════════
+   ABSENCES — Charte Portail RH+
+   Indigo × Teal × Neutres · Syne · DM Sans · DM Mono
+   ════════════════════════════════════════════════════ */
 
-/* Flash Messages */
-.ee-abs-flash {
-    padding: 1rem 1.5rem;
-    border-radius: var(--e-radius);
-    font-size: 0.9375rem;
+.ab-page { display: flex; flex-direction: column; gap: 1.75rem; animation: fadeUp .4s ease both; }
+
+/* ── Flash ────────────────────────────────────────── */
+.ab-flash {
+    padding: .875rem 1.25rem;
+    border-radius: var(--r-lg);
+    font-size: .9rem;
     font-weight: 500;
-    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: .625rem;
 }
-.ee-abs-flash-success { background: var(--e-emerald-pale); color: #065f46; border: 1px solid #a7f3d0; }
-.ee-abs-flash-error { background: var(--e-red-pale); color: #991b1b; border: 1px solid #fecaca; }
+.ab-flash svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: .1rem; }
+.ab-flash.success { background: rgba(10,175,162,.10); color: var(--teal-600); border: 1px solid rgba(10,175,162,.25); }
+.ab-flash.error   { background: var(--rose-100); color: var(--rose-800); border: 1px solid #fecaca; }
 
-/* Stats Cards — 5 columns */
-.ee-abs-stats {
+/* ── Info banner ──────────────────────────────────── */
+.ab-info {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-left: 4px solid var(--ind-400);
+    border-radius: var(--r-lg);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: .875rem;
+    font-size: .875rem;
+    color: var(--text-2);
+}
+.ab-info svg { width: 20px; height: 20px; color: var(--ind-400); flex-shrink: 0; }
+
+/* ── KPI Stats grid ───────────────────────────────── */
+.ab-stats {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 1.5rem;
+    gap: 1.125rem;
 }
 
-.ee-abs-card {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-xl);
-    border: 1px solid var(--e-border);
-    padding: 1.5rem;
+.ab-kpi {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 1.375rem 1.25rem;
     position: relative;
     overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
 }
 
-.ee-abs-card::before {
+.ab-kpi:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.ab-kpi::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
 }
 
-.ee-abs-card.total::before { background: var(--e-blue); }
-.ee-abs-card.justified::before { background: var(--e-emerald); }
-.ee-abs-card.unjustified::before { background: var(--e-red); }
-.ee-abs-card.late::before { background: var(--e-amber); }
-.ee-abs-card.pending::before { background: #8b5cf6; }
+.ab-kpi.total::before      { background: linear-gradient(90deg, var(--ind-400), var(--ind-300)); }
+.ab-kpi.justified::before  { background: linear-gradient(90deg, var(--teal-400), var(--teal-300)); }
+.ab-kpi.unjust::before     { background: linear-gradient(90deg, var(--rose-400), #FB923C); }
+.ab-kpi.late::before       { background: linear-gradient(90deg, var(--amber-400), #FBBF24); }
+.ab-kpi.pending::before    { background: linear-gradient(90deg, #8B5CF6, #A78BFA); }
 
-.ee-abs-header {
+.ab-kpi-head {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: .75rem;
     margin-bottom: 1rem;
 }
 
-.ee-abs-icon {
-    width: 48px; height: 48px;
-    border-radius: var(--e-radius);
-    display: flex; align-items: center; justify-content: center;
+.ab-kpi-ico {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--r-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
-.ee-abs-icon svg { width: 24px; height: 24px; }
-.ee-abs-icon.total { background: var(--e-blue-wash); color: var(--e-blue); }
-.ee-abs-icon.justified { background: var(--e-emerald-pale); color: var(--e-emerald); }
-.ee-abs-icon.unjustified { background: var(--e-red-pale); color: var(--e-red); }
-.ee-abs-icon.late { background: var(--e-amber-wash); color: var(--e-amber); }
-.ee-abs-icon.pending { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
 
-.ee-abs-label { font-size: 0.875rem; color: var(--e-text-secondary); font-weight: 500; }
-.ee-abs-value { font-size: 2rem; font-weight: 700; color: var(--e-text); line-height: 1; }
+.ab-kpi-ico svg { width: 20px; height: 20px; }
+.ab-kpi-ico.total    { background: rgba(55,72,200,.10);  color: var(--ind-500); }
+.ab-kpi-ico.justified{ background: rgba(10,175,162,.12); color: var(--teal-500); }
+.ab-kpi-ico.unjust   { background: var(--rose-100);      color: var(--rose-400); }
+.ab-kpi-ico.late     { background: var(--amber-100);     color: var(--amber-400); }
+.ab-kpi-ico.pending  { background: rgba(139,92,246,.10); color: #8B5CF6; }
 
-/* History Card */
-.ee-abs-history {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-xl);
-    border: 1px solid var(--e-border);
+.ab-kpi-label {
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--text-3);
+}
+
+.ab-kpi-val {
+    font-family: var(--font-d);
+    font-size: 2.125rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+}
+
+/* ── History section ──────────────────────────────── */
+.ab-history {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-xl);
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
-.ee-abs-history-header {
+.ab-history-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--e-border);
+    padding: 1.125rem 1.5rem;
+    border-bottom: 1.5px solid var(--border-2);
+    background: var(--n-50);
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: .75rem;
 }
 
-.ee-abs-history-title { font-size: 1.125rem; font-weight: 700; color: var(--e-text); }
-
-.ee-abs-history-actions {
+.ab-section-title {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: .75rem;
+    font-family: var(--font-d);
+    font-size: .9375rem;
+    font-weight: 700;
+    color: var(--text);
 }
 
-.ee-abs-year-select {
-    padding: 0.5rem 1rem;
-    background: var(--e-bg);
-    border: 1px solid var(--e-border);
-    border-radius: var(--e-radius);
-    font-size: 0.875rem;
-    color: var(--e-text);
+.ab-section-ico {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--ind-900), var(--ind-700));
+    border-radius: var(--r);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.ab-section-ico svg { width: 16px; height: 16px; }
+
+.ab-head-right { display: flex; align-items: center; gap: .625rem; flex-wrap: wrap; }
+
+.ab-year-select {
+    padding: .45rem .875rem;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    font-size: .875rem;
+    font-family: var(--font-m);
+    color: var(--text);
     cursor: pointer;
+    transition: border-color .2s;
 }
 
-.ee-abs-btn-declare {
+.ab-year-select:focus { outline: none; border-color: var(--ind-400); }
+
+.ab-btn-declare {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1.25rem;
-    background: var(--e-blue);
+    gap: .45rem;
+    padding: .55rem 1.125rem;
+    background: linear-gradient(135deg, var(--teal-400), var(--teal-300));
     border: none;
-    border-radius: var(--e-radius);
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: white;
+    border-radius: var(--r);
+    font-family: var(--font);
+    font-size: .8125rem;
+    font-weight: 700;
+    color: #fff;
     cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-}
-.ee-abs-btn-declare:hover { opacity: 0.9; }
-.ee-abs-btn-declare svg { width: 18px; height: 18px; }
-
-/* Table */
-.ee-abs-table-wrapper {
-    overflow-x: auto;
-}
-.ee-abs-table { width: 100%; border-collapse: collapse; }
-.ee-abs-table th {
-    padding: 1rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 700;
-    color: var(--e-text-secondary); text-transform: uppercase; letter-spacing: 0.5px;
-    background: var(--e-bg); white-space: nowrap;
-}
-.ee-abs-table td {
-    padding: 1rem 1.5rem; font-size: 0.9375rem; color: var(--e-text);
-    border-bottom: 1px solid var(--e-border);
-}
-.ee-abs-table tr:last-child td { border-bottom: none; }
-.ee-abs-table tr:hover td { background: var(--e-bg); }
-
-.ee-abs-type {
-    display: flex; align-items: center; gap: 0.75rem;
-}
-.ee-abs-type-icon {
-    width: 36px; height: 36px; border-radius: var(--e-radius);
-    display: flex; align-items: center; justify-content: center;
-}
-.ee-abs-type-icon svg { width: 18px; height: 18px; }
-
-/* Justified badge */
-.ee-abs-badge {
-    display: inline-flex; align-items: center; gap: 0.375rem;
-    padding: 0.375rem 0.75rem; border-radius: 20px;
-    font-size: 0.75rem; font-weight: 600;
-}
-.ee-abs-badge svg { width: 12px; height: 12px; }
-.ee-abs-badge.justified { background: var(--e-emerald-pale); color: var(--e-emerald); }
-.ee-abs-badge.unjustified { background: var(--e-red-pale); color: var(--e-red); }
-
-/* Status badge */
-.ee-abs-status {
-    display: inline-flex; align-items: center; gap: 0.375rem;
-    padding: 0.375rem 0.75rem; border-radius: 20px;
-    font-size: 0.75rem; font-weight: 600;
-}
-.ee-abs-status svg { width: 12px; height: 12px; }
-.ee-abs-status.en-attente { background: var(--e-amber-wash); color: var(--e-amber); }
-.ee-abs-status.approuvee { background: var(--e-emerald-pale); color: var(--e-emerald); }
-.ee-abs-status.refusee { background: var(--e-red-pale); color: var(--e-red); }
-
-.ee-abs-motif-refus {
-    display: block;
-    font-size: 0.75rem;
-    color: var(--e-red);
-    margin-top: 0.25rem;
-    font-weight: 400;
-}
-
-/* Actions column */
-.ee-abs-actions {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.ee-abs-btn-sm {
-    padding: 0.375rem 0.75rem;
-    background: transparent;
-    border: 1px solid var(--e-border);
-    border-radius: var(--e-radius);
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--e-text-secondary);
-    cursor: pointer;
-    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(10,175,162,.28);
+    transition: all .2s ease;
     white-space: nowrap;
 }
-.ee-abs-btn-sm:hover { border-color: var(--e-blue); color: var(--e-blue); }
 
-.ee-abs-btn-sm.justify-btn { border-color: var(--e-emerald); color: var(--e-emerald); }
-.ee-abs-btn-sm.justify-btn:hover { background: var(--e-emerald-pale); }
+.ab-btn-declare:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(10,175,162,.38); }
+.ab-btn-declare svg { width: 16px; height: 16px; }
 
-.ee-abs-btn-sm.cancel-btn:hover { border-color: var(--e-red); color: var(--e-red); }
+/* ── Table ────────────────────────────────────────── */
+.ab-table { width: 100%; border-collapse: collapse; }
 
-/* Info Banner */
-.ee-abs-info {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-xl);
-    border: 1px solid var(--e-border);
-    border-left: 4px solid var(--e-blue);
-    padding: 1.25rem 1.5rem;
+.ab-table thead th {
+    padding: .7rem 1.25rem;
+    text-align: left;
+    font-size: .68rem;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    background: var(--n-50);
+    border-bottom: 1.5px solid var(--border-2);
+    white-space: nowrap;
+}
+
+.ab-table tbody td {
+    padding: .875rem 1.25rem;
+    font-size: .875rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border-2);
+    vertical-align: middle;
+}
+
+.ab-table tbody tr:last-child td { border-bottom: none; }
+.ab-table tbody tr:hover td { background: var(--n-50); }
+
+.ab-type-cell {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    font-size: 0.9375rem;
-    color: var(--e-text-secondary);
+    gap: .625rem;
 }
-.ee-abs-info svg { width: 24px; height: 24px; color: var(--e-blue); flex-shrink: 0; }
 
-/* Empty State */
-.ee-abs-empty { text-align: center; padding: 4rem 2rem; }
-.ee-abs-empty-icon {
-    width: 80px; height: 80px; margin: 0 auto 1.5rem;
-    background: var(--e-bg); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; color: var(--e-text-secondary);
+.ab-type-ico {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--r);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #fff;
 }
-.ee-abs-empty-icon svg { width: 40px; height: 40px; }
-.ee-abs-empty-title { font-size: 1.25rem; font-weight: 700; color: var(--e-text); margin-bottom: 0.5rem; }
-.ee-abs-empty-text { font-size: 0.9375rem; color: var(--e-text-secondary); }
 
-/* Modal */
-.ee-abs-modal-overlay {
+.ab-type-ico svg { width: 16px; height: 16px; }
+
+.ab-date {
+    font-family: var(--font-m);
+    font-size: .8125rem;
+    white-space: nowrap;
+    color: var(--text-2);
+}
+
+.ab-dur {
+    font-family: var(--font-m);
+    font-size: .8125rem;
+    color: var(--text-2);
+    white-space: nowrap;
+}
+
+.ab-motif-cell {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .8125rem;
+    color: var(--text-3);
+}
+
+/* ── Badges ───────────────────────────────────────── */
+.ab-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .28rem .65rem;
+    border-radius: var(--r-f);
+    font-size: .7rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.ab-badge svg { width: 10px; height: 10px; }
+.ab-badge.justified  { background: rgba(10,175,162,.10); color: var(--teal-500); }
+.ab-badge.unjust     { background: var(--rose-100);      color: var(--rose-400); }
+.ab-badge.en-attente { background: var(--amber-100);     color: var(--amber-400); }
+.ab-badge.approuvee  { background: rgba(10,175,162,.10); color: var(--teal-500); }
+.ab-badge.refusee    { background: var(--rose-100);      color: var(--rose-400); }
+
+.ab-motif-refus {
+    display: block;
+    font-size: .72rem;
+    color: var(--rose-400);
+    margin-top: .2rem;
+}
+
+/* ── Row actions ──────────────────────────────────── */
+.ab-row-actions { display: flex; gap: .375rem; align-items: center; }
+
+.ab-row-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .33rem .65rem;
+    border-radius: var(--r);
+    font-size: .7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    border: 1.5px solid transparent;
+    white-space: nowrap;
+    background: transparent;
+    text-decoration: none;
+}
+
+.ab-row-btn svg { width: 11px; height: 11px; }
+.ab-row-btn.justify { border-color: rgba(10,175,162,.3);  color: var(--teal-500); background: rgba(10,175,162,.06); }
+.ab-row-btn.justify:hover { background: rgba(10,175,162,.14); }
+.ab-row-btn.cancel  { border-color: var(--border); color: var(--text-3); }
+.ab-row-btn.cancel:hover  { border-color: var(--rose-400); color: var(--rose-400); }
+
+/* ── Empty ────────────────────────────────────────── */
+.ab-empty { text-align: center; padding: 4rem 2rem; }
+
+.ab-empty-ico {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 1.5rem;
+    background: rgba(55,72,200,.07);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ind-400);
+}
+
+.ab-empty-ico svg { width: 42px; height: 42px; opacity: .65; }
+
+.ab-empty h3 {
+    font-family: var(--font-d);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 .5rem;
+}
+
+.ab-empty p { font-size: .9rem; color: var(--text-2); margin: 0; }
+
+/* ── Modals ───────────────────────────────────────── */
+.ab-modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.5);
+    background: rgba(10,16,64,.45);
+    backdrop-filter: blur(4px);
     z-index: 1000;
     align-items: center;
     justify-content: center;
     padding: 1rem;
 }
-.ee-abs-modal-overlay.active { display: flex; }
 
-.ee-abs-modal {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-xl);
+.ab-modal-overlay.active { display: flex; }
+
+.ab-modal {
+    background: var(--surface);
+    border-radius: var(--r-xl);
     width: 100%;
     max-width: 540px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    box-shadow: var(--shadow-xl);
 }
 
-.ee-abs-modal-header {
+.ab-modal-head {
+    background: linear-gradient(135deg, var(--ind-900), var(--ind-700));
+    padding: 1.375rem 1.5rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--e-border);
+    gap: .875rem;
+    position: relative;
 }
 
-.ee-abs-modal-title {
-    font-size: 1.125rem;
+.ab-modal-head::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal-400), transparent);
+}
+
+.ab-modal-head-ico {
+    width: 40px;
+    height: 40px;
+    background: rgba(10,175,162,.20);
+    border: 1px solid rgba(10,175,162,.30);
+    border-radius: var(--r);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--teal-300);
+    flex-shrink: 0;
+}
+
+.ab-modal-head-ico svg { width: 20px; height: 20px; }
+
+.ab-modal-head h3 {
+    font-family: var(--font-d);
+    font-size: 1.0625rem;
     font-weight: 700;
-    color: var(--e-text);
+    color: #fff;
+    margin: 0;
+    flex: 1;
 }
 
-.ee-abs-modal-close {
-    width: 36px; height: 36px;
-    border-radius: var(--e-radius);
-    border: none; background: var(--e-bg);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    color: var(--e-text-secondary);
-    transition: all 0.2s;
+.ab-modal-x {
+    width: 30px;
+    height: 30px;
+    background: rgba(255,255,255,.10);
+    border: none;
+    border-radius: var(--r);
+    color: rgba(255,255,255,.65);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+    flex-shrink: 0;
 }
-.ee-abs-modal-close:hover { background: var(--e-border); color: var(--e-text); }
 
-.ee-abs-modal-body { padding: 1.5rem; }
+.ab-modal-x:hover { background: rgba(255,255,255,.20); color: #fff; }
+.ab-modal-x svg { width: 15px; height: 15px; }
 
-.ee-abs-form-group { margin-bottom: 1.25rem; }
-.ee-abs-form-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--e-text);
-    margin-bottom: 0.5rem;
-}
-.ee-abs-form-input, .ee-abs-form-select, .ee-abs-form-textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: var(--e-bg);
-    border: 1px solid var(--e-border);
-    border-radius: var(--e-radius);
-    font-size: 0.9375rem;
-    color: var(--e-text);
-    transition: border-color 0.2s;
-    box-sizing: border-box;
-}
-.ee-abs-form-input:focus, .ee-abs-form-select:focus, .ee-abs-form-textarea:focus {
-    outline: none;
-    border-color: var(--e-blue);
-}
-.ee-abs-form-textarea { resize: vertical; min-height: 80px; }
-.ee-abs-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.ee-abs-form-hint { font-size: 0.8125rem; color: var(--e-text-secondary); margin-top: 0.375rem; }
-.ee-abs-form-error { font-size: 0.8125rem; color: var(--e-red); margin-top: 0.375rem; }
-
-.ee-abs-modal-footer {
-    padding: 1.5rem;
-    border-top: 1px solid var(--e-border);
+.ab-modal-body { padding: 1.5rem; }
+.ab-modal-foot {
+    padding: 1rem 1.5rem 1.5rem;
     display: flex;
     justify-content: flex-end;
-    gap: 0.75rem;
+    gap: .625rem;
 }
 
-.ee-abs-btn-secondary {
-    padding: 0.75rem 1.5rem;
-    background: var(--e-bg);
-    border: 1px solid var(--e-border);
-    border-radius: var(--e-radius);
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--e-text);
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.ee-abs-btn-secondary:hover { background: var(--e-border); }
+/* ── Form ─────────────────────────────────────────── */
+.ab-form-group { margin-bottom: 1.125rem; }
 
-.ee-abs-btn-primary {
-    padding: 0.75rem 1.5rem;
-    background: var(--e-blue);
+.ab-form-label {
+    display: block;
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--text-2);
+    margin-bottom: .375rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.ab-form-input,
+.ab-form-select,
+.ab-form-textarea {
+    width: 100%;
+    padding: .65rem .875rem;
+    background: var(--n-50);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    font-size: .875rem;
+    font-family: var(--font);
+    color: var(--text);
+    transition: all .2s;
+    box-sizing: border-box;
+}
+
+.ab-form-textarea { resize: vertical; min-height: 80px; }
+
+.ab-form-input:focus,
+.ab-form-select:focus,
+.ab-form-textarea:focus {
+    outline: none;
+    border-color: var(--ind-400);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(55,72,200,.10);
+}
+
+.ab-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.ab-form-hint { font-size: .72rem; color: var(--text-3); margin-top: .3rem; }
+.ab-form-err  { font-size: .72rem; color: var(--rose-400); margin-top: .3rem; }
+
+.ab-btn-ghost {
+    padding: .65rem 1.125rem;
+    background: var(--n-100);
     border: none;
-    border-radius: var(--e-radius);
-    font-size: 0.9375rem;
+    border-radius: var(--r);
+    font-size: .875rem;
     font-weight: 600;
-    color: white;
+    color: var(--text-2);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all .2s;
 }
-.ee-abs-btn-primary:hover { opacity: 0.9; }
+.ab-btn-ghost:hover { background: var(--n-200); color: var(--text); }
 
-/* Responsive */
-@media (max-width: 1200px) {
-    .ee-abs-stats { grid-template-columns: repeat(3, 1fr); }
+.ab-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .65rem 1.25rem;
+    background: linear-gradient(135deg, var(--teal-400), var(--teal-300));
+    border: none;
+    border-radius: var(--r);
+    font-size: .875rem;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(10,175,162,.30);
+    transition: all .2s;
 }
-@media (max-width: 1024px) {
-    .ee-abs-stats { grid-template-columns: repeat(3, 1fr); }
-}
+.ab-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(10,175,162,.40); }
+.ab-btn-primary svg { width: 16px; height: 16px; }
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 1200px) { .ab-stats { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) {
-    .ee-abs-stats { grid-template-columns: 1fr; }
-    .ee-abs-table-wrapper { overflow-x: auto; }
-    .ee-abs-history-header { flex-direction: column; align-items: flex-start; }
-    .ee-abs-form-row { grid-template-columns: 1fr; }
+    .ab-stats { grid-template-columns: repeat(2, 1fr); }
+    .ab-history { overflow-x: auto; }
+    .ab-table   { min-width: 680px; }
+    .ab-form-row { grid-template-columns: 1fr; }
+    .ab-history-head { flex-direction: column; align-items: flex-start; }
 }
+@media (max-width: 480px) { .ab-stats { grid-template-columns: 1fr; } }
 </style>
 @endsection
 
 @section('content')
-<div class="ee-absences-page">
-    {{-- Flash Messages --}}
+<div class="ab-page">
+
+    {{-- Flash --}}
     @if(session('success'))
-        <div class="ee-abs-flash ee-abs-flash-success">{{ session('success') }}</div>
+        <div class="ab-flash success">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ session('success') }}
+        </div>
     @endif
     @if(session('error'))
-        <div class="ee-abs-flash ee-abs-flash-error">{{ session('error') }}</div>
+        <div class="ab-flash error">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {{ session('error') }}
+        </div>
     @endif
     @if($errors->any())
-        <div class="ee-abs-flash ee-abs-flash-error">
-            @foreach($errors->all() as $error)
-                {{ $error }}<br>
-            @endforeach
+        <div class="ab-flash error">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>@foreach($errors->all() as $e){{ $e }}<br>@endforeach</div>
         </div>
     @endif
 
-    {{-- Info Banner --}}
-    <div class="ee-abs-info animate-fade-in">
+    {{-- Info banner --}}
+    <div class="ab-info">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
         </svg>
-        <span>Consultez et g&eacute;rez vos absences. Vous pouvez d&eacute;clarer une absence et soumettre des justificatifs.</span>
+        <span>Consultez et gérez vos absences. Vous pouvez déclarer une absence et soumettre des justificatifs directement depuis cette page.</span>
     </div>
 
-    {{-- Stats Cards --}}
-    <div class="ee-abs-stats animate-fade-in" style="animation-delay: 0.05s;">
-        <div class="ee-abs-card total">
-            <div class="ee-abs-header">
-                <div class="ee-abs-icon total">
+    {{-- ── KPI Stats ── --}}
+    <div class="ab-stats">
+        <div class="ab-kpi total">
+            <div class="ab-kpi-head">
+                <div class="ab-kpi-ico total">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                        <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
                     </svg>
                 </div>
-                <span class="ee-abs-label">Total absences</span>
+                <span class="ab-kpi-label">Total</span>
             </div>
-            <div class="ee-abs-value">{{ $statsAbsences['total'] }}</div>
+            <div class="ab-kpi-val">{{ $statsAbsences['total'] }}</div>
         </div>
 
-        <div class="ee-abs-card justified">
-            <div class="ee-abs-header">
-                <div class="ee-abs-icon justified">
+        <div class="ab-kpi justified">
+            <div class="ab-kpi-head">
+                <div class="ab-kpi-ico justified">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
                     </svg>
                 </div>
-                <span class="ee-abs-label">Justifi&eacute;es</span>
+                <span class="ab-kpi-label">Justifiées</span>
             </div>
-            <div class="ee-abs-value">{{ $statsAbsences['justifiees'] }}</div>
+            <div class="ab-kpi-val">{{ $statsAbsences['justifiees'] }}</div>
         </div>
 
-        <div class="ee-abs-card unjustified">
-            <div class="ee-abs-header">
-                <div class="ee-abs-icon unjustified">
+        <div class="ab-kpi unjust">
+            <div class="ab-kpi-head">
+                <div class="ab-kpi-ico unjust">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                        <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
                     </svg>
                 </div>
-                <span class="ee-abs-label">Non justifi&eacute;es</span>
+                <span class="ab-kpi-label">Non justifiées</span>
             </div>
-            <div class="ee-abs-value">{{ $statsAbsences['injustifiees'] }}</div>
+            <div class="ab-kpi-val">{{ $statsAbsences['injustifiees'] }}</div>
         </div>
 
-        <div class="ee-abs-card late">
-            <div class="ee-abs-header">
-                <div class="ee-abs-icon late">
+        <div class="ab-kpi late">
+            <div class="ab-kpi-head">
+                <div class="ab-kpi-ico late">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                     </svg>
                 </div>
-                <span class="ee-abs-label">Retards</span>
+                <span class="ab-kpi-label">Retards</span>
             </div>
-            <div class="ee-abs-value">{{ $statsAbsences['retards'] }}</div>
+            <div class="ab-kpi-val">{{ $statsAbsences['retards'] }}</div>
         </div>
 
-        <div class="ee-abs-card pending">
-            <div class="ee-abs-header">
-                <div class="ee-abs-icon pending">
+        <div class="ab-kpi pending">
+            <div class="ab-kpi-head">
+                <div class="ab-kpi-ico pending">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                     </svg>
                 </div>
-                <span class="ee-abs-label">En attente</span>
+                <span class="ab-kpi-label">En attente</span>
             </div>
-            <div class="ee-abs-value">{{ $statsAbsences['en_attente'] }}</div>
+            <div class="ab-kpi-val">{{ $statsAbsences['en_attente'] }}</div>
         </div>
     </div>
 
-    {{-- History --}}
-    <div class="ee-abs-history animate-fade-in" style="animation-delay: 0.1s;">
-        <div class="ee-abs-history-header">
-            <h2 class="ee-abs-history-title">Historique des absences</h2>
-            <div class="ee-abs-history-actions">
-                <select class="ee-abs-year-select" onchange="window.location.href='{{ route('espace-employe.absences') }}?annee='+this.value">
+    {{-- ── History ── --}}
+    <div class="ab-history">
+        <div class="ab-history-head">
+            <div class="ab-section-title">
+                <div class="ab-section-ico">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                </div>
+                Historique des absences
+            </div>
+            <div class="ab-head-right">
+                <select class="ab-year-select" onchange="window.location.href='{{ route('espace-employe.absences') }}?annee='+this.value">
                     @foreach($anneesDisponibles as $a)
                         <option value="{{ $a }}" {{ $a == $annee ? 'selected' : '' }}>{{ $a }}</option>
                     @endforeach
                 </select>
-                <button type="button" class="ee-abs-btn-declare" onclick="document.getElementById('declareAbsenceModal').classList.add('active')">
+                <button type="button" class="ab-btn-declare"
+                        onclick="document.getElementById('declareAbsenceModal').classList.add('active')">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
-                    D&eacute;clarer une absence
+                    Déclarer une absence
                 </button>
             </div>
         </div>
 
         @if($absences->count() > 0)
-            <div class="ee-abs-table-wrapper">
-                <table class="ee-abs-table">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Date</th>
-                            <th>Dur&eacute;e</th>
-                            <th>Justifi&eacute;e</th>
-                            <th>Statut</th>
-                            <th>Motif</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($absences as $absence)
-                            <tr>
-                                <td>
-                                    <div class="ee-abs-type">
-                                        <div class="ee-abs-type-icon" style="background: {{ $absence->typeAbsence->couleur ?? '#6b7280' }}; color: white;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <circle cx="12" cy="12" r="10"></circle>
-                                                <line x1="15" y1="9" x2="9" y2="15"></line>
-                                                <line x1="9" y1="9" x2="15" y2="15"></line>
-                                            </svg>
-                                        </div>
-                                        <span>{{ $absence->typeAbsence->nom ?? 'Absence' }}</span>
-                                    </div>
-                                </td>
-                                <td style="white-space:nowrap;">{{ $absence->date_absence->format('d/m/Y') }}</td>
-                                <td style="font-size:0.875rem;color:var(--e-text-secondary);">{{ $absence->duree_label }}</td>
-                                <td>
-                                    @if($absence->justifiee)
-                                        <span class="ee-abs-badge justified">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                            Justifi&eacute;e
+        <div style="overflow-x: auto;">
+            <table class="ab-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Durée</th>
+                        <th>Justifiée</th>
+                        <th>Statut</th>
+                        <th>Motif</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($absences as $absence)
+                    <tr>
+                        <td>
+                            <div class="ab-type-cell">
+                                <div class="ab-type-ico" style="background: {{ $absence->typeAbsence->couleur ?? 'var(--ind-500)' }};">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                                    </svg>
+                                </div>
+                                <span>{{ $absence->typeAbsence->nom ?? 'Absence' }}</span>
+                            </div>
+                        </td>
+                        <td><span class="ab-date">{{ $absence->date_absence->format('d/m/Y') }}</span></td>
+                        <td><span class="ab-dur">{{ $absence->duree_label }}</span></td>
+                        <td>
+                            @if($absence->justifiee)
+                                <span class="ab-badge justified">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Justifiée
+                                </span>
+                            @else
+                                <span class="ab-badge unjust">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    Non justifiée
+                                </span>
+                            @endif
+                        </td>
+                        <td>
+                            @switch($absence->statut)
+                                @case('en_attente')
+                                    <span class="ab-badge en-attente">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        En attente
+                                    </span>
+                                    @break
+                                @case('approuvee')
+                                    <span class="ab-badge approuvee">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                        Approuvée
+                                    </span>
+                                    @break
+                                @case('refusee')
+                                    <div>
+                                        <span class="ab-badge refusee">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                            Refusée
                                         </span>
-                                    @else
-                                        <span class="ee-abs-badge unjustified">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                            Non justifi&eacute;e
-                                        </span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @switch($absence->statut)
-                                        @case('en_attente')
-                                            <span class="ee-abs-status en-attente">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                                En attente
-                                            </span>
-                                            @break
-                                        @case('approuvee')
-                                            <span class="ee-abs-status approuvee">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                                Approuv&eacute;e
-                                            </span>
-                                            @break
-                                        @case('refusee')
-                                            <span class="ee-abs-status refusee">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                                Refus&eacute;e
-                                            </span>
-                                            @if($absence->motif_refus)
-                                                <span class="ee-abs-motif-refus">{{ $absence->motif_refus }}</span>
-                                            @endif
-                                            @break
-                                    @endswitch
-                                </td>
-                                <td style="font-size:0.875rem;color:var(--e-text-secondary);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ $absence->motif }}">
-                                    {{ $absence->motif ?? '-' }}
-                                </td>
-                                <td>
-                                    <div class="ee-abs-actions">
-                                        {{-- Justifier: non-justified approved absences from admin --}}
-                                        @if(!$absence->justifiee && $absence->statut === 'approuvee' && $absence->source === 'admin')
-                                            <button type="button" class="ee-abs-btn-sm justify-btn" onclick="openJustifyModal({{ $absence->id }})">
-                                                Justifier
-                                            </button>
-                                        @endif
-
-                                        {{-- Annuler: en_attente employee-sourced absences --}}
-                                        @if($absence->statut === 'en_attente' && $absence->source === 'employe')
-                                            <form action="{{ route('espace-employe.absences.annuler', $absence) }}" method="POST" onsubmit="return confirm('Annuler cette d\u00e9claration d\u0027absence ?')">
-                                                @csrf
-                                                <button type="submit" class="ee-abs-btn-sm cancel-btn">Annuler</button>
-                                            </form>
+                                        @if($absence->motif_refus)
+                                            <span class="ab-motif-refus">{{ $absence->motif_refus }}</span>
                                         @endif
                                     </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                    @break
+                            @endswitch
+                        </td>
+                        <td>
+                            <span class="ab-motif-cell" title="{{ $absence->motif }}">{{ $absence->motif ?? '—' }}</span>
+                        </td>
+                        <td>
+                            <div class="ab-row-actions">
+                                @if(!$absence->justifiee && $absence->statut === 'approuvee' && $absence->source === 'admin')
+                                    <button type="button" class="ab-row-btn justify"
+                                            onclick="openJustifyModal({{ $absence->id }})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                        Justifier
+                                    </button>
+                                @endif
+                                @if($absence->statut === 'en_attente' && $absence->source === 'employe')
+                                    <form action="{{ route('espace-employe.absences.annuler', $absence) }}" method="POST"
+                                          onsubmit="return confirm('Annuler cette déclaration d\'absence ?')">
+                                        @csrf
+                                        <button type="submit" class="ab-row-btn cancel">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                            Annuler
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         @else
-            <div class="ee-abs-empty">
-                <div class="ee-abs-empty-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                </div>
-                <h3 class="ee-abs-empty-title">Aucune absence enregistr&eacute;e</h3>
-                <p class="ee-abs-empty-text">Vous n'avez aucune absence pour l'ann&eacute;e {{ $annee }}.</p>
+        <div class="ab-empty">
+            <div class="ab-empty-ico">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
             </div>
+            <h3>Aucune absence enregistrée</h3>
+            <p>Vous n'avez aucune absence pour l'année {{ $annee }}.</p>
+        </div>
         @endif
     </div>
+
 </div>
 
-{{-- Modal D&eacute;clarer une absence --}}
-<div class="ee-abs-modal-overlay" id="declareAbsenceModal">
-    <div class="ee-abs-modal">
-        <div class="ee-abs-modal-header">
-            <h3 class="ee-abs-modal-title">D&eacute;clarer une absence</h3>
-            <button class="ee-abs-modal-close" onclick="document.getElementById('declareAbsenceModal').classList.remove('active')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+{{-- ══════════════════════════
+     MODAL — Déclarer une absence
+═══════════════════════════ --}}
+<div class="ab-modal-overlay" id="declareAbsenceModal">
+    <div class="ab-modal">
+        <div class="ab-modal-head">
+            <div class="ab-modal-head-ico">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+            </div>
+            <h3>Déclarer une absence</h3>
+            <button class="ab-modal-x" onclick="document.getElementById('declareAbsenceModal').classList.remove('active')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
             </button>
         </div>
+
         <form action="{{ route('espace-employe.absences.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="ee-abs-modal-body">
-                <div class="ee-abs-form-group">
-                    <label class="ee-abs-form-label">Type d'absence *</label>
-                    <select name="type_absence_id" class="ee-abs-form-select" required>
-                        <option value="">S&eacute;lectionnez un type</option>
+            <div class="ab-modal-body">
+                <div class="ab-form-group">
+                    <label class="ab-form-label">Type d'absence *</label>
+                    <select name="type_absence_id" class="ab-form-select" required>
+                        <option value="">Sélectionnez un type</option>
                         @foreach($typesAbsence as $type)
-                            <option value="{{ $type->id }}" {{ old('type_absence_id') == $type->id ? 'selected' : '' }}>
-                                {{ $type->nom }}
-                            </option>
+                            <option value="{{ $type->id }}" {{ old('type_absence_id') == $type->id ? 'selected' : '' }}>{{ $type->nom }}</option>
                         @endforeach
                     </select>
-                    @error('type_absence_id')
-                        <p class="ee-abs-form-error">{{ $message }}</p>
-                    @enderror
+                    @error('type_absence_id')<p class="ab-form-err">{{ $message }}</p>@enderror
                 </div>
 
-                <div class="ee-abs-form-row">
-                    <div class="ee-abs-form-group">
-                        <label class="ee-abs-form-label">Date de l'absence *</label>
-                        <input type="date" name="date_absence" class="ee-abs-form-input" value="{{ old('date_absence') }}" required>
-                        @error('date_absence')
-                            <p class="ee-abs-form-error">{{ $message }}</p>
-                        @enderror
+                <div class="ab-form-row">
+                    <div class="ab-form-group">
+                        <label class="ab-form-label">Date de l'absence *</label>
+                        <input type="date" name="date_absence" class="ab-form-input" value="{{ old('date_absence') }}" required>
+                        @error('date_absence')<p class="ab-form-err">{{ $message }}</p>@enderror
                     </div>
-                    <div class="ee-abs-form-group">
-                        <label class="ee-abs-form-label">Dur&eacute;e *</label>
-                        <select name="duree_type" id="dureeTypeSelect" class="ee-abs-form-select" required onchange="toggleMinutesRetard()">
-                            <option value="">S&eacute;lectionnez</option>
-                            <option value="journee" {{ old('duree_type') == 'journee' ? 'selected' : '' }}>Journ&eacute;e enti&egrave;re</option>
-                            <option value="demi_journee" {{ old('duree_type') == 'demi_journee' ? 'selected' : '' }}>Demi-journ&eacute;e</option>
-                            <option value="retard" {{ old('duree_type') == 'retard' ? 'selected' : '' }}>Retard</option>
-                            <option value="depart_anticipe" {{ old('duree_type') == 'depart_anticipe' ? 'selected' : '' }}>D&eacute;part anticip&eacute;</option>
+                    <div class="ab-form-group">
+                        <label class="ab-form-label">Durée *</label>
+                        <select name="duree_type" id="dureeTypeSelect" class="ab-form-select" required onchange="toggleMinutesRetard()">
+                            <option value="">Sélectionnez</option>
+                            <option value="journee"         {{ old('duree_type') == 'journee'         ? 'selected' : '' }}>Journée entière</option>
+                            <option value="demi_journee"    {{ old('duree_type') == 'demi_journee'    ? 'selected' : '' }}>Demi-journée</option>
+                            <option value="retard"          {{ old('duree_type') == 'retard'          ? 'selected' : '' }}>Retard</option>
+                            <option value="depart_anticipe" {{ old('duree_type') == 'depart_anticipe' ? 'selected' : '' }}>Départ anticipé</option>
                         </select>
-                        @error('duree_type')
-                            <p class="ee-abs-form-error">{{ $message }}</p>
-                        @enderror
+                        @error('duree_type')<p class="ab-form-err">{{ $message }}</p>@enderror
                     </div>
                 </div>
 
-                <div class="ee-abs-form-group" id="minutesRetardGroup" style="display: none;">
-                    <label class="ee-abs-form-label">Dur&eacute;e du retard (minutes)</label>
-                    <input type="number" name="minutes_retard" id="minutesRetardInput" class="ee-abs-form-input" value="{{ old('minutes_retard') }}" min="1" max="480" placeholder="Ex: 30">
-                    @error('minutes_retard')
-                        <p class="ee-abs-form-error">{{ $message }}</p>
-                    @enderror
+                <div class="ab-form-group" id="minutesRetardGroup" style="display:none;">
+                    <label class="ab-form-label">Durée du retard (minutes)</label>
+                    <input type="number" name="minutes_retard" id="minutesRetardInput" class="ab-form-input"
+                           value="{{ old('minutes_retard') }}" min="1" max="480" placeholder="Ex : 30">
+                    @error('minutes_retard')<p class="ab-form-err">{{ $message }}</p>@enderror
                 </div>
 
-                <div class="ee-abs-form-group">
-                    <label class="ee-abs-form-label">Motif *</label>
-                    <textarea name="motif" class="ee-abs-form-textarea" placeholder="Indiquez la raison de votre absence" required>{{ old('motif') }}</textarea>
-                    @error('motif')
-                        <p class="ee-abs-form-error">{{ $message }}</p>
-                    @enderror
+                <div class="ab-form-group">
+                    <label class="ab-form-label">Motif *</label>
+                    <textarea name="motif" class="ab-form-textarea"
+                              placeholder="Indiquez la raison de votre absence…" required>{{ old('motif') }}</textarea>
+                    @error('motif')<p class="ab-form-err">{{ $message }}</p>@enderror
                 </div>
 
-                <div class="ee-abs-form-group">
-                    <label class="ee-abs-form-label">Justificatif</label>
-                    <input type="file" name="justificatif" class="ee-abs-form-input" accept=".pdf,.jpg,.jpeg,.png">
-                    <p class="ee-abs-form-hint">PDF, JPG ou PNG - Max 5 Mo</p>
-                    @error('justificatif')
-                        <p class="ee-abs-form-error">{{ $message }}</p>
-                    @enderror
+                <div class="ab-form-group">
+                    <label class="ab-form-label">Justificatif <span style="opacity:.45;">(optionnel)</span></label>
+                    <input type="file" name="justificatif" class="ab-form-input" accept=".pdf,.jpg,.jpeg,.png">
+                    <p class="ab-form-hint">PDF, JPG ou PNG · Max 5 Mo</p>
+                    @error('justificatif')<p class="ab-form-err">{{ $message }}</p>@enderror
                 </div>
             </div>
-            <div class="ee-abs-modal-footer">
-                <button type="button" class="ee-abs-btn-secondary" onclick="document.getElementById('declareAbsenceModal').classList.remove('active')">Annuler</button>
-                <button type="submit" class="ee-abs-btn-primary">Soumettre la d&eacute;claration</button>
+            <div class="ab-modal-foot">
+                <button type="button" class="ab-btn-ghost"
+                        onclick="document.getElementById('declareAbsenceModal').classList.remove('active')">Annuler</button>
+                <button type="submit" class="ab-btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                    Soumettre
+                </button>
             </div>
         </form>
     </div>
 </div>
 
-{{-- Modal Justifier une absence --}}
-<div class="ee-abs-modal-overlay" id="justifyModal">
-    <div class="ee-abs-modal">
-        <div class="ee-abs-modal-header">
-            <h3 class="ee-abs-modal-title">Soumettre un justificatif</h3>
-            <button class="ee-abs-modal-close" onclick="document.getElementById('justifyModal').classList.remove('active')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+{{-- ══════════════════════════
+     MODAL — Justifier une absence
+═══════════════════════════ --}}
+<div class="ab-modal-overlay" id="justifyModal">
+    <div class="ab-modal">
+        <div class="ab-modal-head">
+            <div class="ab-modal-head-ico">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+            </div>
+            <h3>Soumettre un justificatif</h3>
+            <button class="ab-modal-x" onclick="document.getElementById('justifyModal').classList.remove('active')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
             </button>
         </div>
+
         <form id="justifyForm" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="ee-abs-modal-body">
-                <div class="ee-abs-form-group">
-                    <label class="ee-abs-form-label">Justificatif *</label>
-                    <input type="file" name="justificatif" class="ee-abs-form-input" accept=".pdf,.jpg,.jpeg,.png" required>
-                    <p class="ee-abs-form-hint">PDF, JPG ou PNG - Max 5 Mo</p>
+            <div class="ab-modal-body">
+                <div class="ab-form-group">
+                    <label class="ab-form-label">Justificatif *</label>
+                    <input type="file" name="justificatif" class="ab-form-input" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <p class="ab-form-hint">PDF, JPG ou PNG · Max 5 Mo</p>
                 </div>
-
-                <div class="ee-abs-form-group">
-                    <label class="ee-abs-form-label">Commentaire</label>
-                    <textarea name="motif" class="ee-abs-form-textarea" placeholder="Commentaire optionnel concernant le justificatif"></textarea>
+                <div class="ab-form-group">
+                    <label class="ab-form-label">Commentaire <span style="opacity:.45;">(optionnel)</span></label>
+                    <textarea name="motif" class="ab-form-textarea"
+                              placeholder="Commentaire concernant le justificatif…"></textarea>
                 </div>
             </div>
-            <div class="ee-abs-modal-footer">
-                <button type="button" class="ee-abs-btn-secondary" onclick="document.getElementById('justifyModal').classList.remove('active')">Annuler</button>
-                <button type="submit" class="ee-abs-btn-primary">Soumettre le justificatif</button>
+            <div class="ab-modal-foot">
+                <button type="button" class="ab-btn-ghost"
+                        onclick="document.getElementById('justifyModal').classList.remove('active')">Annuler</button>
+                <button type="submit" class="ab-btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                    Soumettre
+                </button>
             </div>
         </form>
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
 <script>
-// Fermer les modals en cliquant sur l'overlay
-document.querySelectorAll('.ee-abs-modal-overlay').forEach(function(overlay) {
-    overlay.addEventListener('click', function(e) {
-        if (e.target === this) this.classList.remove('active');
-    });
+// Close on backdrop click + Escape
+document.querySelectorAll('.ab-modal-overlay').forEach(function (o) {
+    o.addEventListener('click', function (e) { if (e.target === this) this.classList.remove('active'); });
+});
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape')
+        document.querySelectorAll('.ab-modal-overlay.active').forEach(function (o) { o.classList.remove('active'); });
 });
 
-// Toggle minutes_retard field
+// Toggle minutes field
 function toggleMinutesRetard() {
-    var select = document.getElementById('dureeTypeSelect');
-    var group = document.getElementById('minutesRetardGroup');
+    var sel   = document.getElementById('dureeTypeSelect');
+    var grp   = document.getElementById('minutesRetardGroup');
     var input = document.getElementById('minutesRetardInput');
-    if (select.value === 'retard') {
-        group.style.display = '';
+    if (sel.value === 'retard') {
+        grp.style.display = '';
     } else {
-        group.style.display = 'none';
+        grp.style.display = 'none';
         input.value = '';
     }
 }
 
-// Open justify modal with dynamic form action
+// Open justify modal
 function openJustifyModal(absenceId) {
-    var form = document.getElementById('justifyForm');
-    form.action = '{{ url("mon-espace/absences") }}/' + absenceId + '/justifier';
+    document.getElementById('justifyForm').action = '{{ url("mon-espace/absences") }}/' + absenceId + '/justifier';
     document.getElementById('justifyModal').classList.add('active');
 }
 
-// Init: toggle minutes_retard on page load (in case of old value)
+// Init
 toggleMinutesRetard();
 
-// Reopen declare modal if validation errors exist
+// Re-open on validation errors
 @if($errors->any())
     document.getElementById('declareAbsenceModal').classList.add('active');
 @endif

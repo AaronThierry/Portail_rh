@@ -10,559 +10,578 @@
 
 @section('styles')
 <style>
-.ee-demandes-page {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
+/* ════════════════════════════════════════════════════
+   DEMANDES — Charte Portail RH+
+   Indigo × Teal × Neutres · Syne · DM Sans · DM Mono
+   ════════════════════════════════════════════════════ */
 
-/* Stats Row */
-.ee-stats-row {
+.dm-page { display: flex; flex-direction: column; gap: 1.75rem; animation: fadeUp .4s ease both; }
+
+/* ── KPI row ──────────────────────────────────────── */
+.dm-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    gap: 1.125rem;
 }
 
-.ee-stat-box {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-lg);
-    border: 1px solid var(--e-border);
-    border-left: 3px solid;
-    padding: 1.25rem;
+.dm-kpi {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-xl);
+    border-left: 4px solid;
+    padding: 1.25rem 1.375rem;
     display: flex;
     align-items: center;
     gap: 1rem;
+    transition: transform .2s ease, box-shadow .2s ease;
 }
 
-.ee-stat-box:nth-child(1) {
-    border-left-color: var(--e-blue);
-}
+.dm-kpi:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 
-.ee-stat-box:nth-child(2) {
-    border-left-color: var(--e-amber);
-}
+.dm-kpi.total    { border-left-color: var(--ind-400); }
+.dm-kpi.pending  { border-left-color: var(--amber-400); }
+.dm-kpi.approved { border-left-color: var(--teal-400); }
+.dm-kpi.rejected { border-left-color: var(--rose-400); }
 
-.ee-stat-box:nth-child(3) {
-    border-left-color: var(--e-emerald);
-}
-
-.ee-stat-box:nth-child(4) {
-    border-left-color: var(--e-red);
-}
-
-.ee-stat-box-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--e-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.ee-stat-box-icon svg {
-    width: 24px;
-    height: 24px;
-}
-
-.ee-stat-box-icon.all {
-    background: var(--e-blue-wash);
-    color: var(--e-blue);
-}
-
-.ee-stat-box-icon.pending {
-    background: var(--e-amber-wash);
-    color: var(--e-amber);
-}
-
-.ee-stat-box-icon.approved {
-    background: var(--e-emerald-pale);
-    color: var(--e-emerald);
-}
-
-.ee-stat-box-icon.rejected {
-    background: var(--e-red-pale);
-    color: var(--e-red);
-}
-
-.ee-stat-box-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--e-text);
-}
-
-.ee-stat-box-label {
-    font-size: 0.8125rem;
-    color: var(--e-text-secondary);
-}
-
-/* New Request Card */
-.ee-new-request-card {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-xl);
-    border: 1px solid var(--e-border);
-    padding: 2rem;
-}
-
-.ee-new-request-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-}
-
-.ee-new-request-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--e-text);
-}
-
-.ee-request-types-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-}
-
-.ee-request-type-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1.5rem 1rem;
-    background: var(--e-bg);
-    border: 2px solid transparent;
-    border-radius: var(--e-radius-lg);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.ee-request-type-btn:hover {
-    border-color: var(--e-blue);
-    background: var(--e-blue-wash);
-    transform: translateY(-2px);
-}
-
-.ee-request-type-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: var(--e-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.ee-request-type-icon svg {
-    width: 26px;
-    height: 26px;
-}
-
-.ee-request-type-icon.purple {
-    background: #7c3aed;
-    color: white;
-}
-
-.ee-request-type-icon.blue {
-    background: var(--e-blue);
-    color: white;
-}
-
-.ee-request-type-icon.green {
-    background: var(--e-emerald);
-    color: white;
-}
-
-.ee-request-type-icon.orange {
-    background: var(--e-amber);
-    color: white;
-}
-
-.ee-request-type-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--e-text);
-    text-align: center;
-}
-
-/* Demandes List */
-.ee-demandes-card {
-    background: var(--e-surface);
-    border-radius: var(--e-radius-xl);
-    border: 1px solid var(--e-border);
-    overflow: hidden;
-}
-
-.ee-demandes-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--e-border);
-}
-
-.ee-demandes-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--e-text);
-}
-
-.ee-demandes-filters {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.ee-filter-pill {
-    padding: 0.5rem 1rem;
-    background: var(--e-bg);
-    border: 1px solid var(--e-border);
-    border-radius: 20px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--e-text-secondary);
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.ee-filter-pill:hover, .ee-filter-pill.active {
-    background: var(--e-blue);
-    border-color: var(--e-blue);
-    color: white;
-}
-
-/* Demande Item */
-.ee-demandes-list {
-    padding: 1rem;
-}
-
-.ee-demande-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.25rem;
-    background: var(--e-bg);
-    border-radius: var(--e-radius);
-    margin-bottom: 0.75rem;
-    transition: all 0.3s ease;
-}
-
-.ee-demande-item:hover {
-    transform: translateX(4px);
-}
-
-.ee-demande-item:last-child {
-    margin-bottom: 0;
-}
-
-.ee-demande-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--e-radius);
+.dm-kpi-ico {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--r-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 }
 
-.ee-demande-icon svg {
-    width: 24px;
-    height: 24px;
+.dm-kpi-ico svg { width: 20px; height: 20px; }
+.dm-kpi-ico.total    { background: rgba(55,72,200,.10);  color: var(--ind-500); }
+.dm-kpi-ico.pending  { background: var(--amber-100);     color: var(--amber-400); }
+.dm-kpi-ico.approved { background: rgba(10,175,162,.12); color: var(--teal-500); }
+.dm-kpi-ico.rejected { background: var(--rose-100);      color: var(--rose-400); }
+
+.dm-kpi-val {
+    font-family: var(--font-d);
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
 }
 
-.ee-demande-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.ee-demande-type {
-    font-size: 0.9375rem;
+.dm-kpi-lbl {
+    font-size: .75rem;
     font-weight: 600;
-    color: var(--e-text);
-    margin-bottom: 0.25rem;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-top: .2rem;
 }
 
-.ee-demande-date {
-    font-size: 0.8125rem;
-    color: var(--e-text-secondary);
+/* ── New request panel ────────────────────────────── */
+.dm-new {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
-.ee-demande-status {
+.dm-new-head {
+    padding: 1.125rem 1.5rem;
+    border-bottom: 1.5px solid var(--border-2);
+    background: var(--n-50);
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.dm-new-head-ico {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--ind-900), var(--ind-700));
+    border-radius: var(--r);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.dm-new-head-ico svg { width: 16px; height: 16px; }
+
+.dm-new-title {
+    font-family: var(--font-d);
+    font-size: .9375rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.dm-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.dm-type-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+    padding: 1.5rem 1rem;
+    background: var(--n-50);
+    border: 1.5px solid var(--border-2);
+    border-radius: var(--r-xl);
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s ease, border-color .25s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.dm-type-btn::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--dm-color, var(--ind-400));
+    opacity: 0;
+    transition: opacity .25s ease;
+}
+
+.dm-type-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--dm-color, var(--ind-300));
+}
+
+.dm-type-btn:hover::before { opacity: 1; }
+
+.dm-type-ico {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--r-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: transform .25s ease;
+}
+
+.dm-type-btn:hover .dm-type-ico { transform: scale(1.1) rotate(-5deg); }
+.dm-type-ico svg { width: 24px; height: 24px; }
+
+.dm-type-lbl {
+    font-family: var(--font-d);
+    font-size: .875rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.3;
+}
+
+.dm-type-sub {
+    font-size: .72rem;
+    color: var(--text-3);
+    text-align: center;
+}
+
+/* ── History section ──────────────────────────────── */
+.dm-history {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.dm-history-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.125rem 1.5rem;
+    border-bottom: 1.5px solid var(--border-2);
+    background: var(--n-50);
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+.dm-history-title {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-family: var(--font-d);
+    font-size: .9375rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.dm-section-ico {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--ind-900), var(--ind-700));
+    border-radius: var(--r);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.dm-section-ico svg { width: 16px; height: 16px; }
+
+/* ── Filter pills ─────────────────────────────────── */
+.dm-filters {
+    display: flex;
+    gap: .375rem;
+    flex-wrap: wrap;
+}
+
+.dm-pill {
+    padding: .35rem .875rem;
+    background: var(--n-100);
+    border: 1.5px solid transparent;
+    border-radius: var(--r-f);
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: all .2s ease;
+    white-space: nowrap;
+}
+
+.dm-pill:hover { color: var(--ind-500); background: rgba(55,72,200,.08); }
+
+.dm-pill.active {
+    background: var(--ind-900);
+    color: #fff;
+    border-color: var(--ind-900);
+}
+
+/* ── Demande list ─────────────────────────────────── */
+.dm-list { padding: .75rem; display: flex; flex-direction: column; gap: .5rem; }
+
+.dm-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.125rem 1.25rem;
+    background: var(--n-50);
+    border: 1.5px solid var(--border-2);
+    border-radius: var(--r-lg);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.dm-item:hover {
+    transform: translateX(3px);
+    box-shadow: var(--shadow);
+    border-color: var(--border);
+}
+
+.dm-item-ico {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--r-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #fff;
+}
+
+.dm-item-ico svg { width: 20px; height: 20px; }
+
+.dm-item-body { flex: 1; min-width: 0; }
+
+.dm-item-type {
+    font-weight: 700;
+    font-size: .9375rem;
+    color: var(--text);
+    margin: 0 0 .2rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dm-item-meta {
+    font-family: var(--font-m);
+    font-size: .75rem;
+    color: var(--text-3);
+}
+
+.dm-item-meta .sep { margin: 0 .375rem; opacity: .5; }
+
+/* ── Status badges ────────────────────────────────── */
+.dm-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
+    gap: .3rem;
+    padding: .35rem .75rem;
+    border-radius: var(--r-f);
+    font-size: .72rem;
     font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-.ee-demande-status.pending {
-    background: var(--e-amber-pale);
-    color: var(--e-amber);
-}
+.dm-badge svg { width: 11px; height: 11px; }
+.dm-badge.pending  { background: var(--amber-100);     color: var(--amber-400); }
+.dm-badge.approved { background: rgba(10,175,162,.10); color: var(--teal-500); }
+.dm-badge.rejected { background: var(--rose-100);      color: var(--rose-400); }
+.dm-badge.cancelled{ background: var(--n-100);          color: var(--text-3); }
 
-.ee-demande-status.approved {
-    background: var(--e-emerald-pale);
-    color: var(--e-emerald);
-}
+/* ── Empty ────────────────────────────────────────── */
+.dm-empty { text-align: center; padding: 4rem 2rem; }
 
-.ee-demande-status.rejected {
-    background: var(--e-red-pale);
-    color: var(--e-red);
-}
-
-.ee-demande-status svg {
-    width: 14px;
-    height: 14px;
-}
-
-/* Empty State */
-.ee-empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-}
-
-.ee-empty-icon {
-    width: 80px;
-    height: 80px;
+.dm-empty-ico {
+    width: 88px;
+    height: 88px;
     margin: 0 auto 1.5rem;
-    background: var(--e-bg);
+    background: rgba(55,72,200,.07);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--e-text-secondary);
+    color: var(--ind-400);
 }
 
-.ee-empty-icon svg {
-    width: 40px;
-    height: 40px;
-}
+.dm-empty-ico svg { width: 42px; height: 42px; opacity: .65; }
 
-.ee-empty-title {
-    font-size: 1.25rem;
+.dm-empty h3 {
+    font-family: var(--font-d);
+    font-size: 1.125rem;
     font-weight: 700;
-    color: var(--e-text);
-    margin-bottom: 0.5rem;
+    color: var(--text);
+    margin: 0 0 .5rem;
 }
 
-.ee-empty-text {
-    font-size: 0.9375rem;
-    color: var(--e-text-secondary);
-}
+.dm-empty p { font-size: .9rem; color: var(--text-2); margin: 0; }
 
-/* Responsive */
-@media (max-width: 1024px) {
-    .ee-stats-row {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 1024px) { .dm-stats { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) {
-    .ee-stats-row {
-        grid-template-columns: 1fr;
-    }
-
-    .ee-request-types-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .ee-demandes-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-
-    .ee-demandes-filters {
-        width: 100%;
-        overflow-x: auto;
-    }
+    .dm-stats      { grid-template-columns: 1fr; }
+    .dm-types-grid { grid-template-columns: repeat(2, 1fr); }
+    .dm-history-head { flex-direction: column; align-items: flex-start; }
 }
 </style>
 @endsection
 
 @section('content')
-<div class="ee-demandes-page">
-    <!-- Stats Row -->
-    <div class="ee-stats-row animate-fade-in">
-        <div class="ee-stat-box">
-            <div class="ee-stat-box-icon all">
+<div class="dm-page">
+
+    {{-- ── KPI Stats ── --}}
+    @php
+        $total    = $demandes->count();
+        $pending  = $demandes->where('statut', 'en_attente')->count();
+        $approved = $demandes->where('statut', 'approuve')->count();
+        $rejected = $demandes->where('statut', 'refuse')->count();
+    @endphp
+    <div class="dm-stats">
+        <div class="dm-kpi total">
+            <div class="dm-kpi-ico total">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
             </div>
             <div>
-                <div class="ee-stat-box-value">{{ $demandes->count() }}</div>
-                <div class="ee-stat-box-label">Total demandes</div>
+                <div class="dm-kpi-val">{{ $total }}</div>
+                <div class="dm-kpi-lbl">Total</div>
             </div>
         </div>
-        <div class="ee-stat-box">
-            <div class="ee-stat-box-icon pending">
+        <div class="dm-kpi pending">
+            <div class="dm-kpi-ico pending">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                 </svg>
             </div>
             <div>
-                <div class="ee-stat-box-value">{{ $demandes->where('statut', 'en_attente')->count() }}</div>
-                <div class="ee-stat-box-label">En attente</div>
+                <div class="dm-kpi-val">{{ $pending }}</div>
+                <div class="dm-kpi-lbl">En attente</div>
             </div>
         </div>
-        <div class="ee-stat-box">
-            <div class="ee-stat-box-icon approved">
+        <div class="dm-kpi approved">
+            <div class="dm-kpi-ico approved">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
             </div>
             <div>
-                <div class="ee-stat-box-value">{{ $demandes->where('statut', 'approuve')->count() }}</div>
-                <div class="ee-stat-box-label">Approuv&eacute;es</div>
+                <div class="dm-kpi-val">{{ $approved }}</div>
+                <div class="dm-kpi-lbl">Approuvées</div>
             </div>
         </div>
-        <div class="ee-stat-box">
-            <div class="ee-stat-box-icon rejected">
+        <div class="dm-kpi rejected">
+            <div class="dm-kpi-ico rejected">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
                 </svg>
             </div>
             <div>
-                <div class="ee-stat-box-value">{{ $demandes->where('statut', 'refuse')->count() }}</div>
-                <div class="ee-stat-box-label">Refus&eacute;es</div>
+                <div class="dm-kpi-val">{{ $rejected }}</div>
+                <div class="dm-kpi-lbl">Refusées</div>
             </div>
         </div>
     </div>
 
-    <!-- New Request Card -->
-    <div class="ee-new-request-card animate-fade-in" style="animation-delay: 0.1s;">
-        <div class="ee-new-request-header">
-            <h2 class="ee-new-request-title">Nouvelle demande</h2>
+    {{-- ── New Request ── --}}
+    <div class="dm-new">
+        <div class="dm-new-head">
+            <div class="dm-new-head-ico">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+            </div>
+            <span class="dm-new-title">Nouvelle demande</span>
         </div>
-        <div class="ee-request-types-grid">
-            <a href="{{ route('espace-employe.conges') }}" class="ee-request-type-btn">
-                <div class="ee-request-type-icon purple">
+
+        <div class="dm-types-grid">
+            {{-- Congé --}}
+            <a href="{{ route('espace-employe.conges') }}" class="dm-type-btn" style="--dm-color: #7C3AED;">
+                <div class="dm-type-ico" style="background: linear-gradient(135deg, #7C3AED, #6D28D9);">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
                     </svg>
                 </div>
-                <span class="ee-request-type-label">Cong&eacute; / Absence</span>
+                <span class="dm-type-lbl">Congé / Absence</span>
+                <span class="dm-type-sub">Demande de congé ou signaler une absence</span>
             </a>
-            <button class="ee-request-type-btn" onclick="alert('Fonctionnalit&eacute; bient&ocirc;t disponible.')">
-                <div class="ee-request-type-icon blue">
+
+            {{-- Attestation --}}
+            <a href="{{ route('espace-employe.attestations') }}" class="dm-type-btn" style="--dm-color: var(--ind-400);">
+                <div class="dm-type-ico" style="background: linear-gradient(135deg, var(--ind-500), var(--ind-600));">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                 </div>
-                <span class="ee-request-type-label">Attestation</span>
+                <span class="dm-type-lbl">Attestation</span>
+                <span class="dm-type-sub">Travail, salaire ou présence</span>
+            </a>
+
+            {{-- Avance sur salaire --}}
+            <button class="dm-type-btn" style="--dm-color: var(--teal-400);"
+                    onclick="alert('Fonctionnalité bientôt disponible.')">
+                <div class="dm-type-ico" style="background: linear-gradient(135deg, var(--teal-400), var(--teal-300));">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                </div>
+                <span class="dm-type-lbl">Avance sur salaire</span>
+                <span class="dm-type-sub">Bientôt disponible</span>
             </button>
-            <button class="ee-request-type-btn" onclick="alert('Fonctionnalit&eacute; bient&ocirc;t disponible.')">
-                <div class="ee-request-type-icon green">
+
+            {{-- Autre --}}
+            <button class="dm-type-btn" style="--dm-color: var(--amber-400);"
+                    onclick="alert('Fonctionnalité bientôt disponible.')">
+                <div class="dm-type-ico" style="background: linear-gradient(135deg, var(--amber-400), #D97706);">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="12" y1="1" x2="12" y2="23"></line>
-                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="12" y1="18" x2="12" y2="12"/>
+                        <line x1="9" y1="15" x2="15" y2="15"/>
                     </svg>
                 </div>
-                <span class="ee-request-type-label">Avance sur salaire</span>
-            </button>
-            <button class="ee-request-type-btn" onclick="alert('Fonctionnalit&eacute; bient&ocirc;t disponible.')">
-                <div class="ee-request-type-icon orange">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-                <span class="ee-request-type-label">Autre demande</span>
+                <span class="dm-type-lbl">Autre demande</span>
+                <span class="dm-type-sub">Demande spécifique</span>
             </button>
         </div>
     </div>
 
-    <!-- Demandes List -->
-    <div class="ee-demandes-card animate-fade-in" style="animation-delay: 0.2s;">
-        <div class="ee-demandes-header">
-            <h2 class="ee-demandes-title">Historique des demandes</h2>
-            <div class="ee-demandes-filters">
-                <button class="ee-filter-pill active" data-filter="all">Toutes</button>
-                <button class="ee-filter-pill" data-filter="en_attente">En attente</button>
-                <button class="ee-filter-pill" data-filter="approuve">Approuv&eacute;es</button>
-                <button class="ee-filter-pill" data-filter="refuse">Refus&eacute;es</button>
+    {{-- ── History ── --}}
+    <div class="dm-history">
+        <div class="dm-history-head">
+            <div class="dm-history-title">
+                <div class="dm-section-ico">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                Historique des demandes
+            </div>
+            <div class="dm-filters">
+                <button class="dm-pill active" data-filter="all">Toutes</button>
+                <button class="dm-pill" data-filter="en_attente">En attente</button>
+                <button class="dm-pill" data-filter="approuve">Approuvées</button>
+                <button class="dm-pill" data-filter="refuse">Refusées</button>
             </div>
         </div>
 
-        <div class="ee-demandes-list">
+        <div class="dm-list">
             @if($demandes->count() > 0)
                 @foreach($demandes as $demande)
-                    <div class="ee-demande-item" data-statut="{{ $demande->statut }}">
-                        <div class="ee-demande-icon" style="background: {{ $demande->typeConge->couleur ?? '#7c3aed' }}; color: white;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                            </svg>
-                        </div>
-                        <div class="ee-demande-content">
-                            <div class="ee-demande-type">{{ $demande->typeConge->nom ?? 'Cong&eacute;' }} &mdash; {{ $demande->nombre_jours }} {{ $demande->nombre_jours > 1 ? 'jours' : 'jour' }}</div>
-                            <div class="ee-demande-date">{{ $demande->date_debut->format('d/m/Y') }} &rarr; {{ $demande->date_fin->format('d/m/Y') }} &middot; {{ $demande->created_at->diffForHumans() }}</div>
-                        </div>
-                        @switch($demande->statut)
-                            @case('en_attente')
-                                <div class="ee-demande-status pending">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    En attente
-                                </div>
-                                @break
-                            @case('approuve')
-                                <div class="ee-demande-status approved">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                    Approuv&eacute;
-                                </div>
-                                @break
-                            @case('refuse')
-                                <div class="ee-demande-status rejected">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                    Refus&eacute;
-                                </div>
-                                @break
-                            @case('annule')
-                                <div class="ee-demande-status" style="background: #f1f5f9; color: #64748b;">
-                                    Annul&eacute;
-                                </div>
-                                @break
-                        @endswitch
-                    </div>
-                @endforeach
-            @else
-                <div class="ee-empty-state">
-                    <div class="ee-empty-icon">
+                <div class="dm-item" data-statut="{{ $demande->statut }}">
+                    <div class="dm-item-ico" style="background: {{ $demande->typeConge->couleur ?? 'var(--ind-500)' }};">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
                         </svg>
                     </div>
-                    <h3 class="ee-empty-title">Aucune demande</h3>
-                    <p class="ee-empty-text">Vous n'avez pas encore effectu&eacute; de demande.</p>
+                    <div class="dm-item-body">
+                        <p class="dm-item-type">
+                            {{ $demande->typeConge->nom ?? 'Congé' }}
+                            &mdash;
+                            {{ $demande->nombre_jours }}&thinsp;{{ $demande->nombre_jours > 1 ? 'jours' : 'jour' }}
+                        </p>
+                        <span class="dm-item-meta">
+                            {{ $demande->date_debut->format('d/m/Y') }} → {{ $demande->date_fin->format('d/m/Y') }}
+                            <span class="sep">·</span>
+                            {{ $demande->created_at->diffForHumans() }}
+                        </span>
+                    </div>
+
+                    @switch($demande->statut)
+                        @case('en_attente')
+                            <span class="dm-badge pending">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                En attente
+                            </span>
+                            @break
+                        @case('approuve')
+                            <span class="dm-badge approved">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                Approuvé
+                            </span>
+                            @break
+                        @case('refuse')
+                            <span class="dm-badge rejected">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                Refusé
+                            </span>
+                            @break
+                        @case('annule')
+                            <span class="dm-badge cancelled">Annulé</span>
+                            @break
+                    @endswitch
+                </div>
+                @endforeach
+            @else
+                <div class="dm-empty">
+                    <div class="dm-empty-ico">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <h3>Aucune demande</h3>
+                    <p>Vous n'avez pas encore effectué de demande.</p>
                 </div>
             @endif
         </div>
     </div>
-</div>
 
+</div>
+@endsection
+
+@section('scripts')
 <script>
-// Filter pills
-document.querySelectorAll('.ee-filter-pill').forEach(pill => {
-    pill.addEventListener('click', function() {
-        document.querySelectorAll('.ee-filter-pill').forEach(p => p.classList.remove('active'));
+document.querySelectorAll('.dm-pill').forEach(function (pill) {
+    pill.addEventListener('click', function () {
+        document.querySelectorAll('.dm-pill').forEach(function (p) { p.classList.remove('active'); });
         this.classList.add('active');
-        const filter = this.dataset.filter;
-        document.querySelectorAll('.ee-demande-item').forEach(item => {
-            if (filter === 'all' || item.dataset.statut === filter) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
+        var filter = this.dataset.filter;
+        document.querySelectorAll('.dm-item').forEach(function (item) {
+            item.style.display = (filter === 'all' || item.dataset.statut === filter) ? '' : 'none';
         });
     });
 });

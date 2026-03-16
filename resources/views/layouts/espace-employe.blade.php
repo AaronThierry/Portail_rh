@@ -121,29 +121,6 @@
     }
     html.sb-open .ee-main { margin-left: var(--sb-expanded); }
 
-    /* ── Toggle button (right edge) ── */
-    .ee-sb-toggle {
-        position: absolute;
-        right: -13px;
-        top: calc(var(--header-h) + 20px);
-        width: 26px; height: 26px;
-        background: var(--n-0);
-        border: 1.5px solid var(--n-200);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: var(--shadow);
-        z-index: 102;
-        color: var(--ind-500);
-        transition: background .15s, border-color .15s, box-shadow .15s;
-        flex-shrink: 0;
-    }
-    .ee-sb-toggle:hover { background: var(--ind-50); border-color: var(--ind-300); box-shadow: var(--shadow-md); }
-    .ee-sb-toggle svg { width: 12px; height: 12px; stroke-width: 2.5; transition: transform .28s cubic-bezier(.4,0,.2,1); }
-    html.sb-open .ee-sb-toggle svg { transform: rotate(180deg); }
-
     /* ── Brand area ── */
     .ee-sidebar-brand {
         width: 100%;
@@ -187,7 +164,7 @@
 
     .ee-brand-name {
         font-family: var(--font-d);
-        font-size: .9375rem;
+        font-size: 1.0625rem;
         font-weight: 700;
         color: #fff;
         letter-spacing: -.02em;
@@ -196,9 +173,9 @@
     .ee-brand-name span { color: var(--teal-300); }
     .ee-brand-label {
         display: block;
-        font-size: .6rem;
+        font-size: .65rem;
         font-weight: 500;
-        color: rgba(255,255,255,.35);
+        color: rgba(255,255,255,.5);
         letter-spacing: .06em;
         text-transform: uppercase;
     }
@@ -242,16 +219,16 @@
     html.sb-open .ee-user-details { max-width: 140px; opacity: 1; }
 
     .ee-user-name {
-        font-size: .8rem;
+        font-size: .875rem;
         font-weight: 600;
-        color: rgba(255,255,255,.88);
+        color: rgba(255,255,255,.95);
         line-height: 1.2;
         overflow: hidden;
         text-overflow: ellipsis;
     }
     .ee-user-role {
-        font-size: .68rem;
-        color: rgba(255,255,255,.38);
+        font-size: .72rem;
+        color: rgba(255,255,255,.55);
         overflow: hidden;
         text-overflow: ellipsis;
         margin-top: 1px;
@@ -309,7 +286,7 @@
         transition: max-width .28s cubic-bezier(.4,0,.2,1), opacity .18s .06s;
     }
     html.sb-open .nav-title-line { width: 0; opacity: 0; }
-    html.sb-open .nav-title-text { max-width: 160px; opacity: 1; }
+    html.sb-open .nav-title-text { max-width: 160px; opacity: 1; font-size: .65rem; }
     html.sb-open .ee-nav-title { justify-content: flex-start; margin: 6px 2px 2px; }
 
     /* ── Nav links ── */
@@ -321,7 +298,7 @@
         align-items: center;
         justify-content: center;
         gap: 0;
-        color: rgba(255,255,255,.32);
+        color: rgba(255,255,255,.5);
         text-decoration: none;
         transition: background .14s, color .14s, box-shadow .14s,
                     width .28s cubic-bezier(.4,0,.2,1), height .28s,
@@ -331,14 +308,14 @@
         overflow: hidden;
     }
     .ee-nav-link svg {
-        width: 18px; height: 18px;
+        width: 19px; height: 19px;
         stroke-width: 1.8;
         flex-shrink: 0;
     }
-    .ee-nav-link:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.72); }
+    .ee-nav-link:hover { background: rgba(255,255,255,.09); color: rgba(255,255,255,.9); }
     .ee-nav-link.active {
-        background: rgba(10,175,162,.13);
-        color: var(--teal-300);
+        background: rgba(10,175,162,.16);
+        color: #5EEAD4;
         box-shadow: inset 2px 0 0 var(--teal-400);
     }
 
@@ -348,7 +325,7 @@
         opacity: 0;
         overflow: hidden;
         white-space: nowrap;
-        font-size: .8125rem;
+        font-size: .875rem;
         font-weight: 500;
         color: inherit;
         transition: max-width .28s cubic-bezier(.4,0,.2,1), opacity .18s .06s;
@@ -427,9 +404,9 @@
         overflow: hidden;
         flex-shrink: 0;
     }
-    .ee-btn-icon svg { width: 17px; height: 17px; stroke-width: 1.8; flex-shrink: 0; }
-    .ee-btn-icon:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.65); }
-    .ee-btn-icon.danger:hover { background: rgba(251,113,133,.12); color: var(--rose-400); }
+    .ee-btn-icon svg { width: 18px; height: 18px; stroke-width: 1.8; flex-shrink: 0; }
+    .ee-btn-icon:hover { background: rgba(255,255,255,.09); color: rgba(255,255,255,.9); }
+    .ee-btn-icon.danger:hover { background: rgba(251,113,133,.14); color: var(--rose-400); }
 
     /* Footer icon label */
     .btn-icon-label {
@@ -437,7 +414,7 @@
         opacity: 0;
         overflow: hidden;
         white-space: nowrap;
-        font-size: .8125rem;
+        font-size: .875rem;
         font-weight: 500;
         color: inherit;
         transition: max-width .28s cubic-bezier(.4,0,.2,1), opacity .18s .06s;
@@ -656,7 +633,6 @@
         .ee-main { margin-left: 0 !important; }
         .ee-mobile-toggle { display: flex; }
         .ee-content { padding: 1rem; }
-        .ee-sb-toggle { display: none; }
     }
     @media (max-width: 640px) {
         .ee-header { padding: 0 1rem; }
@@ -676,13 +652,6 @@
 
     <!-- ════════════════ SIDEBAR ════════════════ -->
     <aside class="ee-sidebar" id="eeSidebar">
-
-        <!-- Toggle button (right edge) -->
-        <button class="ee-sb-toggle" id="eeSbToggle" title="Développer / Réduire">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"/>
-            </svg>
-        </button>
 
         <!-- Brand -->
         <div class="ee-sidebar-brand">
@@ -928,31 +897,16 @@
 (function () {
     'use strict';
 
-    /* ── Sidebar deux modes (collapsed ↔ expanded) ── */
-    var html      = document.documentElement;
-    var toggleBtn = document.getElementById('eeSbToggle');
-    var STORAGE_KEY = 'rh_sidebar_open';
+    /* ── Sidebar hover : expand au survol, replie à la sortie ── */
+    var html = document.documentElement;
+    var sb   = document.getElementById('eeSidebar');
 
-    function applyState(open) {
-        if (open) {
+    if (sb) {
+        sb.addEventListener('mouseenter', function () {
             html.classList.add('sb-open');
-        } else {
+        });
+        sb.addEventListener('mouseleave', function () {
             html.classList.remove('sb-open');
-        }
-        if (toggleBtn) {
-            toggleBtn.title = open ? 'Réduire le menu' : 'Développer le menu';
-        }
-    }
-
-    /* Restore from localStorage */
-    var savedState = localStorage.getItem(STORAGE_KEY);
-    applyState(savedState === '1');
-
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', function () {
-            var isOpen = html.classList.contains('sb-open');
-            applyState(!isOpen);
-            localStorage.setItem(STORAGE_KEY, !isOpen ? '1' : '0');
         });
     }
 

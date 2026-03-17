@@ -847,12 +847,11 @@
                             <div class="ast-bubble-avatar">IA</div>
                             <div class="ast-bubble-content">Bonjour {{ $personnel->prenoms ?? 'vous' }} ! Je suis votre assistant RH. Comment puis-je vous aider aujourd'hui ? Posez-moi votre question et je ferai de mon mieux pour y repondre. Si je ne peux pas resoudre votre probleme, je vous aiderai a créer un ticket de support.</div>
                         </div>
-                    </div>
-
-                    {{-- Typing indicator --}}
-                    <div class="ast-bubble bot ast-typing" id="typingIndicator" style="padding:.5rem 1.25rem;">
-                        <div class="ast-bubble-avatar">IA</div>
-                        <div class="ast-bubble-content"><div class="ast-dots"><span></span><span></span><span></span></div></div>
+                        {{-- Typing indicator — DOIT être dans chatMessages pour insertBefore --}}
+                        <div class="ast-bubble bot ast-typing" id="typingIndicator">
+                            <div class="ast-bubble-avatar">IA</div>
+                            <div class="ast-bubble-content"><div class="ast-dots"><span></span><span></span><span></span></div></div>
+                        </div>
                     </div>
 
                     {{-- Suggestion de ticket --}}

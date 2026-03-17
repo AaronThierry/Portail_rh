@@ -7,8 +7,8 @@
 <style>
 :root {
     /* RH+ Brand Colors */
-    --md-primary: #4A90D9;
-    --md-primary-dark: #2E6BB3;
+    --md-primary: #6366f1;
+    --md-primary-dark: #4338ca;
     --md-accent: #F5A623;
     --md-bg: #f8fafc;
     --md-card: #ffffff;
@@ -19,7 +19,7 @@
 
 .dark {
     --md-primary: #5BA3E8;
-    --md-primary-dark: #4A90D9;
+    --md-primary-dark: #6366f1;
     --md-bg: #0f172a;
     --md-card: #1e293b;
     --md-text: #f1f5f9;
@@ -51,7 +51,7 @@
     width: 100px;
     height: 100px;
     margin: 0 auto 1.5rem;
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.1) 0%, rgba(46, 107, 179, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(46, 107, 179, 0.1) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -98,18 +98,18 @@
     align-items: center;
     gap: 0.5rem;
     transition: all 0.2s;
-    box-shadow: 0 4px 15px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(74, 144, 217, 0.4);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
     color: white;
 }
 
 .btn-secondary {
     padding: 0.875rem 1.5rem;
-    background: rgba(74, 144, 217, 0.1);
+    background: rgba(99, 102, 241, 0.1);
     color: var(--md-primary);
     border: none;
     border-radius: 12px;
@@ -123,7 +123,7 @@
 }
 
 .btn-secondary:hover {
-    background: rgba(74, 144, 217, 0.15);
+    background: rgba(99, 102, 241, 0.15);
 }
 
 .help-text {

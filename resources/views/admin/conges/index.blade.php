@@ -18,9 +18,9 @@
    VARIABLES - Charte RH+
    ======================================== */
 :root {
-    --cg-primary: #4A90D9;
-    --cg-primary-dark: #2E6BB3;
-    --cg-primary-light: #E8F4FD;
+    --cg-primary: #6366f1;
+    --cg-primary-dark: #4338ca;
+    --cg-primary-light: #eef2ff;
     --cg-accent: #FF9500;
     --cg-accent-light: #FFF7ED;
     --cg-success: #22C55E;
@@ -50,7 +50,7 @@
     --cg-text-muted: #64748b;
     --cg-shadow: rgba(0, 0, 0, 0.3);
     --cg-shadow-lg: rgba(0, 0, 0, 0.5);
-    --cg-primary-light: rgba(74, 144, 217, 0.15);
+    --cg-primary-light: rgba(99, 102, 241, 0.15);
     --cg-accent-light: rgba(255, 149, 0, 0.15);
     --cg-success-light: rgba(34, 197, 94, 0.15);
     --cg-danger-light: rgba(239, 68, 68, 0.15);
@@ -715,7 +715,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="cg-type-badge" style="background: {{ $conge->typeConge->couleur ?? '#4A90D9' }}20; color: {{ $conge->typeConge->couleur ?? '#4A90D9' }};">
+                                    <span class="cg-type-badge" style="background: {{ $conge->typeConge->couleur ?? '#6366f1' }}20; color: {{ $conge->typeConge->couleur ?? '#6366f1' }};">
                                         {{ $conge->typeConge->nom ?? 'Cong&eacute;' }}
                                     </span>
                                     @if($conge->conge_parent_id)

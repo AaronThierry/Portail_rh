@@ -12,8 +12,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --primary: #4A90D9;
-            --primary-dark: #2E6BB3;
+            --primary: #6366f1;
+            --primary-dark: #4338ca;
             --primary-light: #E8F4FD;
             --accent: #FF9500;
             --success: #22C55E;
@@ -110,13 +110,13 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 2rem;
-            box-shadow: 0 20px 60px rgba(74, 144, 217, 0.4);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4);
             animation: logo-pulse 3s ease-in-out infinite;
         }
 
         @keyframes logo-pulse {
-            0%, 100% { box-shadow: 0 20px 60px rgba(74, 144, 217, 0.4); }
-            50% { box-shadow: 0 25px 80px rgba(74, 144, 217, 0.6); }
+            0%, 100% { box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 25px 80px rgba(99, 102, 241, 0.6); }
         }
 
         .brand-logo svg {
@@ -355,7 +355,7 @@
         .form-input:focus {
             border-color: var(--primary);
             background: white;
-            box-shadow: 0 0 0 4px rgba(74, 144, 217, 0.1);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
 
         .form-input:focus + .input-icon,
@@ -448,7 +448,7 @@
             justify-content: center;
             gap: 0.625rem;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 24px rgba(74, 144, 217, 0.35);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
             position: relative;
             overflow: hidden;
         }
@@ -468,7 +468,7 @@
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(74, 144, 217, 0.45);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.45);
         }
 
         .btn-submit:active {

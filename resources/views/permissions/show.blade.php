@@ -6,7 +6,7 @@
 @section('content')
 <div style="padding: 1.5rem;">
     <div style="margin-bottom: 1rem;">
-        <a href="{{ route('admin.permissions.index') }}" style="color: #4A90D9; text-decoration: none;">&larr; Retour aux permissions</a>
+        <a href="{{ route('admin.permissions.index') }}" style="color: #6366f1; text-decoration: none;">&larr; Retour aux permissions</a>
     </div>
 
     <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 2rem; margin-bottom: 1.5rem;">

@@ -10,8 +10,8 @@
    VARIABLES - Charte RH+ Premium
    ======================================== */
 :root {
-    --de-primary: #4A90D9;
-    --de-primary-dark: #2E6BB3;
+    --de-primary: #6366f1;
+    --de-primary-dark: #4338ca;
     --de-primary-light: #E8F4FD;
     --de-accent: #FF9500;
     --de-accent-light: #FFF7ED;
@@ -44,7 +44,7 @@
     --de-text-primary: #f1f5f9;
     --de-text-secondary: #94a3b8;
     --de-text-muted: #64748b;
-    --de-primary-light: rgba(74, 144, 217, 0.15);
+    --de-primary-light: rgba(99, 102, 241, 0.15);
     --de-success-light: rgba(34, 197, 94, 0.15);
     --de-danger-light: rgba(239, 68, 68, 0.15);
 }
@@ -124,7 +124,7 @@
     justify-content: center;
     background: linear-gradient(135deg, var(--de-primary) 0%, var(--de-primary-dark) 100%);
     color: white;
-    box-shadow: 0 8px 20px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
     flex-shrink: 0;
 }
 
@@ -221,7 +221,7 @@
 .de-card-header {
     padding: 1.25rem 1.5rem;
     border-bottom: 1px solid var(--de-card-border);
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.03) 0%, transparent 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, transparent 100%);
 }
 
 .de-card-title {
@@ -449,12 +449,12 @@
 .de-btn-primary {
     background: linear-gradient(135deg, var(--de-primary) 0%, var(--de-primary-dark) 100%);
     color: white;
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .de-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(74, 144, 217, 0.4);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
 .de-btn-secondary {

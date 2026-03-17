@@ -91,9 +91,9 @@
     height: 2px;
     background: linear-gradient(90deg,
         transparent 0%,
-        var(--primary, #4A90D9) 20%,
+        var(--primary, #6366f1) 20%,
         #FF9500 50%,
-        var(--primary, #4A90D9) 80%,
+        var(--primary, #6366f1) 80%,
         transparent 100%);
     opacity: 0.8;
 }
@@ -127,7 +127,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    background: linear-gradient(135deg, var(--primary, #6366f1) 0%, var(--primary-dark, #4338ca) 100%);
     border-radius: 8px;
     color: white;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -156,7 +156,7 @@
 
 .brand-name {
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    background: linear-gradient(135deg, var(--primary, #6366f1) 0%, var(--primary-dark, #4338ca) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -197,7 +197,7 @@
 }
 
 .footer-link:hover {
-    color: var(--primary, #4A90D9);
+    color: var(--primary, #6366f1);
     background: var(--primary-light, #E8F4FD);
 }
 
@@ -214,7 +214,7 @@
     left: 50%;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    background: linear-gradient(90deg, var(--primary, #6366f1) 0%, var(--primary-dark, #4338ca) 100%);
     border-radius: 1px;
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     transform: translateX(-50%);
@@ -306,10 +306,10 @@
 }
 
 .footer-version-badge:hover {
-    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
-    border-color: var(--primary, #4A90D9);
+    background: linear-gradient(135deg, var(--primary, #6366f1) 0%, var(--primary-dark, #4338ca) 100%);
+    border-color: var(--primary, #6366f1);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.25);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
 .footer-version-badge:hover .version-label,
@@ -329,7 +329,7 @@
 .version-number {
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--primary, #4A90D9);
+    color: var(--primary, #6366f1);
     transition: color 0.3s;
 }
 
@@ -339,7 +339,7 @@
 }
 
 .dark .footer-version-badge:hover {
-    background: linear-gradient(135deg, var(--primary, #5BA3E8) 0%, var(--primary-dark, #4A90D9) 100%);
+    background: linear-gradient(135deg, var(--primary, #5BA3E8) 0%, var(--primary-dark, #6366f1) 100%);
 }
 
 /* Responsive Styles */

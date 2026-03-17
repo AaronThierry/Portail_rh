@@ -8,9 +8,9 @@
 @section('styles')
 <style>
 :root {
-    --bp-primary: #4A90D9;
-    --bp-primary-dark: #2E6BB3;
-    --bp-primary-light: #E8F4FD;
+    --bp-primary: #6366f1;
+    --bp-primary-dark: #4338ca;
+    --bp-primary-light: #eef2ff;
     --bp-success: #22C55E;
     --bp-success-light: #F0FDF4;
     --bp-danger: #EF4444;
@@ -31,7 +31,7 @@
     --bp-text-secondary: #94a3b8;
     --bp-text-muted: #64748b;
     --bp-shadow: rgba(0, 0, 0, 0.3);
-    --bp-primary-light: rgba(74, 144, 217, 0.15);
+    --bp-primary-light: rgba(99, 102, 241, 0.15);
     --bp-success-light: rgba(34, 197, 94, 0.15);
 }
 

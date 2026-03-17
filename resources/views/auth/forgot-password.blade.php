@@ -14,8 +14,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --primary: #4A90D9;
-            --primary-dark: #2E6BB3;
+            --primary: #6366f1;
+            --primary-dark: #4338ca;
             --primary-light: #E8F4FD;
             --accent: #FF9500;
             --success: #22C55E;

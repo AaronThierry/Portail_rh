@@ -298,7 +298,7 @@
 /* Card Header */
 .twofa-card-header {
     position: relative;
-    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    background: linear-gradient(135deg, var(--primary, #6366f1) 0%, var(--primary-dark, #4338ca) 100%);
     padding: 2rem;
     overflow: hidden;
 }
@@ -371,7 +371,7 @@
 .section-title svg {
     width: 24px;
     height: 24px;
-    color: var(--primary, #4A90D9);
+    color: var(--primary, #6366f1);
 }
 
 .steps-grid {
@@ -393,19 +393,19 @@
     padding: 1.25rem;
     background: var(--primary-light, #E8F4FD);
     border-radius: 16px;
-    border: 1px solid rgba(74, 144, 217, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.1);
     transition: all 0.3s ease;
 }
 
 .step-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(74, 144, 217, 0.15);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
 }
 
 .step-number {
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    background: linear-gradient(135deg, var(--primary, #6366f1) 0%, var(--primary-dark, #4338ca) 100%);
     color: white;
     border-radius: 10px;
     display: flex;
@@ -414,7 +414,7 @@
     font-size: 1rem;
     font-weight: 700;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .step-content h4 {
@@ -450,7 +450,7 @@
     transform: translate(-50%, -50%);
     width: 280px;
     height: 280px;
-    background: radial-gradient(circle, rgba(74, 144, 217, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
     border-radius: 50%;
     animation: pulse-glow 2s ease-in-out infinite;
 }
@@ -467,7 +467,7 @@
     background: white;
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    border: 3px solid var(--primary, #4A90D9);
+    border: 3px solid var(--primary, #6366f1);
 }
 
 .qr-code svg {
@@ -489,7 +489,7 @@
 .qr-scan-hint svg {
     width: 18px;
     height: 18px;
-    color: var(--primary, #4A90D9);
+    color: var(--primary, #6366f1);
 }
 
 /* Secret Section */
@@ -540,7 +540,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 1rem;
-    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    background: linear-gradient(135deg, var(--primary, #6366f1) 0%, var(--primary-dark, #4338ca) 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -553,7 +553,7 @@
 
 .copy-btn:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.4);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
 .copy-btn.copied {
@@ -614,7 +614,7 @@
 .form-header svg {
     width: 22px;
     height: 22px;
-    color: var(--primary, #4A90D9);
+    color: var(--primary, #6366f1);
 }
 
 .otp-input-container {
@@ -640,9 +640,9 @@
 }
 
 .otp-input:focus {
-    border-color: var(--primary, #4A90D9);
+    border-color: var(--primary, #6366f1);
     background: white;
-    box-shadow: 0 0 0 4px rgba(74, 144, 217, 0.15);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
 .otp-input::placeholder {
@@ -700,14 +700,14 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary, #4A90D9) 0%, var(--primary-dark, #2E6BB3) 100%);
+    background: linear-gradient(135deg, var(--primary, #6366f1) 0%, var(--primary-dark, #4338ca) 100%);
     color: white;
-    box-shadow: 0 4px 14px rgba(74, 144, 217, 0.35);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(74, 144, 217, 0.45);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.45);
 }
 
 .btn-secondary {
@@ -882,8 +882,8 @@
 }
 
 .dark .step-card {
-    background: rgba(74, 144, 217, 0.1);
-    border-color: rgba(74, 144, 217, 0.2);
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.2);
 }
 
 .dark .qr-wrapper {

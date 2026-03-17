@@ -24,10 +24,10 @@
   --text-light: #94a3b8;
 
   /* Brand - RH+ Colors */
-  --primary: #4A90D9;
-  --primary-hover: #3A7BC8;
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
   --primary-light: #5BA3E8;
-  --primary-dark: #2E6BB3;
+  --primary-dark: #4338ca;
   --accent: #F5A623;
 
   /* Status Colors - RH+ */
@@ -37,8 +37,8 @@
   --danger-light: #fee2e2;
   --warning: #E67E22;
   --warning-light: #fef3c7;
-  --info: #4A90D9;
-  --info-light: #E8F4FD;
+  --info: #6366f1;
+  --info-light: #eef2ff;
 
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

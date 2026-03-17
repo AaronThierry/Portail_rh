@@ -7,9 +7,9 @@
 
     {{-- Breadcrumb --}}
     <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8125rem;color:var(--text-secondary,#64748b);margin-bottom:1.5rem;">
-        <a href="{{ route('admin.entreprises.index') }}" style="color:var(--primary,#4A90D9);text-decoration:none;font-weight:500;">Entreprises</a>
+        <a href="{{ route('admin.entreprises.index') }}" style="color:var(--primary,#6366f1);text-decoration:none;font-weight:500;">Entreprises</a>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <a href="{{ route('admin.entreprises.show', $entreprise) }}" style="color:var(--primary,#4A90D9);text-decoration:none;font-weight:500;">{{ $entreprise->nom }}</a>
+        <a href="{{ route('admin.entreprises.show', $entreprise) }}" style="color:var(--primary,#6366f1);text-decoration:none;font-weight:500;">{{ $entreprise->nom }}</a>
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         <span>Créer compte Chef d'Entreprise</span>
     </div>

@@ -270,7 +270,7 @@
 }
 
 .badge-info {
-    background: linear-gradient(135deg, #4A90D9 0%, #2E6BB3 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
     color: #ffffff;
 }
 
@@ -1725,7 +1725,7 @@ select.form-input-compact:hover {
 }
 
 .card-contract .card-icon-modern {
-    background: linear-gradient(135deg, #4A90D9 0%, #2E6BB3 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
@@ -1959,7 +1959,7 @@ select.form-input-compact:hover {
 }
 
 .dark .card-contract .card-icon-modern {
-    background: linear-gradient(135deg, #5BA3E8 0%, #4A90D9 100%);
+    background: linear-gradient(135deg, #5BA3E8 0%, #6366f1 100%);
 }
 
 .dark .info-item-modern:hover {

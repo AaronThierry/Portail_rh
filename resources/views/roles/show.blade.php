@@ -6,7 +6,7 @@
 @section('content')
 <div style="padding: 1.5rem;">
     <div style="margin-bottom: 1rem;">
-        <a href="{{ route('admin.roles.index') }}" style="color: #4A90D9; text-decoration: none;">&larr; Retour aux roles</a>
+        <a href="{{ route('admin.roles.index') }}" style="color: #6366f1; text-decoration: none;">&larr; Retour aux roles</a>
     </div>
 
     <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 2rem; margin-bottom: 1.5rem;">
@@ -18,7 +18,7 @@
         @if($role->permissions->count() > 0)
             <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                 @foreach($role->permissions as $permission)
-                    <span style="display: inline-block; padding: 0.35rem 0.75rem; background: #E8F4FD; color: #4A90D9; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">
+                    <span style="display: inline-block; padding: 0.35rem 0.75rem; background: #E8F4FD; color: #6366f1; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">
                         {{ $permission->name }}
                     </span>
                 @endforeach

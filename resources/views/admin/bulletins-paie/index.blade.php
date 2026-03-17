@@ -20,9 +20,9 @@
    VARIABLES - Charte RH+
    ======================================== */
 :root {
-    --bp-primary: #4A90D9;
-    --bp-primary-dark: #2E6BB3;
-    --bp-primary-light: #E8F4FD;
+    --bp-primary: #6366f1;
+    --bp-primary-dark: #4338ca;
+    --bp-primary-light: #eef2ff;
     --bp-accent: #FF9500;
     --bp-accent-light: #FFF7ED;
     --bp-success: #22C55E;
@@ -48,7 +48,7 @@
     --bp-text-muted: #64748b;
     --bp-shadow: rgba(0, 0, 0, 0.3);
     --bp-shadow-lg: rgba(0, 0, 0, 0.5);
-    --bp-primary-light: rgba(74, 144, 217, 0.15);
+    --bp-primary-light: rgba(99, 102, 241, 0.15);
     --bp-accent-light: rgba(255, 149, 0, 0.15);
     --bp-success-light: rgba(34, 197, 94, 0.15);
 }
@@ -567,12 +567,12 @@
 .bp-btn-primary {
     background: linear-gradient(135deg, var(--bp-primary) 0%, var(--bp-primary-dark) 100%);
     color: white;
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .bp-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(74, 144, 217, 0.4);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
 .bp-btn-secondary {

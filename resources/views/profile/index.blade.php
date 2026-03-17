@@ -358,8 +358,8 @@
 <style>
 /* ==================== PROFILE PAGE PRO DESIGN ==================== */
 :root {
-    --primary: #4A90D9;
-    --primary-dark: #2E6BB3;
+    --primary: #6366f1;
+    --primary-dark: #4338ca;
     --success: #22C55E;
     --warning: #F59E0B;
     --danger: #EF4444;
@@ -509,7 +509,7 @@
 }
 .tab-btn svg { width: 16px; height: 16px; }
 .tab-btn:hover { background: var(--sidebar-hover, #F3F4F6); color: var(--text-primary, #374151); }
-.tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(74,144,217,0.3); }
+.tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(99,102,241,0.3); }
 
 /* Tab Contents */
 .tab-content { display: none; animation: fadeIn 0.3s ease; }
@@ -543,7 +543,7 @@
     flex-shrink: 0;
 }
 .card-icon svg { width: 18px; height: 18px; }
-.card-icon.blue { background: rgba(74,144,217,0.1); color: var(--primary); }
+.card-icon.blue { background: rgba(99,102,241,0.1); color: var(--primary); }
 .card-icon.purple { background: rgba(139,92,246,0.1); color: var(--purple); }
 .card-icon.green { background: rgba(34,197,94,0.1); color: var(--success); }
 .card-icon.orange { background: rgba(245,158,11,0.1); color: var(--warning); }
@@ -671,7 +671,7 @@
     background: var(--card-bg, #fff);
     transition: all 0.2s;
 }
-.form-field input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(74,144,217,0.1); }
+.form-field input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
 .password-field { position: relative; }
 .password-field input { padding-right: 2.25rem; }
 .toggle-pwd {
@@ -704,8 +704,8 @@
     transition: all 0.2s;
 }
 .btn-save svg, .btn-primary svg, .btn-success svg, .btn-warning svg, .btn-danger svg, .btn-outline-danger svg { width: 14px; height: 14px; }
-.btn-save, .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 2px 8px rgba(74,144,217,0.3); }
-.btn-save:hover, .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(74,144,217,0.35); }
+.btn-save, .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 2px 8px rgba(99,102,241,0.3); }
+.btn-save:hover, .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.35); }
 .btn-success { background: linear-gradient(135deg, var(--success), #16A34A); color: white; box-shadow: 0 2px 8px rgba(34,197,94,0.3); }
 .btn-success:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(34,197,94,0.35); }
 .btn-warning { background: linear-gradient(135deg, var(--warning), #D97706); color: white; box-shadow: 0 2px 8px rgba(245,158,11,0.3); }
@@ -737,7 +737,7 @@
     background: var(--sidebar-hover, #F8FAFC);
     margin-bottom: 0.75rem;
 }
-.upload-zone:hover, .upload-zone.dragover { border-color: var(--primary); background: rgba(74,144,217,0.05); }
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--primary); background: rgba(99,102,241,0.05); }
 .upload-icon { width: 36px; height: 36px; margin: 0 auto 0.5rem; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
 .upload-icon svg { width: 18px; height: 18px; color: var(--primary); }
 .upload-content span { display: block; font-size: 0.8125rem; color: var(--text-primary, #374151); }
@@ -757,7 +757,7 @@
 .dark .info-row .info-icon { background: var(--card-bg); }
 .dark .current-avatar { background: var(--sidebar-hover); }
 .dark .upload-zone { background: var(--sidebar-hover); border-color: var(--sidebar-border); }
-.dark .upload-zone:hover { background: rgba(74,144,217,0.1); }
+.dark .upload-zone:hover { background: rgba(99,102,241,0.1); }
 .dark .upload-icon { background: var(--card-bg); }
 </style>
 

@@ -17,8 +17,8 @@
    ======================================== */
 
 :root {
-    --usr-primary: #4A90D9;
-    --usr-primary-dark: #2E6BB3;
+    --usr-primary: #6366f1;
+    --usr-primary-dark: #4338ca;
     --usr-orange: #FF9500;
     --usr-orange-dark: #E68600;
     --usr-success: #10b981;

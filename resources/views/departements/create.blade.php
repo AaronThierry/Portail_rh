@@ -10,8 +10,8 @@
    VARIABLES - Charte RH+ Premium
    ======================================== */
 :root {
-    --dc-primary: #4A90D9;
-    --dc-primary-dark: #2E6BB3;
+    --dc-primary: #6366f1;
+    --dc-primary-dark: #4338ca;
     --dc-primary-light: #E8F4FD;
     --dc-accent: #FF9500;
     --dc-accent-light: #FFF7ED;
@@ -44,7 +44,7 @@
     --dc-text-primary: #f1f5f9;
     --dc-text-secondary: #94a3b8;
     --dc-text-muted: #64748b;
-    --dc-primary-light: rgba(74, 144, 217, 0.15);
+    --dc-primary-light: rgba(99, 102, 241, 0.15);
     --dc-success-light: rgba(34, 197, 94, 0.15);
     --dc-danger-light: rgba(239, 68, 68, 0.15);
 }

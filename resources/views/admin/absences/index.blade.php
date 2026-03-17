@@ -17,9 +17,9 @@
    VARIABLES - Charte RH+ (identique cong&eacute;s)
    ======================================== */
 :root {
-    --ab-primary: #4A90D9;
-    --ab-primary-dark: #2E6BB3;
-    --ab-primary-light: #E8F4FD;
+    --ab-primary: #6366f1;
+    --ab-primary-dark: #4338ca;
+    --ab-primary-light: #eef2ff;
     --ab-accent: #8b5cf6;
     --ab-accent-light: #f3e8ff;
     --ab-success: #22C55E;
@@ -49,7 +49,7 @@
     --ab-text-muted: #64748b;
     --ab-shadow: rgba(0, 0, 0, 0.3);
     --ab-shadow-lg: rgba(0, 0, 0, 0.5);
-    --ab-primary-light: rgba(74, 144, 217, 0.15);
+    --ab-primary-light: rgba(99, 102, 241, 0.15);
     --ab-accent-light: rgba(139, 92, 246, 0.15);
     --ab-success-light: rgba(34, 197, 94, 0.15);
     --ab-danger-light: rgba(239, 68, 68, 0.15);

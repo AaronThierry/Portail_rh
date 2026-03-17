@@ -15,8 +15,8 @@
    VARIABLES - Charte RH+ Premium
    ======================================== */
 :root {
-    --dp-primary: #4A90D9;
-    --dp-primary-dark: #2E6BB3;
+    --dp-primary: #6366f1;
+    --dp-primary-dark: #4338ca;
     --dp-primary-light: #E8F4FD;
     --dp-accent: #FF9500;
     --dp-accent-light: #FFF7ED;
@@ -55,7 +55,7 @@
     --dp-text-muted: #64748b;
     --dp-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     --dp-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.4);
-    --dp-primary-light: rgba(74, 144, 217, 0.15);
+    --dp-primary-light: rgba(99, 102, 241, 0.15);
     --dp-accent-light: rgba(255, 149, 0, 0.15);
     --dp-success-light: rgba(34, 197, 94, 0.15);
     --dp-danger-light: rgba(239, 68, 68, 0.15);
@@ -103,7 +103,7 @@
     right: 0;
     width: 300px;
     height: 100%;
-    background: radial-gradient(circle at 100% 0%, rgba(74, 144, 217, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
     pointer-events: none;
 }
 
@@ -139,7 +139,7 @@
     background: linear-gradient(135deg, var(--dp-primary) 0%, var(--dp-primary-dark) 100%);
     color: white;
     border-radius: var(--dp-radius);
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .dp-header-left p {
@@ -392,7 +392,7 @@
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.03) 0%, transparent 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, transparent 100%);
     border-bottom: 1px solid var(--dp-card-border);
 }
 
@@ -406,7 +406,7 @@
     flex-shrink: 0;
     background: linear-gradient(135deg, var(--dp-primary) 0%, var(--dp-primary-dark) 100%);
     color: white;
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.25);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     transition: var(--dp-transition);
 }
 
@@ -624,7 +624,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.03) 0%, transparent 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, transparent 100%);
 }
 
 .dp-table-header h3 {
@@ -680,7 +680,7 @@
 }
 
 .dp-table tbody tr:hover {
-    background: rgba(74, 144, 217, 0.04);
+    background: rgba(99, 102, 241, 0.04);
 }
 
 .dp-table tbody tr:last-child td {
@@ -700,7 +700,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--dp-primary-light) 0%, rgba(74, 144, 217, 0.1) 100%);
+    background: linear-gradient(135deg, var(--dp-primary-light) 0%, rgba(99, 102, 241, 0.1) 100%);
     color: var(--dp-primary);
     flex-shrink: 0;
 }
@@ -785,12 +785,12 @@
 .dp-btn-primary {
     background: linear-gradient(135deg, var(--dp-primary) 0%, var(--dp-primary-dark) 100%);
     color: white;
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .dp-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(74, 144, 217, 0.4);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
 .dp-btn-secondary {
@@ -842,7 +842,7 @@
     width: 100px;
     height: 100px;
     margin: 0 auto 1.5rem;
-    background: linear-gradient(135deg, var(--dp-primary-light) 0%, rgba(74, 144, 217, 0.1) 100%);
+    background: linear-gradient(135deg, var(--dp-primary-light) 0%, rgba(99, 102, 241, 0.1) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1108,7 +1108,7 @@
 .form-section-icon {
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, var(--dp-primary-light) 0%, rgba(74, 144, 217, 0.1) 100%);
+    background: linear-gradient(135deg, var(--dp-primary-light) 0%, rgba(99, 102, 241, 0.1) 100%);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -1194,7 +1194,7 @@
 }
 
 .form-input:hover {
-    border-color: rgba(74, 144, 217, 0.4);
+    border-color: rgba(99, 102, 241, 0.4);
 }
 
 .form-input:focus {

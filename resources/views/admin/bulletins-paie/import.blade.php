@@ -14,9 +14,9 @@
 @section('styles')
 <style>
 :root {
-    --imp-primary: #4A90D9;
-    --imp-primary-dark: #2E6BB3;
-    --imp-primary-light: #E8F4FD;
+    --imp-primary: #6366f1;
+    --imp-primary-dark: #4338ca;
+    --imp-primary-light: #eef2ff;
     --imp-success: #22C55E;
     --imp-success-light: #F0FDF4;
     --imp-warning: #F59E0B;
@@ -35,7 +35,7 @@
     --imp-card-border: #334155;
     --imp-text: #f1f5f9;
     --imp-text-muted: #94a3b8;
-    --imp-primary-light: rgba(74,144,217,.15);
+    --imp-primary-light: rgba(99,102,241,.15);
     --imp-success-light: rgba(34,197,94,.15);
     --imp-warning-light: rgba(245,158,11,.15);
     --imp-danger-light: rgba(239,68,68,.15);
@@ -69,7 +69,7 @@
 /* Convention de nommage */
 .naming-box {
     background: var(--imp-primary-light);
-    border: 1px solid rgba(74,144,217,.25);
+    border: 1px solid rgba(99,102,241,.25);
     border-radius: 8px;
     padding: 1rem 1.25rem;
     margin-bottom: 1.25rem;

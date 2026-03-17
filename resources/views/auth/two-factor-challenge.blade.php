@@ -14,8 +14,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --primary: #4A90D9;
-            --primary-dark: #2E6BB3;
+            --primary: #6366f1;
+            --primary-dark: #4338ca;
             --primary-light: #E8F4FD;
             --accent: #FF9500;
             --success: #22C55E;
@@ -241,7 +241,7 @@
         .otp-input:focus {
             border-color: var(--primary);
             background: white;
-            box-shadow: 0 0 0 4px rgba(74, 144, 217, 0.15);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
         }
 
         .otp-input::placeholder {
@@ -278,7 +278,7 @@
         .indicator.filled {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             transform: scale(1.2);
-            box-shadow: 0 2px 8px rgba(74, 144, 217, 0.4);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
         }
 
         /* Timer */
@@ -313,13 +313,13 @@
             justify-content: center;
             gap: 0.625rem;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 24px rgba(74, 144, 217, 0.35);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
             margin-bottom: 1rem;
         }
 
         .btn-submit:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(74, 144, 217, 0.45);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.45);
         }
 
         .btn-submit:disabled {

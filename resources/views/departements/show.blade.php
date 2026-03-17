@@ -10,8 +10,8 @@
    VARIABLES - Charte RH+ Premium
    ======================================== */
 :root {
-    --ds-primary: #4A90D9;
-    --ds-primary-dark: #2E6BB3;
+    --ds-primary: #6366f1;
+    --ds-primary-dark: #4338ca;
     --ds-primary-light: #E8F4FD;
     --ds-accent: #FF9500;
     --ds-accent-light: #FFF7ED;
@@ -44,7 +44,7 @@
     --ds-text-primary: #f1f5f9;
     --ds-text-secondary: #94a3b8;
     --ds-text-muted: #64748b;
-    --ds-primary-light: rgba(74, 144, 217, 0.15);
+    --ds-primary-light: rgba(99, 102, 241, 0.15);
     --ds-success-light: rgba(34, 197, 94, 0.15);
     --ds-info-light: rgba(59, 130, 246, 0.15);
     --ds-purple-light: rgba(139, 92, 246, 0.15);
@@ -127,7 +127,7 @@
     justify-content: center;
     background: linear-gradient(135deg, var(--ds-primary) 0%, var(--ds-primary-dark) 100%);
     color: white;
-    box-shadow: 0 8px 20px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
     flex-shrink: 0;
 }
 
@@ -233,12 +233,12 @@
 .ds-btn-primary {
     background: linear-gradient(135deg, var(--ds-primary) 0%, var(--ds-primary-dark) 100%);
     color: white;
-    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .ds-btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(74, 144, 217, 0.4);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
 }
 
 .ds-btn-danger {
@@ -293,7 +293,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.03) 0%, transparent 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, transparent 100%);
 }
 
 .ds-card-title {
@@ -367,7 +367,7 @@
     font-family: 'SF Mono', 'Consolas', monospace;
     background: var(--ds-primary-light);
     color: var(--ds-primary);
-    border-color: rgba(74, 144, 217, 0.2);
+    border-color: rgba(99, 102, 241, 0.2);
 }
 
 /* ========================================
@@ -471,7 +471,7 @@
 }
 
 .ds-table tbody tr:hover {
-    background: rgba(74, 144, 217, 0.04);
+    background: rgba(99, 102, 241, 0.04);
 }
 
 .ds-table tbody tr:last-child td {

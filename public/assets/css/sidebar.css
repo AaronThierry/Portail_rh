@@ -2,24 +2,24 @@
 /* Design professionnel pour ERP avec couleurs Portail RH */
 
 :root {
-    /* Portail RH Brand Colors */
-    --primary: #4A90D9;
-    --primary-dark: #2E6BB3;
-    --primary-light: #E8F4FD;
-    --primary-lighter: #F0F8FF;
+    /* Portail RH — Indigo × Teal Charter */
+    --primary: #6366f1;
+    --primary-dark: #4338ca;
+    --primary-light: #eef2ff;
+    --primary-lighter: #e0e7ff;
 
-    /* Orange Accent */
-    --accent-orange: #FF9500;
-    --accent-orange-dark: #FF6B00;
-    --accent-orange-light: #FFF3E0;
+    /* Teal Accent */
+    --accent-orange: #2dd4bf;
+    --accent-orange-dark: #14b8a6;
+    --accent-orange-light: #f0fdfa;
 
     /* Success Green */
-    --accent-green: #27AE60;
-    --accent-green-light: #D5F5E3;
+    --accent-green: #14b8a6;
+    --accent-green-light: #ccfbf1;
 
     /* Danger Red */
-    --accent-red: #E74C3C;
-    --accent-red-light: #FADBD8;
+    --accent-red: #ef4444;
+    --accent-red-light: #fee2e2;
 
     /* Sidebar specific */
     --sidebar-width: 280px;
@@ -31,7 +31,7 @@
     --sidebar-text-active: #FFFFFF;
     --sidebar-border: rgba(255, 255, 255, 0.08);
     --sidebar-hover: rgba(255, 255, 255, 0.05);
-    --sidebar-active-bg: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    --sidebar-active-bg: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
 
     /* Transitions */
     --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -94,7 +94,7 @@
     right: 0;
     width: 120px;
     height: 100%;
-    background: radial-gradient(circle at 100% 50%, rgba(255, 149, 0, 0.15) 0%, transparent 60%);
+    background: radial-gradient(circle at 100% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
     pointer-events: none;
 }
 
@@ -128,8 +128,8 @@
 
 .sidebar-logo-icon:hover {
     transform: scale(1.05) rotate(5deg);
-    background: rgba(255, 149, 0, 0.3);
-    border-color: rgba(255, 149, 0, 0.5);
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
 }
 
 .sidebar-logo-content {
@@ -150,7 +150,7 @@
     display: inline-flex;
     align-items: center;
     padding: 0.125rem 0.5rem;
-    background: rgba(255, 149, 0, 0.9);
+    background: rgba(20, 184, 166, 0.9);
     color: white;
     font-size: 0.625rem;
     font-weight: 700;
@@ -276,7 +276,7 @@
 
 /* Hover effect on section */
 .nav-section:hover .nav-section-header {
-    background: linear-gradient(90deg, rgba(74, 144, 217, 0.08) 0%, transparent 100%);
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%);
     border-left-color: var(--primary);
 }
 
@@ -357,7 +357,7 @@
 }
 
 .nav-section:nth-child(3) .nav-section-icon {
-    background: linear-gradient(135deg, rgba(255, 149, 0, 0.15) 0%, rgba(255, 107, 0, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(45, 212, 191, 0.1) 100%);
     color: var(--accent-orange);
 }
 
@@ -619,7 +619,7 @@
 /* Tagline Section - Premium Design */
 .sidebar-tagline {
     padding: 1rem 1.25rem;
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.08) 0%, rgba(255, 149, 0, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(45, 212, 191, 0.05) 100%);
     border-bottom: 1px solid var(--sidebar-border);
     position: relative;
     overflow: hidden;

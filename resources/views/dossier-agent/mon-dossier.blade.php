@@ -7,8 +7,8 @@
 <style>
 :root {
     /* RH+ Brand Colors */
-    --md-primary: #4A90D9;
-    --md-primary-dark: #2E6BB3;
+    --md-primary: #6366f1;
+    --md-primary-dark: #4338ca;
     --md-success: #27AE60;
     --md-danger: #ef4444;
     --md-warning: #E67E22;
@@ -22,7 +22,7 @@
 
 .dark {
     --md-primary: #5BA3E8;
-    --md-primary-dark: #4A90D9;
+    --md-primary-dark: #6366f1;
     --md-success: #2ECC71;
     --md-warning: #F5A623;
     --md-bg: #0f172a;
@@ -64,7 +64,7 @@
     font-size: 2.5rem;
     font-weight: 700;
     flex-shrink: 0;
-    box-shadow: 0 8px 25px rgba(74, 144, 217, 0.3);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
 .profile-avatar img {
@@ -114,12 +114,12 @@
 }
 
 .stat-card {
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.1) 0%, rgba(46, 107, 179, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(46, 107, 179, 0.1) 100%);
     border-radius: 14px;
     padding: 1rem 1.5rem;
     text-align: center;
     min-width: 90px;
-    border: 1px solid rgba(74, 144, 217, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 .stat-value {
@@ -204,7 +204,7 @@
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.04) 0%, rgba(46, 107, 179, 0.04) 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.04) 0%, rgba(46, 107, 179, 0.04) 100%);
 }
 
 .doc-icon {
@@ -315,7 +315,7 @@
 }
 
 .doc-btn.preview {
-    background: rgba(74, 144, 217, 0.1);
+    background: rgba(99, 102, 241, 0.1);
     color: var(--md-primary);
 }
 
@@ -337,7 +337,7 @@
     width: 56px;
     height: 56px;
     margin: 0 auto 1rem;
-    background: rgba(74, 144, 217, 0.1);
+    background: rgba(99, 102, 241, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -353,8 +353,8 @@
 
 /* Info Banner */
 .info-banner {
-    background: linear-gradient(135deg, rgba(74, 144, 217, 0.1) 0%, rgba(46, 107, 179, 0.1) 100%);
-    border: 1px solid rgba(74, 144, 217, 0.2);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(46, 107, 179, 0.1) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.2);
     border-radius: 14px;
     padding: 1rem 1.25rem;
     margin-bottom: 1.5rem;

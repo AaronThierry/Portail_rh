@@ -5,956 +5,405 @@
 @section('page-subtitle', 'Gérez les fiches du personnel')
 @section('page-icon')
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-    <circle cx="9" cy="7" r="4"></circle>
-    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
 </svg>
 @endsection
 
 @section('styles')
 <style>
-/* ============================================================
-   PERSONNEL — Swiss Corporate Editorial Design System
-   Geometric precision · Warm accents · Editorial typography
-   ============================================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap');
+/* ═══════════════════════════════════════════════════════════════
+   PERSONNEL — Indigo × Teal Design System
+   Syne (display) · DM Sans (body) · DM Mono (mono)
+   ═══════════════════════════════════════════════════════════════ */
 
 :root {
-    --e-slate-50: #f8fafc;
-    --e-slate-100: #f1f5f9;
-    --e-slate-200: #e2e8f0;
-    --e-slate-300: #cbd5e1;
-    --e-slate-400: #94a3b8;
-    --e-slate-500: #64748b;
-    --e-slate-600: #475569;
-    --e-slate-700: #334155;
-    --e-slate-800: #1e293b;
-    --e-slate-900: #0f172a;
-    --e-slate-950: #020617;
-    --e-blue: #3b7dd8;
-    --e-blue-deep: #2563a0;
-    --e-blue-pale: #dbeafe;
-    --e-blue-wash: #eff6ff;
-    --e-amber: #e8850c;
-    --e-amber-bright: #f59e0b;
-    --e-amber-pale: #fef3c7;
-    --e-amber-wash: #fffbeb;
-    --e-emerald: #059669;
-    --e-emerald-pale: #d1fae5;
-    --e-red: #dc2626;
-    --e-red-pale: #fee2e2;
-    --e-surface: #ffffff;
-    --e-bg: var(--e-slate-50);
-    --e-text: var(--e-slate-900);
-    --e-text-secondary: var(--e-slate-500);
-    --e-text-tertiary: var(--e-slate-400);
-    --e-border: var(--e-slate-200);
-    --e-border-light: var(--e-slate-100);
-    --e-shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-    --e-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-    --e-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
-    --e-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
-    --e-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.04);
-    --e-radius: 12px;
-    --e-radius-lg: 16px;
-    --e-radius-xl: 20px;
-    --e-font-body: 'DM Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
-    --e-font-display: 'DM Serif Display', Georgia, serif;
+    --pp-ind:    #6366f1; --pp-ind-d: #4338ca; --pp-ind-l: #eef2ff; --pp-ind-m: #c7d2fe;
+    --pp-teal:   #14b8a6; --pp-teal-l: #f0fdfa; --pp-teal-m: #99f6e4;
+    --pp-amber:  #f59e0b; --pp-amb-l: #fffbeb;
+    --pp-red:    #ef4444; --pp-red-l: #fef2f2;
+    --pp-emer:   #10b981; --pp-emer-l: #ecfdf5;
+    --pp-surf:   #fff;
+    --pp-bg:     #f8fafc;
+    --pp-text:   #1e293b; --pp-text2: #475569; --pp-text3: #94a3b8;
+    --pp-bdr:    #e2e8f0; --pp-bdr2: #f1f5f9;
+    --pp-r: 13px; --pp-rl: 18px;
+    --pp-sh:  0 1px 3px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.04);
+    --pp-shm: 0 4px 14px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+    --pp-shl: 0 14px 32px rgba(0,0,0,.09), 0 4px 8px rgba(0,0,0,.05);
 }
-
 .dark {
-    --e-surface: var(--e-slate-800);
-    --e-bg: var(--e-slate-900);
-    --e-text: var(--e-slate-100);
-    --e-text-secondary: var(--e-slate-400);
-    --e-text-tertiary: var(--e-slate-500);
-    --e-border: var(--e-slate-700);
-    --e-border-light: var(--e-slate-800);
-    --e-blue-pale: rgba(59, 125, 216, 0.15);
-    --e-blue-wash: rgba(59, 125, 216, 0.08);
-    --e-amber-pale: rgba(232, 133, 12, 0.15);
-    --e-amber-wash: rgba(232, 133, 12, 0.08);
-    --e-emerald-pale: rgba(5, 150, 105, 0.15);
-    --e-red-pale: rgba(220, 38, 38, 0.15);
-    --e-shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
-    --e-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    --e-shadow-md: 0 4px 6px rgba(0,0,0,0.25);
-    --e-shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
-    --e-shadow-xl: 0 20px 25px rgba(0,0,0,0.35);
+    --pp-surf:  #1e293b; --pp-bg:  #0f172a;
+    --pp-text:  #f1f5f9; --pp-text2: #cbd5e1; --pp-text3: #64748b;
+    --pp-bdr:   #334155; --pp-bdr2: #1e293b;
+    --pp-ind-l:  rgba(99,102,241,.12); --pp-ind-m: rgba(99,102,241,.25);
+    --pp-teal-l: rgba(20,184,166,.1);  --pp-teal-m: rgba(20,184,166,.25);
+    --pp-amb-l:  rgba(245,158,11,.1);
+    --pp-red-l:  rgba(239,68,68,.1);   --pp-emer-l: rgba(16,185,129,.1);
+    --pp-sh:  0 1px 3px rgba(0,0,0,.25);
+    --pp-shm: 0 4px 14px rgba(0,0,0,.35);
+    --pp-shl: 0 14px 32px rgba(0,0,0,.45);
 }
 
-/* ==================== ANIMATIONS ==================== */
-@keyframes pp-fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+/* ── Animations ── */
+@keyframes pp-up   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pp-in   { from{opacity:0;transform:scale(.97)}       to{opacity:1;transform:scale(1)} }
+@keyframes pp-spin { to{transform:rotate(360deg)} }
+@keyframes pp-dot  { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
 
-@keyframes pp-scaleIn {
-    from { opacity: 0; transform: scale(0.97); }
-    to { opacity: 1; transform: scale(1); }
-}
+/* ── Page ── */
+.pp-page { font-family:'DM Sans',sans-serif; max-width:1440px; margin:0 auto; animation:pp-up .4s cubic-bezier(.16,1,.3,1); }
 
-@keyframes pp-countUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pp-spin {
-    to { transform: rotate(360deg); }
-}
-
-/* ==================== PAGE CONTAINER ==================== */
-.pp-page {
-    font-family: var(--e-font-body);
-    max-width: 1440px;
-    margin: 0 auto;
-    padding: 0 8px;
-    animation: pp-fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* ==================== PAGE HEADER ==================== */
+/* ── Header ── */
 .pp-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 28px;
-    gap: 20px;
-    animation: pp-fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:28px; gap:16px;
 }
-
-.pp-header-left h1 {
-    font-family: var(--e-font-display);
-    font-size: 2rem;
-    color: var(--e-text);
-    margin: 0 0 4px 0;
-    letter-spacing: -0.5px;
-    line-height: 1.15;
+.pp-header-title {
+    font-family:'Syne',sans-serif; font-size:1.875rem; font-weight:700;
+    color:var(--pp-text); margin:0 0 5px; letter-spacing:-.4px; line-height:1.15;
 }
-
-.pp-header-left p {
-    color: var(--e-text-secondary);
-    font-size: 0.875rem;
-    margin: 0;
-    font-weight: 500;
+.pp-header-sub {
+    font-size:.875rem; color:var(--pp-text3); margin:0;
+    display:flex; align-items:center; gap:7px;
 }
-
-.pp-btn-add {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 11px 24px;
-    background: var(--e-blue);
-    color: #fff;
-    border: none;
-    border-radius: var(--e-radius);
-    font-family: var(--e-font-body);
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    white-space: nowrap;
+.pp-live-dot {
+    width:7px; height:7px; border-radius:50%; background:var(--pp-teal);
+    display:inline-block; animation:pp-dot 2s ease-in-out infinite;
 }
+.pp-header-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
 
-.pp-btn-add svg {
-    width: 17px;
-    height: 17px;
+/* ── Buttons ── */
+.pp-btn {
+    display:inline-flex; align-items:center; gap:8px; padding:10px 20px;
+    border-radius:12px; font-family:'DM Sans',sans-serif; font-size:.875rem;
+    font-weight:600; cursor:pointer; transition:all .22s cubic-bezier(.16,1,.3,1);
+    border:none; white-space:nowrap; text-decoration:none;
 }
-
-.pp-btn-add:hover {
-    background: var(--e-blue-deep);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 125, 216, 0.3);
+.pp-btn svg { width:17px; height:17px; flex-shrink:0; }
+.pp-btn-primary {
+    background:linear-gradient(135deg,#6366f1,#4338ca); color:#fff;
+    box-shadow:0 4px 14px rgba(99,102,241,.35);
 }
+.pp-btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(99,102,241,.45); color:#fff; }
+.pp-btn-secondary {
+    background:var(--pp-surf); color:var(--pp-text2);
+    border:1.5px solid var(--pp-bdr); box-shadow:var(--pp-sh);
+}
+.pp-btn-secondary:hover { background:var(--pp-bg); color:var(--pp-text); border-color:var(--pp-text3); }
 
-/* ==================== STATS GRID ==================== */
+/* ── Stats ── */
 .pp-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px;
 }
-
 .pp-stat {
-    background: var(--e-surface);
-    border: 1px solid var(--e-border);
-    border-radius: var(--e-radius-lg);
-    padding: 22px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: var(--e-shadow-sm);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    animation: pp-fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-    position: relative;
-    overflow: hidden;
+    background:var(--pp-surf); border:1.5px solid var(--pp-bdr);
+    border-radius:var(--pp-rl); padding:20px 22px;
+    display:flex; align-items:center; gap:16px;
+    box-shadow:var(--pp-sh); transition:all .25s cubic-bezier(.16,1,.3,1);
+    position:relative; overflow:hidden; cursor:default;
+    animation:pp-up .4s cubic-bezier(.16,1,.3,1) backwards;
 }
-
-.pp-stat:nth-child(1) { animation-delay: 0.05s; }
-.pp-stat:nth-child(2) { animation-delay: 0.1s; }
-.pp-stat:nth-child(3) { animation-delay: 0.15s; }
-.pp-stat:nth-child(4) { animation-delay: 0.2s; }
-
+.pp-stat:nth-child(1){animation-delay:.04s}.pp-stat:nth-child(2){animation-delay:.08s}
+.pp-stat:nth-child(3){animation-delay:.12s}.pp-stat:nth-child(4){animation-delay:.16s}
+.pp-stat:hover { transform:translateY(-4px); box-shadow:var(--pp-shl); border-color:var(--pp-stat-c,var(--pp-ind)); }
+.pp-stat::before {
+    content:''; position:absolute; top:-28px; right:-28px;
+    width:90px; height:90px; border-radius:50%;
+    background:var(--pp-stat-g,rgba(99,102,241,.06));
+    transition:opacity .3s; pointer-events:none;
+}
 .pp-stat::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    opacity: 0;
-    transition: opacity 0.3s;
+    content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+    background:var(--pp-stat-c,var(--pp-ind));
+    transform:scaleX(0); transform-origin:left;
+    transition:transform .32s cubic-bezier(.16,1,.3,1);
 }
-
-.pp-stat:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--e-shadow-md);
-}
-
-.pp-stat:hover::after { opacity: 1; }
-
-.pp-stat.blue::after { background: var(--e-blue); }
-.pp-stat.emerald::after { background: var(--e-emerald); }
-.pp-stat.red::after { background: var(--e-red); }
-.pp-stat.amber::after { background: var(--e-amber); }
+.pp-stat:hover::after { transform:scaleX(1); }
+.pp-stat-ind  { --pp-stat-c:var(--pp-ind);   --pp-stat-g:rgba(99,102,241,.06); }
+.pp-stat-teal { --pp-stat-c:var(--pp-teal);  --pp-stat-g:rgba(20,184,166,.06); }
+.pp-stat-red  { --pp-stat-c:var(--pp-red);   --pp-stat-g:rgba(239,68,68,.05); }
+.pp-stat-amb  { --pp-stat-c:var(--pp-amber); --pp-stat-g:rgba(245,158,11,.05); }
 
 .pp-stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--e-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    width:48px; height:48px; border-radius:13px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
-
-.pp-stat-icon svg {
-    width: 22px;
-    height: 22px;
+.pp-stat-icon svg { width:22px; height:22px; }
+.pp-stat-ind  .pp-stat-icon { background:var(--pp-ind-l);  color:var(--pp-ind); }
+.pp-stat-teal .pp-stat-icon { background:var(--pp-teal-l); color:var(--pp-teal); }
+.pp-stat-red  .pp-stat-icon { background:var(--pp-red-l);  color:var(--pp-red); }
+.pp-stat-amb  .pp-stat-icon { background:var(--pp-amb-l);  color:var(--pp-amber); }
+.pp-stat-body { flex:1; min-width:0; }
+.pp-stat-val {
+    font-family:'Syne',sans-serif; font-size:2rem; font-weight:700;
+    color:var(--pp-text); line-height:1; margin-bottom:4px;
 }
-
-.pp-stat.blue .pp-stat-icon { background: var(--e-blue-pale); color: var(--e-blue); }
-.pp-stat.emerald .pp-stat-icon { background: var(--e-emerald-pale); color: var(--e-emerald); }
-.pp-stat.red .pp-stat-icon { background: var(--e-red-pale); color: var(--e-red); }
-.pp-stat.amber .pp-stat-icon { background: var(--e-amber-pale); color: var(--e-amber); }
-
-.pp-stat-info { flex: 1; min-width: 0; }
-
-.pp-stat-value {
-    font-family: var(--e-font-display);
-    font-size: 1.75rem;
-    color: var(--e-text);
-    line-height: 1;
-    margin-bottom: 3px;
-}
-
 .pp-stat-label {
-    font-size: 0.75rem;
-    color: var(--e-text-secondary);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size:.68rem; color:var(--pp-text3); font-weight:600;
+    text-transform:uppercase; letter-spacing:.7px;
 }
 
-/* ==================== TOOLBAR ==================== */
+/* ── Toolbar ── */
 .pp-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    animation: pp-fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:20px; flex-wrap:wrap;
 }
-
-.pp-search {
-    flex: 1;
-    max-width: 400px;
-    position: relative;
+.pp-search-wrap { flex:1; min-width:200px; max-width:340px; position:relative; }
+.pp-search-wrap svg {
+    position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    width:16px; height:16px; color:var(--pp-text3);
+    pointer-events:none; transition:color .2s;
 }
-
-.pp-search svg {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 17px;
-    height: 17px;
-    color: var(--e-text-tertiary);
-    pointer-events: none;
-    transition: color 0.2s;
+.pp-search-wrap:focus-within svg { color:var(--pp-ind); }
+.pp-search-input {
+    width:100%; padding:10px 12px 10px 38px;
+    background:var(--pp-surf); border:1.5px solid var(--pp-bdr);
+    border-radius:12px; font-family:'DM Sans',sans-serif;
+    font-size:.875rem; color:var(--pp-text); outline:none;
+    transition:all .2s; box-shadow:var(--pp-sh);
 }
+.pp-search-input::placeholder { color:var(--pp-text3); }
+.pp-search-input:focus { border-color:var(--pp-ind); box-shadow:0 0 0 3px rgba(99,102,241,.12); }
 
-.pp-search input {
-    width: 100%;
-    padding: 10px 14px 10px 42px;
-    background: var(--e-surface);
-    border: 1px solid var(--e-border);
-    border-radius: var(--e-radius);
-    font-family: var(--e-font-body);
-    font-size: 0.875rem;
-    color: var(--e-text);
-    outline: none;
-    transition: all 0.2s;
+.pp-filter-sel {
+    padding:9px 30px 9px 12px; background:var(--pp-surf);
+    border:1.5px solid var(--pp-bdr); border-radius:11px;
+    font-family:'DM Sans',sans-serif; font-size:.8125rem;
+    color:var(--pp-text2); cursor:pointer; outline:none;
+    transition:all .2s; box-shadow:var(--pp-sh); appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 8px center;
 }
+.pp-filter-sel:focus { border-color:var(--pp-ind); box-shadow:0 0 0 3px rgba(99,102,241,.1); }
 
-.pp-search input::placeholder {
-    color: var(--e-text-tertiary);
+.pp-spacer { flex:1; }
+
+/* View toggle */
+.pp-view-toggle {
+    display:flex; background:var(--pp-bg); border:1.5px solid var(--pp-bdr);
+    border-radius:11px; padding:3px; gap:2px;
 }
-
-.pp-search input:focus {
-    border-color: var(--e-blue);
-    box-shadow: 0 0 0 3px rgba(59, 125, 216, 0.1);
+.pp-vbtn {
+    width:34px; height:34px; border-radius:8px; border:none;
+    background:transparent; color:var(--pp-text3); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:all .18s;
 }
+.pp-vbtn svg { width:17px; height:17px; }
+.pp-vbtn.active { background:var(--pp-surf); color:var(--pp-ind); box-shadow:var(--pp-sh); }
+.pp-vbtn:hover:not(.active) { color:var(--pp-text2); background:rgba(0,0,0,.04); }
 
-.pp-search:focus-within svg {
-    color: var(--e-blue);
-}
-
-.pp-btn-filter {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 10px 18px;
-    background: var(--e-surface);
-    color: var(--e-text-secondary);
-    border: 1px solid var(--e-border);
-    border-radius: var(--e-radius);
-    font-family: var(--e-font-body);
-    font-size: 0.8125rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.pp-btn-filter svg {
-    width: 16px;
-    height: 16px;
-}
-
-.pp-btn-filter:hover {
-    background: var(--e-bg);
-    border-color: var(--e-text-tertiary);
-    color: var(--e-text);
-}
-
-/* ==================== TABLE CARD ==================== */
+/* ── Table Card ── */
 .pp-table-card {
-    background: var(--e-surface);
-    border: 1px solid var(--e-border);
-    border-radius: var(--e-radius-lg);
-    overflow: hidden;
-    box-shadow: var(--e-shadow-sm);
-    animation: pp-scaleIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    background:var(--pp-surf); border:1.5px solid var(--pp-bdr);
+    border-radius:var(--pp-rl); overflow:hidden;
+    box-shadow:var(--pp-sh); animation:pp-in .4s cubic-bezier(.16,1,.3,1) .18s both;
 }
+.pp-table-wrap { overflow-x:auto; }
+.pp-table-wrap::-webkit-scrollbar { height:5px; }
+.pp-table-wrap::-webkit-scrollbar-track { background:var(--pp-bdr2); }
+.pp-table-wrap::-webkit-scrollbar-thumb { background:var(--pp-bdr); border-radius:3px; }
 
-.pp-table-wrap {
-    overflow-x: auto;
-}
-
-.pp-table-wrap::-webkit-scrollbar {
-    height: 6px;
-}
-
-.pp-table-wrap::-webkit-scrollbar-track {
-    background: var(--e-border-light);
-}
-
-.pp-table-wrap::-webkit-scrollbar-thumb {
-    background: var(--e-border);
-    border-radius: 3px;
-}
-
-/* ==================== TABLE ==================== */
-.pp-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-}
-
-.pp-table thead {
-    background: var(--e-bg);
-    border-bottom: 1px solid var(--e-border);
-}
-
+/* ── Table ── */
+.pp-table { width:100%; border-collapse:collapse; font-size:.875rem; }
+.pp-table thead { background:var(--pp-bg); border-bottom:1.5px solid var(--pp-bdr); }
 .pp-table thead th {
-    padding: 13px 18px;
-    text-align: left;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    color: var(--e-text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    white-space: nowrap;
-    user-select: none;
+    padding:12px 18px; text-align:left; font-size:.68rem;
+    font-weight:700; color:var(--pp-text3);
+    text-transform:uppercase; letter-spacing:.7px; white-space:nowrap; user-select:none;
 }
+.pp-table tbody tr { border-bottom:1px solid var(--pp-bdr2); transition:background .12s; }
+.pp-table tbody tr:last-child { border-bottom:none; }
+.pp-table tbody tr:hover { background:var(--pp-ind-l); }
+.pp-table tbody td { padding:13px 18px; color:var(--pp-text); vertical-align:middle; white-space:nowrap; }
 
-.pp-table tbody tr {
-    border-bottom: 1px solid var(--e-border-light);
-    transition: background 0.15s;
-}
-
-.pp-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-.pp-table tbody tr:hover {
-    background: var(--e-blue-wash);
-}
-
-.pp-table tbody td {
-    padding: 14px 18px;
-    color: var(--e-text);
-    vertical-align: middle;
-    white-space: nowrap;
-}
-
-/* Personnel Cell */
-.pp-cell-person {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
+/* Person cell */
+.pp-person { display:flex; align-items:center; gap:12px; }
+.pp-av-wrap { position:relative; flex-shrink:0; }
 .pp-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    object-fit: cover;
-    border: 2px solid var(--e-border-light);
-    flex-shrink: 0;
-    transition: transform 0.2s;
+    width:40px; height:40px; border-radius:11px; object-fit:cover;
+    border:2px solid var(--pp-bdr); transition:transform .22s; display:block;
 }
+.pp-table tbody tr:hover .pp-avatar { transform:scale(1.1) rotate(-2deg); }
+.pp-av-dot {
+    position:absolute; bottom:-2px; right:-2px;
+    width:11px; height:11px; border-radius:50%; border:2px solid var(--pp-surf);
+}
+.pp-av-dot.on  { background:#10b981; }
+.pp-av-dot.off { background:var(--pp-text3); }
+.pp-pname { font-weight:600; color:var(--pp-text); display:block; line-height:1.3; }
+.pp-pmat  { font-size:.72rem; color:var(--pp-text3); font-family:'DM Mono',monospace; letter-spacing:.3px; display:block; }
 
-.pp-table tbody tr:hover .pp-avatar {
-    transform: scale(1.08);
-}
+/* Muted */
+.pp-muted { color:var(--pp-text3); font-size:.8125rem; font-style:italic; }
 
-.pp-person-info {
-    min-width: 0;
-}
-
-.pp-person-name {
-    font-weight: 600;
-    color: var(--e-text);
-    display: block;
-    line-height: 1.3;
-    font-size: 0.875rem;
-}
-
-.pp-person-matricule {
-    font-size: 0.75rem;
-    color: var(--e-text-tertiary);
-    font-weight: 500;
-    font-family: 'DM Sans', monospace;
-    letter-spacing: 0.3px;
-}
-
-/* Date Badge */
-.pp-date {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.8125rem;
-    color: var(--e-text-secondary);
-}
-
-.pp-date svg {
-    width: 14px;
-    height: 14px;
-    color: var(--e-text-tertiary);
-}
+/* Date */
+.pp-date { display:inline-flex; align-items:center; gap:5px; font-size:.8125rem; color:var(--pp-text2); }
+.pp-date svg { width:13px; height:13px; color:var(--pp-text3); }
 
 /* Badges */
 .pp-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    border-radius: 100px;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.2px;
-    text-transform: uppercase;
+    display:inline-flex; align-items:center; gap:5px;
+    padding:3px 10px; border-radius:999px;
+    font-size:.68rem; font-weight:700; letter-spacing:.2px; text-transform:uppercase;
+}
+.pp-badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.6; }
+.pp-badge-ind  { background:var(--pp-ind-l);  color:var(--pp-ind); }
+.pp-badge-teal { background:var(--pp-teal-l); color:var(--pp-teal); }
+.pp-badge-amb  { background:var(--pp-amb-l);  color:var(--pp-amber); }
+.pp-badge-red  { background:var(--pp-red-l);  color:var(--pp-red); }
+.pp-badge-emer { background:var(--pp-emer-l); color:var(--pp-emer); }
+.pp-badge-gray { background:var(--pp-bdr2);   color:var(--pp-text3); }
+
+/* Actions */
+.pp-actions { display:flex; align-items:center; gap:5px; }
+.pp-act {
+    width:33px; height:33px; border-radius:9px; border:1.5px solid var(--pp-bdr);
+    background:var(--pp-surf); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all .18s; color:var(--pp-text3); text-decoration:none;
+}
+.pp-act svg { width:15px; height:15px; }
+.pp-act.view:hover { background:var(--pp-ind-l); border-color:var(--pp-ind-m); color:var(--pp-ind); transform:scale(1.1); }
+.pp-act.del:hover  { background:var(--pp-red-l); border-color:rgba(239,68,68,.3); color:var(--pp-red); transform:scale(1.1); }
+
+/* Table footer */
+.pp-tfoot {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:11px 18px; border-top:1px solid var(--pp-bdr); background:var(--pp-bg);
+}
+.pp-tfoot-txt { font-size:.8rem; color:var(--pp-text3); }
+.pp-tfoot-txt strong { color:var(--pp-text2); font-weight:600; }
+
+/* ── Card Grid ── */
+.pp-grid {
+    display:none; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:16px; animation:pp-in .3s cubic-bezier(.16,1,.3,1);
+}
+.pp-grid.pp-active { display:grid; }
+.pp-table-card.pp-hidden { display:none; }
+
+.pp-card {
+    background:var(--pp-surf); border:1.5px solid var(--pp-bdr);
+    border-radius:var(--pp-rl); padding:20px;
+    box-shadow:var(--pp-sh); transition:all .25s cubic-bezier(.16,1,.3,1);
+    position:relative; overflow:hidden;
+}
+.pp-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg,var(--pp-ind),var(--pp-teal));
+    transform:scaleX(0); transform-origin:left;
+    transition:transform .3s cubic-bezier(.16,1,.3,1);
+}
+.pp-card:hover { transform:translateY(-5px); box-shadow:var(--pp-shl); border-color:var(--pp-ind-m); }
+.pp-card:hover::before { transform:scaleX(1); }
+.pp-card-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+.pp-card-av { width:52px; height:52px; border-radius:14px; object-fit:cover; border:2px solid var(--pp-bdr); flex-shrink:0; }
+.pp-card-info { flex:1; min-width:0; }
+.pp-card-name {
+    font-family:'Syne',sans-serif; font-weight:700; font-size:.9375rem;
+    color:var(--pp-text); display:block;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.pp-card-mat { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--pp-text3); }
+.pp-card-rows { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+.pp-card-row { display:flex; align-items:center; justify-content:space-between; }
+.pp-card-rlabel { font-size:.7rem; font-weight:600; color:var(--pp-text3); text-transform:uppercase; letter-spacing:.5px; }
+.pp-card-rval { font-size:.8125rem; font-weight:500; color:var(--pp-text2); text-align:right; }
+.pp-card-foot {
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:14px; border-top:1px solid var(--pp-bdr2);
 }
 
-.pp-badge-info {
-    background: var(--e-blue-pale);
-    color: var(--e-blue);
-}
-
-.pp-badge-warning {
-    background: var(--e-amber-pale);
-    color: var(--e-amber);
-}
-
-.pp-badge-success {
-    background: var(--e-emerald-pale);
-    color: var(--e-emerald);
-}
-
-.pp-badge-danger {
-    background: var(--e-red-pale);
-    color: var(--e-red);
-}
-
-/* Action Buttons */
-.pp-actions {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.pp-act-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
-    border: 1px solid var(--e-border);
-    background: var(--e-surface);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--e-text-secondary);
-    text-decoration: none;
-}
-
-.pp-act-btn svg {
-    width: 16px;
-    height: 16px;
-}
-
-.pp-act-btn.view:hover {
-    background: var(--e-blue-wash);
-    border-color: var(--e-blue-pale);
-    color: var(--e-blue);
-}
-
-.pp-act-btn.delete:hover {
-    background: var(--e-red-pale);
-    border-color: rgba(220, 38, 38, 0.3);
-    color: var(--e-red);
-}
-
-/* ==================== EMPTY STATE ==================== */
-.pp-empty {
-    padding: 80px 20px;
-    text-align: center;
-}
-
+/* ── Empty ── */
+.pp-empty { padding:72px 24px; text-align:center; }
 .pp-empty-icon {
-    width: 72px;
-    height: 72px;
-    margin: 0 auto 20px;
-    border-radius: var(--e-radius-lg);
-    background: var(--e-blue-wash);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width:72px; height:72px; margin:0 auto 20px; border-radius:18px;
+    background:linear-gradient(135deg,var(--pp-ind-l),var(--pp-teal-l));
+    display:flex; align-items:center; justify-content:center;
 }
+.pp-empty-icon svg { width:32px; height:32px; color:var(--pp-ind); }
+.pp-empty-title { font-family:'Syne',sans-serif; font-size:1.25rem; font-weight:700; color:var(--pp-text); margin:0 0 8px; }
+.pp-empty-desc  { color:var(--pp-text3); font-size:.875rem; margin:0 0 24px; }
 
-.pp-empty-icon svg {
-    width: 32px;
-    height: 32px;
-    color: var(--e-blue);
-}
-
-.pp-empty h3 {
-    font-family: var(--e-font-display);
-    font-size: 1.25rem;
-    color: var(--e-text);
-    margin: 0 0 8px 0;
-}
-
-.pp-empty p {
-    color: var(--e-text-secondary);
-    font-size: 0.875rem;
-    margin: 0 0 24px 0;
-}
-
-.pp-empty-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 22px;
-    background: var(--e-blue);
-    color: #fff;
-    border: none;
-    border-radius: var(--e-radius);
-    font-family: var(--e-font-body);
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s;
-}
-
-.pp-empty-btn svg {
-    width: 16px;
-    height: 16px;
-}
-
-.pp-empty-btn:hover {
-    background: var(--e-blue-deep);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59, 125, 216, 0.3);
-}
-
-/* ==================== PAGINATION ==================== */
-.pp-pagination {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    animation: pp-fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
-}
-
-.pp-pagination nav {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.pp-pagination .pagination {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
+/* ── Pagination ── */
+.pp-pagination { margin-top:20px; display:flex; justify-content:center; }
+.pp-pagination nav,.pp-pagination .pagination { display:flex; align-items:center; gap:4px; list-style:none; padding:0; margin:0; }
 .pp-pagination .page-item .page-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 36px;
-    height: 36px;
-    padding: 0 10px;
-    border-radius: 9px;
-    border: 1px solid var(--e-border);
-    background: var(--e-surface);
-    color: var(--e-text-secondary);
-    font-family: var(--e-font-body);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s;
+    display:flex; align-items:center; justify-content:center;
+    min-width:36px; height:36px; padding:0 10px; border-radius:10px;
+    border:1.5px solid var(--pp-bdr); background:var(--pp-surf);
+    color:var(--pp-text2); font-family:'DM Sans',sans-serif;
+    font-size:.8125rem; font-weight:600; text-decoration:none; transition:all .18s;
 }
-
-.pp-pagination .page-item .page-link:hover {
-    background: var(--e-blue-wash);
-    border-color: var(--e-blue-pale);
-    color: var(--e-blue);
-}
-
+.pp-pagination .page-item .page-link:hover { background:var(--pp-ind-l); border-color:var(--pp-ind-m); color:var(--pp-ind); }
 .pp-pagination .page-item.active .page-link {
-    background: var(--e-blue);
-    border-color: var(--e-blue);
-    color: #fff;
+    background:linear-gradient(135deg,#6366f1,#4338ca); border-color:transparent;
+    color:#fff; box-shadow:0 4px 12px rgba(99,102,241,.4);
 }
+.pp-pagination .page-item.disabled .page-link { opacity:.4; cursor:not-allowed; }
 
-.pp-pagination .page-item.disabled .page-link {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-/* ==================== TEXT MUTED ==================== */
-.pp-muted {
-    color: var(--e-text-tertiary);
-    font-size: 0.8125rem;
-}
-
-/* ==================== PREMIUM NOTIFICATION — TOP CENTER IMPACT ==================== */
+/* ══ Premium Notification ══ */
 .hrp-notif {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    width: min(500px, calc(100vw - 32px));
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 0;
-    z-index: 100001;
-    overflow: hidden;
-    font-family: var(--e-font-body);
-    /* Start: hors écran en haut */
-    transform: translateX(-50%) translateY(-130%) scale(0.92);
-    opacity: 0;
-    transition:
-        transform 0.52s cubic-bezier(0.34, 1.56, 0.64, 1),
-        opacity   0.28s ease;
+    position:fixed; top:20px; left:50%; width:min(480px,calc(100vw - 32px));
+    background:#fff; border-radius:16px; padding:0; z-index:100001; overflow:hidden;
+    font-family:'DM Sans',sans-serif;
+    transform:translateX(-50%) translateY(-130%) scale(.92); opacity:0;
+    transition:transform .52s cubic-bezier(.34,1.56,.64,1),opacity .28s ease;
 }
-
-.hrp-notif.hrp-show {
-    transform: translateX(-50%) translateY(0) scale(1);
-    opacity: 1;
-}
-
+.hrp-notif.hrp-show { transform:translateX(-50%) translateY(0) scale(1); opacity:1; }
 .hrp-notif.hrp-hide {
-    transform: translateX(-50%) translateY(-110%) scale(0.94);
-    opacity: 0;
-    transition:
-        transform 0.3s cubic-bezier(0.55, 0, 1, 0.45),
-        opacity   0.22s ease;
+    transform:translateX(-50%) translateY(-110%) scale(.94); opacity:0;
+    transition:transform .3s cubic-bezier(.55,0,1,.45),opacity .22s ease;
 }
+.hrp-notif::before { content:''; display:block; height:5px; width:100%; }
+.hrp-notif-success::before { background:linear-gradient(90deg,#059669,#10b981,#34d399); }
+.hrp-notif-error::before   { background:linear-gradient(90deg,#dc2626,#ef4444,#f87171); }
+.hrp-notif-info::before    { background:linear-gradient(90deg,var(--pp-ind-d),var(--pp-ind),#818cf8); }
+.hrp-notif-success { box-shadow:0 4px 6px rgba(16,185,129,.12),0 20px 50px rgba(16,185,129,.18),0 8px 24px rgba(0,0,0,.1),0 0 0 1px rgba(16,185,129,.15); }
+.hrp-notif-error   { box-shadow:0 4px 6px rgba(239,68,68,.12),0 20px 50px rgba(239,68,68,.16),0 8px 24px rgba(0,0,0,.1),0 0 0 1px rgba(239,68,68,.15); }
+.hrp-notif-info    { box-shadow:0 4px 6px rgba(99,102,241,.12),0 20px 50px rgba(99,102,241,.18),0 8px 24px rgba(0,0,0,.1),0 0 0 1px rgba(99,102,241,.15); }
+.hrp-notif-inner { display:flex; align-items:center; gap:16px; padding:18px 20px; }
+.hrp-notif-icon-wrap { position:relative; width:52px; height:52px; flex-shrink:0; }
+.hrp-notif-icon-bg { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.hrp-notif-success .hrp-notif-icon-bg { background:linear-gradient(135deg,#d1fae5,#6ee7b7); box-shadow:0 0 0 8px rgba(16,185,129,.1); }
+.hrp-notif-error   .hrp-notif-icon-bg { background:linear-gradient(135deg,#fee2e2,#fca5a5); box-shadow:0 0 0 8px rgba(239,68,68,.1); }
+.hrp-notif-info    .hrp-notif-icon-bg { background:linear-gradient(135deg,var(--pp-ind-l),var(--pp-ind-m)); box-shadow:0 0 0 8px rgba(99,102,241,.1); }
+.hrp-check-path { stroke-dasharray:1; stroke-dashoffset:1; }
+.hrp-notif-success .hrp-check-path { animation:hrp-check .55s cubic-bezier(.65,0,.35,1) .2s forwards; }
+@keyframes hrp-check { to{ stroke-dashoffset:0; } }
+.hrp-notif-ring { position:absolute; inset:-7px; border-radius:50%; border:3px solid #10b981; opacity:0; }
+.hrp-notif-success .hrp-notif-ring { animation:hrp-ring 1.1s cubic-bezier(.4,0,.6,1) .45s both; }
+@keyframes hrp-ring { 0%{opacity:.9;transform:scale(.82)} 100%{opacity:0;transform:scale(1.6)} }
+.hrp-notif-body { flex:1; min-width:0; }
+.hrp-notif-label { font-size:.73rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:3px; }
+.hrp-notif-success .hrp-notif-label { color:#047857; }
+.hrp-notif-error   .hrp-notif-label { color:#b91c1c; }
+.hrp-notif-info    .hrp-notif-label { color:var(--pp-ind-d); }
+.hrp-notif-msg { font-size:.9375rem; color:#0f172a; font-weight:600; line-height:1.45; }
+.hrp-notif-close { background:none; border:none; width:32px; height:32px; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#94a3b8; flex-shrink:0; transition:background .15s,color .15s; }
+.hrp-notif-close:hover { background:#f1f5f9; color:#334155; }
+.hrp-notif-progress { height:4px; background:rgba(0,0,0,.05); }
+.hrp-notif-bar { height:100%; transform-origin:left; transform:scaleX(1); }
+.hrp-notif-success .hrp-notif-bar { background:linear-gradient(90deg,#059669,#10b981,#34d399); }
+.hrp-notif-error   .hrp-notif-bar { background:linear-gradient(90deg,#dc2626,#ef4444); }
+.hrp-notif-info    .hrp-notif-bar { background:linear-gradient(90deg,var(--pp-ind-d),var(--pp-ind)); }
+.dark .hrp-notif { background:#0f172a; border:1px solid rgba(255,255,255,.07); }
+.dark .hrp-notif-msg { color:#f1f5f9; }
+.dark .hrp-notif-close:hover { background:rgba(255,255,255,.07); color:#cbd5e1; }
+.dark .hrp-notif-progress { background:rgba(255,255,255,.06); }
 
-/* ── Bande colorée en haut (accent strip) ─ */
-.hrp-notif::before {
-    content: '';
-    display: block;
-    height: 5px;
-    width: 100%;
+/* ── Responsive ── */
+@media(max-width:1200px){ .pp-stats{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:768px){
+    .pp-header{flex-direction:column;align-items:flex-start}
+    .pp-header-title{font-size:1.5rem}
+    .pp-stats{grid-template-columns:repeat(2,1fr)}
+    .pp-toolbar{flex-direction:column;align-items:stretch}
+    .pp-search-wrap{max-width:none}
 }
-
-.hrp-notif-success::before { background: linear-gradient(90deg, #059669, #10b981, #34d399); }
-.hrp-notif-error::before   { background: linear-gradient(90deg, #dc2626, #ef4444, #f87171); }
-.hrp-notif-info::before    { background: linear-gradient(90deg, #1d4ed8, #3b82f6, #60a5fa); }
-
-/* Ombre colorée selon le type */
-.hrp-notif-success {
-    box-shadow:
-        0 4px 6px rgba(16, 185, 129, 0.12),
-        0 20px 50px rgba(16, 185, 129, 0.18),
-        0 8px 24px rgba(0, 0, 0, 0.1),
-        0 0 0 1px rgba(16, 185, 129, 0.15);
-}
-
-.hrp-notif-error {
-    box-shadow:
-        0 4px 6px rgba(239, 68, 68, 0.12),
-        0 20px 50px rgba(239, 68, 68, 0.16),
-        0 8px 24px rgba(0, 0, 0, 0.1),
-        0 0 0 1px rgba(239, 68, 68, 0.15);
-}
-
-.hrp-notif-info {
-    box-shadow:
-        0 4px 6px rgba(59, 130, 246, 0.12),
-        0 20px 50px rgba(59, 130, 246, 0.16),
-        0 8px 24px rgba(0, 0, 0, 0.1),
-        0 0 0 1px rgba(59, 130, 246, 0.15);
-}
-
-/* ── Contenu ────────────────────────────── */
-.hrp-notif-inner {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 20px 18px 20px;
-}
-
-/* ── Icon ──────────────────────────────── */
-.hrp-notif-icon-wrap {
-    position: relative;
-    width: 52px;
-    height: 52px;
-    flex-shrink: 0;
-}
-
-.hrp-notif-icon-bg {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.hrp-notif-success .hrp-notif-icon-bg {
-    background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
-    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.1);
-}
-
-.hrp-notif-error .hrp-notif-icon-bg {
-    background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
-    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.1);
-}
-
-.hrp-notif-info .hrp-notif-icon-bg {
-    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
-    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.1);
-}
-
-/* Checkmark animé */
-.hrp-check-path {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-}
-
-.hrp-notif-success .hrp-check-path {
-    animation: hrp-draw-check 0.55s cubic-bezier(0.65, 0, 0.35, 1) 0.2s forwards;
-}
-
-@keyframes hrp-draw-check {
-    to { stroke-dashoffset: 0; }
-}
-
-/* Ring pulse émeraude */
-.hrp-notif-ring {
-    position: absolute;
-    inset: -7px;
-    border-radius: 50%;
-    border: 3px solid #10b981;
-    opacity: 0;
-}
-
-.hrp-notif-success .hrp-notif-ring {
-    animation: hrp-ring-pulse 1.1s cubic-bezier(0.4, 0, 0.6, 1) 0.45s both;
-}
-
-@keyframes hrp-ring-pulse {
-    0%   { opacity: 0.9; transform: scale(0.82); }
-    100% { opacity: 0;   transform: scale(1.6);  }
-}
-
-/* ── Body ──────────────────────────────── */
-.hrp-notif-body {
-    flex: 1;
-    min-width: 0;
-}
-
-.hrp-notif-label {
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 3px;
-}
-
-.hrp-notif-success .hrp-notif-label { color: #047857; }
-.hrp-notif-error   .hrp-notif-label { color: #b91c1c; }
-.hrp-notif-info    .hrp-notif-label { color: #1d4ed8; }
-
-.hrp-notif-msg {
-    font-size: 0.9375rem;
-    color: #0f172a;
-    font-weight: 600;
-    line-height: 1.45;
-}
-
-/* ── Bouton close ──────────────────────── */
-.hrp-notif-close {
-    background: none;
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #94a3b8;
-    flex-shrink: 0;
-    transition: background 0.15s, color 0.15s;
-}
-
-.hrp-notif-close:hover {
-    background: #f1f5f9;
-    color: #334155;
-}
-
-/* ── Barre de progression ──────────────── */
-.hrp-notif-progress {
-    height: 4px;
-    background: rgba(0, 0, 0, 0.05);
-}
-
-.hrp-notif-bar {
-    height: 100%;
-    transform-origin: left;
-    transform: scaleX(1);
-}
-
-.hrp-notif-success .hrp-notif-bar {
-    background: linear-gradient(90deg, #059669, #10b981, #34d399);
-}
-
-.hrp-notif-error .hrp-notif-bar {
-    background: linear-gradient(90deg, #dc2626, #ef4444);
-}
-
-.hrp-notif-info .hrp-notif-bar {
-    background: linear-gradient(90deg, #1d4ed8, #3b82f6);
-}
-
-/* ── Dark mode ─────────────────────────── */
-.dark .hrp-notif {
-    background: #0f172a;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.dark .hrp-notif-msg { color: #f1f5f9; }
-
-.dark .hrp-notif-success {
-    box-shadow:
-        0 4px 6px rgba(16,185,129,0.15),
-        0 20px 50px rgba(16,185,129,0.22),
-        0 8px 24px rgba(0,0,0,0.4),
-        0 0 0 1px rgba(16,185,129,0.2);
-}
-
-.dark .hrp-notif-error {
-    box-shadow:
-        0 4px 6px rgba(239,68,68,0.15),
-        0 20px 50px rgba(239,68,68,0.2),
-        0 8px 24px rgba(0,0,0,0.4),
-        0 0 0 1px rgba(239,68,68,0.2);
-}
-
-.dark .hrp-notif-success .hrp-notif-icon-bg {
-    background: linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(52,211,153,0.18) 100%);
-}
-
-.dark .hrp-notif-error .hrp-notif-icon-bg {
-    background: linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(248,113,113,0.18) 100%);
-}
-
-.dark .hrp-notif-info .hrp-notif-icon-bg {
-    background: linear-gradient(135deg, rgba(59,130,246,0.25) 0%, rgba(96,165,250,0.18) 100%);
-}
-
-.dark .hrp-notif-close:hover {
-    background: rgba(255, 255, 255, 0.07);
-    color: #cbd5e1;
-}
-
-.dark .hrp-notif-progress { background: rgba(255,255,255,0.06); }
-
-/* ── Responsive ────────────────────────── */
-@media (max-width: 540px) {
-    .hrp-notif {
-        top: 12px;
-        width: calc(100vw - 24px);
-    }
-}
-
-/* ==================== SPINNER ==================== */
-.pp-spin {
-    animation: pp-spin 0.8s linear infinite;
-}
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 1280px) {
-    .pp-stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .pp-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .pp-stats {
-        grid-template-columns: 1fr;
-    }
-    .pp-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .pp-search {
-        max-width: none;
-    }
-    .pp-header-left h1 {
-        font-size: 1.5rem;
-    }
+@media(max-width:480px){
+    .pp-stats{grid-template-columns:1fr}
+    .pp-grid{grid-template-columns:1fr}
 }
 </style>
 @endsection
@@ -962,96 +411,123 @@
 @section('content')
 <div class="pp-page">
 
-    <!-- Page Header -->
+    {{-- ── Header ── --}}
     <div class="pp-header">
-        <div class="pp-header-left">
-            <h1>Gestion du Personnel</h1>
-            <p>Gerez les employes et leurs informations</p>
+        <div>
+            <h1 class="pp-header-title">Gestion du Personnel</h1>
+            <p class="pp-header-sub">
+                <span class="pp-live-dot"></span>
+                {{ $personnels->total() }} employé{{ $personnels->total() > 1 ? 's' : '' }} enregistré{{ $personnels->total() > 1 ? 's' : '' }}
+            </p>
         </div>
-        <button class="pp-btn-add" id="btnAddPersonnel">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Nouveau personnel
-        </button>
+        <div class="pp-header-actions">
+            <button class="pp-btn pp-btn-primary" id="btnAddPersonnel">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Nouveau personnel
+            </button>
+        </div>
     </div>
 
-    <!-- Stats Grid -->
+    {{-- ── Stats ── --}}
     <div class="pp-stats">
-        <div class="pp-stat blue">
+        <div class="pp-stat pp-stat-ind">
             <div class="pp-stat-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
-            <div class="pp-stat-info">
-                <div class="pp-stat-value" data-count="{{ $personnels->total() ?? 0 }}">0</div>
+            <div class="pp-stat-body">
+                <div class="pp-stat-val" data-count="{{ $personnels->total() }}">0</div>
                 <div class="pp-stat-label">Total</div>
             </div>
         </div>
-        <div class="pp-stat emerald">
+        <div class="pp-stat pp-stat-teal">
             <div class="pp-stat-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             </div>
-            <div class="pp-stat-info">
-                <div class="pp-stat-value" data-count="{{ $personnels->where('is_active', true)->count() }}">0</div>
+            <div class="pp-stat-body">
+                <div class="pp-stat-val" data-count="{{ $personnels->where('is_active', true)->count() }}">0</div>
                 <div class="pp-stat-label">Actifs</div>
             </div>
         </div>
-        <div class="pp-stat red">
+        <div class="pp-stat pp-stat-red">
             <div class="pp-stat-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
             </div>
-            <div class="pp-stat-info">
-                <div class="pp-stat-value" data-count="{{ $personnels->where('is_active', false)->count() }}">0</div>
+            <div class="pp-stat-body">
+                <div class="pp-stat-val" data-count="{{ $personnels->where('is_active', false)->count() }}">0</div>
                 <div class="pp-stat-label">Inactifs</div>
             </div>
         </div>
-        <div class="pp-stat amber">
+        <div class="pp-stat pp-stat-amb">
             <div class="pp-stat-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                    <line x1="12" y1="9" x2="12" y2="13"></line>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
             </div>
-            <div class="pp-stat-info">
-                <div class="pp-stat-value" data-count="{{ $personnels->whereNull('user_id')->count() }}">0</div>
+            <div class="pp-stat-body">
+                <div class="pp-stat-val" data-count="{{ $personnels->whereNull('user_id')->count() }}">0</div>
                 <div class="pp-stat-label">Sans compte</div>
             </div>
         </div>
     </div>
 
-    <!-- Toolbar -->
-    <div class="pp-toolbar">
-        <div class="pp-search">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <input type="search" placeholder="Rechercher un personnel..." id="searchInput">
-        </div>
-        <button class="pp-btn-filter" id="btnFilter">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-            </svg>
-            Filtrer
-        </button>
-    </div>
+    {{-- ── Toolbar ── --}}
+    <form method="GET" action="{{ request()->url() }}" id="filterForm">
+        <div class="pp-toolbar">
+            {{-- Search --}}
+            <div class="pp-search-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="search" name="search" class="pp-search-input" id="searchInput"
+                       placeholder="Nom, matricule, poste…" value="{{ request('search') }}"
+                       autocomplete="off">
+            </div>
 
-    <!-- Table -->
-    <div class="pp-table-card">
+            {{-- Département filter --}}
+            <select name="departement_id" class="pp-filter-sel" onchange="this.form.submit()">
+                <option value="">Tous les départements</option>
+                @foreach($departements as $dept)
+                    <option value="{{ $dept->id }}" {{ request('departement_id') == $dept->id ? 'selected' : '' }}>
+                        {{ $dept->nom }}
+                    </option>
+                @endforeach
+            </select>
+
+            {{-- Contrat filter --}}
+            <select name="type_contrat" class="pp-filter-sel" onchange="this.form.submit()">
+                <option value="">Tous contrats</option>
+                <option value="CDI" {{ request('type_contrat') === 'CDI' ? 'selected' : '' }}>CDI</option>
+                <option value="CDD" {{ request('type_contrat') === 'CDD' ? 'selected' : '' }}>CDD</option>
+                <option value="Stage" {{ request('type_contrat') === 'Stage' ? 'selected' : '' }}>Stage</option>
+                <option value="Consultant" {{ request('type_contrat') === 'Consultant' ? 'selected' : '' }}>Consultant</option>
+            </select>
+
+            {{-- Statut filter --}}
+            <select name="has_user" class="pp-filter-sel" onchange="this.form.submit()">
+                <option value="">Tous statuts</option>
+                <option value="yes" {{ request('has_user') === 'yes' ? 'selected' : '' }}>Avec compte</option>
+                <option value="no"  {{ request('has_user') === 'no'  ? 'selected' : '' }}>Sans compte</option>
+            </select>
+
+            @if(request()->hasAny(['search','departement_id','type_contrat','has_user']))
+            <a href="{{ request()->url() }}" class="pp-btn pp-btn-secondary" style="padding:9px 14px; font-size:.8rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Réinitialiser
+            </a>
+            @endif
+
+            <div class="pp-spacer"></div>
+
+            {{-- View toggle --}}
+            <div class="pp-view-toggle">
+                <button type="button" class="pp-vbtn active" id="btnTable" title="Vue tableau">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/></svg>
+                </button>
+                <button type="button" class="pp-vbtn" id="btnGrid" title="Vue cartes">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    {{-- ── Table View ── --}}
+    <div class="pp-table-card" id="tableView">
         <div class="pp-table-wrap">
             <table class="pp-table">
                 <thead>
@@ -1059,7 +535,7 @@
                         <th>Personnel</th>
                         <th>Sexe</th>
                         <th>Poste</th>
-                        <th>Departement</th>
+                        <th>Département</th>
                         <th>Date Embauche</th>
                         <th>Contrat</th>
                         <th>Statut</th>
@@ -1068,57 +544,51 @@
                 </thead>
                 <tbody id="personnelTableBody">
                     @forelse($personnels as $personnel)
-                    <tr data-personnel-id="{{ $personnel->id }}">
+                    <tr data-search="{{ strtolower($personnel->nom_complet . ' ' . $personnel->matricule . ' ' . $personnel->poste) }}">
                         <td>
-                            <div class="pp-cell-person">
-                                <img src="{{ $personnel->photo_url }}" alt="{{ $personnel->nom_complet }}" class="pp-avatar">
-                                <div class="pp-person-info">
-                                    <span class="pp-person-name">{{ $personnel->nom_complet }}</span>
-                                    <span class="pp-person-matricule">{{ $personnel->matricule }}</span>
+                            <div class="pp-person">
+                                <div class="pp-av-wrap">
+                                    <img src="{{ $personnel->photo_url }}" alt="{{ $personnel->nom_complet }}" class="pp-avatar">
+                                    <span class="pp-av-dot {{ $personnel->is_active ? 'on' : 'off' }}"></span>
+                                </div>
+                                <div>
+                                    <span class="pp-pname">{{ $personnel->nom_complet }}</span>
+                                    <span class="pp-pmat">{{ $personnel->matricule }}</span>
                                 </div>
                             </div>
                         </td>
-                        <td>{{ $personnel->sexe ?? 'N/A' }}</td>
-                        <td>{{ $personnel->poste ?? 'Non defini' }}</td>
-                        <td>{{ $personnel->departement->nom ?? 'Non assigne' }}</td>
+                        <td>{{ $personnel->sexe ?? '—' }}</td>
+                        <td>{{ $personnel->poste ?? '—' }}</td>
+                        <td>{{ $personnel->departement->nom ?? '—' }}</td>
                         <td>
                             @if($personnel->date_embauche)
-                            <div class="pp-date">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                </svg>
-                                {{ \Carbon\Carbon::parse($personnel->date_embauche)->locale('fr')->isoFormat('DD MMM YYYY') }}
-                            </div>
+                                <div class="pp-date">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                    {{ \Carbon\Carbon::parse($personnel->date_embauche)->locale('fr')->isoFormat('DD MMM YYYY') }}
+                                </div>
                             @else
-                            <span class="pp-muted">Non renseignee</span>
+                                <span class="pp-muted">N/A</span>
                             @endif
                         </td>
                         <td>
-                            <span class="pp-badge {{ $personnel->type_contrat === 'CDI' ? 'pp-badge-info' : 'pp-badge-warning' }}">
-                                {{ $personnel->type_contrat }}
-                            </span>
+                            @php
+                                $tc = $personnel->type_contrat;
+                                $tcClass = $tc === 'CDI' ? 'pp-badge-ind' : ($tc === 'CDD' ? 'pp-badge-amb' : 'pp-badge-gray');
+                            @endphp
+                            <span class="pp-badge {{ $tcClass }}">{{ $tc ?? 'N/A' }}</span>
                         </td>
                         <td>
-                            <span class="pp-badge {{ $personnel->is_active ? 'pp-badge-success' : 'pp-badge-danger' }}">
+                            <span class="pp-badge {{ $personnel->is_active ? 'pp-badge-teal' : 'pp-badge-red' }}">
                                 {{ $personnel->is_active ? 'Actif' : 'Inactif' }}
                             </span>
                         </td>
                         <td>
                             <div class="pp-actions">
-                                <a href="{{ route('admin.personnels.show', $personnel->id) }}" class="pp-act-btn view" title="Voir details">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                        <circle cx="12" cy="12" r="3"></circle>
-                                    </svg>
+                                <a href="{{ route('admin.personnels.show', $personnel->id) }}" class="pp-act view" title="Voir le profil">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                 </a>
-                                <button class="pp-act-btn delete" title="Supprimer" onclick="deletePersonnel({{ $personnel->id }})">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
+                                <button class="pp-act del" title="Supprimer" onclick="deletePersonnel({{ $personnel->id }}, '{{ addslashes($personnel->nom_complet) }}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                                 </button>
                             </div>
                         </td>
@@ -1128,21 +598,13 @@
                         <td colspan="8">
                             <div class="pp-empty">
                                 <div class="pp-empty-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                                 </div>
-                                <h3>Aucun personnel trouve</h3>
-                                <p>Commencez par ajouter votre premier employe</p>
-                                <button type="button" class="pp-empty-btn" onclick="document.getElementById('btnAddPersonnel').click()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg>
-                                    Creer un personnel
+                                <p class="pp-empty-title">Aucun personnel trouvé</p>
+                                <p class="pp-empty-desc">Commencez par ajouter votre premier employé</p>
+                                <button type="button" class="pp-btn pp-btn-primary" onclick="document.getElementById('btnAddPersonnel').click()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                    Créer un personnel
                                 </button>
                             </div>
                         </td>
@@ -1151,80 +613,112 @@
                 </tbody>
             </table>
         </div>
+
+        @if($personnels->count() > 0)
+        <div class="pp-tfoot">
+            <span class="pp-tfoot-txt">
+                Affichage <strong>{{ $personnels->firstItem() }}–{{ $personnels->lastItem() }}</strong>
+                sur <strong>{{ $personnels->total() }}</strong> employés
+            </span>
+            <span class="pp-tfoot-txt" id="filterCount"></span>
+        </div>
+        @endif
     </div>
 
-    <!-- Pagination -->
+    {{-- ── Card Grid View ── --}}
+    <div class="pp-grid" id="gridView">
+        @foreach($personnels as $personnel)
+        @php
+            $tc = $personnel->type_contrat;
+            $tcClass = $tc === 'CDI' ? 'pp-badge-ind' : ($tc === 'CDD' ? 'pp-badge-amb' : 'pp-badge-gray');
+        @endphp
+        <div class="pp-card" data-search="{{ strtolower($personnel->nom_complet . ' ' . $personnel->matricule . ' ' . $personnel->poste) }}">
+            <div class="pp-card-head">
+                <img src="{{ $personnel->photo_url }}" alt="{{ $personnel->nom_complet }}" class="pp-card-av">
+                <div class="pp-card-info">
+                    <span class="pp-card-name">{{ $personnel->nom_complet }}</span>
+                    <span class="pp-card-mat">{{ $personnel->matricule }}</span>
+                </div>
+                <span class="pp-badge {{ $personnel->is_active ? 'pp-badge-teal' : 'pp-badge-red' }}">
+                    {{ $personnel->is_active ? 'Actif' : 'Inactif' }}
+                </span>
+            </div>
+            <div class="pp-card-rows">
+                <div class="pp-card-row">
+                    <span class="pp-card-rlabel">Poste</span>
+                    <span class="pp-card-rval">{{ $personnel->poste ?? '—' }}</span>
+                </div>
+                <div class="pp-card-row">
+                    <span class="pp-card-rlabel">Département</span>
+                    <span class="pp-card-rval">{{ $personnel->departement->nom ?? '—' }}</span>
+                </div>
+                <div class="pp-card-row">
+                    <span class="pp-card-rlabel">Embauche</span>
+                    <span class="pp-card-rval">
+                        {{ $personnel->date_embauche
+                            ? \Carbon\Carbon::parse($personnel->date_embauche)->locale('fr')->isoFormat('DD MMM YYYY')
+                            : '—' }}
+                    </span>
+                </div>
+            </div>
+            <div class="pp-card-foot">
+                <span class="pp-badge {{ $tcClass }}">{{ $tc ?? 'N/A' }}</span>
+                <div class="pp-actions">
+                    <a href="{{ route('admin.personnels.show', $personnel->id) }}" class="pp-act view" title="Voir le profil">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </a>
+                    <button class="pp-act del" title="Supprimer" onclick="deletePersonnel({{ $personnel->id }}, '{{ addslashes($personnel->nom_complet) }}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    {{-- ── Pagination ── --}}
     @if($personnels->hasPages())
     <div class="pp-pagination">
-        {{ $personnels->links() }}
+        {{ $personnels->appends(request()->query())->links() }}
     </div>
     @endif
+
 </div>
 
 @include('personnels.modal_v3_final')
-
 @endsection
 
 @section('scripts')
 <script>
-// Animate stat counters
+/* ── Animate stat counters ── */
 function animateStats() {
-    document.querySelectorAll('.pp-stat-value[data-count]').forEach(el => {
+    document.querySelectorAll('.pp-stat-val[data-count]').forEach(el => {
         const target = parseInt(el.dataset.count) || 0;
-        const duration = 600;
-        const start = performance.now();
-
-        function tick(now) {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            el.textContent = Math.round(target * eased);
-            if (progress < 1) requestAnimationFrame(tick);
-        }
-
-        requestAnimationFrame(tick);
+        const dur = 700, start = performance.now();
+        (function tick(now) {
+            const p = Math.min((now - start) / dur, 1);
+            const e = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(target * e);
+            if (p < 1) requestAnimationFrame(tick);
+        })(start);
     });
 }
 
-// ══════════════════════════════════════════════════════════════════
-//  PREMIUM NOTIFICATION  —  showNotification(message, type, duration)
-//  duration : ms avant fermeture auto (0 = persistant)
-// ══════════════════════════════════════════════════════════════════
+/* ── Premium Notification ── */
 function showNotification(message, type = 'info', duration = 6000) {
-    // Fermer les notifications existantes avec animation
     document.querySelectorAll('.hrp-notif').forEach(n => {
         n.classList.add('hrp-hide');
         setTimeout(() => n.remove(), 400);
     });
-
-    const labels = { success: 'Succès', error: 'Erreur', info: 'Information', warning: 'Attention' };
-
+    const labels = { success:'Succès', error:'Erreur', info:'Information' };
     const icons = {
-        success: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path class="hrp-check-path" d="M20 6L9 17L4 12"
-                          stroke="#10b981" stroke-width="2.5"
-                          stroke-linecap="round" stroke-linejoin="round"
-                          pathLength="1"/>
-                  </svg>`,
-        error:   `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="18" y1="6" x2="6"  y2="18" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
-                    <line x1="6"  y1="6" x2="18" y2="18" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>
-                  </svg>`,
-        info:    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="#3b82f6" stroke-width="2.2"/>
-                    <line x1="12" y1="8"  x2="12"    y2="12"   stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round"/>
-                    <line x1="12" y1="16" x2="12.01" y2="16"   stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
-                  </svg>`,
+        success: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path class="hrp-check-path" d="M20 6L9 17L4 12" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg>`,
+        error:   `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6"  y2="18" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/><line x1="6"  y1="6" x2="18" y2="18" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+        info:    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#6366f1" stroke-width="2.2"/><line x1="12" y1="8" x2="12" y2="12" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"/></svg>`,
     };
-
-    const progressHTML = duration > 0
-        ? `<div class="hrp-notif-progress"><div class="hrp-notif-bar"></div></div>`
-        : '';
-
     const notif = document.createElement('div');
     notif.className = `hrp-notif hrp-notif-${type}`;
-    notif.setAttribute('role', 'status');
-    notif.setAttribute('aria-live', 'polite');
+    notif.setAttribute('role','status');
     notif.innerHTML = `
         <div class="hrp-notif-inner">
             <div class="hrp-notif-icon-wrap">
@@ -1233,95 +727,119 @@ function showNotification(message, type = 'info', duration = 6000) {
             </div>
             <div class="hrp-notif-body">
                 <div class="hrp-notif-label">${labels[type] ?? type}</div>
-                <div class="hrp-notif-msg">${message.replace(/\n/g, '<br>')}</div>
+                <div class="hrp-notif-msg">${message.replace(/\n/g,'<br>')}</div>
             </div>
-            <button class="hrp-notif-close"
-                    onclick="this.closest('.hrp-notif').classList.add('hrp-hide'); setTimeout(() => this.closest('.hrp-notif').remove(), 400)"
-                    title="Fermer" aria-label="Fermer">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
+            <button class="hrp-notif-close" onclick="this.closest('.hrp-notif').classList.add('hrp-hide');setTimeout(()=>this.closest('.hrp-notif').remove(),400)" title="Fermer">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
-        ${progressHTML}
+        ${duration > 0 ? '<div class="hrp-notif-progress"><div class="hrp-notif-bar"></div></div>' : ''}
     `;
     document.body.appendChild(notif);
-
-    // ① Entrée avec ressort (spring)
     requestAnimationFrame(() => requestAnimationFrame(() => notif.classList.add('hrp-show')));
-
-    // ② Progress bar : shrink de gauche à droite
     if (duration > 0) {
         const bar = notif.querySelector('.hrp-notif-bar');
         if (bar) {
             bar.style.transition = `transform ${duration}ms linear`;
-            requestAnimationFrame(() => requestAnimationFrame(() => {
-                bar.style.transform = 'scaleX(0)';
-            }));
+            requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.transform = 'scaleX(0)'; }));
         }
-        // ③ Auto-dismiss
         setTimeout(() => {
             notif.classList.add('hrp-hide');
-            notif.classList.remove('hrp-show');
             setTimeout(() => notif.remove(), 400);
         }, duration);
     }
 }
 
-// Delete personnel
-async function deletePersonnel(id) {
-    if (!confirm('Etes-vous sur de vouloir supprimer ce personnel?')) {
-        return;
-    }
-
+/* ── Delete ── */
+async function deletePersonnel(id, name) {
+    if (!confirm(`Supprimer ${name} ? Cette action est irréversible.`)) return;
     try {
-        const response = await fetch(`/admin/personnels/${id}`, {
+        const res = await fetch(`/admin/personnels/${id}`, {
             method: 'DELETE',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 'Accept': 'application/json'
             }
         });
-
-        const data = await response.json();
-
+        const data = await res.json();
         if (data.success) {
-            sessionStorage.setItem('personnel_flash', JSON.stringify({
-                type: 'success',
-                message: '✅ Personnel supprimé avec succès.'
-            }));
+            sessionStorage.setItem('pp_flash', JSON.stringify({ type:'success', message:`${name} a été supprimé avec succès.` }));
             window.location.reload();
         } else {
-            showNotification('Erreur : ' + (data.message || 'Une erreur est survenue'), 'error', 0);
+            showNotification(data.message || 'Une erreur est survenue.', 'error', 0);
         }
-    } catch (error) {
-        console.error('Erreur:', error);
-        showNotification('Erreur lors de la suppression. Veuillez réessayer.', 'error', 0);
+    } catch(e) {
+        showNotification('Erreur réseau. Veuillez réessayer.', 'error', 0);
     }
 }
 
-// Search functionality
-document.getElementById('searchInput').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    const rows = document.querySelectorAll('#personnelTableBody tr');
+/* ── Live search (client-side) ── */
+document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    const rows = document.querySelectorAll('#personnelTableBody tr[data-search]');
+    const cards = document.querySelectorAll('#gridView .pp-card[data-search]');
+    let visible = 0;
 
-    rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(searchTerm) ? '' : 'none';
+    rows.forEach(r => {
+        const show = !q || r.dataset.search.includes(q);
+        r.style.display = show ? '' : 'none';
+        if (show) visible++;
     });
+    cards.forEach(c => {
+        const show = !q || c.dataset.search.includes(q);
+        c.style.display = show ? '' : 'none';
+    });
+
+    const fc = document.getElementById('filterCount');
+    if (fc) fc.textContent = q ? `${visible} résultat${visible > 1 ? 's' : ''} trouvé${visible > 1 ? 's' : ''}` : '';
 });
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    // ⚡ Flash message après rechargement (sessionStorage → notification premium)
+/* ── View toggle ── */
+const tableView = document.getElementById('tableView');
+const gridView  = document.getElementById('gridView');
+const btnTable  = document.getElementById('btnTable');
+const btnGrid   = document.getElementById('btnGrid');
+
+const savedView = localStorage.getItem('pp_view') || 'table';
+if (savedView === 'grid') switchView('grid', false);
+
+btnTable.addEventListener('click', () => switchView('table'));
+btnGrid.addEventListener('click',  () => switchView('grid'));
+
+function switchView(mode, save = true) {
+    if (mode === 'grid') {
+        tableView.classList.add('pp-hidden');
+        gridView.classList.add('pp-active');
+        btnTable.classList.remove('active');
+        btnGrid.classList.add('active');
+    } else {
+        tableView.classList.remove('pp-hidden');
+        gridView.classList.remove('pp-active');
+        btnTable.classList.add('active');
+        btnGrid.classList.remove('active');
+    }
+    if (save) localStorage.setItem('pp_view', mode);
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', () => {
+    // Flash message
     try {
-        const flash = sessionStorage.getItem('personnel_flash');
+        const flash = sessionStorage.getItem('pp_flash');
         if (flash) {
-            sessionStorage.removeItem('personnel_flash');
+            sessionStorage.removeItem('pp_flash');
             const { type, message } = JSON.parse(flash);
-            setTimeout(() => showNotification(message, type, type === 'success' ? 7000 : 0), 600);
+            setTimeout(() => showNotification(message, type, type === 'success' ? 7000 : 0), 500);
         }
-    } catch(e) { console.error('Flash error:', e); }
+    } catch(e) {}
+
+    // Laravel flash
+    @if(session('success'))
+        setTimeout(() => showNotification('{{ session('success') }}', 'success', 7000), 500);
+    @endif
+    @if(session('error'))
+        setTimeout(() => showNotification('{{ session('error') }}', 'error', 0), 500);
+    @endif
 
     animateStats();
 });

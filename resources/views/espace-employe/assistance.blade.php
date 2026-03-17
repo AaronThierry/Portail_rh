@@ -1065,9 +1065,9 @@ function toggleFaq(btn) {
 /* ══════════════════════════════════════════════════
    CHAT IA
    ══════════════════════════════════════════════════ */
-let chatHistory       = [];
-let chatEscalation    = { sujet: '', categorie: 'question', priorite: 'normale' };
-const csrfToken       = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+let chatHistory    = [];
+let ticketCreated  = false;   // évite les doublons
+const csrfToken    = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 
 const chatMessages    = document.getElementById('chatMessages');
 const typingIndicator = document.getElementById('typingIndicator');
@@ -1102,7 +1102,6 @@ function addBubble(role, text) {
 
     const content = document.createElement('div');
     content.className = 'ast-bubble-content';
-    // Convert line breaks and basic markdown bold
     content.innerHTML = text
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -1114,10 +1113,49 @@ function addBubble(role, text) {
     return wrap;
 }
 
-/* ── Show / hide typing indicator ── */
+/* ── Typing indicator ── */
 function setTyping(on) {
     typingIndicator.style.display = on ? 'flex' : 'none';
     if (on) chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+/* ── Créer ticket automatiquement ── */
+async function autoCreateTicket(sujet, categorie, priorite, history) {
+    if (ticketCreated) return;   // ne pas créer deux fois
+    ticketCreated = true;
+
+    const message = history
+        .map(m => (m.role === 'user' ? 'Moi : ' : 'IA : ') + m.content)
+        .join('\n\n')
+        .substring(0, 3000);
+
+    try {
+        const res = await fetch('{{ url("/mon-espace/assistance/chat/ticket") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ sujet: sujet || 'Demande via assistant IA', categorie, priorite, message }),
+        });
+
+        const data = res.ok ? await res.json() : null;
+
+        if (data && data.success) {
+            const ref = data.reference ? ' (réf. ' + data.reference + ')' : (data.id ? ' #' + data.id : '');
+            addBubble('assistant', '🎫 J\'ai créé un ticket de support' + ref + ' en votre nom. Un agent RH va prendre en charge votre demande et vous répondra très prochainement.');
+            if (ticketSuggest) ticketSuggest.style.display = 'none';
+            showToast('Ticket créé avec succès !', 'success');
+        } else {
+            ticketCreated = false;   // autoriser retry
+            addBubble('assistant', 'Je n\'ai pas pu créer le ticket automatiquement. Utilisez le formulaire "Nouvelle demande" ci-dessous pour nous contacter.');
+        }
+    } catch (err) {
+        ticketCreated = false;
+        console.error('autoCreateTicket error:', err);
+        addBubble('assistant', 'Erreur lors de la création du ticket. Veuillez utiliser le formulaire ci-dessous.');
+    }
 }
 
 /* ── Main send function ── */
@@ -1125,7 +1163,6 @@ async function sendChat() {
     const text = chatInput.value.trim();
     if (!text) return;
 
-    // Disable input while waiting
     chatInput.value = '';
     chatInput.style.height = 'auto';
     chatInput.disabled = true;
@@ -1133,9 +1170,6 @@ async function sendChat() {
 
     addBubble('user', text);
     setTyping(true);
-
-    // Append to history BEFORE sending (server expects current message included)
-    const historyToSend = [...chatHistory, { role: 'user', content: text }];
 
     try {
         const res = await fetch('{{ url("/mon-espace/assistance/chat") }}', {
@@ -1154,94 +1188,29 @@ async function sendChat() {
         setTyping(false);
         addBubble('assistant', data.reply);
 
-        // Update history from server response
-        chatHistory = data.history ?? historyToSend;
+        chatHistory = data.history ?? [...chatHistory, { role: 'user', content: text }];
 
-        // Handle escalation
-        if (data.requires_ticket) {
-            chatEscalation = {
-                sujet     : data.suggested_sujet     ?? '',
-                categorie : data.suggested_categorie ?? 'question',
-                priorite  : data.suggested_priorite  ?? 'normale',
-            };
-            ticketSuggest.style.display = 'flex';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        // Création automatique du ticket si nécessaire
+        if (data.requires_ticket && !ticketCreated) {
+            // Petit délai pour que l'user lise la réponse IA avant la confirmation
+            setTimeout(() => {
+                autoCreateTicket(
+                    data.suggested_sujet     ?? text,
+                    data.suggested_categorie ?? 'question',
+                    data.suggested_priorite  ?? 'normale',
+                    chatHistory
+                );
+            }, 800);
         }
 
     } catch (err) {
         setTyping(false);
-        addBubble('assistant', 'Désolé, une erreur s\'est produite. Veuillez réessayer ou contacter directement le service RH.');
+        addBubble('assistant', 'Désolé, une erreur s\'est produite. Veuillez réessayer ou utiliser le formulaire ci-dessous.');
         console.error('Chat error:', err);
     } finally {
         chatInput.disabled = false;
         document.getElementById('chatSend').disabled = false;
         chatInput.focus();
-    }
-}
-
-/* ── Ticket modal ── */
-function openTicketModal() {
-    // Pre-fill fields from escalation data
-    document.getElementById('modalSujet').value     = chatEscalation.sujet;
-    document.getElementById('modalCategorie').value = chatEscalation.categorie;
-    document.getElementById('modalPriorite').value  = chatEscalation.priorite;
-
-    // Build message from chat history summary
-    const lines = chatHistory.map(m => (m.role === 'user' ? 'Moi : ' : 'IA : ') + m.content).join('\n\n');
-    document.getElementById('modalMessage').value = lines.substring(0, 3000);
-
-    document.getElementById('chatTicketModal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeTicketModal() {
-    document.getElementById('chatTicketModal').classList.remove('open');
-    document.body.style.overflow = '';
-}
-
-document.getElementById('openTicketModal')?.addEventListener('click', openTicketModal);
-
-/* ── Submit ticket from chat ── */
-async function submitChatTicket() {
-    const btn = document.getElementById('modalSubmitBtn');
-    const sujet    = document.getElementById('modalSujet').value.trim();
-    const categorie= document.getElementById('modalCategorie').value;
-    const priorite = document.getElementById('modalPriorite').value;
-    const message  = document.getElementById('modalMessage').value.trim();
-
-    if (!sujet || !message) {
-        showToast('Veuillez remplir le sujet et le message.', 'error');
-        return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Envoi…';
-
-    try {
-        const res = await fetch('{{ url("/mon-espace/assistance/chat/ticket") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({ sujet, categorie, priorite, message, history: chatHistory }),
-        });
-
-        if (!res.ok) throw new Error('Erreur ' + res.status);
-        const data = await res.json();
-
-        closeTicketModal();
-        ticketSuggest.style.display = 'none';
-        addBubble('assistant', '✅ Votre ticket a été créé avec succès (réf. #' + (data.reference ?? data.id) + '). Un agent RH vous répondra très prochainement.');
-        showToast('Ticket créé avec succès !', 'success');
-
-    } catch (err) {
-        showToast('Erreur lors de la création du ticket. Réessayez.', 'error');
-        console.error('Ticket error:', err);
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer le ticket';
     }
 }
 

@@ -175,26 +175,36 @@ PROMPT;
             $categorie = 'support';
         }
 
+        // ── Demande explicite de ticket par l'utilisateur ─────────────
+        $lastUserMsg = strtolower(collect($history)->where('role', 'user')->last()['content'] ?? '');
+        $explicitTicketKeywords = [
+            'créer un ticket', 'creer un ticket', 'ouvrir un ticket', 'ouvre un ticket',
+            'soumettre un ticket', 'faire un ticket', 'je veux un ticket',
+            'je voudrais un ticket', 'un ticket stp', 'un ticket svp',
+            'envoyer une demande', 'envoyer au support', 'contacter le support',
+            'parler à un humain', 'parler a un humain', 'agent humain', 'agent rh',
+            'prendre en charge', 'ticket de support',
+        ];
+        $userWantsTicket = collect($explicitTicketKeywords)->contains(
+            fn($k) => str_contains($lastUserMsg, $k)
+        );
+
         // ── Détection d'escalade nécessaire ───────────────────────────
         $escaladeKeywords = [
-            // Problèmes que l'IA ne peut pas résoudre
             'supprimer', 'modifier mes données', 'rembourse', 'annuler mon abonnement',
             'données perdues', 'bug bloquant', 'ne fonctionne pas du tout', 'panne totale',
             'depuis plusieurs jours', 'toujours pas résolu', 'plusieurs fois',
-            // Signal de frustration
             'très en colère', 'insatisfait', 'inacceptable', 'honteux',
-            // Bot lui-même suggère l'escalade
-            'contacter le support', 'soumettre une requête', 'agent humain',
             'je vous recommande de', 'je vous suggère de contacter',
         ];
 
-        $requiresTicket = collect($escaladeKeywords)->contains(
+        $requiresTicket = $userWantsTicket || collect($escaladeKeywords)->contains(
             fn($k) => str_contains($userText, $k) || str_contains($botText, $k)
         );
 
-        // Toujours escalader après 4+ échanges sans résolution
+        // Escalader après 5+ échanges sans résolution
         $userMsgCount = collect($history)->where('role', 'user')->count();
-        if ($userMsgCount >= 4) {
+        if ($userMsgCount >= 5) {
             $requiresTicket = true;
         }
 

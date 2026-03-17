@@ -23,6 +23,7 @@ use App\Http\Requests\StoreCongeRequest;
 use App\Notifications\NouvelleDemandeCongeNotification;
 use App\Notifications\NouvelleDemandeAbsenceNotification;
 use App\Services\WhatsAppService;
+use Illuminate\Support\Facades\Log;
 
 class EspaceEmployeController extends Controller
 {
@@ -942,7 +943,7 @@ class EspaceEmployeController extends Controller
             ]);
 
         } catch (\Throwable $e) {
-            \Log::error('chatIA exception', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            Log::error('chatIA exception', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json([
                 'reply'               => "Je rencontre des difficultés techniques. Vous pouvez soumettre votre demande directement via le formulaire ci-dessous.",
                 'history'             => $request->input('history', []),
@@ -969,7 +970,7 @@ class EspaceEmployeController extends Controller
         $user      = Auth::user();
         $personnel = $user->personnel;
 
-        Requete::create([
+        $requete = Requete::create([
             'entreprise_id' => $personnel?->entreprise_id ?? $user->entreprise_id,
             'user_id'       => $user->id,
             'sujet'         => $request->sujet,
@@ -979,7 +980,11 @@ class EspaceEmployeController extends Controller
             'statut'        => 'en_attente',
         ]);
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success'   => true,
+            'id'        => $requete->id,
+            'reference' => $requete->reference ?? null,
+        ]);
     }
 
     /**

@@ -119,6 +119,7 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
     // Chat IA — doit être AVANT {requete} pour éviter le conflit de paramètre
     Route::post('/assistance/chat', [EspaceEmployeController::class, 'chatIA'])->name('assistance.chat');
     Route::post('/assistance/chat/ticket', [EspaceEmployeController::class, 'ticketFromChat'])->name('assistance.chat.ticket');
+    Route::post('/assistance/{requete}/repondre', [EspaceEmployeController::class, 'repondreRequete'])->name('assistance.repondre');
     Route::post('/assistance/{requete}/fermer', [EspaceEmployeController::class, 'fermerRequete'])->name('assistance.fermer');
 
     // 2FA

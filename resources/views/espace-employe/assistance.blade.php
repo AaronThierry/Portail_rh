@@ -545,6 +545,85 @@
 .ast-chat-modal-submit:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,.3); }
 .ast-chat-modal-submit:disabled { opacity: .6; cursor: default; transform: none; }
 
+/* ── TICKET THREAD ── */
+.ast-ticket-toggle {
+    width: 100%; background: none; border: none; cursor: pointer; padding: 0;
+    display: flex; align-items: center; gap: .5rem; text-align: left;
+}
+.ast-ticket-chevron {
+    width: 16px; height: 16px; flex-shrink: 0; color: var(--text-3);
+    transition: transform .25s; margin-left: .25rem;
+}
+.ast-ticket-item.open .ast-ticket-chevron { transform: rotate(180deg); }
+
+.ast-ticket-body {
+    display: none; flex-direction: column; gap: 1rem;
+    margin-top: .75rem; padding-top: .75rem;
+    border-top: 1px solid var(--border);
+}
+.ast-ticket-item.open .ast-ticket-body { display: flex; }
+
+.ast-thread { display: flex; flex-direction: column; gap: .875rem; }
+
+.ast-thread-msg { display: flex; gap: .625rem; }
+.ast-thread-msg.rh { flex-direction: row-reverse; }
+
+.ast-thread-avatar {
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .6875rem; font-weight: 700;
+}
+.ast-thread-avatar.emp { background: linear-gradient(135deg,var(--ind-500),var(--ind-600)); color: #fff; }
+.ast-thread-avatar.rh  { background: linear-gradient(135deg,var(--teal-500),var(--teal-600)); color: #fff; }
+
+.ast-thread-content { flex: 1; min-width: 0; max-width: 78%; display: flex; flex-direction: column; gap: .3rem; }
+.ast-thread-msg.rh .ast-thread-content { align-items: flex-end; }
+
+.ast-thread-meta {
+    display: flex; align-items: center; gap: .5rem;
+    font-size: .6875rem; color: var(--text-3);
+}
+.ast-thread-meta strong { color: var(--text-2); }
+.ast-thread-msg.rh .ast-thread-meta { flex-direction: row-reverse; }
+
+.ast-thread-bubble {
+    padding: .625rem .875rem; border-radius: 12px;
+    font-size: .8125rem; line-height: 1.6; white-space: pre-wrap;
+    word-break: break-word; max-width: 100%;
+}
+.ast-thread-bubble.employe {
+    background: rgba(99,102,241,.07); border: 1px solid rgba(99,102,241,.15);
+    border-top-left-radius: 3px;
+}
+.ast-thread-bubble.rh {
+    background: rgba(7,143,132,.07); border: 1px solid rgba(7,143,132,.15);
+    border-top-right-radius: 3px;
+}
+
+/* Formulaire de réponse inline */
+.ast-reply-form { display: flex; flex-direction: column; gap: .625rem; }
+.ast-reply-input {
+    width: 100%; padding: .625rem .875rem; border: 1.5px solid var(--border);
+    border-radius: var(--r-md); background: var(--bg); color: var(--text);
+    font-family: var(--font-b); font-size: .875rem; resize: vertical; min-height: 72px;
+    transition: border-color .2s, box-shadow .2s;
+}
+.ast-reply-input:focus { outline: none; border-color: var(--ind-400); box-shadow: 0 0 0 3px rgba(99,102,241,.1); }
+.ast-reply-form-foot { display: flex; align-items: center; gap: .625rem; flex-wrap: wrap; }
+
+.ast-ticket-closed-note {
+    display: flex; align-items: center; gap: .5rem;
+    padding: .625rem .875rem; border-radius: var(--r-md);
+    background: rgba(100,116,139,.06); border: 1px solid rgba(100,116,139,.15);
+    font-size: .75rem; color: var(--text-3);
+}
+
+.ast-thread-count {
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .15rem .5rem; border-radius: 999px;
+    background: rgba(99,102,241,.08); color: var(--ind-400); font-size: .6875rem;
+}
+
 /* ── RESPONSIVE ── */
 
 /* Tablette paysage */
@@ -684,70 +763,129 @@
                     </div>
                     @else
                     @foreach($requetes as $req)
-                    <div class="ast-item">
-                        <div class="ast-item-top">
-                            {{-- Icon categorie --}}
-                            <div class="ast-item-cat {{ $req->categorie }}">
-                                @if($req->categorie === 'question')
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                @elseif($req->categorie === 'support')
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                @elseif($req->categorie === 'facturation')
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                @endif
-                            </div>
+                    @php $hasThread = $req->messages->isNotEmpty() || $req->reponse; @endphp
+                    <div class="ast-item ast-ticket-item" id="ticket-{{ $req->id }}">
 
-                            <div class="ast-item-main">
-                                <div class="ast-item-sujet">{{ $req->sujet }}</div>
-                                <div class="ast-item-meta">
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
-                                        {{ $req->created_at->format('d/m/Y') }}
-                                    </span>
-                                    <span>·</span>
-                                    <span>{{ \App\Models\Requete::CATEGORIES[$req->categorie] ?? $req->categorie }}</span>
-                                    <span>·</span>
-                                    <span class="ast-badge {{ $req->statut }}">
-                                        <span class="ast-badge-dot"></span>
-                                        {{ \App\Models\Requete::STATUTS[$req->statut] ?? $req->statut }}
-                                    </span>
-                                    <span class="ast-prio-badge {{ $req->priorite }}">
-                                        @if($req->priorite === 'urgente')⚡ @endif{{ \App\Models\Requete::PRIORITES[$req->priorite] ?? $req->priorite }}
-                                    </span>
+                        {{-- En-tête du ticket (cliquable) --}}
+                        <button class="ast-ticket-toggle" onclick="toggleTicket({{ $req->id }})" aria-expanded="false">
+                            <div class="ast-item-top" style="flex:1;pointer-events:none;">
+                                <div class="ast-item-cat {{ $req->categorie }}">
+                                    @if($req->categorie === 'question')
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    @elseif($req->categorie === 'support')
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    @elseif($req->categorie === 'facturation')
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                    @else
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                    @endif
+                                </div>
+                                <div class="ast-item-main">
+                                    <div class="ast-item-sujet">{{ $req->sujet }}</div>
+                                    <div class="ast-item-meta">
+                                        <span>{{ $req->created_at->format('d/m/Y') }}</span>
+                                        <span>·</span>
+                                        <span>{{ \App\Models\Requete::CATEGORIES[$req->categorie] ?? $req->categorie }}</span>
+                                        <span>·</span>
+                                        <span class="ast-badge {{ $req->statut }}">
+                                            <span class="ast-badge-dot"></span>
+                                            {{ \App\Models\Requete::STATUTS[$req->statut] ?? $req->statut }}
+                                        </span>
+                                        <span class="ast-prio-badge {{ $req->priorite }}">
+                                            @if($req->priorite === 'urgente')⚡ @endif{{ \App\Models\Requete::PRIORITES[$req->priorite] ?? $req->priorite }}
+                                        </span>
+                                        @if($hasThread)
+                                        <span class="ast-thread-count">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                            {{ $req->messages->count() + ($req->reponse ? 1 : 0) }} message{{ ($req->messages->count() + ($req->reponse ? 1 : 0)) > 1 ? 's' : '' }}
+                                        </span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <svg class="ast-ticket-chevron" id="chevron-{{ $req->id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
 
-                        {{-- Message employé --}}
-                        <div style="font-size:.8125rem;color:var(--text-2);line-height:1.5;padding-left:2.75rem;">
-                            {{ Str::limit($req->message, 160) }}
-                        </div>
+                        {{-- Corps du ticket (collapsible) --}}
+                        <div class="ast-ticket-body" id="ticket-body-{{ $req->id }}">
 
-                        {{-- Réponse RH --}}
-                        @if($req->reponse)
-                        <div class="ast-reply" style="margin-left:2.75rem;">
-                            <div class="ast-reply-label">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                                Reponse RH {{ $req->repondu_le ? '— '.$req->repondu_le->format('d/m/Y') : '' }}
-                            </div>
-                            <div class="ast-reply-text">{{ $req->reponse }}</div>
-                        </div>
-                        @endif
+                            {{-- Fil de discussion --}}
+                            <div class="ast-thread">
 
-                        {{-- Actions --}}
-                        @if($req->statut === 'repondue')
-                        <div class="ast-item-actions" style="padding-left:2.75rem;">
-                            <form action="{{ route('espace-employe.assistance.fermer', $req) }}" method="POST">
+                                {{-- Message initial --}}
+                                <div class="ast-thread-msg employe">
+                                    <div class="ast-thread-avatar emp">{{ strtoupper(substr(Auth::user()->name ?? 'M', 0, 1)) }}</div>
+                                    <div class="ast-thread-content">
+                                        <div class="ast-thread-meta">
+                                            <strong>Vous</strong>
+                                            <span>{{ $req->created_at->format('d/m/Y à H\hi') }}</span>
+                                        </div>
+                                        <div class="ast-thread-bubble employe">{{ $req->message }}</div>
+                                    </div>
+                                </div>
+
+                                {{-- Réponse directe RH (champ reponse) --}}
+                                @if($req->reponse)
+                                <div class="ast-thread-msg rh">
+                                    <div class="ast-thread-avatar rh">RH</div>
+                                    <div class="ast-thread-content">
+                                        <div class="ast-thread-meta">
+                                            <strong>Service RH</strong>
+                                            <span>{{ $req->repondu_le ? $req->repondu_le->format('d/m/Y à H\hi') : '' }}</span>
+                                        </div>
+                                        <div class="ast-thread-bubble rh">{{ $req->reponse }}</div>
+                                    </div>
+                                </div>
+                                @endif
+
+                                {{-- Messages du fil (requete_messages) --}}
+                                @foreach($req->messages as $msg)
+                                @php $isRH = $msg->isFromAdmin(); @endphp
+                                <div class="ast-thread-msg {{ $isRH ? 'rh' : 'employe' }}">
+                                    <div class="ast-thread-avatar {{ $isRH ? 'rh' : 'emp' }}">
+                                        {{ $isRH ? 'RH' : strtoupper(substr($msg->user->name ?? 'M', 0, 1)) }}
+                                    </div>
+                                    <div class="ast-thread-content">
+                                        <div class="ast-thread-meta">
+                                            <strong>{{ $isRH ? 'Service RH' : 'Vous' }}</strong>
+                                            <span>{{ $msg->created_at->format('d/m/Y à H\hi') }}</span>
+                                        </div>
+                                        <div class="ast-thread-bubble {{ $isRH ? 'rh' : 'employe' }}">{{ $msg->content }}</div>
+                                    </div>
+                                </div>
+                                @endforeach
+
+                            </div>{{-- /ast-thread --}}
+
+                            {{-- Formulaire de réponse --}}
+                            @if(!$req->isFermee())
+                            <form class="ast-reply-form" action="{{ route('espace-employe.assistance.repondre', $req) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="ast-btn ghost">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                                    Marquer comme resolu
-                                </button>
+                                <textarea name="message_reply" class="ast-reply-input" placeholder="Ajouter un message à cette demande…" rows="2" maxlength="3000" required></textarea>
+                                <div class="ast-reply-form-foot">
+                                    <button type="submit" class="ast-btn primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                        Répondre
+                                    </button>
+                                    @if($req->statut === 'repondue')
+                                    <form action="{{ route('espace-employe.assistance.fermer', $req) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="ast-btn ghost">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                            Marquer résolu
+                                        </button>
+                                    </form>
+                                    @endif
+                                </div>
                             </form>
-                        </div>
-                        @endif
+                            @else
+                            <div class="ast-ticket-closed-note">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                Ticket fermé — aucune réponse possible.
+                            </div>
+                            @endif
+
+                        </div>{{-- /ast-ticket-body --}}
                     </div>
                     @endforeach
                     @endif
@@ -1059,8 +1197,34 @@ function toggleFaq(btn) {
     const item = btn.closest('.ast-faq-item');
     const wasOpen = item.classList.contains('open');
     document.querySelectorAll('.ast-faq-item.open').forEach(i => i.classList.remove('open'));
-    if(!wasOpen) item.classList.add('open');
+    if (!wasOpen) item.classList.add('open');
 }
+
+/* ── Ticket thread toggle ── */
+function toggleTicket(id) {
+    const item = document.getElementById('ticket-' + id);
+    if (!item) return;
+    const isOpen = item.classList.contains('open');
+    // Fermer tous les autres
+    document.querySelectorAll('.ast-ticket-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) {
+        item.classList.add('open');
+        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+/* ── Auto-ouvrir le ticket après redirect (#ticket-X) ── */
+(function () {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#ticket-')) {
+        const id = hash.replace('#ticket-', '');
+        const item = document.getElementById('ticket-' + id);
+        if (item) {
+            item.classList.add('open');
+            setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+        }
+    }
+})();
 
 /* ══════════════════════════════════════════════════
    CHAT IA

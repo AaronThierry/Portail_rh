@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Requete extends Model
 {
@@ -62,6 +63,11 @@ class Requete extends Model
     public function reponduPar(): BelongsTo
     {
         return $this->belongsTo(User::class, 'repondu_par');
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(RequeteMessage::class)->orderBy('created_at');
     }
 
     /* ── Scopes ─────────────────────────────────────────── */

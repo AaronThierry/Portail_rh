@@ -868,6 +868,7 @@ class EspaceEmployeController extends Controller
         $personnel = $user->personnel;
 
         $requetes = Requete::where('user_id', $user->id)
+            ->with('messages.user')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -985,6 +986,42 @@ class EspaceEmployeController extends Controller
             'id'        => $requete->id,
             'reference' => $requete->reference ?? null,
         ]);
+    }
+
+    /**
+     * L'employé répond à un ticket existant
+     */
+    public function repondreRequete(Request $request, Requete $requete)
+    {
+        $user = Auth::user();
+
+        if ($requete->user_id !== $user->id) {
+            abort(403);
+        }
+
+        if ($requete->isFermee()) {
+            return back()->with('error', 'Ce ticket est fermé, vous ne pouvez plus y répondre.');
+        }
+
+        $request->validate([
+            'message_reply' => 'required|string|max:3000',
+        ]);
+
+        \App\Models\RequeteMessage::create([
+            'requete_id' => $requete->id,
+            'user_id'    => $user->id,
+            'role'       => 'chef',
+            'content'    => $request->message_reply,
+        ]);
+
+        // Repasser en "en_cours" si la RH avait répondu
+        if ($requete->statut === 'repondue') {
+            $requete->update(['statut' => 'en_cours']);
+        }
+
+        return redirect()
+            ->route('espace-employe.assistance', ['#ticket-' . $requete->id])
+            ->with('success', 'Votre réponse a été envoyée.');
     }
 
     /**

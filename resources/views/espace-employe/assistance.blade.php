@@ -1139,7 +1139,7 @@ async function sendChat() {
     const historyToSend = [...chatHistory, { role: 'user', content: text }];
 
     try {
-        const res = await fetch('{{ route("espace-employe.assistance.chat") }}', {
+        const res = await fetch('{{ url("/mon-espace/assistance/chat") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1219,7 +1219,7 @@ async function submitChatTicket() {
     btn.textContent = 'Envoi…';
 
     try {
-        const res = await fetch('{{ route("espace-employe.assistance.chat.ticket") }}', {
+        const res = await fetch('{{ url("/mon-espace/assistance/chat/ticket") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

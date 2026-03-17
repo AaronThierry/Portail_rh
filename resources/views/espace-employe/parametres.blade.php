@@ -146,6 +146,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    min-width: 0;        /* crucial : empêche le grid item de déborder */
+    overflow: hidden;
 }
 
 /* ── CARD ── */
@@ -155,6 +157,8 @@
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
     overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
     scroll-margin-top: calc(var(--header-h) + 1.5rem);
 }
 
@@ -463,8 +467,8 @@
 
 /* Tablette portrait : sidebar en barre horizontale */
 @media (max-width: 768px) {
-    .prm-layout { grid-template-columns: 1fr; gap: 1rem; }
-    .prm-sidebar { position: static; flex-direction: row; flex-wrap: wrap; gap: .75rem; }
+    .prm-layout { grid-template-columns: 1fr; gap: 1rem; overflow: hidden; }
+    .prm-sidebar { position: static; display: flex; flex-direction: row; flex-wrap: wrap; gap: .75rem; min-width: 0; }
     .prm-id-card { display: none; }
     .prm-nav {
         flex: 1; display: flex; flex-direction: row; flex-wrap: nowrap;
@@ -482,10 +486,6 @@
 
 /* Mobile */
 @media (max-width: 540px) {
-    /* Empêche tout overflow horizontal */
-    .prm-layout, .prm-content, .prm-card { overflow-x: hidden; }
-    .prm-content { min-width: 0; }
-
     .prm-row { grid-template-columns: 1fr; }
     .prm-sec-grid { grid-template-columns: 1fr; gap: .5rem; }
 

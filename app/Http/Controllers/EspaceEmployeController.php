@@ -17,6 +17,7 @@ use App\Models\TypeConge;
 use App\Models\User;
 use App\Models\Absence;
 use App\Models\TypeAbsence;
+use App\Models\Requete;
 use App\Http\Requests\StoreCongeRequest;
 use App\Notifications\NouvelleDemandeCongeNotification;
 use App\Notifications\NouvelleDemandeAbsenceNotification;
@@ -854,6 +855,73 @@ class EspaceEmployeController extends Controller
         $absence->delete();
 
         return back()->with('success', 'La déclaration d\'absence a été annulée.');
+    }
+
+    /**
+     * Affiche la page d'assistance / support
+     */
+    public function assistance()
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        $requetes = Requete::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $stats = [
+            'total'      => $requetes->count(),
+            'en_attente' => $requetes->whereIn('statut', ['en_attente', 'en_cours'])->count(),
+            'repondues'  => $requetes->where('statut', 'repondue')->count(),
+            'fermees'    => $requetes->where('statut', 'fermee')->count(),
+        ];
+
+        return view('espace-employe.assistance', compact('personnel', 'user', 'requetes', 'stats'));
+    }
+
+    /**
+     * Soumet une nouvelle requête d'assistance
+     */
+    public function storeRequete(Request $request)
+    {
+        $user = Auth::user();
+        $personnel = $user->personnel;
+
+        $request->validate([
+            'sujet'     => 'required|string|max:255',
+            'categorie' => 'required|in:' . implode(',', array_keys(Requete::CATEGORIES)),
+            'priorite'  => 'required|in:' . implode(',', array_keys(Requete::PRIORITES)),
+            'message'   => 'required|string|max:3000',
+        ]);
+
+        Requete::create([
+            'entreprise_id' => $personnel?->entreprise_id ?? $user->entreprise_id,
+            'user_id'       => $user->id,
+            'sujet'         => $request->sujet,
+            'categorie'     => $request->categorie,
+            'priorite'      => $request->priorite,
+            'message'       => $request->message,
+            'statut'        => 'en_attente',
+        ]);
+
+        return redirect()->route('espace-employe.assistance')
+            ->with('success', 'Votre demande a été soumise. Nous vous répondrons dans les plus brefs délais.');
+    }
+
+    /**
+     * Ferme une requête d'assistance répondue
+     */
+    public function fermerRequete(Requete $requete)
+    {
+        $user = Auth::user();
+
+        if ($requete->user_id !== $user->id) {
+            abort(403);
+        }
+
+        $requete->update(['statut' => 'fermee']);
+
+        return back()->with('success', 'La demande a été marquée comme fermée.');
     }
 
     /**

@@ -113,6 +113,11 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
     // Paramètres du compte
     Route::get('/parametres', [EspaceEmployeController::class, 'parametres'])->name('parametres');
 
+    // Assistance / Support
+    Route::get('/assistance', [EspaceEmployeController::class, 'assistance'])->name('assistance');
+    Route::post('/assistance', [EspaceEmployeController::class, 'storeRequete'])->name('assistance.store');
+    Route::post('/assistance/{requete}/fermer', [EspaceEmployeController::class, 'fermerRequete'])->name('assistance.fermer');
+
     // 2FA
     Route::post('/two-factor/enable', [TwoFactorController::class, 'enable'])->name('two-factor.enable');
     Route::post('/two-factor/verify', [TwoFactorController::class, 'verify'])->name('two-factor.verify');

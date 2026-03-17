@@ -317,6 +317,13 @@
     font-family:inherit; transition:all .2s;
 }
 .ast-btn svg { width:13px; height:13px; }
+.ast-btn.primary {
+    background: linear-gradient(135deg, var(--ind-600), var(--ind-500));
+    color: #fff; box-shadow: 0 2px 8px rgba(99,102,241,.25);
+    padding: .5rem 1.125rem; font-size: .8125rem;
+}
+.ast-btn.primary:hover { transform:translateY(-1px); box-shadow: 0 4px 14px rgba(99,102,241,.35); }
+.ast-btn.primary svg { width:14px; height:14px; }
 .ast-btn.ghost { background:var(--bg); color:var(--text-2); border:1.5px solid var(--border); }
 .ast-btn.ghost:hover { border-color:var(--ind-300); color:var(--ind-700); background:var(--ind-50); }
 
@@ -587,25 +594,33 @@
 .ast-thread-msg.rh .ast-thread-meta { flex-direction: row-reverse; }
 
 .ast-thread-bubble {
-    padding: .625rem .875rem; border-radius: 12px;
+    padding: .75rem 1rem; border-radius: 12px;
     font-size: .8125rem; line-height: 1.6; white-space: pre-wrap;
-    word-break: break-word; max-width: 100%;
+    word-break: break-word; max-width: 100%; color: var(--text);
 }
 .ast-thread-bubble.employe {
-    background: rgba(99,102,241,.07); border: 1px solid rgba(99,102,241,.15);
-    border-top-left-radius: 3px;
+    background: rgba(99,102,241,.12); border: 1px solid rgba(99,102,241,.2);
+    border-top-left-radius: 3px; color: var(--text);
 }
 .ast-thread-bubble.rh {
-    background: rgba(7,143,132,.07); border: 1px solid rgba(7,143,132,.15);
-    border-top-right-radius: 3px;
+    background: rgba(7,143,132,.12); border: 1px solid rgba(7,143,132,.2);
+    border-top-right-radius: 3px; color: var(--text);
 }
 
 /* Formulaire de réponse inline */
-.ast-reply-form { display: flex; flex-direction: column; gap: .625rem; }
+.ast-reply-form {
+    display: flex; flex-direction: column; gap: .75rem;
+    padding: 1rem; border-radius: var(--r-lg);
+    background: var(--bg); border: 1.5px solid var(--border);
+}
+.ast-reply-form-label {
+    font-size: .6875rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; color: var(--text-3);
+}
 .ast-reply-input {
-    width: 100%; padding: .625rem .875rem; border: 1.5px solid var(--border);
-    border-radius: var(--r-md); background: var(--bg); color: var(--text);
-    font-family: var(--font-b); font-size: .875rem; resize: vertical; min-height: 72px;
+    width: 100%; padding: .75rem 1rem; border: 1.5px solid var(--border);
+    border-radius: var(--r-md); background: var(--surface); color: var(--text);
+    font-family: var(--font-b); font-size: .875rem; resize: vertical; min-height: 80px;
     transition: border-color .2s, box-shadow .2s;
 }
 .ast-reply-input:focus { outline: none; border-color: var(--ind-400); box-shadow: 0 0 0 3px rgba(99,102,241,.1); }
@@ -861,7 +876,11 @@
                             @if(!$req->isFermee())
                             <form class="ast-reply-form" action="{{ route('espace-employe.assistance.repondre', $req) }}" method="POST">
                                 @csrf
-                                <textarea name="message_reply" class="ast-reply-input" placeholder="Ajouter un message à cette demande…" rows="2" maxlength="3000" required></textarea>
+                                <div class="ast-reply-form-label">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;vertical-align:middle;margin-right:.3rem;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    Votre réponse
+                                </div>
+                                <textarea name="message_reply" class="ast-reply-input" placeholder="Écrivez votre réponse ici…" rows="3" maxlength="3000" required></textarea>
                                 <div class="ast-reply-form-foot">
                                     <button type="submit" class="ast-btn primary">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>

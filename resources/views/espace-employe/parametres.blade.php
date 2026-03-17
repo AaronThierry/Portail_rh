@@ -455,21 +455,46 @@
 .prm-toast-x svg { width:13px; height:13px; }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-    .prm-layout { grid-template-columns: 1fr; }
-    .prm-sidebar { position: static; }
+
+/* Tablette paysage : sidebar plus étroite */
+@media (max-width: 1024px) {
+    .prm-layout { grid-template-columns: 200px 1fr; gap: 1.125rem; }
+}
+
+/* Tablette portrait : sidebar en barre horizontale */
+@media (max-width: 768px) {
+    .prm-layout { grid-template-columns: 1fr; gap: 1rem; }
+    .prm-sidebar { position: static; flex-direction: row; flex-wrap: wrap; gap: .75rem; }
     .prm-id-card { display: none; }
-    .prm-nav { display: flex; overflow-x: auto; padding: .25rem; gap: .25rem; border-radius: var(--r-lg); scrollbar-width: none; }
+    .prm-nav {
+        flex: 1; display: flex; flex-direction: row; flex-wrap: nowrap;
+        overflow-x: auto; padding: .25rem; gap: .25rem;
+        border-radius: var(--r-lg); scrollbar-width: none;
+    }
     .prm-nav::-webkit-scrollbar { display: none; }
     .prm-nav-section { display: none; }
     .prm-nav-divider { display: none; }
     .prm-nav-item { white-space: nowrap; flex-shrink: 0; padding: .5rem .875rem; }
+    .prm-card-head { padding: 1rem 1.25rem; }
+    .prm-card-body { padding: 1.125rem 1.25rem; }
+    .prm-card-footer { padding: .875rem 1.25rem; }
 }
-@media (max-width: 600px) {
+
+/* Mobile */
+@media (max-width: 540px) {
     .prm-row { grid-template-columns: 1fr; }
     .prm-sec-grid { grid-template-columns: 1fr; }
-    .prm-danger-row { flex-direction: column; align-items: flex-start; }
+    .prm-danger-row { flex-direction: column; align-items: flex-start; gap: .75rem; }
     .prm-btn.danger { width: 100%; justify-content: center; }
+    .prm-field-row { flex-wrap: wrap; }
+    .prm-lock-badge { font-size: .5625rem; }
+    .prm-card-head { gap: .75rem; }
+    .prm-card-icon { width: 38px; height: 38px; }
+    .prm-card-icon svg { width: 17px; height: 17px; }
+    .prm-card-title { font-size: .9rem; }
+    .prm-notif-row { gap: .75rem; }
+    .prm-notif-icon { width: 36px; height: 36px; }
+    .prm-sec-grid { gap: .5rem; }
 }
 </style>
 @endsection

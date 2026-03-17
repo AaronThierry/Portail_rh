@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\Absence;
 use App\Models\TypeAbsence;
 use App\Models\Requete;
+use App\Services\OllamaService;
 use App\Http\Requests\StoreCongeRequest;
 use App\Notifications\NouvelleDemandeCongeNotification;
 use App\Notifications\NouvelleDemandeAbsenceNotification;
@@ -906,6 +907,79 @@ class EspaceEmployeController extends Controller
 
         return redirect()->route('espace-employe.assistance')
             ->with('success', 'Votre demande a été soumise. Nous vous répondrons dans les plus brefs délais.');
+    }
+
+    /**
+     * Chat IA — endpoint AJAX
+     */
+    public function chatIA(Request $request)
+    {
+        try {
+            $request->validate([
+                'message'               => 'required|string|max:1000',
+                'history'               => 'nullable|array|max:20',
+                'history.*.role'        => 'in:user,assistant',
+                'history.*.content'     => 'string|max:2000',
+            ]);
+
+            $history   = $request->input('history', []);
+            $history[] = ['role' => 'user', 'content' => $request->input('message')];
+
+            $ollama   = app(OllamaService::class);
+            $response = $ollama->chat($history);
+
+            $history[] = ['role' => 'assistant', 'content' => $response];
+
+            $escalation = $ollama->detectEscalation($history);
+
+            return response()->json([
+                'reply'               => $response,
+                'history'             => $history,
+                'requires_ticket'     => $escalation['requires_ticket'],
+                'suggested_sujet'     => $escalation['suggested_sujet'],
+                'suggested_categorie' => $escalation['suggested_categorie'],
+                'suggested_priorite'  => $escalation['suggested_priorite'],
+            ]);
+
+        } catch (\Throwable $e) {
+            \Log::error('chatIA exception', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json([
+                'reply'               => "Je rencontre des difficultés techniques. Vous pouvez soumettre votre demande directement via le formulaire ci-dessous.",
+                'history'             => $request->input('history', []),
+                'requires_ticket'     => false,
+                'suggested_sujet'     => '',
+                'suggested_categorie' => 'question',
+                'suggested_priorite'  => 'normale',
+            ]);
+        }
+    }
+
+    /**
+     * Créer un ticket depuis le chat IA
+     */
+    public function ticketFromChat(Request $request)
+    {
+        $request->validate([
+            'sujet'     => 'required|string|max:255',
+            'categorie' => 'required|in:' . implode(',', array_keys(Requete::CATEGORIES)),
+            'priorite'  => 'required|in:' . implode(',', array_keys(Requete::PRIORITES)),
+            'message'   => 'required|string|max:3000',
+        ]);
+
+        $user      = Auth::user();
+        $personnel = $user->personnel;
+
+        Requete::create([
+            'entreprise_id' => $personnel?->entreprise_id ?? $user->entreprise_id,
+            'user_id'       => $user->id,
+            'sujet'         => $request->sujet,
+            'categorie'     => $request->categorie,
+            'priorite'      => $request->priorite,
+            'message'       => $request->message,
+            'statut'        => 'en_attente',
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
     /**

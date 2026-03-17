@@ -62,7 +62,7 @@ PROMPT;
         );
 
         try {
-            $response = Http::timeout(60)->post("{$this->url}/api/chat", [
+            $response = Http::connectTimeout(5)->timeout(30)->post("{$this->url}/api/chat", [
                 'model'    => $this->model,
                 'messages' => $messages,
                 'stream'   => false,
@@ -111,7 +111,7 @@ PROMPT;
         ];
 
         try {
-            $response = Http::timeout(30)->post("{$this->url}/api/chat", [
+            $response = Http::connectTimeout(5)->timeout(20)->post("{$this->url}/api/chat", [
                 'model'    => $this->model,
                 'messages' => $summaryMessages,
                 'stream'   => false,

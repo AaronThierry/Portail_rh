@@ -46,32 +46,105 @@
 }
 
 /* ── Animations ── */
-@keyframes pp-up   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-@keyframes pp-in   { from{opacity:0;transform:scale(.97)}       to{opacity:1;transform:scale(1)} }
-@keyframes pp-spin { to{transform:rotate(360deg)} }
-@keyframes pp-dot  { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+@keyframes pp-up      { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pp-in      { from{opacity:0;transform:scale(.97)}       to{opacity:1;transform:scale(1)} }
+@keyframes pp-spin    { to{transform:rotate(360deg)} }
+@keyframes pp-dot     { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+@keyframes pp-shimmer { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+@keyframes pp-float   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
 
 /* ── Page ── */
 .pp-page { font-family:'DM Sans',sans-serif; max-width:1440px; margin:0 auto; animation:pp-up .4s cubic-bezier(.16,1,.3,1); }
 
-/* ── Header ── */
-.pp-header {
-    display:flex; justify-content:space-between; align-items:flex-start;
-    margin-bottom:28px; gap:16px;
+/* ══════════════════════════════════
+   HERO BANNER
+══════════════════════════════════ */
+.pp-hero {
+    position:relative; border-radius:20px; overflow:hidden;
+    margin-bottom:24px;
+    animation:pp-up .4s cubic-bezier(.16,1,.3,1) .04s both;
 }
-.pp-header-title {
-    font-family:'Syne',sans-serif; font-size:1.875rem; font-weight:700;
-    color:var(--pp-text); margin:0 0 5px; letter-spacing:-.4px; line-height:1.15;
+
+.pp-hero-bg {
+    background:linear-gradient(135deg,#312e81 0%,#4338ca 40%,#0d9488 100%);
+    padding:1.875rem 2rem;
+    position:relative;
 }
-.pp-header-sub {
-    font-size:.875rem; color:var(--pp-text3); margin:0;
-    display:flex; align-items:center; gap:7px;
+
+/* Orbe haut-droite */
+.pp-hero-bg::before {
+    content:''; position:absolute;
+    top:-70px; right:-70px;
+    width:260px; height:260px;
+    background:radial-gradient(circle,rgba(20,184,166,.35) 0%,transparent 70%);
+    border-radius:50%; pointer-events:none;
 }
+/* Orbe bas-gauche */
+.pp-hero-bg::after {
+    content:''; position:absolute;
+    bottom:-50px; left:-50px;
+    width:200px; height:200px;
+    background:radial-gradient(circle,rgba(99,102,241,.3) 0%,transparent 70%);
+    border-radius:50%; pointer-events:none;
+}
+
+.pp-hero-inner {
+    position:relative;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:1.5rem; flex-wrap:wrap;
+}
+
+.pp-hero-left h1 {
+    font-family:'Syne',sans-serif; font-size:1.75rem; font-weight:700;
+    color:#fff; margin:0 0 .3rem; letter-spacing:-.4px; line-height:1.2;
+}
+
+.pp-hero-sub {
+    font-size:.875rem; color:rgba(255,255,255,.72); margin:0;
+    display:flex; align-items:center; gap:8px;
+}
+
 .pp-live-dot {
     width:7px; height:7px; border-radius:50%; background:var(--pp-teal);
     display:inline-block; animation:pp-dot 2s ease-in-out infinite;
+    box-shadow:0 0 0 3px rgba(20,184,166,.25);
 }
-.pp-header-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+/* KPIs dans le hero */
+.pp-hero-kpis {
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:16px; padding:.875rem 1.5rem;
+    display:flex; gap:2rem;
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+
+.pp-hero-kpi { text-align:center; position:relative; }
+
+.pp-hero-kpi + .pp-hero-kpi::before {
+    content:''; position:absolute;
+    left:-1rem; top:15%; bottom:15%;
+    width:1px; background:rgba(255,255,255,.15);
+}
+
+.pp-hero-kpi-val {
+    font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:700;
+    color:#fff; line-height:1;
+}
+
+.pp-hero-kpi-lbl {
+    font-size:.6875rem; color:rgba(255,255,255,.6);
+    text-transform:uppercase; letter-spacing:.5px;
+    font-weight:600; margin-top:.3rem;
+}
+
+.pp-hero-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+/* Ligne accent */
+.pp-hero-accent {
+    height:3px;
+    background:linear-gradient(90deg,transparent,rgba(99,102,241,.6),rgba(20,184,166,.8),transparent);
+}
 
 /* ── Buttons ── */
 .pp-btn {
@@ -285,17 +358,44 @@
 .pp-card {
     background:var(--pp-surf); border:1.5px solid var(--pp-bdr);
     border-radius:var(--pp-rl); padding:20px;
-    box-shadow:var(--pp-sh); transition:all .25s cubic-bezier(.16,1,.3,1);
+    box-shadow:var(--pp-sh);
     position:relative; overflow:hidden;
+    transform-style:preserve-3d;
+    transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(0);
+    transition:transform .12s cubic-bezier(.16,1,.3,1),
+               box-shadow .25s cubic-bezier(.16,1,.3,1),
+               border-color .25s ease;
+    will-change:transform;
 }
+
+/* Barre top gradient au hover */
 .pp-card::before {
     content:''; position:absolute; top:0; left:0; right:0; height:3px;
     background:linear-gradient(90deg,var(--pp-ind),var(--pp-teal));
     transform:scaleX(0); transform-origin:left;
     transition:transform .3s cubic-bezier(.16,1,.3,1);
 }
-.pp-card:hover { transform:translateY(-5px); box-shadow:var(--pp-shl); border-color:var(--pp-ind-m); }
+
+/* Spotlight lumineux suivant le curseur */
+.pp-card::after {
+    content:''; position:absolute; inset:0; pointer-events:none; border-radius:var(--pp-rl);
+    background:radial-gradient(circle 160px at var(--mx,50%) var(--my,50%), rgba(99,102,241,.10), transparent 70%);
+    opacity:0; transition:opacity .3s ease;
+}
+
+.pp-card:hover {
+    box-shadow:var(--pp-shl), 0 0 0 1px rgba(99,102,241,.12);
+    border-color:var(--pp-ind-m);
+}
+
 .pp-card:hover::before { transform:scaleX(1); }
+.pp-card:hover::after  { opacity:1; }
+
+/* Quand on relâche le hover → spring back */
+.pp-card.pp-tilt-off {
+    transform:perspective(700px) rotateX(0deg) rotateY(0deg) translateZ(0) !important;
+    transition:transform .45s cubic-bezier(.16,1,.3,1);
+}
 .pp-card-head { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
 .pp-card-av { width:52px; height:52px; border-radius:14px; object-fit:cover; border:2px solid var(--pp-bdr); flex-shrink:0; }
 .pp-card-info { flex:1; min-width:0; }
@@ -313,6 +413,23 @@
     display:flex; align-items:center; justify-content:space-between;
     padding-top:14px; border-top:1px solid var(--pp-bdr2);
 }
+
+/* ── Table cursor glow ── */
+#personnelTableBody {
+    position:relative;
+}
+#personnelTableBody::before {
+    content:''; pointer-events:none;
+    position:absolute;
+    width:320px; height:320px;
+    border-radius:50%;
+    left:calc(var(--gx,-999px) - 160px);
+    top:calc(var(--gy,-999px) - 160px);
+    background:radial-gradient(circle,rgba(99,102,241,.055) 0%,transparent 70%);
+    transition:left .04s linear, top .04s linear;
+    z-index:0;
+}
+#personnelTableBody tr { position:relative; z-index:1; }
 
 /* ── Empty ── */
 .pp-empty { padding:72px 24px; text-align:center; }
@@ -411,21 +528,42 @@
 @section('content')
 <div class="pp-page">
 
-    {{-- ── Header ── --}}
-    <div class="pp-header">
-        <div>
-            <h1 class="pp-header-title">Gestion du Personnel</h1>
-            <p class="pp-header-sub">
-                <span class="pp-live-dot"></span>
-                {{ $personnels->total() }} employé{{ $personnels->total() > 1 ? 's' : '' }} enregistré{{ $personnels->total() > 1 ? 's' : '' }}
-            </p>
+    {{-- ══ Hero Banner ══ --}}
+    <div class="pp-hero">
+        <div class="pp-hero-bg">
+            <div class="pp-hero-inner">
+                <div class="pp-hero-left">
+                    <h1>Gestion du Personnel</h1>
+                    <p class="pp-hero-sub">
+                        <span class="pp-live-dot"></span>
+                        Registre actif des collaborateurs
+                    </p>
+                </div>
+
+                <div class="pp-hero-kpis">
+                    <div class="pp-hero-kpi">
+                        <div class="pp-hero-kpi-val" data-count="{{ $personnels->total() }}">{{ $personnels->total() }}</div>
+                        <div class="pp-hero-kpi-lbl">Total</div>
+                    </div>
+                    <div class="pp-hero-kpi">
+                        <div class="pp-hero-kpi-val" data-count="{{ $personnels->where('is_active', true)->count() }}">{{ $personnels->where('is_active', true)->count() }}</div>
+                        <div class="pp-hero-kpi-lbl">Actifs</div>
+                    </div>
+                    <div class="pp-hero-kpi">
+                        <div class="pp-hero-kpi-val" data-count="{{ $personnels->whereNull('user_id')->count() }}">{{ $personnels->whereNull('user_id')->count() }}</div>
+                        <div class="pp-hero-kpi-lbl">Sans compte</div>
+                    </div>
+                </div>
+
+                <div class="pp-hero-actions">
+                    <button class="pp-btn pp-btn-primary" id="btnAddPersonnel" style="background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);backdrop-filter:blur(8px);box-shadow:none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Nouveau personnel
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="pp-header-actions">
-            <button class="pp-btn pp-btn-primary" id="btnAddPersonnel">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Nouveau personnel
-            </button>
-        </div>
+        <div class="pp-hero-accent"></div>
     </div>
 
     {{-- ── Stats ── --}}
@@ -821,6 +959,64 @@ function switchView(mode, save = true) {
     if (save) localStorage.setItem('pp_view', mode);
 }
 
+/* ══════════════════════════════
+   3D TILT + SPOTLIGHT on cards
+══════════════════════════════ */
+function initTilt() {
+    document.querySelectorAll('.pp-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const r  = card.getBoundingClientRect();
+            const x  = (e.clientX - r.left) / r.width;
+            const y  = (e.clientY - r.top)  / r.height;
+            const rx = (y - 0.5) * -9;
+            const ry = (x - 0.5) *  9;
+            card.style.setProperty('--rx', rx + 'deg');
+            card.style.setProperty('--ry', ry + 'deg');
+            card.style.setProperty('--mx', (x * 100) + '%');
+            card.style.setProperty('--my', (y * 100) + '%');
+            card.classList.remove('pp-tilt-off');
+        });
+        card.addEventListener('mouseleave', () => {
+            card.classList.add('pp-tilt-off');
+            card.style.setProperty('--rx', '0deg');
+            card.style.setProperty('--ry', '0deg');
+            setTimeout(() => card.classList.remove('pp-tilt-off'), 450);
+        });
+    });
+}
+
+/* ══════════════════════════════
+   TABLE cursor glow
+══════════════════════════════ */
+function initTableGlow() {
+    const tbody = document.getElementById('personnelTableBody');
+    if (!tbody) return;
+    tbody.addEventListener('mousemove', e => {
+        const r = tbody.getBoundingClientRect();
+        tbody.style.setProperty('--gx', (e.clientX - r.left) + 'px');
+        tbody.style.setProperty('--gy', (e.clientY - r.top)  + 'px');
+    });
+    tbody.addEventListener('mouseleave', () => {
+        tbody.style.setProperty('--gx', '-999px');
+        tbody.style.setProperty('--gy', '-999px');
+    });
+}
+
+/* ── Hero KPI counters ── */
+function animateHeroKpis() {
+    document.querySelectorAll('.pp-hero-kpi-val[data-count]').forEach(el => {
+        const target = parseInt(el.dataset.count) || 0;
+        if (!target) return;
+        el.textContent = '0';
+        const dur = 700, start = performance.now();
+        (function tick(now) {
+            const p = Math.min((now - start) / dur, 1);
+            el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+            if (p < 1) requestAnimationFrame(tick);
+        })(start);
+    });
+}
+
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
     // Flash message
@@ -842,6 +1038,9 @@ document.addEventListener('DOMContentLoaded', () => {
     @endif
 
     animateStats();
+    animateHeroKpis();
+    initTilt();
+    initTableGlow();
 });
 </script>
 @endsection

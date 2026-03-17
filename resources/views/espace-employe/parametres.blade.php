@@ -17,10 +17,10 @@
 
 .prm-layout {
     display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 1.25rem;
+    grid-template-columns: 240px 1fr;
+    gap: 1.5rem;
     align-items: start;
-    max-width: 880px;
+    width: 100%;
     animation: prm-in .5s cubic-bezier(.16,1,.3,1);
 }
 @keyframes prm-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; } }

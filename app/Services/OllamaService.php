@@ -139,17 +139,15 @@ PROMPT;
     public function detectEscalation(array $history): array
     {
         // Concaténer tous les messages utilisateur pour analyse
-        $userText = collect($history)
+        $userText = strtolower(collect($history)
             ->where('role', 'user')
             ->pluck('content')
-            ->implode(' ')
-            ->lower();
+            ->implode(' '));
 
-        $botText = collect($history)
+        $botText = strtolower(collect($history)
             ->where('role', 'assistant')
             ->pluck('content')
-            ->implode(' ')
-            ->lower();
+            ->implode(' '));
 
         // ── Détection de priorité urgente ──────────────────────────────
         $urgentKeywords = [

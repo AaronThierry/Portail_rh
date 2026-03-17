@@ -406,11 +406,40 @@
 function closeMobileSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
-    const burger = document.getElementById('mobileMenuButton');
-
+    const burger  = document.getElementById('mobileMenuButton');
     if (sidebar) sidebar.classList.remove('mobile-open');
     if (overlay) overlay.classList.remove('active');
-    if (burger) burger.classList.remove('active');
+    if (burger)  burger.classList.remove('active');
     document.body.style.overflow = '';
 }
+
+// Cursor glow — touche signature
+(function() {
+    const sb = document.getElementById('sidebar');
+    if (!sb) return;
+    sb.addEventListener('mousemove', e => {
+        const r = sb.getBoundingClientRect();
+        sb.style.setProperty('--sx', (e.clientX - r.left)  + 'px');
+        sb.style.setProperty('--sy', (e.clientY - r.top)   + 'px');
+    });
+    sb.addEventListener('mouseleave', () => {
+        sb.style.setProperty('--sx', '-999px');
+        sb.style.setProperty('--sy', '-999px');
+    });
+
+    // Animate quick stats ratio bar
+    document.addEventListener('DOMContentLoaded', () => {
+        const total  = parseInt(document.querySelector('.quick-stat-value:not(.success)')?.textContent) || 0;
+        const active = parseInt(document.querySelector('.quick-stat-value.success')?.textContent)       || 0;
+        const ratio  = total > 0 ? Math.round(active / total * 100) : 0;
+        const statsEl = document.querySelector('.sidebar-quick-stats');
+        if (statsEl) {
+            setTimeout(() => { statsEl.style.setProperty('--ratio', ratio + '%'); }, 200);
+            // Apply ratio via ::before width using a inline style trick
+            const style = document.createElement('style');
+            style.textContent = `.sidebar-quick-stats::before { width: ${ratio}%; transition: width .9s cubic-bezier(.16,1,.3,1) .3s; }`;
+            document.head.appendChild(style);
+        }
+    });
+})();
 </script>

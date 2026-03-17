@@ -17,7 +17,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    max-width: 1100px;
+    width: 100%;
+    min-width: 0;
     animation: ast-in .5s cubic-bezier(.16,1,.3,1);
 }
 @keyframes ast-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; } }
@@ -361,17 +362,45 @@
 .ast-contact-val   { font-size:.875rem; font-weight:600; color:var(--text); font-family:var(--font-m); }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 900px) {
-    .ast-grid { grid-template-columns: 1fr; }
-    .ast-stats { grid-template-columns: repeat(2,1fr); }
+
+/* Tablette paysage */
+@media (max-width: 1100px) {
+    .ast-grid { grid-template-columns: 1fr 320px; }
 }
+
+/* Tablette portrait */
+@media (max-width: 860px) {
+    .ast-grid { grid-template-columns: 1fr; }
+    .ast-stats { grid-template-columns: repeat(2, 1fr); }
+    .ast-hero-body { flex-wrap: wrap; }
+    .ast-hero-cta { width: 100%; justify-content: center; }
+}
+
+/* Mobile */
 @media (max-width: 540px) {
-    .ast-hero-body { flex-direction:column; align-items:flex-start; gap:1rem; }
-    .ast-hero-cta { width:100%; justify-content:center; }
-    .ast-stats { grid-template-columns: 1fr 1fr; gap:.625rem; }
+    .ast-page, .ast-card, .ast-grid > div { min-width: 0; overflow: hidden; }
+    .ast-hero { padding: 1.25rem; }
+    .ast-hero-body { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .ast-hero-title { font-size: 1.25rem; }
+    .ast-hero-icon { width: 48px; height: 48px; }
+    .ast-hero-icon svg { width: 22px; height: 22px; }
+    .ast-stats { grid-template-columns: 1fr 1fr; gap: .625rem; }
+    .ast-stat { padding: .875rem 1rem; }
+    .ast-stat-val { font-size: 1.625rem; }
     .ast-row { grid-template-columns: 1fr; }
-    .ast-card-body { padding:1rem; }
-    .ast-card-foot { padding:.875rem 1rem; }
+    .ast-card-body { padding: 1rem; }
+    .ast-card-foot { padding: .875rem 1rem; }
+    .ast-card-head { padding: .875rem 1rem; gap: .625rem; }
+    .ast-card-icon { width: 36px; height: 36px; }
+    .ast-card-icon svg { width: 16px; height: 16px; }
+    .ast-item-top { gap: .5rem; }
+    .ast-item-cat { width: 30px; height: 30px; }
+    .ast-item-cat svg { width: 13px; height: 13px; }
+    .ast-item-sujet { font-size: .8125rem; }
+    .ast-reply { margin-left: 0; }
+    .ast-item-actions { padding-left: 0; }
+    .ast-contact-item { gap: .625rem; }
+    .ast-contact-ico { width: 34px; height: 34px; }
 }
 </style>
 @endsection

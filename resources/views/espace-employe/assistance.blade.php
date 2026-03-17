@@ -361,6 +361,190 @@
 .ast-contact-label { font-size:.625rem; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--text-3); margin-bottom:.25rem; }
 .ast-contact-val   { font-size:.875rem; font-weight:600; color:var(--text); font-family:var(--font-m); }
 
+/* ── CHAT IA ── */
+.ast-chat-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 420px;
+}
+
+.ast-chat-messages {
+    flex: 1; overflow-y: auto; padding: 1.25rem;
+    display: flex; flex-direction: column; gap: .875rem;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+    background: var(--bg);
+    min-height: 320px; max-height: 420px;
+}
+.ast-chat-messages::-webkit-scrollbar { width: 4px; }
+.ast-chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* Bulles */
+.ast-bubble {
+    display: flex; gap: .625rem; align-items: flex-end; max-width: 90%;
+}
+.ast-bubble.user { flex-direction: row-reverse; align-self: flex-end; }
+.ast-bubble.bot  { align-self: flex-start; }
+
+.ast-bubble-avatar {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: .625rem; font-weight: 700;
+}
+.ast-bubble.bot  .ast-bubble-avatar { background: linear-gradient(135deg, var(--ind-500), var(--teal-500)); color: white; }
+.ast-bubble.user .ast-bubble-avatar { background: var(--ind-50); color: var(--ind-600); border: 1px solid var(--ind-200); }
+
+.ast-bubble-content {
+    padding: .625rem .875rem;
+    border-radius: var(--r-lg);
+    font-size: .8125rem; line-height: 1.55; max-width: 100%;
+    word-break: break-word;
+}
+.ast-bubble.bot  .ast-bubble-content { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; }
+.ast-bubble.user .ast-bubble-content { background: linear-gradient(135deg, var(--ind-600), var(--ind-700)); color: white; border-bottom-right-radius: 4px; }
+
+/* Typing indicator */
+.ast-typing { display: none; }
+.ast-typing.show { display: flex; }
+.ast-typing .ast-bubble-content { padding: .75rem 1rem; }
+.ast-dots { display: inline-flex; gap: 4px; align-items: center; }
+.ast-dots span {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--text-3);
+    animation: bounce .9s ease-in-out infinite;
+}
+.ast-dots span:nth-child(2) { animation-delay: .15s; }
+.ast-dots span:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+
+/* Ticket suggest banner */
+.ast-ticket-suggest {
+    display: none; margin: 0 1.25rem 1rem;
+    padding: .875rem 1rem; border-radius: var(--r-lg);
+    background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(20,184,166,.06));
+    border: 1px solid var(--ind-200);
+    border-left: 4px solid var(--teal-500);
+}
+.ast-ticket-suggest.show { display: flex; align-items: center; gap: .875rem; }
+.ast-ticket-suggest-icon { width: 36px; height: 36px; border-radius: var(--r-md); flex-shrink: 0; background: linear-gradient(135deg, var(--teal-500), var(--teal-600)); color: white; display: flex; align-items: center; justify-content: center; }
+.ast-ticket-suggest-icon svg { width: 16px; height: 16px; }
+.ast-ticket-suggest-text { flex: 1; }
+.ast-ticket-suggest-title { font-size: .8125rem; font-weight: 700; color: var(--text); margin-bottom: .125rem; }
+.ast-ticket-suggest-sub   { font-size: .75rem; color: var(--text-2); }
+.ast-ticket-btn {
+    display: inline-flex; align-items: center; gap: .375rem;
+    padding: .5rem 1rem; border-radius: var(--r-md);
+    background: linear-gradient(135deg, var(--teal-500), var(--teal-600));
+    color: white; border: none; font-size: .75rem; font-weight: 700;
+    cursor: pointer; font-family: inherit; flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(7,143,132,.3); transition: all .2s;
+}
+.ast-ticket-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(7,143,132,.4); }
+.ast-ticket-btn svg { width: 13px; height: 13px; }
+
+/* Input bar */
+.ast-chat-bar {
+    display: flex; align-items: center; gap: .625rem;
+    padding: .875rem 1.25rem; border-top: 1px solid var(--border);
+    background: var(--surface);
+}
+.ast-chat-input {
+    flex: 1; padding: .625rem .875rem;
+    border: 1.5px solid var(--border); border-radius: var(--r-lg);
+    font-size: .875rem; color: var(--text); background: var(--bg);
+    font-family: inherit; resize: none; line-height: 1.4;
+    max-height: 100px; overflow-y: auto; outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+.ast-chat-input:focus { border-color: var(--teal-400); box-shadow: 0 0 0 3px rgba(7,143,132,.1); }
+.ast-chat-input::placeholder { color: var(--text-3); }
+.ast-chat-send {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--teal-500), var(--teal-600));
+    color: white; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(7,143,132,.3); transition: all .2s;
+}
+.ast-chat-send:hover:not(:disabled) { transform: scale(1.08); box-shadow: 0 5px 14px rgba(7,143,132,.4); }
+.ast-chat-send:disabled { opacity: .5; cursor: not-allowed; }
+.ast-chat-send svg { width: 16px; height: 16px; }
+
+/* Chat header */
+.ast-chat-head-status {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-size: .6875rem; font-weight: 600; color: var(--teal-600);
+}
+.ast-chat-head-status::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--teal-500); box-shadow: 0 0 0 3px rgba(7,143,132,.2);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100% { box-shadow:0 0 0 3px rgba(7,143,132,.2); } 50% { box-shadow:0 0 0 6px rgba(7,143,132,.06); } }
+
+/* Ticket modal créé depuis chat */
+.ast-chat-modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(15,23,42,.55); backdrop-filter: blur(10px);
+    z-index: 800; align-items: center; justify-content: center; padding: 1rem;
+}
+.ast-chat-modal-overlay.open { display: flex; }
+.ast-chat-modal {
+    background: var(--surface); border-radius: var(--r-xl);
+    width: 100%; max-width: 480px; max-height: 90vh; overflow: hidden;
+    animation: mIn .4s cubic-bezier(.16,1,.3,1);
+    box-shadow: 0 32px 64px -16px rgba(0,0,0,.22);
+    border: 1px solid var(--border); display: flex; flex-direction: column;
+}
+@keyframes mIn { from { opacity:0; transform:scale(.96) translateY(16px); } to { opacity:1; transform:none; } }
+.ast-chat-modal-head {
+    background: linear-gradient(135deg, var(--ind-900), var(--ind-700));
+    padding: 1.25rem 1.375rem; color: white; position: relative; overflow: hidden; flex-shrink: 0;
+    display: flex; align-items: flex-start; gap: .75rem;
+}
+.ast-chat-modal-head::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+.ast-chat-modal-head::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--teal-400),var(--teal-500)); }
+.ast-chat-modal-title { font-family:var(--font-d); font-size:1.0625rem; font-weight:400; margin:0 0 .25rem; position:relative; z-index:1; }
+.ast-chat-modal-sub   { font-size:.75rem; opacity:.7; position:relative; z-index:1; }
+.ast-chat-modal-close { position:absolute; top:.875rem; right:.875rem; width:30px; height:30px; border:none; border-radius:var(--r-sm); background:rgba(255,255,255,.1); color:rgba(255,255,255,.7); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; z-index:2; }
+.ast-chat-modal-close:hover { background:rgba(255,255,255,.2); color:white; transform:rotate(90deg); }
+.ast-chat-modal-close svg { width:14px; height:14px; }
+.ast-chat-modal-body  { padding: 1.375rem; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+.ast-chat-modal-row   { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.ast-chat-modal-field { display: flex; flex-direction: column; gap: .375rem; }
+.ast-chat-modal-label { font-size: .75rem; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .04em; }
+.ast-chat-modal-input,
+.ast-chat-modal-select,
+.ast-chat-modal-textarea {
+    width: 100%; padding: .625rem .875rem; border: 1.5px solid var(--border);
+    border-radius: var(--r-md); background: var(--bg); color: var(--text);
+    font-family: var(--font-b); font-size: .875rem; transition: border-color .2s, box-shadow .2s;
+}
+.ast-chat-modal-input:focus,
+.ast-chat-modal-select:focus,
+.ast-chat-modal-textarea:focus {
+    outline: none; border-color: var(--ind-400); box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+}
+.ast-chat-modal-textarea { resize: vertical; min-height: 100px; }
+.ast-chat-modal-ia-note {
+    display: flex; align-items: center; gap: .5rem;
+    padding: .625rem .875rem; border-radius: var(--r-md);
+    background: rgba(99,102,241,.06); border: 1px solid rgba(99,102,241,.15);
+    font-size: .75rem; color: var(--ind-400);
+}
+.ast-chat-modal-foot  { padding: 1rem 1.375rem; border-top: 1px solid var(--border); background: var(--bg); display: flex; justify-content: flex-end; gap: .5rem; flex-shrink: 0; }
+.ast-chat-modal-cancel { padding: .5rem 1.125rem; border: 1.5px solid var(--border); border-radius: var(--r-md); background: transparent; color: var(--text-2); font-size: .875rem; cursor: pointer; transition: all .2s; }
+.ast-chat-modal-cancel:hover { border-color: var(--text-3); color: var(--text); }
+.ast-chat-modal-submit {
+    display: flex; align-items: center; gap: .5rem;
+    padding: .5rem 1.25rem; border: none; border-radius: var(--r-md);
+    background: linear-gradient(135deg, var(--ind-600), var(--ind-500)); color: white;
+    font-family: var(--font-b); font-size: .875rem; font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.ast-chat-modal-submit:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,.3); }
+.ast-chat-modal-submit:disabled { opacity: .6; cursor: default; transform: none; }
+
 /* ── RESPONSIVE ── */
 
 /* Tablette paysage */
@@ -642,8 +826,59 @@
 
         </div>
 
-        {{-- RIGHT : FAQ + Contact --}}
+        {{-- RIGHT : Chat IA + FAQ + Contact --}}
         <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+            {{-- Chat IA --}}
+            <article class="ast-card">
+                <header class="ast-card-head">
+                    <div class="ast-card-icon" style="background:linear-gradient(135deg,var(--ind-500),var(--teal-500));color:white;box-shadow:0 4px 12px rgba(99,102,241,.2);">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a9 9 0 0 1 9 9c0 4.97-4.03 9-9 9a9 9 0 0 1-9-9A9 9 0 0 1 12 2z"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg>
+                    </div>
+                    <div style="flex:1;">
+                        <h2 class="ast-card-title">Assistant IA</h2>
+                        <span class="ast-chat-head-status">En ligne · Repond instantanement</span>
+                    </div>
+                </header>
+                <div class="ast-chat-wrap">
+                    <div class="ast-chat-messages" id="chatMessages">
+                        {{-- Message d'accueil --}}
+                        <div class="ast-bubble bot">
+                            <div class="ast-bubble-avatar">IA</div>
+                            <div class="ast-bubble-content">Bonjour {{ $personnel->prenoms ?? 'vous' }} ! Je suis votre assistant RH. Comment puis-je vous aider aujourd'hui ? Posez-moi votre question et je ferai de mon mieux pour y repondre. Si je ne peux pas resoudre votre probleme, je vous aiderai a créer un ticket de support.</div>
+                        </div>
+                    </div>
+
+                    {{-- Typing indicator --}}
+                    <div class="ast-bubble bot ast-typing" id="typingIndicator" style="padding:.5rem 1.25rem;">
+                        <div class="ast-bubble-avatar">IA</div>
+                        <div class="ast-bubble-content"><div class="ast-dots"><span></span><span></span><span></span></div></div>
+                    </div>
+
+                    {{-- Suggestion de ticket --}}
+                    <div class="ast-ticket-suggest" id="ticketSuggest">
+                        <div class="ast-ticket-suggest-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        </div>
+                        <div class="ast-ticket-suggest-text">
+                            <div class="ast-ticket-suggest-title">Creer un ticket de support</div>
+                            <div class="ast-ticket-suggest-sub">L'IA n'a pas pu resoudre votre probleme — un agent humain prendra le relais.</div>
+                        </div>
+                        <button class="ast-ticket-btn" id="openTicketModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Creer
+                        </button>
+                    </div>
+
+                    {{-- Input --}}
+                    <div class="ast-chat-bar">
+                        <textarea class="ast-chat-input" id="chatInput" placeholder="Posez votre question..." rows="1" maxlength="1000" onkeydown="handleChatKey(event)"></textarea>
+                        <button class="ast-chat-send" id="chatSend" onclick="sendChat()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </article>
 
             {{-- FAQ --}}
             <article class="ast-card">
@@ -747,31 +982,282 @@
     </div>{{-- /ast-grid --}}
 </div>{{-- /ast-page --}}
 
+{{-- ── Ticket Modal (chat) ── --}}
+<div class="ast-chat-modal-overlay" id="chatTicketModal" onclick="if(event.target===this)closeTicketModal()">
+    <div class="ast-chat-modal">
+        <div class="ast-chat-modal-head">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;flex-shrink:0;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <div>
+                <div class="ast-chat-modal-title">Créer un ticket de support</div>
+                <div class="ast-chat-modal-sub">Pré-rempli depuis votre conversation avec l'IA</div>
+            </div>
+            <button class="ast-chat-modal-close" onclick="closeTicketModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="ast-chat-modal-body">
+            <div class="ast-chat-modal-field">
+                <label class="ast-chat-modal-label">Sujet</label>
+                <input type="text" class="ast-chat-modal-input" id="modalSujet" placeholder="Sujet du ticket" maxlength="255">
+            </div>
+            <div class="ast-chat-modal-row">
+                <div class="ast-chat-modal-field">
+                    <label class="ast-chat-modal-label">Catégorie</label>
+                    <select class="ast-chat-modal-select" id="modalCategorie">
+                        <option value="question">Question générale</option>
+                        <option value="facturation">Facturation / Paie</option>
+                        <option value="support">Support technique</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                <div class="ast-chat-modal-field">
+                    <label class="ast-chat-modal-label">Priorité</label>
+                    <select class="ast-chat-modal-select" id="modalPriorite">
+                        <option value="normale">Normale</option>
+                        <option value="urgente">Urgente</option>
+                    </select>
+                </div>
+            </div>
+            <div class="ast-chat-modal-field">
+                <label class="ast-chat-modal-label">Message</label>
+                <textarea class="ast-chat-modal-textarea" id="modalMessage" rows="5" placeholder="Décrivez votre problème..."></textarea>
+            </div>
+            <div class="ast-chat-modal-ia-note">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                Le résumé de votre échange avec l'IA a été pré-rempli dans le message.
+            </div>
+        </div>
+        <div class="ast-chat-modal-foot">
+            <button class="ast-chat-modal-cancel" onclick="closeTicketModal()">Annuler</button>
+            <button class="ast-chat-modal-submit" id="modalSubmitBtn" onclick="submitChatTicket()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Envoyer le ticket
+            </button>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
 <script>
-/* Toast */
+/* ── Toast ── */
 document.querySelectorAll('.ast-toast').forEach(t => {
     setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 5000);
 });
 
-/* Char counter */
+/* ── Char counter (ticket form) ── */
 function countChars(el) {
     const max = 3000, cur = el.value.length;
     const cnt = document.getElementById('charCount');
     cnt.textContent = cur + ' / ' + max;
     cnt.className = 'ast-char-count' + (cur > max - 200 ? ' warn' : '') + (cur >= max ? ' over' : '');
 }
-// Init
 document.querySelector('.ast-textarea')?.dispatchEvent(new Event('input'));
 
-/* FAQ accordion */
+/* ── FAQ accordion ── */
 function toggleFaq(btn) {
     const item = btn.closest('.ast-faq-item');
     const wasOpen = item.classList.contains('open');
     document.querySelectorAll('.ast-faq-item.open').forEach(i => i.classList.remove('open'));
     if(!wasOpen) item.classList.add('open');
 }
+
+/* ══════════════════════════════════════════════════
+   CHAT IA
+   ══════════════════════════════════════════════════ */
+let chatHistory       = [];
+let chatEscalation    = { sujet: '', categorie: 'question', priorite: 'normale' };
+const csrfToken       = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
+const chatMessages    = document.getElementById('chatMessages');
+const typingIndicator = document.getElementById('typingIndicator');
+const ticketSuggest   = document.getElementById('ticketSuggest');
+const chatInput       = document.getElementById('chatInput');
+
+/* ── Auto-resize textarea ── */
+chatInput?.addEventListener('input', () => {
+    chatInput.style.height = 'auto';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+});
+
+/* ── Enter sends, Shift+Enter = newline ── */
+function handleChatKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChat();
+    }
+}
+
+/* ── Add a chat bubble ── */
+function addBubble(role, text) {
+    const wrap = document.createElement('div');
+    wrap.className = 'ast-bubble ' + (role === 'user' ? 'user' : 'bot');
+
+    if (role === 'assistant') {
+        const av = document.createElement('div');
+        av.className = 'ast-bubble-avatar';
+        av.textContent = 'IA';
+        wrap.appendChild(av);
+    }
+
+    const content = document.createElement('div');
+    content.className = 'ast-bubble-content';
+    // Convert line breaks and basic markdown bold
+    content.innerHTML = text
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+    wrap.appendChild(content);
+
+    chatMessages.insertBefore(wrap, typingIndicator);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return wrap;
+}
+
+/* ── Show / hide typing indicator ── */
+function setTyping(on) {
+    typingIndicator.style.display = on ? 'flex' : 'none';
+    if (on) chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+/* ── Main send function ── */
+async function sendChat() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+
+    // Disable input while waiting
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    chatInput.disabled = true;
+    document.getElementById('chatSend').disabled = true;
+
+    addBubble('user', text);
+    setTyping(true);
+
+    // Append to history BEFORE sending (server expects current message included)
+    const historyToSend = [...chatHistory, { role: 'user', content: text }];
+
+    try {
+        const res = await fetch('{{ route("espace-employe.assistance.chat") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ message: text, history: chatHistory }),
+        });
+
+        if (!res.ok) throw new Error('Erreur serveur (' + res.status + ')');
+        const data = await res.json();
+
+        setTyping(false);
+        addBubble('assistant', data.reply);
+
+        // Update history from server response
+        chatHistory = data.history ?? historyToSend;
+
+        // Handle escalation
+        if (data.requires_ticket) {
+            chatEscalation = {
+                sujet     : data.suggested_sujet     ?? '',
+                categorie : data.suggested_categorie ?? 'question',
+                priorite  : data.suggested_priorite  ?? 'normale',
+            };
+            ticketSuggest.style.display = 'flex';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+    } catch (err) {
+        setTyping(false);
+        addBubble('assistant', 'Désolé, une erreur s\'est produite. Veuillez réessayer ou contacter directement le service RH.');
+        console.error('Chat error:', err);
+    } finally {
+        chatInput.disabled = false;
+        document.getElementById('chatSend').disabled = false;
+        chatInput.focus();
+    }
+}
+
+/* ── Ticket modal ── */
+function openTicketModal() {
+    // Pre-fill fields from escalation data
+    document.getElementById('modalSujet').value     = chatEscalation.sujet;
+    document.getElementById('modalCategorie').value = chatEscalation.categorie;
+    document.getElementById('modalPriorite').value  = chatEscalation.priorite;
+
+    // Build message from chat history summary
+    const lines = chatHistory.map(m => (m.role === 'user' ? 'Moi : ' : 'IA : ') + m.content).join('\n\n');
+    document.getElementById('modalMessage').value = lines.substring(0, 3000);
+
+    document.getElementById('chatTicketModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeTicketModal() {
+    document.getElementById('chatTicketModal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+document.getElementById('openTicketModal')?.addEventListener('click', openTicketModal);
+
+/* ── Submit ticket from chat ── */
+async function submitChatTicket() {
+    const btn = document.getElementById('modalSubmitBtn');
+    const sujet    = document.getElementById('modalSujet').value.trim();
+    const categorie= document.getElementById('modalCategorie').value;
+    const priorite = document.getElementById('modalPriorite').value;
+    const message  = document.getElementById('modalMessage').value.trim();
+
+    if (!sujet || !message) {
+        showToast('Veuillez remplir le sujet et le message.', 'error');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Envoi…';
+
+    try {
+        const res = await fetch('{{ route("espace-employe.assistance.chat.ticket") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ sujet, categorie, priorite, message, history: chatHistory }),
+        });
+
+        if (!res.ok) throw new Error('Erreur ' + res.status);
+        const data = await res.json();
+
+        closeTicketModal();
+        ticketSuggest.style.display = 'none';
+        addBubble('assistant', '✅ Votre ticket a été créé avec succès (réf. #' + (data.reference ?? data.id) + '). Un agent RH vous répondra très prochainement.');
+        showToast('Ticket créé avec succès !', 'success');
+
+    } catch (err) {
+        showToast('Erreur lors de la création du ticket. Réessayez.', 'error');
+        console.error('Ticket error:', err);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer le ticket';
+    }
+}
+
+/* ── Toast helper ── */
+function showToast(msg, type = 'success') {
+    const color = type === 'error' ? '#ef4444' : 'var(--teal-500)';
+    const t = document.createElement('div');
+    t.className = 'ast-toast';
+    t.innerHTML = `<span style="font-size:.875rem;color:var(--text);">${msg}</span><div class="ast-toast-bar" style="background:${color};"></div>`;
+    document.body.appendChild(t);
+    setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 5000);
+}
+
+/* Init */
+setTyping(false);
+ticketSuggest.style.display = 'none';
 </script>
 @endsection

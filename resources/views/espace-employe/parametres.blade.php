@@ -482,19 +482,53 @@
 
 /* Mobile */
 @media (max-width: 540px) {
+    /* Empêche tout overflow horizontal */
+    .prm-layout, .prm-content, .prm-card { overflow-x: hidden; }
+    .prm-content { min-width: 0; }
+
     .prm-row { grid-template-columns: 1fr; }
-    .prm-sec-grid { grid-template-columns: 1fr; }
+    .prm-sec-grid { grid-template-columns: 1fr; gap: .5rem; }
+
+    /* Field rows : masquer le badge, laisser la valeur wrapper */
+    .prm-lock-badge { display: none; }
+    .prm-field-row { gap: .625rem; padding: .75rem; }
+    .prm-field-row-icon { width: 32px; height: 32px; flex-shrink: 0; }
+    .prm-field-row-val {
+        font-size: .8125rem;
+        white-space: normal;
+        word-break: break-all;
+        overflow-wrap: break-word;
+    }
+
+    /* Info banner : évite le débordement du texte */
+    .prm-info { padding: .875rem; }
+    .prm-info p { font-size: .75rem; word-break: break-word; }
+
+    /* Danger */
     .prm-danger-row { flex-direction: column; align-items: flex-start; gap: .75rem; }
     .prm-btn.danger { width: 100%; justify-content: center; }
-    .prm-field-row { flex-wrap: wrap; }
-    .prm-lock-badge { font-size: .5625rem; }
-    .prm-card-head { gap: .75rem; }
-    .prm-card-icon { width: 38px; height: 38px; }
-    .prm-card-icon svg { width: 17px; height: 17px; }
-    .prm-card-title { font-size: .9rem; }
-    .prm-notif-row { gap: .75rem; }
+
+    /* Card headers plus compacts */
+    .prm-card-head { gap: .625rem; padding: .875rem 1rem; }
+    .prm-card-icon { width: 36px; height: 36px; border-radius: var(--r-sm); }
+    .prm-card-icon svg { width: 16px; height: 16px; }
+    .prm-card-title { font-size: .875rem; }
+    .prm-card-sub { font-size: .6875rem; }
+    .prm-card-body { padding: 1rem; }
+    .prm-card-footer { padding: .75rem 1rem; }
+
+    /* Notifs */
+    .prm-notif-row { gap: .625rem; }
     .prm-notif-icon { width: 36px; height: 36px; }
-    .prm-sec-grid { gap: .5rem; }
+    .prm-notif-label { font-size: .8125rem; }
+    .prm-notif-desc  { font-size: .6875rem; }
+
+    /* Sec cells */
+    .prm-sec-cell { padding: .75rem; }
+    .prm-sec-cell-val { font-size: .75rem; word-break: break-all; }
+
+    /* Inputs */
+    .prm-input { font-size: .8125rem; }
 }
 </style>
 @endsection

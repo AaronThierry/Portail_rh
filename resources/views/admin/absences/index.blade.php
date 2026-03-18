@@ -236,68 +236,207 @@
 .ab-pagination .active span { background: var(--ab-primary); color: white; }
 .ab-pagination .disabled span { opacity: 0.4; }
 
-/* MODAL */
-.ab-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
-.ab-modal-overlay.active { display: flex; }
-.ab-modal { background: var(--ab-card-bg); border-radius: var(--ab-radius-lg); width: 100%; max-width: 560px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden; max-height: 90vh; overflow-y: auto; }
-.ab-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem; border-bottom: 1px solid var(--ab-card-border); }
-.ab-modal-title { font-size: 1.0625rem; font-weight: 700; color: var(--ab-text-primary); }
-.ab-modal-close { width: 32px; height: 32px; border-radius: 8px; border: none; background: var(--ab-bg); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ab-text-secondary); }
-.ab-modal-close:hover { background: var(--ab-card-border); color: var(--ab-text-primary); }
-.ab-modal-close svg { width: 18px; height: 18px; }
-.ab-modal-body { padding: 1.25rem; }
-.ab-modal-footer { padding: 1.25rem; border-top: 1px solid var(--ab-card-border); display: flex; justify-content: flex-end; gap: 0.75rem; }
-.ab-form-group { margin-bottom: 1rem; }
-.ab-form-label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--ab-text-primary); margin-bottom: 0.5rem; }
-.ab-form-input, .ab-form-select, .ab-form-textarea {
-    width: 100%; padding: 0.625rem 0.875rem; background: var(--ab-bg);
-    border: 1px solid var(--ab-card-border); border-radius: 8px;
-    font-size: 0.9375rem; color: var(--ab-text-primary); box-sizing: border-box;
+/* ── MODAL ── */
+@keyframes ab-modal-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-.ab-form-input:focus, .ab-form-select:focus, .ab-form-textarea:focus { outline: none; border-color: var(--ab-primary); }
-.ab-form-textarea { resize: vertical; min-height: 70px; }
-.ab-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-.ab-form-hint { font-size: 0.75rem; color: var(--ab-text-muted); margin-top: 0.25rem; }
+@keyframes ab-overlay-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.ab-modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    z-index: 1000; align-items: center; justify-content: center; padding: 1rem;
+}
+.ab-modal-overlay.active { display: flex; animation: ab-overlay-in 0.18s ease; }
+.ab-modal {
+    background: var(--ab-card-bg); border-radius: 18px; width: 100%; max-width: 580px;
+    box-shadow: 0 32px 64px -12px rgba(99,102,241,0.18), 0 8px 24px rgba(0,0,0,0.15);
+    overflow: hidden; max-height: 92vh; overflow-y: auto;
+    animation: ab-modal-in 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    border: 1px solid rgba(99,102,241,0.12);
+}
+/* Header variants */
+.ab-modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0; border-bottom: 1px solid var(--ab-card-border); overflow: hidden;
+}
+.ab-modal-header-inner {
+    flex: 1; display: flex; align-items: center; gap: 0.875rem; padding: 1.25rem 1.375rem;
+}
+.ab-modal-header-icon {
+    width: 40px; height: 40px; border-radius: 10px; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ab-modal-header-icon svg { width: 20px; height: 20px; }
+.ab-modal-header-text { flex: 1; }
+.ab-modal-title { font-size: 1.0625rem; font-weight: 700; color: var(--ab-text-primary); margin: 0; line-height: 1.3; }
+.ab-modal-subtitle { font-size: 0.8125rem; color: var(--ab-text-muted); margin: 2px 0 0; }
+.ab-modal-close {
+    width: 36px; height: 36px; border-radius: 10px; border: none;
+    background: transparent; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; color: var(--ab-text-muted); margin-right: 1rem;
+    transition: background 0.15s, color 0.15s; flex-shrink: 0;
+}
+.ab-modal-close:hover { background: var(--ab-bg); color: var(--ab-text-primary); }
+.ab-modal-close svg { width: 18px; height: 18px; }
+/* Top accent bar on modal header */
+.ab-modal-header-bar {
+    height: 3px; background: linear-gradient(90deg, #4338ca, #6366f1, #14b8a6);
+}
+/* Colored icon variants */
+.ab-modal-icon-indigo { background: linear-gradient(135deg,#eef2ff,#e0e7ff); color: #4338ca; }
+.ab-modal-icon-teal   { background: linear-gradient(135deg,#f0fdfa,#ccfbf1); color: #0d9488; }
+.ab-modal-icon-red    { background: linear-gradient(135deg,#fef2f2,#fee2e2); color: #dc2626; }
+.dark .ab-modal-icon-indigo { background: rgba(99,102,241,0.15); color: #818cf8; }
+.dark .ab-modal-icon-teal   { background: rgba(20,184,166,0.15); color: #2dd4bf; }
+.dark .ab-modal-icon-red    { background: rgba(239,68,68,0.15);  color: #f87171; }
+
+.ab-modal-body { padding: 1.5rem 1.375rem; }
+.ab-modal-footer {
+    padding: 1.125rem 1.375rem; border-top: 1px solid var(--ab-card-border);
+    display: flex; justify-content: flex-end; gap: 0.625rem;
+    background: var(--ab-bg);
+}
+
+/* Form elements */
+.ab-form-group { margin-bottom: 1.125rem; }
+.ab-form-label {
+    display: block; font-size: 0.8125rem; font-weight: 600;
+    color: var(--ab-text-secondary); margin-bottom: 0.4375rem; letter-spacing: 0.01em;
+}
+.ab-form-input, .ab-form-select, .ab-form-textarea {
+    width: 100%; padding: 0.6875rem 1rem; background: var(--ab-bg);
+    border: 1.5px solid var(--ab-card-border); border-radius: 10px;
+    font-size: 0.9375rem; color: var(--ab-text-primary); box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s; font-family: inherit;
+}
+.ab-form-input:focus, .ab-form-select:focus, .ab-form-textarea:focus {
+    outline: none; border-color: var(--ab-primary);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+}
+.ab-form-textarea { resize: vertical; min-height: 80px; }
+.ab-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
+.ab-form-hint { font-size: 0.75rem; color: var(--ab-text-muted); margin-top: 0.3rem; }
+/* File input */
+.ab-form-file-wrap {
+    position: relative; border: 1.5px dashed var(--ab-card-border); border-radius: 10px;
+    padding: 0.875rem 1rem; background: var(--ab-bg); cursor: pointer;
+    transition: border-color 0.15s;
+}
+.ab-form-file-wrap:hover { border-color: var(--ab-primary); }
+.ab-form-file-wrap input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.ab-form-file-label {
+    display: flex; align-items: center; gap: 0.625rem; pointer-events: none;
+    font-size: 0.875rem; color: var(--ab-text-muted);
+}
+.ab-form-file-label svg { width: 18px; height: 18px; color: var(--ab-primary); flex-shrink: 0; }
+/* Custom checkbox */
+.ab-checkbox-wrap { display: flex; align-items: center; gap: 0.625rem; padding: 0.75rem 1rem; background: var(--ab-bg); border-radius: 10px; border: 1.5px solid var(--ab-card-border); cursor: pointer; }
+.ab-checkbox-wrap input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--ab-success); cursor: pointer; }
+.ab-checkbox-wrap label { font-size: 0.9375rem; font-weight: 600; color: var(--ab-text-primary); cursor: pointer; margin: 0; }
 
 /* Searchable Select */
 .ab-search-select { position: relative; }
 .ab-search-select .ab-search-input {
-    width: 100%; padding: 0.625rem 0.875rem 0.625rem 2.25rem; background: var(--ab-bg);
-    border: 1px solid var(--ab-card-border); border-radius: 8px;
+    width: 100%; padding: 0.6875rem 1rem 0.6875rem 2.375rem; background: var(--ab-bg);
+    border: 1.5px solid var(--ab-card-border); border-radius: 10px;
     font-size: 0.9375rem; color: var(--ab-text-primary); box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
-.ab-search-select .ab-search-input:focus { outline: none; border-color: var(--ab-primary); }
+.ab-search-select .ab-search-input:focus {
+    outline: none; border-color: var(--ab-primary);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+}
 .ab-search-select .ab-search-icon {
     position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
     width: 16px; height: 16px; color: var(--ab-text-muted); pointer-events: none;
 }
 .ab-search-select .ab-search-clear {
-    position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%);
-    width: 20px; height: 20px; border: none; background: none; cursor: pointer;
-    color: var(--ab-text-muted); display: none; padding: 0;
+    position: absolute; right: 0.625rem; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px; border: none; background: var(--ab-card-border); cursor: pointer;
+    color: var(--ab-text-secondary); display: none; padding: 0; border-radius: 50%;
+    font-size: 14px; line-height: 22px; text-align: center;
 }
-.ab-search-select .ab-search-clear:hover { color: var(--ab-text-primary); }
+.ab-search-select .ab-search-clear:hover { background: var(--ab-primary); color: white; }
 .ab-search-dropdown {
-    display: none; position: absolute; top: 100%; left: 0; right: 0;
-    background: var(--ab-card-bg); border: 1px solid var(--ab-card-border);
-    border-radius: 8px; max-height: 220px; overflow-y: auto; z-index: 100;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-top: 4px;
+    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--ab-card-bg); border: 1.5px solid var(--ab-card-border);
+    border-radius: 12px; max-height: 230px; overflow-y: auto; z-index: 200;
+    box-shadow: 0 12px 32px rgba(99,102,241,0.15), 0 2px 8px rgba(0,0,0,0.08);
 }
 .ab-search-option {
-    padding: 0.625rem 0.875rem; cursor: pointer; font-size: 0.9375rem;
-    color: var(--ab-text-primary); transition: background 0.1s;
+    padding: 0.6875rem 1rem; cursor: pointer; font-size: 0.9375rem;
+    color: var(--ab-text-primary); transition: background 0.1s; border-radius: 0;
+    display: flex; flex-direction: column; gap: 1px;
 }
 .ab-search-option:hover, .ab-search-option.highlighted { background: var(--ab-primary-light); }
 .ab-search-option .ab-opt-sub { color: var(--ab-text-muted); font-size: 0.8125rem; }
 .ab-search-no-results {
-    padding: 0.875rem; color: var(--ab-text-muted); font-style: italic;
+    padding: 1rem; color: var(--ab-text-muted); font-style: italic;
     font-size: 0.875rem; text-align: center; display: none;
 }
-.ab-modal-btn-cancel { padding: 0.625rem 1.25rem; background: var(--ab-bg); border: 1px solid var(--ab-card-border); border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: var(--ab-text-secondary); cursor: pointer; }
-.ab-modal-btn-confirm { padding: 0.625rem 1.25rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: white; cursor: pointer; background: var(--ab-accent); }
-.ab-modal-btn-confirm:hover { opacity: 0.9; }
-.ab-modal-btn-reject { padding: 0.625rem 1.25rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: white; cursor: pointer; background: var(--ab-danger); }
-.ab-modal-btn-reject:hover { opacity: 0.9; }
+
+/* Buttons */
+.ab-modal-btn-cancel {
+    padding: 0.625rem 1.25rem; background: var(--ab-bg);
+    border: 1.5px solid var(--ab-card-border); border-radius: 10px;
+    font-size: 0.875rem; font-weight: 600; color: var(--ab-text-secondary);
+    cursor: pointer; transition: border-color 0.15s, color 0.15s;
+}
+.ab-modal-btn-cancel:hover { border-color: var(--ab-primary); color: var(--ab-primary); }
+.ab-modal-btn-confirm {
+    padding: 0.625rem 1.375rem; border: none; border-radius: 10px;
+    font-size: 0.875rem; font-weight: 700; color: white; cursor: pointer;
+    background: linear-gradient(135deg, #4338ca, #6366f1);
+    box-shadow: 0 2px 8px rgba(99,102,241,0.30); transition: opacity 0.15s, box-shadow 0.15s;
+}
+.ab-modal-btn-confirm:hover { opacity: 0.92; box-shadow: 0 4px 14px rgba(99,102,241,0.40); }
+.ab-modal-btn-confirm-teal {
+    padding: 0.625rem 1.375rem; border: none; border-radius: 10px;
+    font-size: 0.875rem; font-weight: 700; color: white; cursor: pointer;
+    background: linear-gradient(135deg, #0d9488, #14b8a6);
+    box-shadow: 0 2px 8px rgba(20,184,166,0.30); transition: opacity 0.15s;
+}
+.ab-modal-btn-confirm-teal:hover { opacity: 0.92; }
+.ab-modal-btn-reject {
+    padding: 0.625rem 1.375rem; border: none; border-radius: 10px;
+    font-size: 0.875rem; font-weight: 700; color: white; cursor: pointer;
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    box-shadow: 0 2px 8px rgba(239,68,68,0.28); transition: opacity 0.15s;
+}
+.ab-modal-btn-reject:hover { opacity: 0.92; }
+
+/* Approve / info card in modal */
+.ab-modal-info-card {
+    background: var(--ab-bg); border-radius: 12px; padding: 1rem 1.125rem;
+    margin-bottom: 1rem; border: 1.5px solid var(--ab-card-border);
+    display: flex; align-items: center; gap: 0.875rem;
+}
+.ab-modal-info-avatar {
+    width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+    background: linear-gradient(135deg,#eef2ff,#e0e7ff);
+    display: flex; align-items: center; justify-content: center;
+}
+.dark .ab-modal-info-avatar { background: rgba(99,102,241,0.15); }
+.ab-modal-info-avatar svg { width: 20px; height: 20px; color: #4338ca; }
+.dark .ab-modal-info-avatar svg { color: #818cf8; }
+.ab-modal-info-label { font-size: 0.75rem; font-weight: 600; color: var(--ab-text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.ab-modal-info-value { font-size: 0.9375rem; font-weight: 700; color: var(--ab-text-primary); margin-top: 1px; }
+.ab-modal-notice {
+    display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.875rem;
+    color: var(--ab-text-secondary); background: rgba(99,102,241,0.06);
+    border: 1px solid rgba(99,102,241,0.15); border-radius: 10px;
+    padding: 0.875rem 1rem; line-height: 1.6; margin-bottom: 1rem;
+}
+.ab-modal-notice svg { width: 18px; height: 18px; color: var(--ab-primary); flex-shrink: 0; margin-top: 1px; }
+.ab-modal-notice-danger {
+    background: rgba(239,68,68,0.05); border-color: rgba(239,68,68,0.15);
+}
+.ab-modal-notice-danger svg { color: #ef4444; }
 
 /* Flash */
 .ab-flash { padding: 1rem 1.25rem; border-radius: var(--ab-radius); font-size: 0.9375rem; font-weight: 500; margin-bottom: 1.25rem; }
@@ -631,26 +770,37 @@
 {{-- Add Absence Modal --}}
 <div class="ab-modal-overlay" id="addAbsenceModal">
     <div class="ab-modal">
+        <div class="ab-modal-header-bar"></div>
         <div class="ab-modal-header">
-            <h3 class="ab-modal-title">Enregistrer une absence</h3>
-            <button class="ab-modal-close" onclick="closeAbModal('addAbsenceModal')">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <div class="ab-modal-header-inner">
+                <div class="ab-modal-header-icon ab-modal-icon-indigo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                </div>
+                <div class="ab-modal-header-text">
+                    <h3 class="ab-modal-title">Enregistrer une absence</h3>
+                    <p class="ab-modal-subtitle">Remplissez les informations de l'absence</p>
+                </div>
+            </div>
+            <button class="ab-modal-close" onclick="closeAbModal('addAbsenceModal')" title="Fermer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
         <form action="{{ route('admin.absences.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="ab-modal-body">
+
                 <div class="ab-form-group">
-                    <label class="ab-form-label">Employ&eacute; *</label>
+                    <label class="ab-form-label">Employ&eacute; <span style="color:var(--ab-danger)">*</span></label>
                     <div class="ab-search-select" id="abPersonnelSearch">
-                        <svg class="ab-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <svg class="ab-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                         <input type="text" class="ab-search-input" placeholder="Rechercher un employ&eacute;..." autocomplete="off">
                         <button type="button" class="ab-search-clear" title="Effacer">&times;</button>
                         <input type="hidden" name="personnel_id" value="{{ old('personnel_id') }}" required>
                         <div class="ab-search-dropdown">
                             @foreach($personnels as $p)
                                 <div class="ab-search-option" data-value="{{ $p->id }}" data-text="{{ $p->prenoms }} {{ $p->nom }} ({{ $p->matricule ?? '-' }})">
-                                    {{ $p->prenoms }} {{ $p->nom }} <span class="ab-opt-sub">({{ $p->matricule ?? '-' }})</span>
+                                    <span>{{ $p->prenoms }} {{ $p->nom }}</span>
+                                    <span class="ab-opt-sub">{{ $p->matricule ?? 'Sans matricule' }}</span>
                                 </div>
                             @endforeach
                             <div class="ab-search-no-results">Aucun r&eacute;sultat</div>
@@ -660,7 +810,7 @@
 
                 <div class="ab-form-row">
                     <div class="ab-form-group">
-                        <label class="ab-form-label">Type d'absence *</label>
+                        <label class="ab-form-label">Type d'absence <span style="color:var(--ab-danger)">*</span></label>
                         <select name="type_absence_id" class="ab-form-select" required>
                             <option value="">S&eacute;lectionnez</option>
                             @foreach($typesAbsence as $type)
@@ -669,14 +819,14 @@
                         </select>
                     </div>
                     <div class="ab-form-group">
-                        <label class="ab-form-label">Date *</label>
+                        <label class="ab-form-label">Date <span style="color:var(--ab-danger)">*</span></label>
                         <input type="date" name="date_absence" class="ab-form-input" value="{{ old('date_absence', date('Y-m-d')) }}" required>
                     </div>
                 </div>
 
                 <div class="ab-form-row">
                     <div class="ab-form-group">
-                        <label class="ab-form-label">Type de dur&eacute;e *</label>
+                        <label class="ab-form-label">Type de dur&eacute;e <span style="color:var(--ab-danger)">*</span></label>
                         <select name="duree_type" class="ab-form-select" id="dureeTypeSelect" required onchange="toggleMinutesRetard()">
                             <option value="journee" {{ old('duree_type') === 'journee' ? 'selected' : '' }}>Journ&eacute;e compl&egrave;te</option>
                             <option value="demi_journee" {{ old('duree_type') === 'demi_journee' ? 'selected' : '' }}>Demi-journ&eacute;e</option>
@@ -703,24 +853,35 @@
 
                 <div class="ab-form-group">
                     <label class="ab-form-label">Motif</label>
-                    <textarea name="motif" class="ab-form-textarea" placeholder="Motif de l'absence (optionnel)">{{ old('motif') }}</textarea>
+                    <textarea name="motif" class="ab-form-textarea" placeholder="D&eacute;crivez le motif de l'absence...">{{ old('motif') }}</textarea>
                 </div>
 
                 <div class="ab-form-group">
                     <label class="ab-form-label">Justificatif</label>
-                    <input type="file" name="justificatif" class="ab-form-input" accept=".pdf,.jpg,.jpeg,.png">
-                    <p class="ab-form-hint">PDF, JPG ou PNG - Max 5 Mo</p>
+                    <div class="ab-form-file-wrap">
+                        <input type="file" name="justificatif" accept=".pdf,.jpg,.jpeg,.png" id="justificatifInput" onchange="updateFileLabel(this)">
+                        <div class="ab-form-file-label" id="justificatifLabel">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <span>Glisser un fichier ou cliquer pour choisir &mdash; <em>PDF, JPG, PNG &middot; max 5 Mo</em></span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="ab-form-group" style="display:flex;align-items:center;gap:0.75rem;">
+                <div class="ab-form-group">
                     <input type="hidden" name="justifiee" value="0">
-                    <input type="checkbox" name="justifiee" value="1" id="justifieeCheck" {{ old('justifiee') ? 'checked' : '' }} style="width:18px;height:18px;accent-color:var(--ab-success);">
-                    <label for="justifieeCheck" class="ab-form-label" style="margin:0;cursor:pointer;">Absence justifi&eacute;e</label>
+                    <label class="ab-checkbox-wrap">
+                        <input type="checkbox" name="justifiee" value="1" id="justifieeCheck" {{ old('justifiee') ? 'checked' : '' }}>
+                        <span style="font-size:0.9375rem;font-weight:600;color:var(--ab-text-primary);">Marquer comme absence justifi&eacute;e</span>
+                    </label>
                 </div>
+
             </div>
             <div class="ab-modal-footer">
                 <button type="button" class="ab-modal-btn-cancel" onclick="closeAbModal('addAbsenceModal')">Annuler</button>
-                <button type="submit" class="ab-modal-btn-confirm">Enregistrer</button>
+                <button type="submit" class="ab-modal-btn-confirm">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;display:inline;vertical-align:middle;margin-right:5px;"><polyline points="20 6 9 17 4 12"/></svg>
+                    Enregistrer
+                </button>
             </div>
         </form>
     </div>
@@ -728,26 +889,49 @@
 
 {{-- Approve Modal --}}
 <div class="ab-modal-overlay" id="approveAbModal">
-    <div class="ab-modal">
+    <div class="ab-modal" style="max-width:480px;">
+        <div class="ab-modal-header-bar" style="background:linear-gradient(90deg,#0d9488,#14b8a6,#6366f1);"></div>
         <div class="ab-modal-header">
-            <h3 class="ab-modal-title" id="approveAbModalTitle">Approuver l'absence</h3>
-            <button class="ab-modal-close" onclick="closeAbModal('approveAbModal')">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <div class="ab-modal-header-inner">
+                <div class="ab-modal-header-icon ab-modal-icon-teal">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div class="ab-modal-header-text">
+                    <h3 class="ab-modal-title" id="approveAbModalTitle">Approuver l'absence</h3>
+                    <p class="ab-modal-subtitle" id="approveAbStepLabel">Confirmation requise</p>
+                </div>
+            </div>
+            <button class="ab-modal-close" onclick="closeAbModal('approveAbModal')" title="Fermer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
         <form id="approveAbForm" method="POST" action="">
             @csrf
             <div class="ab-modal-body">
-                <div style="background:var(--ab-bg);border-radius:10px;padding:1rem;margin-bottom:1rem;border:1px solid var(--ab-card-border);">
-                    <p style="margin:0;font-size:0.875rem;color:var(--ab-text-secondary);">Employé</p>
-                    <p style="margin:0.25rem 0 0;font-weight:600;color:var(--ab-text-primary);" id="approveAbEmployee">—</p>
+                <div class="ab-modal-info-card">
+                    <div class="ab-modal-info-avatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div>
+                        <p class="ab-modal-info-label">Employ&eacute;</p>
+                        <p class="ab-modal-info-value" id="approveAbEmployee">—</p>
+                    </div>
                 </div>
-                <p id="approveAbDesc" style="font-size:0.9375rem;color:var(--ab-text-secondary);margin-bottom:1rem;"></p>
-                <p style="font-size:0.9375rem;color:var(--ab-text-secondary);">Cette action enverra une notification &agrave; l'employ&eacute;.</p>
+                <div class="ab-modal-notice" id="approveAbDesc">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span id="approveAbDescText">Confirmer la validation de cette absence.</span>
+                </div>
+                <p style="font-size:0.875rem;color:var(--ab-text-muted);display:flex;align-items:center;gap:0.5rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0;color:var(--ab-primary);"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    Une notification sera envoy&eacute;e &agrave; l'employ&eacute;.
+                </p>
             </div>
             <div class="ab-modal-footer">
                 <button type="button" class="ab-modal-btn-cancel" onclick="closeAbModal('approveAbModal')">Annuler</button>
-                <button type="submit" class="ab-modal-btn-confirm" id="approveAbBtnLabel">Approuver</button>
+                <button type="submit" class="ab-modal-btn-confirm-teal" id="approveAbBtnLabel">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;display:inline;vertical-align:middle;margin-right:5px;"><polyline points="20 6 9 17 4 12"/></svg>
+                    Approuver
+                </button>
             </div>
         </form>
     </div>
@@ -755,27 +939,40 @@
 
 {{-- Reject Modal --}}
 <div class="ab-modal-overlay" id="rejectModal">
-    <div class="ab-modal">
+    <div class="ab-modal" style="max-width:480px;">
+        <div class="ab-modal-header-bar" style="background:linear-gradient(90deg,#dc2626,#ef4444,#f97316);"></div>
         <div class="ab-modal-header">
-            <h3 class="ab-modal-title">Refuser l'absence</h3>
-            <button class="ab-modal-close" onclick="closeAbModal('rejectModal')">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <div class="ab-modal-header-inner">
+                <div class="ab-modal-header-icon ab-modal-icon-red">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                </div>
+                <div class="ab-modal-header-text">
+                    <h3 class="ab-modal-title">Refuser l'absence</h3>
+                    <p class="ab-modal-subtitle">Un motif est requis pour notifier l'employ&eacute;</p>
+                </div>
+            </div>
+            <button class="ab-modal-close" onclick="closeAbModal('rejectModal')" title="Fermer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
         <form id="rejectForm" method="POST" action="">
             @csrf
             <div class="ab-modal-body">
-                <p style="font-size: 0.9375rem; color: var(--ab-text-secondary); margin-bottom: 1rem;">
-                    Veuillez indiquer le motif du refus. L'employ&eacute; sera notifi&eacute; de cette d&eacute;cision.
-                </p>
+                <div class="ab-modal-notice ab-modal-notice-danger" style="margin-bottom:1.25rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span>Cette d&eacute;cision est d&eacute;finitive. L'employ&eacute; recevra une notification avec le motif indiqu&eacute;.</span>
+                </div>
                 <div class="ab-form-group">
-                    <label class="ab-form-label">Motif du refus *</label>
-                    <textarea name="motif_refus" class="ab-form-textarea" required placeholder="Indiquez la raison du refus..." style="min-height: 100px;"></textarea>
+                    <label class="ab-form-label">Motif du refus <span style="color:var(--ab-danger)">*</span></label>
+                    <textarea name="motif_refus" class="ab-form-textarea" required placeholder="Expliquez clairement la raison du refus à l'employé..." style="min-height:110px;"></textarea>
                 </div>
             </div>
             <div class="ab-modal-footer">
                 <button type="button" class="ab-modal-btn-cancel" onclick="closeAbModal('rejectModal')">Annuler</button>
-                <button type="submit" class="ab-modal-btn-reject">Confirmer le refus</button>
+                <button type="submit" class="ab-modal-btn-reject">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;display:inline;vertical-align:middle;margin-right:5px;"><polyline points="20 6 9 17 4 12"/></svg>
+                    Confirmer le refus
+                </button>
             </div>
         </form>
     </div>
@@ -796,16 +993,26 @@ function openApproveAbModal(absenceId, employee, isChefStep) {
     var form = document.getElementById('approveAbForm');
     form.action = '{{ url("admin/absences") }}/' + absenceId + '/approuver';
     document.getElementById('approveAbEmployee').textContent = employee;
+    var btn = document.getElementById('approveAbBtnLabel');
     if (isChefStep) {
-        document.getElementById('approveAbModalTitle').textContent = 'Valider l\'absence (Étape 1/2)';
-        document.getElementById('approveAbDesc').textContent = 'Confirmer la validation de cette absence. Elle sera ensuite soumise à l\'approbation finale du service RH.';
-        document.getElementById('approveAbBtnLabel').textContent = 'Valider';
+        document.getElementById('approveAbModalTitle').textContent = 'Valider l\'absence';
+        document.getElementById('approveAbStepLabel').textContent = 'Étape 1 sur 2 — Validation chef';
+        document.getElementById('approveAbDescText').textContent = 'Vous validez cette absence en tant que chef. Elle sera ensuite soumise à l\'approbation finale du service RH.';
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;display:inline;vertical-align:middle;margin-right:5px;"><polyline points="20 6 9 17 4 12"/></svg>Valider';
     } else {
-        document.getElementById('approveAbModalTitle').textContent = 'Approuver l\'absence (Étape finale)';
-        document.getElementById('approveAbDesc').textContent = 'Confirmer l\'approbation définitive de cette absence. L\'employé sera notifié.';
-        document.getElementById('approveAbBtnLabel').textContent = 'Approuver définitivement';
+        document.getElementById('approveAbModalTitle').textContent = 'Approuver l\'absence';
+        document.getElementById('approveAbStepLabel').textContent = 'Étape finale — Approbation RH';
+        document.getElementById('approveAbDescText').textContent = 'Confirmer l\'approbation définitive de cette absence. L\'employé sera notifié immédiatement.';
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;display:inline;vertical-align:middle;margin-right:5px;"><polyline points="20 6 9 17 4 12"/></svg>Approuver définitivement';
     }
     document.getElementById('approveAbModal').classList.add('active');
+}
+
+function updateFileLabel(input) {
+    var label = document.getElementById('justificatifLabel');
+    if (input.files && input.files[0]) {
+        label.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--ab-success);flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg><span>' + input.files[0].name + '</span>';
+    }
 }
 
 function openRejectModal(absenceId) {

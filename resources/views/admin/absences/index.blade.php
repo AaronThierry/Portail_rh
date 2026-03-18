@@ -67,61 +67,129 @@
 /* Page */
 .absences-page { padding: 0; animation: ab-fadeIn 0.45s ease-out; }
 
+/* ── HERO BANNER ── */
+.ab-hero {
+    position:relative; border-radius:20px; overflow:hidden;
+    margin-bottom:24px; animation:ab-fadeIn .4s cubic-bezier(.16,1,.3,1) .04s both;
+}
+.ab-hero-bg {
+    background:linear-gradient(135deg,#312e81 0%,#4338ca 40%,#0d9488 100%);
+    padding:1.875rem 2rem; position:relative;
+}
+.ab-hero-bg::before {
+    content:''; position:absolute; top:-70px; right:-70px; width:260px; height:260px;
+    background:radial-gradient(circle,rgba(20,184,166,.35) 0%,transparent 70%);
+    border-radius:50%; pointer-events:none;
+}
+.ab-hero-bg::after {
+    content:''; position:absolute; bottom:-50px; left:-50px; width:200px; height:200px;
+    background:radial-gradient(circle,rgba(99,102,241,.3) 0%,transparent 70%);
+    border-radius:50%; pointer-events:none;
+}
+.ab-hero-inner {
+    position:relative; display:flex; align-items:center;
+    justify-content:space-between; gap:1.5rem; flex-wrap:wrap;
+}
+.ab-hero-left h1 {
+    font-family:'Syne',sans-serif; font-size:1.75rem; font-weight:700;
+    color:#fff; margin:0 0 .3rem; letter-spacing:-.4px; line-height:1.2;
+}
+.ab-hero-sub {
+    font-size:.875rem; color:rgba(255,255,255,.72); margin:0;
+    display:flex; align-items:center; gap:8px;
+}
+.ab-live-dot {
+    width:7px; height:7px; border-radius:50%; background:#14b8a6;
+    display:inline-block; animation:ab-dot 2s ease-in-out infinite;
+    box-shadow:0 0 0 3px rgba(20,184,166,.25);
+}
+@keyframes ab-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+.ab-hero-kpis {
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
+    border-radius:16px; padding:.875rem 1.5rem; display:flex; gap:2rem;
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.ab-hero-kpi { text-align:center; position:relative; }
+.ab-hero-kpi + .ab-hero-kpi::before {
+    content:''; position:absolute; left:-1rem; top:15%; bottom:15%;
+    width:1px; background:rgba(255,255,255,.15);
+}
+.ab-hero-kpi-val {
+    font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:700; color:#fff; line-height:1;
+}
+.ab-hero-kpi-lbl {
+    font-size:.6875rem; color:rgba(255,255,255,.6);
+    text-transform:uppercase; letter-spacing:.5px; font-weight:600; margin-top:.3rem;
+}
+.ab-hero-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.ab-hero-accent {
+    height:3px;
+    background:linear-gradient(90deg,transparent,rgba(99,102,241,.6),rgba(20,184,166,.8),transparent);
+}
+.ab-btn-hero {
+    display:inline-flex; align-items:center; gap:8px; padding:10px 20px;
+    border-radius:12px; font-size:.875rem; font-weight:600; cursor:pointer;
+    transition:all .22s; white-space:nowrap;
+    background:rgba(255,255,255,.15); color:#fff;
+    border:1.5px solid rgba(255,255,255,.25); backdrop-filter:blur(8px);
+}
+.ab-btn-hero:hover { background:rgba(255,255,255,.25); transform:translateY(-2px); }
+.ab-btn-hero svg { width:17px; height:17px; flex-shrink:0; }
+
 /* ── STAT CARDS ── */
 .ab-stats {
-    display: grid; grid-template-columns: repeat(5,1fr);
-    gap: 18px; margin-bottom: 24px;
+    display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:24px;
 }
 .ab-stat-card {
-    background: white; border-radius: 16px; padding: 20px 22px;
-    position: relative; overflow: hidden;
-    border: 1px solid var(--ab-card-border);
-    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-    animation: ab-fadeIn 0.5s ease-out backwards;
+    background:var(--ab-card-bg); border:1.5px solid var(--ab-card-border);
+    border-radius:16px; padding:20px 22px;
+    display:flex; align-items:center; gap:16px;
+    box-shadow:var(--ab-shadow-sm); transition:all .25s cubic-bezier(.16,1,.3,1);
+    position:relative; overflow:hidden; cursor:default;
+    animation:ab-fadeIn .4s cubic-bezier(.16,1,.3,1) backwards;
 }
-.dark .ab-stat-card { background: var(--ab-card-bg); }
-.ab-stat-card:nth-child(1) { animation-delay:.07s }
-.ab-stat-card:nth-child(2) { animation-delay:.14s }
-.ab-stat-card:nth-child(3) { animation-delay:.21s }
-.ab-stat-card:nth-child(4) { animation-delay:.28s }
-.ab-stat-card:nth-child(5) { animation-delay:.35s }
-.ab-stat-card:hover { transform:translateY(-4px); box-shadow:var(--ab-shadow-xl); }
+.ab-stat-card:nth-child(1){animation-delay:.04s}.ab-stat-card:nth-child(2){animation-delay:.08s}
+.ab-stat-card:nth-child(3){animation-delay:.12s}.ab-stat-card:nth-child(4){animation-delay:.16s}
+.ab-stat-card:nth-child(5){animation-delay:.20s}
+.ab-stat-card:hover { transform:translateY(-4px); box-shadow:var(--ab-shadow-xl); border-color:var(--ab-stat-c,var(--ab-primary)); }
 .ab-stat-card::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:4px;
-    border-radius:16px 16px 0 0;
+    content:''; position:absolute; top:-28px; right:-28px;
+    width:90px; height:90px; border-radius:50%;
+    background:var(--ab-stat-g,rgba(99,102,241,.06)); pointer-events:none;
 }
-.ab-stat-card.total::before      { background:linear-gradient(90deg,#4338ca,#6366f1); }
-.ab-stat-card.justified::before  { background:linear-gradient(90deg,#0d9488,#14b8a6); }
-.ab-stat-card.unjustified::before{ background:linear-gradient(90deg,#dc2626,#ef4444); }
-.ab-stat-card.late::before       { background:linear-gradient(90deg,#d97706,#f59e0b); }
-.ab-stat-card.pending::before    { background:linear-gradient(90deg,#7c3aed,#8b5cf6); }
+.ab-stat-card::after {
+    content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+    background:var(--ab-stat-c,var(--ab-primary));
+    transform:scaleX(0); transform-origin:left;
+    transition:transform .32s cubic-bezier(.16,1,.3,1);
+}
+.ab-stat-card:hover::after { transform:scaleX(1); }
+.ab-stat-card.total      { --ab-stat-c:#6366f1; --ab-stat-g:rgba(99,102,241,.06); }
+.ab-stat-card.justified  { --ab-stat-c:#14b8a6; --ab-stat-g:rgba(20,184,166,.06); }
+.ab-stat-card.unjustified{ --ab-stat-c:#ef4444; --ab-stat-g:rgba(239,68,68,.05); }
+.ab-stat-card.late       { --ab-stat-c:#f59e0b; --ab-stat-g:rgba(245,158,11,.05); }
+.ab-stat-card.pending    { --ab-stat-c:#8b5cf6; --ab-stat-g:rgba(139,92,246,.05); }
 
-.ab-stat-header { display:flex; justify-content:space-between; align-items:flex-start; }
-.ab-stat-content { flex:1; }
-.ab-stat-value {
-    font-size: 2.125rem; font-weight:800; line-height:1; margin-bottom:5px;
-    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-    animation: ab-countUp 0.6s ease-out backwards;
-}
-.ab-stat-card.total      .ab-stat-value { background:linear-gradient(135deg,#4338ca,#6366f1); }
-.ab-stat-card.justified  .ab-stat-value { background:linear-gradient(135deg,#0d9488,#14b8a6); }
-.ab-stat-card.unjustified .ab-stat-value{ background:linear-gradient(135deg,#dc2626,#ef4444); }
-.ab-stat-card.late       .ab-stat-value { background:linear-gradient(135deg,#d97706,#f59e0b); }
-.ab-stat-card.pending    .ab-stat-value { background:linear-gradient(135deg,#7c3aed,#8b5cf6); }
-.ab-stat-label {
-    font-size:0.8125rem; font-weight:600; color:var(--ab-text-secondary);
-    text-transform:uppercase; letter-spacing:0.4px;
-}
 .ab-stat-icon {
-    width:50px; height:50px; border-radius:13px; display:flex;
-    align-items:center; justify-content:center; flex-shrink:0;
+    width:48px; height:48px; border-radius:13px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
-.ab-stat-icon svg { width:24px; height:24px; stroke-width:2; }
-.ab-stat-card.total      .ab-stat-icon { background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(99,102,241,.05)); color:#6366f1; }
-.ab-stat-card.justified  .ab-stat-icon { background:linear-gradient(135deg,rgba(20,184,166,.15),rgba(20,184,166,.05)); color:#0d9488; }
-.ab-stat-card.unjustified .ab-stat-icon{ background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(239,68,68,.05));  color:#ef4444; }
-.ab-stat-card.late       .ab-stat-icon { background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05)); color:#f59e0b; }
-.ab-stat-card.pending    .ab-stat-icon { background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(139,92,246,.05)); color:#8b5cf6; }
+.ab-stat-icon svg { width:22px; height:22px; stroke-width:2; }
+.ab-stat-card.total      .ab-stat-icon { background:var(--ab-primary-light);  color:var(--ab-primary); }
+.ab-stat-card.justified  .ab-stat-icon { background:var(--ab-teal-light);     color:var(--ab-teal-dark); }
+.ab-stat-card.unjustified .ab-stat-icon{ background:var(--ab-danger-light);   color:var(--ab-danger); }
+.ab-stat-card.late       .ab-stat-icon { background:var(--ab-warning-light);  color:var(--ab-warning); }
+.ab-stat-card.pending    .ab-stat-icon { background:var(--ab-accent-light);   color:var(--ab-accent); }
+
+.ab-stat-body { flex:1; min-width:0; }
+.ab-stat-value {
+    font-family:'Syne',sans-serif; font-size:2rem; font-weight:700;
+    color:var(--ab-text-primary); line-height:1; margin-bottom:4px;
+}
+.ab-stat-label {
+    font-size:.68rem; color:var(--ab-text-muted); font-weight:600;
+    text-transform:uppercase; letter-spacing:.7px;
+}
 
 /* ── TOOLBAR ── */
 .ab-toolbar {
@@ -583,66 +651,92 @@
         </div>
     @endif
 
+    {{-- ══ Hero Banner ══ --}}
+    <div class="ab-hero">
+        <div class="ab-hero-bg">
+            <div class="ab-hero-inner">
+                <div class="ab-hero-left">
+                    <h1>Gestion des Absences</h1>
+                    <p class="ab-hero-sub">
+                        <span class="ab-live-dot"></span>
+                        Suivi et enregistrement des absences
+                    </p>
+                </div>
+                <div class="ab-hero-kpis">
+                    <div class="ab-hero-kpi">
+                        <div class="ab-hero-kpi-val">{{ $stats['total'] }}</div>
+                        <div class="ab-hero-kpi-lbl">Total</div>
+                    </div>
+                    <div class="ab-hero-kpi">
+                        <div class="ab-hero-kpi-val">{{ $stats['en_attente'] }}</div>
+                        <div class="ab-hero-kpi-lbl">En attente</div>
+                    </div>
+                    <div class="ab-hero-kpi">
+                        <div class="ab-hero-kpi-val">{{ $stats['justifiees'] }}</div>
+                        <div class="ab-hero-kpi-lbl">Justifi&eacute;es</div>
+                    </div>
+                </div>
+                <div class="ab-hero-actions">
+                    <button class="ab-btn-hero" onclick="document.getElementById('addAbsenceModal').classList.add('active')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Enregistrer une absence
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="ab-hero-accent"></div>
+    </div>
+
     {{-- ── Stats ── --}}
     <div class="ab-stats">
 
         <div class="ab-stat-card total">
-            <div class="ab-stat-header">
-                <div class="ab-stat-content">
-                    <div class="ab-stat-value">{{ $stats['total'] }}</div>
-                    <div class="ab-stat-label">Total absences</div>
-                </div>
-                <div class="ab-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-                </div>
+            <div class="ab-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </div>
+            <div class="ab-stat-body">
+                <div class="ab-stat-value">{{ $stats['total'] }}</div>
+                <div class="ab-stat-label">Total absences</div>
             </div>
         </div>
 
         <div class="ab-stat-card justified">
-            <div class="ab-stat-header">
-                <div class="ab-stat-content">
-                    <div class="ab-stat-value">{{ $stats['justifiees'] }}</div>
-                    <div class="ab-stat-label">Justifi&eacute;es</div>
-                </div>
-                <div class="ab-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </div>
+            <div class="ab-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="ab-stat-body">
+                <div class="ab-stat-value">{{ $stats['justifiees'] }}</div>
+                <div class="ab-stat-label">Justifi&eacute;es</div>
             </div>
         </div>
 
         <div class="ab-stat-card unjustified">
-            <div class="ab-stat-header">
-                <div class="ab-stat-content">
-                    <div class="ab-stat-value">{{ $stats['injustifiees'] }}</div>
-                    <div class="ab-stat-label">Non justifi&eacute;es</div>
-                </div>
-                <div class="ab-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                </div>
+            <div class="ab-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="ab-stat-body">
+                <div class="ab-stat-value">{{ $stats['injustifiees'] }}</div>
+                <div class="ab-stat-label">Non justifi&eacute;es</div>
             </div>
         </div>
 
         <div class="ab-stat-card late">
-            <div class="ab-stat-header">
-                <div class="ab-stat-content">
-                    <div class="ab-stat-value">{{ $stats['retards'] }}</div>
-                    <div class="ab-stat-label">Retards</div>
-                </div>
-                <div class="ab-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                </div>
+            <div class="ab-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="ab-stat-body">
+                <div class="ab-stat-value">{{ $stats['retards'] }}</div>
+                <div class="ab-stat-label">Retards</div>
             </div>
         </div>
 
         <div class="ab-stat-card pending">
-            <div class="ab-stat-header">
-                <div class="ab-stat-content">
-                    <div class="ab-stat-value">{{ $stats['en_attente'] }}</div>
-                    <div class="ab-stat-label">En attente</div>
-                </div>
-                <div class="ab-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                </div>
+            <div class="ab-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div class="ab-stat-body">
+                <div class="ab-stat-value">{{ $stats['en_attente'] }}</div>
+                <div class="ab-stat-label">En attente</div>
             </div>
         </div>
 

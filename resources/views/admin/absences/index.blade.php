@@ -247,22 +247,25 @@
 }
 .ab-modal-overlay {
     display: none; position: fixed; inset: 0;
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
     z-index: 1000; align-items: center; justify-content: center; padding: 1rem;
 }
 .ab-modal-overlay.active { display: flex; animation: ab-overlay-in 0.18s ease; }
+
+/* Flex-column so header+footer never scroll away */
 .ab-modal {
-    background: var(--ab-card-bg); border-radius: 18px; width: 100%; max-width: 580px;
-    box-shadow: 0 32px 64px -12px rgba(99,102,241,0.18), 0 8px 24px rgba(0,0,0,0.15);
-    overflow: hidden; max-height: 92vh; overflow-y: auto;
+    background: var(--ab-card-bg); border-radius: 16px; width: 100%; max-width: 580px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(99,102,241,0.18);
+    display: flex; flex-direction: column; max-height: 88vh; overflow: hidden;
     animation: ab-modal-in 0.22s cubic-bezier(0.34,1.56,0.64,1);
-    border: 1px solid rgba(99,102,241,0.12);
 }
 /* Header variants */
 .ab-modal-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0; border-bottom: 1px solid var(--ab-card-border); overflow: hidden;
+    padding: 0; border-bottom: 1px solid var(--ab-card-border);
+    flex-shrink: 0; /* never scrolls */
+    background: var(--ab-card-bg);
 }
 .ab-modal-header-inner {
     flex: 1; display: flex; align-items: center; gap: 0.875rem; padding: 1.25rem 1.375rem;
@@ -283,23 +286,25 @@
 }
 .ab-modal-close:hover { background: var(--ab-bg); color: var(--ab-text-primary); }
 .ab-modal-close svg { width: 18px; height: 18px; }
-/* Top accent bar on modal header */
+/* Top accent bar — toujours visible (flex-shrink:0) */
 .ab-modal-header-bar {
     height: 3px; background: linear-gradient(90deg, #4338ca, #6366f1, #14b8a6);
+    flex-shrink: 0;
 }
 /* Colored icon variants */
 .ab-modal-icon-indigo { background: linear-gradient(135deg,#eef2ff,#e0e7ff); color: #4338ca; }
 .ab-modal-icon-teal   { background: linear-gradient(135deg,#f0fdfa,#ccfbf1); color: #0d9488; }
 .ab-modal-icon-red    { background: linear-gradient(135deg,#fef2f2,#fee2e2); color: #dc2626; }
-.dark .ab-modal-icon-indigo { background: rgba(99,102,241,0.15); color: #818cf8; }
-.dark .ab-modal-icon-teal   { background: rgba(20,184,166,0.15); color: #2dd4bf; }
-.dark .ab-modal-icon-red    { background: rgba(239,68,68,0.15);  color: #f87171; }
+.dark .ab-modal-icon-indigo { background: rgba(99,102,241,0.18); color: #818cf8; }
+.dark .ab-modal-icon-teal   { background: rgba(20,184,166,0.18); color: #2dd4bf; }
+.dark .ab-modal-icon-red    { background: rgba(239,68,68,0.18);  color: #f87171; }
 
-.ab-modal-body { padding: 1.5rem 1.375rem; }
+/* Seul le body scroll — header et footer restent statiques */
+.ab-modal-body { padding: 1.375rem 1.375rem; overflow-y: auto; flex: 1; min-height: 0; }
 .ab-modal-footer {
     padding: 1.125rem 1.375rem; border-top: 1px solid var(--ab-card-border);
     display: flex; justify-content: flex-end; gap: 0.625rem;
-    background: var(--ab-bg);
+    background: var(--ab-bg); flex-shrink: 0;
 }
 
 /* Form elements */
@@ -309,14 +314,21 @@
     color: var(--ab-text-secondary); margin-bottom: 0.4375rem; letter-spacing: 0.01em;
 }
 .ab-form-input, .ab-form-select, .ab-form-textarea {
-    width: 100%; padding: 0.6875rem 1rem; background: var(--ab-bg);
-    border: 1.5px solid var(--ab-card-border); border-radius: 10px;
-    font-size: 0.9375rem; color: var(--ab-text-primary); box-sizing: border-box;
+    width: 100%; padding: 0.6875rem 1rem; background: #f8fafc;
+    border: 1.5px solid #e2e8f0; border-radius: 10px;
+    font-size: 0.9375rem; color: #1e293b; box-sizing: border-box;
     transition: border-color 0.15s, box-shadow 0.15s; font-family: inherit;
+    appearance: none; -webkit-appearance: none;
+}
+.dark .ab-form-input, .dark .ab-form-select, .dark .ab-form-textarea {
+    background: #0f172a; border-color: #334155; color: #f1f5f9;
 }
 .ab-form-input:focus, .ab-form-select:focus, .ab-form-textarea:focus {
-    outline: none; border-color: var(--ab-primary);
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    outline: none; border-color: #6366f1; background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.14);
+}
+.dark .ab-form-input:focus, .dark .ab-form-select:focus, .dark .ab-form-textarea:focus {
+    background: #1e293b; border-color: #818cf8;
 }
 .ab-form-textarea { resize: vertical; min-height: 80px; }
 .ab-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
@@ -774,7 +786,7 @@
         <div class="ab-modal-header">
             <div class="ab-modal-header-inner">
                 <div class="ab-modal-header-icon ab-modal-icon-indigo">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
                 </div>
                 <div class="ab-modal-header-text">
                     <h3 class="ab-modal-title">Enregistrer une absence</h3>

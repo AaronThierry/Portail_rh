@@ -80,150 +80,170 @@
     animation: usr-fadeIn 0.5s ease-out;
 }
 
+/* ══════════════════════════════════
+   HERO BANNER
+══════════════════════════════════ */
+.usr-hero {
+    position:relative; border-radius:20px; overflow:hidden;
+    margin-bottom:24px; animation:usr-fadeIn .4s cubic-bezier(.16,1,.3,1) .04s both;
+}
+.usr-hero-bg {
+    background:linear-gradient(135deg,#312e81 0%,#4338ca 40%,#0d9488 100%);
+    padding:1.875rem 2rem; position:relative;
+}
+.usr-hero-bg::before {
+    content:''; position:absolute; top:-70px; right:-70px; width:260px; height:260px;
+    background:radial-gradient(circle,rgba(20,184,166,.35) 0%,transparent 70%);
+    border-radius:50%; pointer-events:none;
+}
+.usr-hero-bg::after {
+    content:''; position:absolute; bottom:-50px; left:-50px; width:200px; height:200px;
+    background:radial-gradient(circle,rgba(99,102,241,.3) 0%,transparent 70%);
+    border-radius:50%; pointer-events:none;
+}
+.usr-hero-inner {
+    position:relative; display:flex; align-items:center;
+    justify-content:space-between; gap:1.5rem; flex-wrap:wrap;
+}
+.usr-hero-left h1 {
+    font-family:'Syne',sans-serif; font-size:1.75rem; font-weight:700;
+    color:#fff; margin:0 0 .3rem; letter-spacing:-.4px; line-height:1.2;
+}
+.usr-hero-sub {
+    font-size:.875rem; color:rgba(255,255,255,.72); margin:0;
+    display:flex; align-items:center; gap:8px;
+}
+.usr-live-dot {
+    width:7px; height:7px; border-radius:50%; background:#14b8a6;
+    display:inline-block; animation:usr-dot 2s ease-in-out infinite;
+    box-shadow:0 0 0 3px rgba(20,184,166,.25);
+}
+@keyframes usr-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.5)} }
+.usr-hero-kpis {
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
+    border-radius:16px; padding:.875rem 1.5rem; display:flex; gap:2rem;
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.usr-hero-kpi { text-align:center; position:relative; }
+.usr-hero-kpi + .usr-hero-kpi::before {
+    content:''; position:absolute; left:-1rem; top:15%; bottom:15%;
+    width:1px; background:rgba(255,255,255,.15);
+}
+.usr-hero-kpi-val {
+    font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:700; color:#fff; line-height:1;
+}
+.usr-hero-kpi-lbl {
+    font-size:.6875rem; color:rgba(255,255,255,.6);
+    text-transform:uppercase; letter-spacing:.5px; font-weight:600; margin-top:.3rem;
+}
+.usr-hero-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.usr-hero-accent {
+    height:3px;
+    background:linear-gradient(90deg,transparent,rgba(99,102,241,.6),rgba(20,184,166,.8),transparent);
+}
+.usr-btn-hero {
+    display:inline-flex; align-items:center; gap:8px; padding:10px 20px;
+    border-radius:12px; font-size:.875rem; font-weight:600; cursor:pointer;
+    transition:all .22s; white-space:nowrap;
+    background:rgba(255,255,255,.15); color:#fff;
+    border:1.5px solid rgba(255,255,255,.25); backdrop-filter:blur(8px);
+}
+.usr-btn-hero:hover { background:rgba(255,255,255,.25); transform:translateY(-2px); }
+.usr-btn-hero svg { width:17px; height:17px; flex-shrink:0; }
+
 /* ========================================
    STATISTICS GRID
    ======================================== */
 .usr-stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    margin-bottom: 28px;
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
 .usr-stat-card {
     background: white;
     border-radius: 16px;
-    padding: 20px 24px;
+    padding: 20px 22px;
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--usr-gray-200);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    animation: usr-fadeIn 0.5s ease-out backwards;
+    border: 1.5px solid var(--usr-gray-200);
+    display: flex; align-items: center; gap: 16px;
+    transition: all 0.25s cubic-bezier(.16,1,.3,1);
+    animation: usr-fadeIn 0.4s cubic-bezier(.16,1,.3,1) backwards;
+    cursor: default;
 }
 
-.usr-stat-card:nth-child(1) { animation-delay: 0.1s; }
-.usr-stat-card:nth-child(2) { animation-delay: 0.2s; }
-.usr-stat-card:nth-child(3) { animation-delay: 0.3s; }
-.usr-stat-card:nth-child(4) { animation-delay: 0.4s; }
+.usr-stat-card:nth-child(1) { animation-delay: 0.04s; }
+.usr-stat-card:nth-child(2) { animation-delay: 0.08s; }
+.usr-stat-card:nth-child(3) { animation-delay: 0.12s; }
+.usr-stat-card:nth-child(4) { animation-delay: 0.16s; }
+
+.dark .usr-stat-card { background: #1e293b; border-color: #334155; }
 
 .usr-stat-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--usr-shadow-xl);
+    border-color: var(--usr-stat-c, #6366f1);
 }
 
+/* Radial orb top-right */
 .usr-stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    border-radius: 16px 16px 0 0;
+    content: ''; position: absolute; top: -28px; right: -28px;
+    width: 90px; height: 90px; border-radius: 50%;
+    background: var(--usr-stat-g, rgba(99,102,241,.06));
+    pointer-events: none;
 }
 
-.usr-stat-card.total::before {
-    background: linear-gradient(90deg, var(--usr-orange), var(--usr-orange-dark));
+/* Bottom slide-in bar on hover */
+.usr-stat-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--usr-stat-c, #6366f1);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .32s cubic-bezier(.16,1,.3,1);
 }
+.usr-stat-card:hover::after { transform: scaleX(1); }
 
-.usr-stat-card.active::before {
-    background: linear-gradient(90deg, var(--usr-success), #059669);
-}
-
-.usr-stat-card.inactive::before {
-    background: linear-gradient(90deg, var(--usr-danger), #dc2626);
-}
-
-.usr-stat-card.warning::before {
-    background: linear-gradient(90deg, var(--usr-warning), #d97706);
-}
-
-.usr-stat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.usr-stat-content {
-    flex: 1;
-}
-
-.usr-stat-value {
-    font-size: 2.25rem;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 6px;
-    background: linear-gradient(135deg, var(--usr-gray-800), var(--usr-gray-600));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.usr-stat-card.total .usr-stat-value {
-    background: linear-gradient(135deg, var(--usr-orange), var(--usr-orange-dark));
-    -webkit-background-clip: text;
-    background-clip: text;
-}
-
-.usr-stat-card.active .usr-stat-value {
-    background: linear-gradient(135deg, var(--usr-success), #059669);
-    -webkit-background-clip: text;
-    background-clip: text;
-}
-
-.usr-stat-card.inactive .usr-stat-value {
-    background: linear-gradient(135deg, var(--usr-danger), #dc2626);
-    -webkit-background-clip: text;
-    background-clip: text;
-}
-
-.usr-stat-card.warning .usr-stat-value {
-    background: linear-gradient(135deg, var(--usr-warning), #d97706);
-    -webkit-background-clip: text;
-    background-clip: text;
-}
-
-.usr-stat-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--usr-gray-500);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+.usr-stat-card.total   { --usr-stat-c: #6366f1; --usr-stat-g: rgba(99,102,241,.06); }
+.usr-stat-card.active  { --usr-stat-c: #14b8a6; --usr-stat-g: rgba(20,184,166,.06); }
+.usr-stat-card.inactive{ --usr-stat-c: #ef4444; --usr-stat-g: rgba(239,68,68,.05); }
+.usr-stat-card.warning { --usr-stat-c: #f59e0b; --usr-stat-g: rgba(245,158,11,.05); }
 
 .usr-stat-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    width: 48px; height: 48px; border-radius: 13px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.usr-stat-icon svg { width: 22px; height: 22px; stroke-width: 2; }
+
+.usr-stat-card.total   .usr-stat-icon { background: #eef2ff; color: #6366f1; }
+.usr-stat-card.active  .usr-stat-icon { background: #f0fdfa; color: #0d9488; }
+.usr-stat-card.inactive .usr-stat-icon{ background: #fef2f2; color: #ef4444; }
+.usr-stat-card.warning .usr-stat-icon { background: #fffbeb; color: #f59e0b; }
+
+.dark .usr-stat-card.total   .usr-stat-icon { background: rgba(99,102,241,.15);  color: #818cf8; }
+.dark .usr-stat-card.active  .usr-stat-icon { background: rgba(20,184,166,.15);  color: #2dd4bf; }
+.dark .usr-stat-card.inactive .usr-stat-icon{ background: rgba(239,68,68,.15);   color: #f87171; }
+.dark .usr-stat-card.warning .usr-stat-icon { background: rgba(245,158,11,.15);  color: #fbbf24; }
+
+.usr-stat-body { flex: 1; min-width: 0; }
+
+.usr-stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+    color: #1e293b;
 }
 
-.usr-stat-card.total .usr-stat-icon {
-    background: linear-gradient(135deg, rgba(255, 149, 0, 0.15), rgba(255, 149, 0, 0.05));
-    color: var(--usr-orange);
-}
+.dark .usr-stat-value { color: #f1f5f9; }
 
-.usr-stat-card.active .usr-stat-icon {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
-    color: var(--usr-success);
-}
-
-.usr-stat-card.inactive .usr-stat-icon {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
-    color: var(--usr-danger);
-}
-
-.usr-stat-card.warning .usr-stat-icon {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
-    color: var(--usr-warning);
-}
-
-.usr-stat-icon svg {
-    width: 26px;
-    height: 26px;
-    stroke-width: 2;
+.usr-stat-label {
+    font-size: .68rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: .7px;
 }
 
 /* ========================================
@@ -1299,12 +1319,6 @@
     border-color: var(--usr-gray-700);
 }
 
-.dark .usr-stat-value {
-    background: linear-gradient(135deg, var(--usr-gray-100), var(--usr-gray-300));
-    -webkit-background-clip: text;
-    background-clip: text;
-}
-
 .dark .usr-stat-label {
     color: var(--usr-gray-400);
 }
@@ -1801,69 +1815,98 @@
 @endif
 
 <div class="usr-page">
+
+    {{-- ══ Hero Banner ══ --}}
+    <div class="usr-hero">
+        <div class="usr-hero-bg">
+            <div class="usr-hero-inner">
+                <div class="usr-hero-left">
+                    <h1>Gestion des Utilisateurs</h1>
+                    <p class="usr-hero-sub">
+                        <span class="usr-live-dot"></span>
+                        Acc&egrave;s et permissions des comptes
+                    </p>
+                </div>
+                <div class="usr-hero-kpis">
+                    <div class="usr-hero-kpi">
+                        <div class="usr-hero-kpi-val">{{ $users->count() }}</div>
+                        <div class="usr-hero-kpi-lbl">Total</div>
+                    </div>
+                    <div class="usr-hero-kpi">
+                        <div class="usr-hero-kpi-val">{{ $users->where('status', 'active')->count() }}</div>
+                        <div class="usr-hero-kpi-lbl">Actifs</div>
+                    </div>
+                    <div class="usr-hero-kpi">
+                        <div class="usr-hero-kpi-val">{{ $users->where('status', 'inactive')->count() }}</div>
+                        <div class="usr-hero-kpi-lbl">Inactifs</div>
+                    </div>
+                </div>
+                <div class="usr-hero-actions">
+                    <button class="usr-btn-hero" onclick="document.getElementById('createUserModal').classList.add('active')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Nouvel utilisateur
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="usr-hero-accent"></div>
+    </div>
+
     {{-- Statistics Grid --}}
     <div class="usr-stats-grid">
         <div class="usr-stat-card total">
-            <div class="usr-stat-header">
-                <div class="usr-stat-content">
-                    <div class="usr-stat-value" data-count="{{ $users->count() }}">0</div>
-                    <div class="usr-stat-label">Total Comptes</div>
-                </div>
-                <div class="usr-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                </div>
+            <div class="usr-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
+            <div class="usr-stat-body">
+                <div class="usr-stat-value" data-count="{{ $users->count() }}">0</div>
+                <div class="usr-stat-label">Total Comptes</div>
             </div>
         </div>
 
         <div class="usr-stat-card active">
-            <div class="usr-stat-header">
-                <div class="usr-stat-content">
-                    <div class="usr-stat-value" data-count="{{ $users->where('status', 'active')->count() }}">0</div>
-                    <div class="usr-stat-label">Comptes Actifs</div>
-                </div>
-                <div class="usr-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                </div>
+            <div class="usr-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <div class="usr-stat-body">
+                <div class="usr-stat-value" data-count="{{ $users->where('status', 'active')->count() }}">0</div>
+                <div class="usr-stat-label">Comptes Actifs</div>
             </div>
         </div>
 
         <div class="usr-stat-card inactive">
-            <div class="usr-stat-header">
-                <div class="usr-stat-content">
-                    <div class="usr-stat-value" data-count="{{ $users->where('status', 'inactive')->count() }}">0</div>
-                    <div class="usr-stat-label">Comptes Inactifs</div>
-                </div>
-                <div class="usr-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                    </svg>
-                </div>
+            <div class="usr-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+            </div>
+            <div class="usr-stat-body">
+                <div class="usr-stat-value" data-count="{{ $users->where('status', 'inactive')->count() }}">0</div>
+                <div class="usr-stat-label">Comptes Inactifs</div>
             </div>
         </div>
 
         <div class="usr-stat-card warning">
-            <div class="usr-stat-header">
-                <div class="usr-stat-content">
-                    <div class="usr-stat-value" data-count="{{ $users->filter(fn($u) => !$u->personnel)->count() }}">0</div>
-                    <div class="usr-stat-label">Sans Personnel</div>
-                </div>
-                <div class="usr-stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                        <line x1="12" y1="9" x2="12" y2="13"></line>
-                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                    </svg>
-                </div>
+            <div class="usr-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <div class="usr-stat-body">
+                <div class="usr-stat-value" data-count="{{ $users->filter(fn($u) => !$u->personnel)->count() }}">0</div>
+                <div class="usr-stat-label">Sans Personnel</div>
             </div>
         </div>
     </div>

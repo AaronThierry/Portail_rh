@@ -13,33 +13,37 @@
 
 @section('styles')
 <style>
-/* ========================================
-   VARIABLES - Charte RH+ (identique cong&eacute;s)
-   ======================================== */
+/* ================================================
+   ABSENCES — Design System (Indigo × Teal charter)
+   ================================================ */
 :root {
     --ab-primary: #6366f1;
     --ab-primary-dark: #4338ca;
     --ab-primary-light: #eef2ff;
+    --ab-teal: #14b8a6;
+    --ab-teal-dark: #0d9488;
+    --ab-teal-light: #f0fdfa;
     --ab-accent: #8b5cf6;
     --ab-accent-light: #f3e8ff;
-    --ab-success: #22C55E;
-    --ab-success-light: #F0FDF4;
-    --ab-danger: #EF4444;
-    --ab-danger-light: #FEF2F2;
-    --ab-warning: #F59E0B;
-    --ab-warning-light: #FFFBEB;
+    --ab-success: #10b981;
+    --ab-success-light: #ecfdf5;
+    --ab-danger: #ef4444;
+    --ab-danger-light: #fef2f2;
+    --ab-warning: #f59e0b;
+    --ab-warning-light: #fffbeb;
     --ab-bg: #f8fafc;
     --ab-card-bg: #ffffff;
     --ab-card-border: #e2e8f0;
     --ab-text-primary: #1e293b;
     --ab-text-secondary: #64748b;
     --ab-text-muted: #94a3b8;
-    --ab-shadow: rgba(0, 0, 0, 0.04);
-    --ab-shadow-lg: rgba(0, 0, 0, 0.08);
+    --ab-shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --ab-shadow: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04);
+    --ab-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+    --ab-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.10), 0 10px 10px -5px rgba(0,0,0,0.04);
     --ab-radius: 12px;
     --ab-radius-lg: 16px;
 }
-
 .dark {
     --ab-bg: #0f172a;
     --ab-card-bg: #1e293b;
@@ -47,194 +51,280 @@
     --ab-text-primary: #f1f5f9;
     --ab-text-secondary: #94a3b8;
     --ab-text-muted: #64748b;
-    --ab-shadow: rgba(0, 0, 0, 0.3);
-    --ab-shadow-lg: rgba(0, 0, 0, 0.5);
-    --ab-primary-light: rgba(99, 102, 241, 0.15);
-    --ab-accent-light: rgba(139, 92, 246, 0.15);
-    --ab-success-light: rgba(34, 197, 94, 0.15);
-    --ab-danger-light: rgba(239, 68, 68, 0.15);
-    --ab-warning-light: rgba(245, 158, 11, 0.15);
+    --ab-primary-light: rgba(99,102,241,0.15);
+    --ab-teal-light: rgba(20,184,166,0.15);
+    --ab-accent-light: rgba(139,92,246,0.15);
+    --ab-success-light: rgba(16,185,129,0.15);
+    --ab-danger-light: rgba(239,68,68,0.15);
+    --ab-warning-light: rgba(245,158,11,0.15);
 }
 
-/* BASE */
-.absences-page { padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
+/* Animations */
+@keyframes ab-fadeIn   { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes ab-scaleIn  { from { opacity:0; transform:scale(0.95); }       to { opacity:1; transform:scale(1); } }
+@keyframes ab-countUp  { from { opacity:0; transform:translateY(8px); }   to { opacity:1; transform:translateY(0); } }
 
-/* STATS ROW */
-.ab-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
+/* Page */
+.absences-page { padding: 0; animation: ab-fadeIn 0.45s ease-out; }
+
+/* ── STAT CARDS ── */
+.ab-stats {
+    display: grid; grid-template-columns: repeat(5,1fr);
+    gap: 18px; margin-bottom: 24px;
+}
 .ab-stat-card {
-    background: var(--ab-card-bg); border: 1px solid var(--ab-card-border);
-    border-radius: var(--ab-radius-lg); padding: 1.25rem;
-    display: flex; align-items: center; gap: 1rem;
-    box-shadow: 0 1px 3px var(--ab-shadow); position: relative; overflow: hidden;
+    background: white; border-radius: 16px; padding: 20px 22px;
+    position: relative; overflow: hidden;
+    border: 1px solid var(--ab-card-border);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    animation: ab-fadeIn 0.5s ease-out backwards;
 }
-.ab-stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-.ab-stat-card.total::before { background: var(--ab-primary); }
-.ab-stat-card.justified::before { background: var(--ab-success); }
-.ab-stat-card.unjustified::before { background: var(--ab-danger); }
-.ab-stat-card.late::before { background: var(--ab-warning); }
-.ab-stat-card.pending::before { background: var(--ab-accent); }
+.dark .ab-stat-card { background: var(--ab-card-bg); }
+.ab-stat-card:nth-child(1) { animation-delay:.07s }
+.ab-stat-card:nth-child(2) { animation-delay:.14s }
+.ab-stat-card:nth-child(3) { animation-delay:.21s }
+.ab-stat-card:nth-child(4) { animation-delay:.28s }
+.ab-stat-card:nth-child(5) { animation-delay:.35s }
+.ab-stat-card:hover { transform:translateY(-4px); box-shadow:var(--ab-shadow-xl); }
+.ab-stat-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:4px;
+    border-radius:16px 16px 0 0;
+}
+.ab-stat-card.total::before      { background:linear-gradient(90deg,#4338ca,#6366f1); }
+.ab-stat-card.justified::before  { background:linear-gradient(90deg,#0d9488,#14b8a6); }
+.ab-stat-card.unjustified::before{ background:linear-gradient(90deg,#dc2626,#ef4444); }
+.ab-stat-card.late::before       { background:linear-gradient(90deg,#d97706,#f59e0b); }
+.ab-stat-card.pending::before    { background:linear-gradient(90deg,#7c3aed,#8b5cf6); }
+
+.ab-stat-header { display:flex; justify-content:space-between; align-items:flex-start; }
+.ab-stat-content { flex:1; }
+.ab-stat-value {
+    font-size: 2.125rem; font-weight:800; line-height:1; margin-bottom:5px;
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    animation: ab-countUp 0.6s ease-out backwards;
+}
+.ab-stat-card.total      .ab-stat-value { background:linear-gradient(135deg,#4338ca,#6366f1); }
+.ab-stat-card.justified  .ab-stat-value { background:linear-gradient(135deg,#0d9488,#14b8a6); }
+.ab-stat-card.unjustified .ab-stat-value{ background:linear-gradient(135deg,#dc2626,#ef4444); }
+.ab-stat-card.late       .ab-stat-value { background:linear-gradient(135deg,#d97706,#f59e0b); }
+.ab-stat-card.pending    .ab-stat-value { background:linear-gradient(135deg,#7c3aed,#8b5cf6); }
+.ab-stat-label {
+    font-size:0.8125rem; font-weight:600; color:var(--ab-text-secondary);
+    text-transform:uppercase; letter-spacing:0.4px;
+}
 .ab-stat-icon {
-    width: 48px; height: 48px; border-radius: var(--ab-radius);
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    width:50px; height:50px; border-radius:13px; display:flex;
+    align-items:center; justify-content:center; flex-shrink:0;
 }
-.ab-stat-icon svg { width: 24px; height: 24px; }
-.ab-stat-icon.total { background: var(--ab-primary-light); color: var(--ab-primary); }
-.ab-stat-icon.justified { background: var(--ab-success-light); color: var(--ab-success); }
-.ab-stat-icon.unjustified { background: var(--ab-danger-light); color: var(--ab-danger); }
-.ab-stat-icon.late { background: var(--ab-warning-light); color: var(--ab-warning); }
-.ab-stat-icon.pending { background: var(--ab-accent-light); color: var(--ab-accent); }
-.ab-stat-value { font-size: 1.75rem; font-weight: 700; color: var(--ab-text-primary); line-height: 1; }
-.ab-stat-label { font-size: 0.8125rem; color: var(--ab-text-secondary); margin-top: 0.25rem; }
+.ab-stat-icon svg { width:24px; height:24px; stroke-width:2; }
+.ab-stat-card.total      .ab-stat-icon { background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(99,102,241,.05)); color:#6366f1; }
+.ab-stat-card.justified  .ab-stat-icon { background:linear-gradient(135deg,rgba(20,184,166,.15),rgba(20,184,166,.05)); color:#0d9488; }
+.ab-stat-card.unjustified .ab-stat-icon{ background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(239,68,68,.05));  color:#ef4444; }
+.ab-stat-card.late       .ab-stat-icon { background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.05)); color:#f59e0b; }
+.ab-stat-card.pending    .ab-stat-icon { background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(139,92,246,.05)); color:#8b5cf6; }
 
-/* FILTERS */
-.ab-filters {
-    background: var(--ab-card-bg); border: 1px solid var(--ab-card-border);
-    border-radius: var(--ab-radius-lg); padding: 1.25rem; margin-bottom: 1.5rem;
-    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-    box-shadow: 0 1px 3px var(--ab-shadow);
+/* ── TOOLBAR ── */
+.ab-toolbar {
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+    margin-bottom:22px; background:white; padding:14px 18px;
+    border-radius:14px; border:1px solid var(--ab-card-border);
+    box-shadow:var(--ab-shadow-sm); flex-wrap:wrap;
+    animation: ab-fadeIn 0.5s ease-out 0.3s backwards;
 }
-.ab-filter-group { display: flex; align-items: center; gap: 0.5rem; }
-.ab-filter-label { font-size: 0.8125rem; font-weight: 600; color: var(--ab-text-secondary); white-space: nowrap; }
-.ab-filter-select, .ab-filter-input {
-    padding: 0.5rem 0.875rem; background: var(--ab-bg); border: 1px solid var(--ab-card-border);
-    border-radius: 8px; font-size: 0.875rem; color: var(--ab-text-primary); min-width: 140px;
-}
-.ab-filter-select:focus, .ab-filter-input:focus { outline: none; border-color: var(--ab-primary); }
-.ab-filter-btn {
-    padding: 0.5rem 1rem; background: var(--ab-primary); color: white;
-    border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600;
-    cursor: pointer; display: flex; align-items: center; gap: 0.375rem;
-}
-.ab-filter-btn:hover { opacity: 0.9; }
-.ab-filter-btn svg { width: 16px; height: 16px; }
-.ab-filter-reset {
-    padding: 0.5rem 1rem; background: transparent; color: var(--ab-text-secondary);
-    border: 1px solid var(--ab-card-border); border-radius: 8px; font-size: 0.875rem;
-    cursor: pointer; text-decoration: none;
-}
-.ab-filter-reset:hover { border-color: var(--ab-text-secondary); color: var(--ab-text-primary); }
+.dark .ab-toolbar { background:var(--ab-card-bg); }
+.ab-toolbar-left  { display:flex; align-items:center; gap:10px; flex:1; flex-wrap:wrap; }
+.ab-toolbar-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
 
-/* ADD BUTTON */
-.ab-add-btn {
-    padding: 0.5rem 1rem; background: var(--ab-accent); color: white;
-    border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600;
-    cursor: pointer; display: flex; align-items: center; gap: 0.375rem; margin-left: auto;
+.ab-search-box { position:relative; min-width:220px; }
+.ab-search-box input {
+    width:100%; padding:9px 14px 9px 40px; border:1px solid var(--ab-card-border);
+    border-radius:10px; font-size:0.9rem; background:var(--ab-bg); color:var(--ab-text-primary);
+    transition:all 0.2s; box-sizing:border-box;
 }
-.ab-add-btn:hover { opacity: 0.9; }
-.ab-add-btn svg { width: 16px; height: 16px; }
+.ab-search-box input:focus { outline:none; border-color:#6366f1; background:white; box-shadow:0 0 0 3px rgba(99,102,241,0.1); }
+.dark .ab-search-box input:focus { background:var(--ab-bg); }
+.ab-search-box input::placeholder { color:var(--ab-text-muted); }
+.ab-search-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--ab-text-muted); pointer-events:none; }
+.ab-search-icon svg { width:16px; height:16px; }
 
-/* TABLE */
+.ab-filter-select {
+    padding:8px 12px; border:1px solid var(--ab-card-border); border-radius:10px;
+    font-size:0.875rem; background:var(--ab-bg); color:var(--ab-text-primary);
+    cursor:pointer; transition:all 0.2s; font-family:inherit;
+}
+.ab-filter-select:focus { outline:none; border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,0.1); }
+
+.ab-btn-filter {
+    padding:9px 18px; background:linear-gradient(135deg,#4338ca,#6366f1); color:white;
+    border:none; border-radius:10px; font-size:0.875rem; font-weight:600;
+    cursor:pointer; display:flex; align-items:center; gap:6px;
+    box-shadow:0 2px 8px rgba(99,102,241,0.28); transition:all 0.2s;
+}
+.ab-btn-filter:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(99,102,241,0.38); }
+.ab-btn-filter svg { width:15px; height:15px; }
+
+.ab-btn-reset {
+    padding:9px 16px; background:white; color:var(--ab-text-secondary);
+    border:1px solid var(--ab-card-border); border-radius:10px; font-size:0.875rem;
+    font-weight:500; cursor:pointer; text-decoration:none; transition:all 0.2s;
+    display:flex; align-items:center; gap:6px;
+}
+.dark .ab-btn-reset { background:var(--ab-bg); }
+.ab-btn-reset:hover { border-color:#6366f1; color:#6366f1; }
+
+.ab-btn-add {
+    padding:9px 18px; background:linear-gradient(135deg,#0d9488,#14b8a6); color:white;
+    border:none; border-radius:10px; font-size:0.875rem; font-weight:700;
+    cursor:pointer; display:flex; align-items:center; gap:7px;
+    box-shadow:0 2px 8px rgba(20,184,166,0.30); transition:all 0.3s;
+}
+.ab-btn-add:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(20,184,166,0.40); }
+.ab-btn-add svg { width:17px; height:17px; }
+
+/* ── TABLE CARD ── */
 .ab-table-card {
-    background: var(--ab-card-bg); border: 1px solid var(--ab-card-border);
-    border-radius: var(--ab-radius-lg); overflow: hidden;
-    box-shadow: 0 1px 3px var(--ab-shadow);
+    background:white; border:1px solid var(--ab-card-border);
+    border-radius:16px; overflow:hidden; box-shadow:var(--ab-shadow);
+    animation: ab-scaleIn 0.4s ease-out 0.4s backwards;
 }
+.dark .ab-table-card { background:var(--ab-card-bg); }
 .ab-table-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.25rem; border-bottom: 1px solid var(--ab-card-border);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 22px; border-bottom:1px solid var(--ab-card-border);
+    background:linear-gradient(135deg,rgba(99,102,241,0.04),rgba(20,184,166,0.03));
 }
-.ab-table-title { font-size: 1.125rem; font-weight: 700; color: var(--ab-text-primary); }
+.ab-table-title {
+    font-size:1rem; font-weight:700; color:var(--ab-text-primary);
+    display:flex; align-items:center; gap:9px;
+}
+.ab-table-title-dot {
+    width:8px; height:8px; border-radius:50%;
+    background:linear-gradient(135deg,#6366f1,#14b8a6); flex-shrink:0;
+}
 .ab-table-count {
-    font-size: 0.8125rem; color: var(--ab-text-secondary); background: var(--ab-bg);
-    padding: 0.375rem 0.75rem; border-radius: 20px;
+    font-size:0.8125rem; color:var(--ab-text-secondary);
+    background:var(--ab-primary-light); color:#4338ca;
+    padding:4px 12px; border-radius:20px; font-weight:600;
 }
-.ab-table-wrap { overflow-x: auto; }
-.ab-table { width: 100%; border-collapse: collapse; }
+.dark .ab-table-count { background:rgba(99,102,241,0.15); color:#818cf8; }
+.ab-table-wrap { overflow-x:auto; }
+.ab-table { width:100%; border-collapse:collapse; }
 .ab-table th {
-    padding: 0.875rem 1.25rem; text-align: left; font-size: 0.75rem; font-weight: 700;
-    color: var(--ab-text-secondary); text-transform: uppercase; letter-spacing: 0.5px;
-    background: var(--ab-bg); border-bottom: 1px solid var(--ab-card-border); white-space: nowrap;
+    padding:11px 18px; text-align:left; font-size:0.6875rem; font-weight:700;
+    color:var(--ab-text-muted); text-transform:uppercase; letter-spacing:0.6px;
+    background:var(--ab-bg); border-bottom:1px solid var(--ab-card-border); white-space:nowrap;
 }
 .ab-table td {
-    padding: 1rem 1.25rem; font-size: 0.9375rem; color: var(--ab-text-primary);
-    border-bottom: 1px solid var(--ab-card-border); vertical-align: middle;
+    padding:14px 18px; font-size:0.9375rem; color:var(--ab-text-primary);
+    border-bottom:1px solid var(--ab-card-border); vertical-align:middle;
 }
-.ab-table tr:last-child td { border-bottom: none; }
-.ab-table tr:hover td { background: var(--ab-bg); }
+.ab-table tr:last-child td { border-bottom:none; }
+.ab-table tbody tr { transition:background 0.15s; }
+.ab-table tbody tr:hover td { background:rgba(99,102,241,0.025); }
+.dark .ab-table tbody tr:hover td { background:rgba(99,102,241,0.06); }
 
-/* Employee Cell */
-.ab-employee { display: flex; align-items: center; gap: 0.75rem; }
+/* Employee cell */
+.ab-employee { display:flex; align-items:center; gap:11px; }
 .ab-employee-avatar {
-    width: 40px; height: 40px; border-radius: 10px; object-fit: cover;
-    background: var(--ab-primary-light); border: 2px solid var(--ab-card-border);
+    width:42px; height:42px; border-radius:11px; object-fit:cover;
+    border:2px solid var(--ab-card-border); flex-shrink:0;
 }
-.ab-employee-name { font-weight: 600; color: var(--ab-text-primary); font-size: 0.9375rem; }
-.ab-employee-matricule { font-size: 0.75rem; color: var(--ab-text-muted); }
+.ab-employee-name { font-weight:700; color:var(--ab-text-primary); font-size:0.9375rem; line-height:1.3; }
+.ab-employee-matricule {
+    font-size:0.75rem; color:var(--ab-text-muted); font-family:'DM Mono',monospace;
+    background:var(--ab-bg); padding:1px 6px; border-radius:4px; display:inline-block; margin-top:2px;
+}
 
-/* Type Badge */
+/* Badges */
 .ab-type-badge {
-    display: inline-flex; align-items: center; gap: 0.375rem;
-    padding: 0.375rem 0.75rem; border-radius: 8px;
-    font-size: 0.8125rem; font-weight: 600; white-space: nowrap;
+    display:inline-flex; align-items:center;
+    padding:4px 10px; border-radius:7px;
+    font-size:0.8125rem; font-weight:600; white-space:nowrap;
 }
+.ab-justif {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;
+}
+.ab-justif.oui { background:#ecfdf5; color:#059669; }
+.ab-justif.non { background:#fef2f2; color:#dc2626; }
+.dark .ab-justif.oui { background:rgba(16,185,129,0.15); color:#34d399; }
+.dark .ab-justif.non { background:rgba(239,68,68,0.15); color:#f87171; }
 
-/* Justifi&eacute;e Badge */
-.ab-justif { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-.ab-justif.oui { background: var(--ab-success-light); color: #15803d; }
-.ab-justif.non { background: var(--ab-danger-light); color: #b91c1c; }
-.ab-justif.attente { background: var(--ab-warning-light); color: #92400e; }
-
-/* Source Badge */
 .ab-source {
-    display: inline-flex; align-items: center; gap: 0.375rem;
-    padding: 0.375rem 0.75rem; border-radius: 20px;
-    font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+    display:inline-flex; align-items:center; gap:4px;
+    padding:4px 10px; border-radius:20px;
+    font-size:0.75rem; font-weight:600; white-space:nowrap;
 }
-.ab-source.admin { background: var(--ab-primary-light); color: var(--ab-primary); }
-.ab-source.employe { background: var(--ab-accent-light); color: var(--ab-accent); }
+.ab-source.admin   { background:#eef2ff; color:#4338ca; }
+.ab-source.employe { background:#f3e8ff; color:#7c3aed; }
+.dark .ab-source.admin   { background:rgba(99,102,241,0.15); color:#818cf8; }
+.dark .ab-source.employe { background:rgba(139,92,246,0.15); color:#a78bfa; }
 
-/* Statut Badge */
 .ab-statut {
-    display: inline-flex; align-items: center; gap: 0.375rem;
-    padding: 0.375rem 0.75rem; border-radius: 20px;
-    font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+    display:inline-flex; align-items:center; gap:4px;
+    padding:4px 10px; border-radius:20px;
+    font-size:0.75rem; font-weight:700; white-space:nowrap;
 }
-.ab-statut.en-attente { background: var(--ab-warning-light); color: #92400e; }
-.ab-statut.valide-chef { background: #dbeafe; color: #1d4ed8; }
-.dark .ab-statut.valide-chef { background: rgba(59,130,246,0.18); color: #60a5fa; }
-.ab-statut.approuvee { background: var(--ab-success-light); color: #15803d; }
-.ab-statut.refusee { background: var(--ab-danger-light); color: #b91c1c; }
+.ab-statut.en-attente  { background:#fffbeb; color:#d97706; }
+.ab-statut.valide-chef { background:#eff6ff; color:#2563eb; }
+.ab-statut.approuvee   { background:#ecfdf5; color:#059669; }
+.ab-statut.refusee     { background:#fef2f2; color:#dc2626; }
+.dark .ab-statut.en-attente  { background:rgba(245,158,11,0.15); color:#fbbf24; }
+.dark .ab-statut.valide-chef { background:rgba(59,130,246,0.15); color:#60a5fa; }
+.dark .ab-statut.approuvee   { background:rgba(16,185,129,0.15); color:#34d399; }
+.dark .ab-statut.refusee     { background:rgba(239,68,68,0.15); color:#f87171; }
 
-/* Actions */
-.ab-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+/* Action buttons */
+.ab-actions { display:flex; gap:6px; flex-wrap:wrap; }
 .ab-btn {
-    padding: 0.5rem 0.875rem; border: none; border-radius: 8px;
-    font-size: 0.8125rem; font-weight: 600; cursor: pointer;
-    display: inline-flex; align-items: center; gap: 0.375rem; white-space: nowrap;
+    padding:6px 12px; border:none; border-radius:8px; font-size:0.8125rem; font-weight:600;
+    cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;
+    transition:all 0.15s;
 }
-.ab-btn svg { width: 14px; height: 14px; }
-.ab-btn-toggle { background: var(--ab-success-light); color: #15803d; }
-.ab-btn-toggle:hover { background: var(--ab-success); color: white; }
-.ab-btn-delete { background: var(--ab-danger-light); color: #b91c1c; }
-.ab-btn-delete:hover { background: var(--ab-danger); color: white; }
-.ab-btn-detail { background: var(--ab-bg); color: var(--ab-text-secondary); border: 1px solid var(--ab-card-border); }
-.ab-btn-detail:hover { border-color: var(--ab-primary); color: var(--ab-primary); }
-.ab-btn-approve { background: var(--ab-success-light); color: #15803d; }
-.ab-btn-approve:hover { background: var(--ab-success); color: white; }
-.ab-btn-reject { background: var(--ab-danger-light); color: #b91c1c; }
-.ab-btn-reject:hover { background: var(--ab-danger); color: white; }
+.ab-btn svg { width:13px; height:13px; }
+.ab-btn-toggle  { background:#ecfdf5; color:#059669; }
+.ab-btn-toggle:hover  { background:#10b981; color:white; }
+.ab-btn-delete  { background:#fef2f2; color:#dc2626; }
+.ab-btn-delete:hover  { background:#ef4444; color:white; }
+.ab-btn-approve { background:#ecfdf5; color:#059669; }
+.ab-btn-approve:hover { background:#10b981; color:white; }
+.ab-btn-reject  { background:#fef2f2; color:#dc2626; }
+.ab-btn-reject:hover  { background:#ef4444; color:white; }
 
-/* Justificatif link */
 .ab-justif-link {
-    display: inline-flex; align-items: center; gap: 0.25rem;
-    font-size: 0.75rem; color: var(--ab-primary); text-decoration: none; font-weight: 600;
+    display:inline-flex; align-items:center; gap:3px;
+    font-size:0.75rem; color:#6366f1; text-decoration:none; font-weight:600;
 }
-.ab-justif-link:hover { text-decoration: underline; }
-.ab-justif-link svg { width: 12px; height: 12px; }
+.ab-justif-link:hover { text-decoration:underline; }
+.ab-justif-link svg { width:11px; height:11px; }
 
-/* EMPTY */
-.ab-empty { text-align: center; padding: 4rem 2rem; }
-.ab-empty-icon { width: 64px; height: 64px; margin: 0 auto 1rem; background: var(--ab-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--ab-text-muted); }
-.ab-empty-icon svg { width: 32px; height: 32px; }
-.ab-empty-title { font-size: 1.125rem; font-weight: 700; color: var(--ab-text-primary); margin-bottom: 0.5rem; }
-.ab-empty-text { font-size: 0.875rem; color: var(--ab-text-secondary); }
+/* Empty state */
+.ab-empty { text-align:center; padding:4.5rem 2rem; }
+.ab-empty-icon {
+    width:72px; height:72px; margin:0 auto 1rem; border-radius:50%;
+    background:linear-gradient(135deg,#eef2ff,#f0fdfa);
+    display:flex; align-items:center; justify-content:center; color:#6366f1;
+}
+.ab-empty-icon svg { width:34px; height:34px; }
+.ab-empty-title { font-size:1.125rem; font-weight:700; color:var(--ab-text-primary); margin-bottom:6px; }
+.ab-empty-text  { font-size:0.9rem; color:var(--ab-text-secondary); }
 
-/* PAGINATION */
-.ab-pagination { display: flex; align-items: center; justify-content: center; padding: 1.25rem; gap: 0.25rem; }
-.ab-pagination a, .ab-pagination span { padding: 0.5rem 0.875rem; border-radius: 8px; font-size: 0.875rem; font-weight: 500; text-decoration: none; color: var(--ab-text-secondary); }
-.ab-pagination a:hover { background: var(--ab-primary-light); color: var(--ab-primary); }
-.ab-pagination .active span { background: var(--ab-primary); color: white; }
-.ab-pagination .disabled span { opacity: 0.4; }
+/* Flash */
+.ab-flash { padding:1rem 1.25rem; border-radius:12px; font-size:0.9375rem; font-weight:500; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+.ab-flash-success { background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
+.ab-flash-error   { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+
+/* Pagination */
+.ab-pagination { display:flex; align-items:center; justify-content:center; padding:18px; gap:4px; }
+.ab-pagination a,.ab-pagination span { padding:7px 13px; border-radius:9px; font-size:0.875rem; font-weight:500; text-decoration:none; color:var(--ab-text-secondary); }
+.ab-pagination a:hover { background:var(--ab-primary-light); color:#4338ca; }
+.ab-pagination .active span { background:linear-gradient(135deg,#4338ca,#6366f1); color:white; box-shadow:0 2px 8px rgba(99,102,241,0.3); }
+.ab-pagination .disabled span { opacity:0.4; }
+
+/* Responsive */
+@media (max-width:1280px) { .ab-stats { grid-template-columns:repeat(3,1fr); } }
+@media (max-width:900px)  { .ab-stats { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px)  { .ab-stats { grid-template-columns:1fr; } .ab-toolbar { flex-direction:column; align-items:stretch; } }
 
 /* ── MODAL ── */
 @keyframes ab-modal-in {
@@ -478,135 +568,159 @@
 
 @section('content')
 <div class="absences-page">
+
     {{-- Flash --}}
     @if(session('success'))
-        <div class="ab-flash ab-flash-success">{{ session('success') }}</div>
+        <div class="ab-flash ab-flash-success">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ session('success') }}
+        </div>
     @endif
     @if(session('error'))
-        <div class="ab-flash ab-flash-error">{{ session('error') }}</div>
+        <div class="ab-flash ab-flash-error">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {{ session('error') }}
+        </div>
     @endif
 
-    {{-- Stats --}}
+    {{-- ── Stats ── --}}
     <div class="ab-stats">
+
         <div class="ab-stat-card total">
-            <div class="ab-stat-icon total">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                </svg>
-            </div>
-            <div>
-                <div class="ab-stat-value">{{ $stats['total'] }}</div>
-                <div class="ab-stat-label">Total absences</div>
+            <div class="ab-stat-header">
+                <div class="ab-stat-content">
+                    <div class="ab-stat-value">{{ $stats['total'] }}</div>
+                    <div class="ab-stat-label">Total absences</div>
+                </div>
+                <div class="ab-stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                </div>
             </div>
         </div>
+
         <div class="ab-stat-card justified">
-            <div class="ab-stat-icon justified">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-            </div>
-            <div>
-                <div class="ab-stat-value">{{ $stats['justifiees'] }}</div>
-                <div class="ab-stat-label">Justifi&eacute;es</div>
+            <div class="ab-stat-header">
+                <div class="ab-stat-content">
+                    <div class="ab-stat-value">{{ $stats['justifiees'] }}</div>
+                    <div class="ab-stat-label">Justifi&eacute;es</div>
+                </div>
+                <div class="ab-stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
             </div>
         </div>
+
         <div class="ab-stat-card unjustified">
-            <div class="ab-stat-icon unjustified">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                </svg>
-            </div>
-            <div>
-                <div class="ab-stat-value">{{ $stats['injustifiees'] }}</div>
-                <div class="ab-stat-label">Non justifi&eacute;es</div>
+            <div class="ab-stat-header">
+                <div class="ab-stat-content">
+                    <div class="ab-stat-value">{{ $stats['injustifiees'] }}</div>
+                    <div class="ab-stat-label">Non justifi&eacute;es</div>
+                </div>
+                <div class="ab-stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
             </div>
         </div>
+
         <div class="ab-stat-card late">
-            <div class="ab-stat-icon late">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-            </div>
-            <div>
-                <div class="ab-stat-value">{{ $stats['retards'] }}</div>
-                <div class="ab-stat-label">Retards</div>
+            <div class="ab-stat-header">
+                <div class="ab-stat-content">
+                    <div class="ab-stat-value">{{ $stats['retards'] }}</div>
+                    <div class="ab-stat-label">Retards</div>
+                </div>
+                <div class="ab-stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
             </div>
         </div>
+
         <div class="ab-stat-card pending">
-            <div class="ab-stat-icon pending">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-            </div>
-            <div>
-                <div class="ab-stat-value">{{ $stats['en_attente'] }}</div>
-                <div class="ab-stat-label">En attente</div>
+            <div class="ab-stat-header">
+                <div class="ab-stat-content">
+                    <div class="ab-stat-value">{{ $stats['en_attente'] }}</div>
+                    <div class="ab-stat-label">En attente</div>
+                </div>
+                <div class="ab-stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
             </div>
         </div>
+
     </div>
 
-    {{-- Filters --}}
-    <form class="ab-filters" method="GET" action="{{ route('admin.absences.index') }}">
-        <div class="ab-filter-group">
-            <span class="ab-filter-label">Type</span>
+    {{-- ── Toolbar ── --}}
+    <form method="GET" action="{{ route('admin.absences.index') }}">
+    <div class="ab-toolbar">
+        <div class="ab-toolbar-left">
+
+            {{-- Search --}}
+            <div class="ab-search-box">
+                <span class="ab-search-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </span>
+                <input type="text" name="search" placeholder="Nom ou matricule..." value="{{ request('search') }}">
+            </div>
+
+            {{-- Type --}}
             <select name="type_absence" class="ab-filter-select">
-                <option value="">Tous</option>
+                <option value="">Tous les types</option>
                 @foreach($typesAbsence as $type)
                     <option value="{{ $type->id }}" {{ request('type_absence') == $type->id ? 'selected' : '' }}>{{ $type->nom }}</option>
                 @endforeach
             </select>
-        </div>
-        <div class="ab-filter-group">
-            <span class="ab-filter-label">Justifi&eacute;e</span>
-            <select name="justifiee" class="ab-filter-select" style="min-width: 100px;">
-                <option value="">Toutes</option>
-                <option value="1" {{ request('justifiee') === '1' ? 'selected' : '' }}>Oui</option>
-                <option value="0" {{ request('justifiee') === '0' ? 'selected' : '' }}>Non</option>
+
+            {{-- Justifiée --}}
+            <select name="justifiee" class="ab-filter-select">
+                <option value="">Justification</option>
+                <option value="1" {{ request('justifiee') === '1' ? 'selected' : '' }}>Justifi&eacute;es</option>
+                <option value="0" {{ request('justifiee') === '0' ? 'selected' : '' }}>Non justifi&eacute;es</option>
             </select>
-        </div>
-        <div class="ab-filter-group">
-            <span class="ab-filter-label">Statut</span>
-            <select name="statut" class="ab-filter-select" style="min-width: 120px;">
-                <option value="">Toutes</option>
-                <option value="en_attente" {{ request('statut') === 'en_attente' ? 'selected' : '' }}>En attente</option>
-                <option value="approuvee" {{ request('statut') === 'approuvee' ? 'selected' : '' }}>Approuv&eacute;es</option>
-                <option value="refusee" {{ request('statut') === 'refusee' ? 'selected' : '' }}>Refus&eacute;es</option>
+
+            {{-- Statut --}}
+            <select name="statut" class="ab-filter-select">
+                <option value="">Tous les statuts</option>
+                <option value="en_attente"  {{ request('statut') === 'en_attente'  ? 'selected' : '' }}>En attente</option>
+                <option value="approuvee"   {{ request('statut') === 'approuvee'   ? 'selected' : '' }}>Approuv&eacute;es</option>
+                <option value="refusee"     {{ request('statut') === 'refusee'     ? 'selected' : '' }}>Refus&eacute;es</option>
             </select>
-        </div>
-        <div class="ab-filter-group">
-            <span class="ab-filter-label">Ann&eacute;e</span>
-            <select name="annee" class="ab-filter-select" style="min-width: 90px;">
+
+            {{-- Année --}}
+            <select name="annee" class="ab-filter-select">
                 @foreach($anneesDisponibles as $a)
                     <option value="{{ $a }}" {{ request('annee', date('Y')) == $a ? 'selected' : '' }}>{{ $a }}</option>
                 @endforeach
             </select>
+
+            {{-- Submit --}}
+            <button type="submit" class="ab-btn-filter">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                Filtrer
+            </button>
+
+            @if(request()->hasAny(['search','type_absence','justifiee','statut','annee']))
+                <a href="{{ route('admin.absences.index') }}" class="ab-btn-reset">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    Effacer
+                </a>
+            @endif
         </div>
-        <div class="ab-filter-group">
-            <input type="text" name="search" class="ab-filter-input" placeholder="Nom ou matricule..." value="{{ request('search') }}">
+
+        <div class="ab-toolbar-right">
+            <button type="button" class="ab-btn-add" onclick="document.getElementById('addAbsenceModal').classList.add('active')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Enregistrer une absence
+            </button>
         </div>
-        <button type="submit" class="ab-filter-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            Filtrer
-        </button>
-        <a href="{{ route('admin.absences.index') }}" class="ab-filter-reset">R&eacute;initialiser</a>
-        <button type="button" class="ab-add-btn" onclick="document.getElementById('addAbsenceModal').classList.add('active')">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Enregistrer une absence
-        </button>
+    </div>
     </form>
 
-    {{-- Table --}}
+    {{-- ── Table ── --}}
     <div class="ab-table-card">
         <div class="ab-table-header">
-            <h2 class="ab-table-title">Absences enregistr&eacute;es</h2>
+            <h2 class="ab-table-title">
+                <span class="ab-table-title-dot"></span>
+                Absences enregistr&eacute;es
+            </h2>
             <span class="ab-table-count">{{ $absences->total() }} r&eacute;sultat{{ $absences->total() > 1 ? 's' : '' }}</span>
         </div>
 

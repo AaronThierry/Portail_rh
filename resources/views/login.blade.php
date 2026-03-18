@@ -162,7 +162,7 @@
     /* Card header */
     .au-head {
         background: linear-gradient(135deg, var(--ind-dkr) 0%, var(--ind-dk) 50%, var(--teal-dk) 100%);
-        padding: 2rem 2rem 1.75rem;
+        padding: 1.5rem 2rem 1.375rem;
         text-align: center;
         position: relative; overflow: hidden;
     }
@@ -186,35 +186,35 @@
     }
 
     .au-icon {
-        width: 64px; height: 64px;
+        width: 54px; height: 54px;
         background: rgba(255,255,255,.18);
         backdrop-filter: blur(10px);
-        border-radius: 18px;
+        border-radius: 15px;
         display: flex; align-items: center; justify-content: center;
-        margin: 0 auto 1rem;
+        margin: 0 auto .75rem;
         position: relative; z-index: 1;
     }
-    .au-icon svg { width: 32px; height: 32px; color: #fff; }
+    .au-icon svg { width: 27px; height: 27px; color: #fff; }
 
     .au-head h1 {
         font-family: 'Syne', sans-serif;
-        font-size: 1.5rem; font-weight: 700; color: #fff;
-        margin-bottom: .35rem;
+        font-size: 1.375rem; font-weight: 700; color: #fff;
+        margin-bottom: .25rem;
         position: relative; z-index: 1;
     }
     .au-head p {
-        font-size: .9rem; color: rgba(255,255,255,.88);
-        line-height: 1.5; position: relative; z-index: 1;
+        font-size: .85rem; color: rgba(255,255,255,.88);
+        line-height: 1.4; position: relative; z-index: 1;
     }
 
     /* Card body */
-    .au-body { padding: 2rem; }
+    .au-body { padding: 1.5rem; }
 
     /* Alerts */
     .au-alert {
         display: flex; align-items: center; gap: .75rem;
-        padding: 1rem; border-radius: 12px;
-        margin-bottom: 1.25rem;
+        padding: .75rem 1rem; border-radius: 12px;
+        margin-bottom: 1rem;
         font-size: .875rem; font-weight: 500;
     }
     .au-alert svg { width: 18px; height: 18px; flex-shrink: 0; }
@@ -222,10 +222,10 @@
     .au-alert-err { background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5; }
 
     /* Form */
-    .au-group { margin-bottom: 1.25rem; }
+    .au-group { margin-bottom: 1rem; }
     .au-label {
         display: block; font-size: .8125rem; font-weight: 600;
-        color: var(--tx); margin-bottom: .5rem;
+        color: var(--tx); margin-bottom: .375rem;
     }
     .au-wrap { position: relative; }
     .au-ico {
@@ -237,7 +237,7 @@
     .au-ico svg { width: 18px; height: 18px; }
     .au-input {
         width: 100%;
-        padding: .9375rem 1rem .9375rem 3rem;
+        padding: .8125rem 1rem .8125rem 3rem;
         font-family: 'DM Sans', sans-serif;
         font-size: .9375rem; font-weight: 500;
         color: var(--tx); background: var(--bg);
@@ -265,7 +265,7 @@
     /* Options row */
     .au-opts {
         display: flex; align-items: center; justify-content: space-between;
-        margin-bottom: 1.375rem;
+        margin-bottom: 1.125rem;
     }
     .au-check { display: flex; align-items: center; gap: .5rem; cursor: pointer; }
     .au-check input { width: 17px; height: 17px; accent-color: var(--ind); cursor: pointer; }
@@ -304,7 +304,7 @@
 
     /* Card footer */
     .au-foot {
-        padding: 1.25rem 2rem;
+        padding: .875rem 2rem;
         background: var(--bg); border-top: 1px solid var(--br);
         text-align: center;
         font-size: .8125rem; color: var(--mt);

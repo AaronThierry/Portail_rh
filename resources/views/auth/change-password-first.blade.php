@@ -6,681 +6,368 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Sécurisez votre compte — Portail RH+</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/images/logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --navy:       #070D1A;
-            --navy-card:  #0C1628;
-            --navy-input: #0A1422;
-            --navy-mid:   #111D35;
-            --gold:       #C9A96E;
-            --gold-light: #E2C78A;
-            --gold-dim:   #9A7A4E;
-            --text:       #F0EDE8;
-            --text-muted: rgba(240,237,232,0.45);
-            --text-sub:   rgba(240,237,232,0.65);
-            --border:     rgba(201,169,110,0.15);
-            --border-faint: rgba(255,255,255,0.06);
-            --danger:     #F87171;
-        }
+    :root {
+        --ind:    #6366f1; --ind-dk: #4338ca; --ind-dkr: #312e81;
+        --teal:   #14b8a6; --teal-dk:#0d9488;
+        --green:  #10b981; --red: #ef4444; --amber: #f59e0b;
+        --tx: #1e293b; --mt: #64748b; --br: #e2e8f0; --bg: #f8fafc;
+    }
 
-        html { height: 100%; }
+    body {
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
+        display: flex; align-items: center; justify-content: center;
+        background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 55%, #0F172A 100%);
+        padding: 1.25rem;
+        position: relative; overflow: hidden;
+    }
+    body::before {
+        content:'';position:fixed;inset:0;
+        background-image:linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px);
+        background-size:44px 44px;pointer-events:none;z-index:0;
+    }
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--navy);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px 16px;
-            position: relative;
-            overflow-x: hidden;
-        }
+    .au-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;}
+    .au-orb{position:absolute;border-radius:50%;filter:blur(90px);}
+    .au-orb-1{width:500px;height:500px;background:var(--ind);opacity:.32;top:-150px;right:-90px;animation:au-float 22s ease-in-out infinite;}
+    .au-orb-2{width:400px;height:400px;background:var(--teal);opacity:.22;bottom:-120px;left:-70px;animation:au-float 28s ease-in-out infinite reverse;animation-delay:-8s;}
+    .au-orb-3{width:260px;height:260px;background:var(--ind-dk);opacity:.13;top:45%;left:35%;animation:au-float 18s ease-in-out infinite;animation-delay:-4s;}
+    @keyframes au-float{0%,100%{transform:translate(0,0) scale(1);}25%{transform:translate(22px,-22px) scale(1.03);}50%{transform:translate(-16px,16px) scale(.97);}75%{transform:translate(16px,22px) scale(1.01);}}
 
-        /* Geometric grid background */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(201,169,110,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(201,169,110,0.03) 1px, transparent 1px);
-            background-size: 48px 48px;
-            pointer-events: none;
-            z-index: 0;
-        }
+    .au-wrap-outer{width:100%;max-width:480px;position:relative;z-index:1;}
 
-        /* Radial glow */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 700px;
-            height: 700px;
-            background: radial-gradient(circle, rgba(201,169,110,0.055) 0%, transparent 68%);
-            pointer-events: none;
-            z-index: 0;
-        }
+    .au-card{background:#fff;border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.3);overflow:hidden;animation:au-enter .55s cubic-bezier(.16,1,.3,1);}
+    @keyframes au-enter{from{opacity:0;transform:translateY(32px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
 
-        /* ── Card ── */
-        .vault-card {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 460px;
-            background: var(--navy-card);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-            animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
+    /* Header */
+    .au-head{background:linear-gradient(135deg,var(--ind-dkr) 0%,var(--ind-dk) 50%,var(--teal-dk) 100%);padding:2rem 2rem 1.75rem;text-align:center;position:relative;overflow:hidden;}
+    .au-head::before{content:'';position:absolute;top:-60%;right:-40%;width:80%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.14) 0%,transparent 65%);pointer-events:none;}
+    .au-head::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.08) 50%,transparent 60%);transform:translateX(-100%);animation:au-shimmer 3.5s ease-in-out infinite;}
+    @keyframes au-shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(220%)}}
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(28px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+    /* Badge */
+    .au-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);padding:.3125rem .875rem;border-radius:20px;margin-bottom:1.125rem;position:relative;z-index:1;}
+    .au-badge-dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:badge-pulse 2s ease-in-out infinite;}
+    @keyframes badge-pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+    .au-badge span{font-family:'DM Mono',monospace;font-size:.6875rem;font-weight:500;color:#fff;letter-spacing:.06em;text-transform:uppercase;}
 
-        /* Gold top stripe */
-        .vault-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold-dim) 0%, var(--gold) 40%, var(--gold-light) 60%, var(--gold) 80%, var(--gold-dim) 100%);
-        }
+    .au-icon{width:64px;height:64px;background:rgba(255,255,255,.18);backdrop-filter:blur(10px);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;position:relative;z-index:1;}
+    .au-icon svg{width:32px;height:32px;color:#fff;}
+    .au-head h1{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:.35rem;position:relative;z-index:1;}
+    .au-head p{font-size:.875rem;color:rgba(255,255,255,.85);line-height:1.55;position:relative;z-index:1;max-width:320px;margin:0 auto;}
 
-        /* ── Header ── */
-        .vh-header {
-            padding: 40px 44px 32px;
-            border-bottom: 1px solid var(--border-faint);
-        }
+    /* Body */
+    .au-body{padding:2rem;}
 
-        .vh-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 32px;
-        }
+    .au-alert{display:flex;align-items:center;gap:.75rem;padding:1rem;border-radius:12px;margin-bottom:1.25rem;font-size:.875rem;font-weight:500;}
+    .au-alert svg{width:18px;height:18px;flex-shrink:0;}
+    .au-alert-warn{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;}
+    .au-alert-err{background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5;}
 
-        .vh-brand-icon {
-            width: 34px;
-            height: 34px;
-            background: var(--gold);
-            border-radius: 7px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
+    .au-group{margin-bottom:1.25rem;}
+    .au-label{display:block;font-size:.8125rem;font-weight:600;color:var(--tx);margin-bottom:.5rem;}
+    .au-wrap{position:relative;}
+    .au-ico{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none;transition:color .25s;}
+    .au-ico svg{width:18px;height:18px;}
+    .au-input{width:100%;padding:.9375rem 3rem .9375rem 3rem;font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:500;color:var(--tx);background:var(--bg);border:2px solid var(--br);border-radius:13px;outline:none;transition:border-color .25s,box-shadow .25s,background .25s;}
+    .au-input:focus{border-color:var(--ind);background:#fff;box-shadow:0 0 0 4px rgba(99,102,241,.1);}
+    .au-input.is-error{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.08);}
+    .au-wrap:focus-within .au-ico{color:var(--ind);}
+    .au-input::placeholder{color:#9ca3af;}
 
-        .vh-brand-icon svg { width: 16px; height: 16px; stroke: var(--navy-card); }
+    .au-eye{position:absolute;right:.875rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94a3b8;padding:.25rem;border-radius:6px;transition:color .2s;}
+    .au-eye:hover{color:var(--ind);}
+    .au-eye svg{width:18px;height:18px;}
 
-        .vh-brand-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 17px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            color: var(--text);
-        }
-        .vh-brand-name span { color: var(--gold); }
+    .au-field-err{font-size:.75rem;color:var(--red);margin-top:.375rem;display:none;}
+    .au-field-err.show{display:block;}
 
-        .vh-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            background: rgba(201,169,110,0.1);
-            border: 1px solid rgba(201,169,110,0.25);
-            padding: 4px 12px;
-            border-radius: 3px;
-            margin-bottom: 18px;
-        }
+    /* Strength bar */
+    .strength-wrap{margin-top:.625rem;}
+    .strength-bar{height:3px;background:rgba(0,0,0,.07);border-radius:2px;overflow:hidden;margin-bottom:.375rem;}
+    .strength-fill{height:100%;width:0%;border-radius:2px;transition:width .35s ease,background .35s ease;}
+    .strength-lbl{font-family:'DM Mono',monospace;font-size:.6875rem;font-weight:500;letter-spacing:.03em;color:var(--mt);transition:color .3s;}
 
-        .vh-badge-dot {
-            width: 5px;
-            height: 5px;
-            background: var(--gold);
-            border-radius: 50%;
-            animation: pulse 2.2s ease-in-out infinite;
-        }
+    /* Requirements */
+    .au-reqs{background:var(--bg);border:1px solid var(--br);border-radius:12px;padding:1rem 1.125rem;margin-bottom:1.5rem;}
+    .au-reqs-title{font-family:'DM Mono',monospace;font-size:.6875rem;font-weight:600;color:var(--mt);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.875rem;}
+    .au-req{display:flex;align-items:center;gap:.75rem;font-size:.8125rem;color:var(--mt);margin-bottom:.625rem;transition:color .25s;}
+    .au-req:last-child{margin-bottom:0;}
+    .req-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .25s,border-color .25s;}
+    .req-dot svg{width:9px;height:9px;stroke:transparent;transition:stroke .25s;}
+    .au-req.valid{color:var(--tx);}
+    .au-req.valid .req-dot{background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.45);}
+    .au-req.valid .req-dot svg{stroke:var(--ind);}
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.35; }
-        }
+    /* Submit */
+    .au-btn{width:100%;padding:1rem;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--ind) 0%,var(--ind-dk) 100%);border:none;border-radius:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.625rem;transition:transform .25s,box-shadow .25s;box-shadow:0 8px 24px rgba(99,102,241,.35);position:relative;overflow:hidden;}
+    .au-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--ind-dk) 0%,var(--ind-dkr) 100%);opacity:0;transition:opacity .3s;}
+    .au-btn:hover::before{opacity:1;}
+    .au-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(99,102,241,.45);}
+    .au-btn:active{transform:translateY(0);}
+    .au-btn:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:0 8px 24px rgba(99,102,241,.2);}
+    .au-btn>*{position:relative;z-index:1;}
+    .au-btn svg{width:18px;height:18px;flex-shrink:0;}
 
-        .vh-badge span {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--gold);
-            letter-spacing: 1.6px;
-            text-transform: uppercase;
-        }
+    /* Footer */
+    .au-foot{padding:1.25rem 2rem;text-align:center;}
+    .au-logout{display:inline-flex;align-items:center;gap:.5rem;font-size:.875rem;font-weight:500;color:var(--mt);text-decoration:none;padding:.625rem .875rem;border-radius:10px;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:color .2s,background .2s;}
+    .au-logout:hover{color:var(--tx);background:var(--bg);}
+    .au-logout svg{width:16px;height:16px;}
 
-        .vh-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 34px;
-            font-weight: 400;
-            color: var(--text);
-            line-height: 1.18;
-            letter-spacing: -0.3px;
-            margin-bottom: 12px;
-        }
-
-        .vh-subtitle {
-            font-size: 13.5px;
-            color: var(--text-sub);
-            line-height: 1.65;
-        }
-
-        /* ── Body ── */
-        .vh-body {
-            padding: 32px 44px 36px;
-        }
-
-        .vh-alert {
-            padding: 13px 16px;
-            border-radius: 3px;
-            font-size: 13px;
-            line-height: 1.55;
-            margin-bottom: 24px;
-        }
-        .vh-alert.warn {
-            background: rgba(251,191,36,0.06);
-            border-left: 2px solid #FBBF24;
-            color: #FCD34D;
-        }
-        .vh-alert.err {
-            background: rgba(248,113,113,0.06);
-            border-left: 2px solid var(--danger);
-            color: var(--danger);
-        }
-
-        .vh-group { margin-bottom: 22px; }
-
-        .vh-label {
-            display: block;
-            font-size: 10.5px;
-            font-weight: 600;
-            color: var(--text-muted);
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            margin-bottom: 9px;
-        }
-
-        .vh-input-wrap { position: relative; }
-
-        .vh-input {
-            width: 100%;
-            padding: 13px 46px 13px 16px;
-            background: var(--navy-input);
-            border: 1px solid var(--border-faint);
-            border-bottom: 1px solid rgba(201,169,110,0.2);
-            border-radius: 3px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            color: var(--text);
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .vh-input::placeholder {
-            color: var(--text-muted);
-            font-family: 'Outfit', sans-serif;
-            font-size: 13px;
-        }
-        .vh-input:focus {
-            border-color: rgba(201,169,110,0.5);
-            box-shadow: 0 0 0 3px rgba(201,169,110,0.07), inset 0 0 0 1px rgba(201,169,110,0.1);
-        }
-        .vh-input.is-error {
-            border-color: rgba(248,113,113,0.5);
-            box-shadow: 0 0 0 3px rgba(248,113,113,0.05);
-        }
-
-        .vh-eye {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            padding: 6px;
-            transition: color 0.2s;
-            display: flex;
-            align-items: center;
-        }
-        .vh-eye:hover { color: var(--gold); }
-        .vh-eye svg { width: 16px; height: 16px; }
-
-        .vh-field-error {
-            font-size: 12px;
-            color: var(--danger);
-            margin-top: 6px;
-            display: none;
-        }
-        .vh-field-error.show { display: block; }
-
-        /* Strength meter */
-        .vh-strength { margin-top: 12px; display: none; }
-        .vh-strength.visible { display: block; }
-
-        .vh-strength-bar-wrap {
-            height: 3px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 6px;
-        }
-        .vh-strength-bar {
-            height: 100%;
-            width: 0%;
-            border-radius: 2px;
-            transition: width 0.35s ease, background-color 0.35s ease;
-        }
-        .vh-strength-label {
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            transition: color 0.3s;
-        }
-
-        /* Requirements list */
-        .vh-reqs {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border-faint);
-            border-radius: 3px;
-            padding: 16px 18px;
-            margin-bottom: 28px;
-        }
-        .vh-reqs-title {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--text-muted);
-            letter-spacing: 1.3px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-        .vh-req-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 12.5px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            transition: color 0.25s;
-        }
-        .vh-req-item:last-child { margin-bottom: 0; }
-        .req-icon {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: background 0.25s, border-color 0.25s;
-        }
-        .req-icon svg {
-            width: 9px;
-            height: 9px;
-            stroke: transparent;
-            transition: stroke 0.25s;
-        }
-        .vh-req-item.valid { color: var(--text-sub); }
-        .vh-req-item.valid .req-icon {
-            background: rgba(201,169,110,0.18);
-            border-color: rgba(201,169,110,0.4);
-        }
-        .vh-req-item.valid .req-icon svg { stroke: var(--gold); }
-
-        /* Submit button */
-        .vh-submit {
-            width: 100%;
-            padding: 15px 24px;
-            background: var(--gold);
-            border: none;
-            border-radius: 3px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--navy-card);
-            letter-spacing: 0.4px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .vh-submit::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
-            transform: translateX(-100%);
-            transition: transform 0.5s;
-        }
-        .vh-submit:hover {
-            background: var(--gold-light);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 24px rgba(201,169,110,0.25);
-        }
-        .vh-submit:hover::after { transform: translateX(100%); }
-        .vh-submit:active { transform: translateY(0); }
-        .vh-submit:disabled {
-            background: rgba(201,169,110,0.3);
-            color: rgba(7,13,26,0.45);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        .vh-submit svg {
-            width: 16px;
-            height: 16px;
-            stroke: var(--navy-card);
-            flex-shrink: 0;
-            transition: transform 0.2s;
-        }
-        .vh-submit:hover:not(:disabled) svg { transform: translateX(2px); }
-
-        /* Footer */
-        .vh-footer {
-            padding: 0 44px 32px;
-            text-align: center;
-        }
-        .vh-logout-link {
-            font-size: 12.5px;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .vh-logout-link:hover { color: var(--text-sub); }
-
-        @media (max-width: 520px) {
-            .vh-header, .vh-body, .vh-footer {
-                padding-left: 24px;
-                padding-right: 24px;
-            }
-            .vh-title { font-size: 28px; }
-        }
+    @media(max-width:520px){
+        .au-card{border-radius:22px;}.au-head{padding:1.5rem 1.5rem 1.25rem;}.au-body{padding:1.5rem;}.au-foot{padding:1rem 1.5rem;}
+    }
     </style>
 </head>
 <body>
 
-<div class="vault-card">
-
-    {{-- Header --}}
-    <div class="vh-header">
-        <div class="vh-brand">
-            <div class="vh-brand-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-            </div>
-            <div class="vh-brand-name">Portail <span>RH+</span></div>
-        </div>
-
-        <div class="vh-badge">
-            <div class="vh-badge-dot"></div>
-            <span>Sécurité &mdash; Première connexion</span>
-        </div>
-
-        <h1 class="vh-title">Sécurisez<br><em>votre compte</em></h1>
-        <p class="vh-subtitle">
-            Vous utilisez un mot de passe temporaire. Définissez votre mot de passe permanent pour accéder à votre espace.
-        </p>
+    <div class="au-orbs">
+        <div class="au-orb au-orb-1"></div>
+        <div class="au-orb au-orb-2"></div>
+        <div class="au-orb au-orb-3"></div>
     </div>
 
-    {{-- Body --}}
-    <div class="vh-body">
+    <div class="au-wrap-outer">
+        <div class="au-card">
 
-        @if(session('warning'))
-        <div class="vh-alert warn">{{ session('warning') }}</div>
-        @endif
-
-        @if($errors->any())
-        <div class="vh-alert err">
-            @foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach
-        </div>
-        @endif
-
-        <form action="{{ route('password.update-first') }}" method="POST" id="vaultForm" novalidate>
-            @csrf
-
-            {{-- Nouveau mot de passe --}}
-            <div class="vh-group">
-                <label for="new_password" class="vh-label">Nouveau mot de passe</label>
-                <div class="vh-input-wrap">
-                    <input type="password" id="new_password" name="new_password"
-                           class="vh-input @error('new_password') is-error @enderror"
-                           placeholder="Minimum 8 caractères"
-                           autocomplete="new-password"
-                           autofocus required>
-                    <button type="button" class="vh-eye" onclick="togglePwd('new_password', this)" aria-label="Afficher">
-                        <svg id="eye-np-show" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                        </svg>
-                        <svg id="eye-np-hide" style="display:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                            <line x1="1" y1="1" x2="23" y2="23"/>
-                        </svg>
-                    </button>
+            <div class="au-head">
+                <div class="au-badge">
+                    <div class="au-badge-dot"></div>
+                    <span>Première connexion</span>
                 </div>
-                <span class="vh-field-error @error('new_password') show @enderror" id="err-np">
-                    @error('new_password'){{ $message }}@enderror
-                </span>
+                <div class="au-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <h1>Sécurisez votre compte</h1>
+                <p>Vous utilisez un mot de passe temporaire. Définissez votre mot de passe permanent pour accéder à votre espace.</p>
+            </div>
 
-                <div class="vh-strength" id="strengthWrap">
-                    <div class="vh-strength-bar-wrap">
-                        <div class="vh-strength-bar" id="strengthBar"></div>
+            <div class="au-body">
+
+                @if(session('warning'))
+                <div class="au-alert au-alert-warn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <span>{{ session('warning') }}</span>
+                </div>
+                @endif
+
+                @if($errors->any())
+                <div class="au-alert au-alert-err">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                    </svg>
+                    <div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div>
+                </div>
+                @endif
+
+                <form action="{{ route('password.update-first') }}" method="POST" id="vaultForm" novalidate>
+                    @csrf
+
+                    <!-- Nouveau mot de passe -->
+                    <div class="au-group">
+                        <label for="new_password" class="au-label">Nouveau mot de passe</label>
+                        <div class="au-wrap">
+                            <input type="password" id="new_password" name="new_password"
+                                   class="au-input @error('new_password') is-error @enderror"
+                                   placeholder="Minimum 8 caractères"
+                                   autocomplete="new-password" autofocus required>
+                            <span class="au-ico">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </span>
+                            <button type="button" class="au-eye" onclick="togglePwd('new_password','eye-np')" aria-label="Afficher">
+                                <svg id="eye-np" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="au-field-err @error('new_password') show @enderror" id="err-np">
+                            @error('new_password'){{ $message }}@enderror
+                        </span>
+                        <div class="strength-wrap" id="strength-wrap" style="display:none;">
+                            <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+                            <span class="strength-lbl" id="strength-lbl"></span>
+                        </div>
                     </div>
-                    <span class="vh-strength-label" id="strengthLabel"></span>
-                </div>
-            </div>
 
-            {{-- Confirmation --}}
-            <div class="vh-group">
-                <label for="new_password_confirmation" class="vh-label">Confirmer le mot de passe</label>
-                <div class="vh-input-wrap">
-                    <input type="password" id="new_password_confirmation" name="new_password_confirmation"
-                           class="vh-input"
-                           placeholder="Retapez votre mot de passe"
-                           autocomplete="new-password"
-                           required>
-                    <button type="button" class="vh-eye" onclick="togglePwd('new_password_confirmation', this)" aria-label="Afficher">
-                        <svg id="eye-nc-show" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    <!-- Confirmation -->
+                    <div class="au-group">
+                        <label for="new_password_confirmation" class="au-label">Confirmer le mot de passe</label>
+                        <div class="au-wrap">
+                            <input type="password" id="new_password_confirmation" name="new_password_confirmation"
+                                   class="au-input" placeholder="Retapez votre mot de passe"
+                                   autocomplete="new-password" required>
+                            <span class="au-ico">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </span>
+                            <button type="button" class="au-eye" onclick="togglePwd('new_password_confirmation','eye-nc')" aria-label="Afficher">
+                                <svg id="eye-nc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <span class="au-field-err" id="err-nc"></span>
+                    </div>
+
+                    <!-- Requirements -->
+                    <div class="au-reqs">
+                        <div class="au-reqs-title">Règles du mot de passe</div>
+                        <div class="au-req" id="req-length">
+                            <div class="req-dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Au moins 8 caractères</span>
+                        </div>
+                        <div class="au-req" id="req-upper">
+                            <div class="req-dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Une lettre majuscule</span>
+                        </div>
+                        <div class="au-req" id="req-lower">
+                            <div class="req-dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Une lettre minuscule</span>
+                        </div>
+                        <div class="au-req" id="req-digit">
+                            <div class="req-dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Un chiffre</span>
+                        </div>
+                        <div class="au-req" id="req-special">
+                            <div class="req-dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                            <span>Un caractère spécial (@, #, !, &hellip;)</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="au-btn" id="submitBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                         </svg>
-                        <svg id="eye-nc-hide" style="display:none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                            <line x1="1" y1="1" x2="23" y2="23"/>
-                        </svg>
+                        <span>Définir mon mot de passe permanent</span>
                     </button>
-                </div>
-                <span class="vh-field-error" id="err-nc"></span>
+                </form>
             </div>
 
-            {{-- Requirements checklist --}}
-            <div class="vh-reqs">
-                <div class="vh-reqs-title">Règles du mot de passe</div>
-
-                <div class="vh-req-item" id="req-length">
-                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-                    <span>Au moins 8 caractères</span>
-                </div>
-                <div class="vh-req-item" id="req-upper">
-                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-                    <span>Une lettre majuscule</span>
-                </div>
-                <div class="vh-req-item" id="req-lower">
-                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-                    <span>Une lettre minuscule</span>
-                </div>
-                <div class="vh-req-item" id="req-digit">
-                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-                    <span>Un chiffre</span>
-                </div>
-                <div class="vh-req-item" id="req-special">
-                    <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-                    <span>Un caractère spécial (@, #, !, &hellip;)</span>
-                </div>
+            <div class="au-foot">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
+                <button class="au-logout"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Me déconnecter
+                </button>
             </div>
-
-            {{-- Submit --}}
-            <button type="submit" class="vh-submit" id="submitBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-                Définir mon mot de passe permanent
-            </button>
-        </form>
+        </div>
     </div>
 
-    {{-- Footer --}}
-    <div class="vh-footer">
-        <a href="{{ route('logout') }}"
-           class="vh-logout-link"
-           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            Me déconnecter
-        </a>
-    </div>
-
-</div>
-
-<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
-
-<script>
-/* Toggle visibility */
-function togglePwd(fieldId, btn) {
-    const input = document.getElementById(fieldId);
-    const isHidden = input.type === 'password';
-    input.type = isHidden ? 'text' : 'password';
-    // show/hide icons for new_password
-    if (fieldId === 'new_password') {
-        document.getElementById('eye-np-show').style.display = isHidden ? 'none' : '';
-        document.getElementById('eye-np-hide').style.display = isHidden ? '' : 'none';
-    } else {
-        document.getElementById('eye-nc-show').style.display = isHidden ? 'none' : '';
-        document.getElementById('eye-nc-hide').style.display = isHidden ? '' : 'none';
-    }
-}
-
-/* Strength calculator */
-const STRENGTH_COLORS = ['#EF4444','#F97316','#EAB308','#84CC16','#C9A96E','#E2C78A'];
-const STRENGTH_LABELS = ['Très faible','Faible','Moyen','Bien','Fort','Excellent'];
-
-function calcScore(pwd) {
-    let s = 0;
-    if (pwd.length >= 8)            s++;
-    if (pwd.length >= 12)           s++;
-    if (/[A-Z]/.test(pwd))          s++;
-    if (/[a-z]/.test(pwd))          s++;
-    if (/\d/.test(pwd))             s++;
-    if (/[^A-Za-z0-9]/.test(pwd))   s++;
-    return s; // 0–6
-}
-
-const reqs = [
-    { id: 'req-length',  test: p => p.length >= 8 },
-    { id: 'req-upper',   test: p => /[A-Z]/.test(p) },
-    { id: 'req-lower',   test: p => /[a-z]/.test(p) },
-    { id: 'req-digit',   test: p => /\d/.test(p) },
-    { id: 'req-special', test: p => /[^A-Za-z0-9]/.test(p) },
-];
-
-const pwdInput  = document.getElementById('new_password');
-const confInput = document.getElementById('new_password_confirmation');
-const bar       = document.getElementById('strengthBar');
-const barLabel  = document.getElementById('strengthLabel');
-const sWrap     = document.getElementById('strengthWrap');
-
-function updateUI(val) {
-    if (!val) {
-        sWrap.classList.remove('visible');
-        reqs.forEach(r => document.getElementById(r.id).classList.remove('valid'));
-        return;
-    }
-    sWrap.classList.add('visible');
-    const score = calcScore(val);
-    bar.style.width           = Math.max((score / 6) * 100, 8) + '%';
-    bar.style.backgroundColor = STRENGTH_COLORS[Math.min(score, 5)];
-    barLabel.style.color      = STRENGTH_COLORS[Math.min(score, 5)];
-    barLabel.textContent      = STRENGTH_LABELS[Math.min(score, 5)];
-    reqs.forEach(r => document.getElementById(r.id).classList.toggle('valid', r.test(val)));
-}
-
-pwdInput.addEventListener('input', () => {
-    updateUI(pwdInput.value);
-    // clear error
-    pwdInput.classList.remove('is-error');
-    document.getElementById('err-np').classList.remove('show');
-    // re-check confirm match
-    if (confInput.value) checkConfirm();
-});
-
-function checkConfirm() {
-    const err = document.getElementById('err-nc');
-    if (confInput.value && pwdInput.value !== confInput.value) {
-        confInput.classList.add('is-error');
-        err.textContent = 'Les mots de passe ne correspondent pas';
-        err.classList.add('show');
-    } else {
-        confInput.classList.remove('is-error');
-        err.classList.remove('show');
-    }
-}
-
-confInput.addEventListener('input', checkConfirm);
-
-/* Form submit */
-document.getElementById('vaultForm').addEventListener('submit', function(e) {
-    let ok = true;
-
-    if (!pwdInput.value) {
-        pwdInput.classList.add('is-error');
-        const err = document.getElementById('err-np');
-        err.textContent = 'Le nouveau mot de passe est requis';
-        err.classList.add('show');
-        ok = false;
-    } else if (pwdInput.value.length < 8) {
-        pwdInput.classList.add('is-error');
-        const err = document.getElementById('err-np');
-        err.textContent = 'Minimum 8 caractères requis';
-        err.classList.add('show');
-        ok = false;
+    <script>
+    function togglePwd(inputId, svgId) {
+        const inp = document.getElementById(inputId);
+        const svg = document.getElementById(svgId);
+        const isHidden = inp.type === 'password';
+        inp.type = isHidden ? 'text' : 'password';
+        svg.innerHTML = isHidden
+            ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+            : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
     }
 
-    if (pwdInput.value && confInput.value && pwdInput.value !== confInput.value) {
-        confInput.classList.add('is-error');
+    const COLORS = ['#ef4444','#f97316','#eab308','#84cc16','#6366f1','#14b8a6'];
+    const LABELS = ['Très faible','Faible','Moyen','Bien','Fort','Excellent'];
+
+    const reqs = [
+        { id:'req-length',  test: p => p.length >= 8 },
+        { id:'req-upper',   test: p => /[A-Z]/.test(p) },
+        { id:'req-lower',   test: p => /[a-z]/.test(p) },
+        { id:'req-digit',   test: p => /\d/.test(p) },
+        { id:'req-special', test: p => /[^A-Za-z0-9]/.test(p) },
+    ];
+
+    function calcScore(p) {
+        let s = 0;
+        if (p.length >= 8)          s++;
+        if (p.length >= 12)         s++;
+        if (/[A-Z]/.test(p))        s++;
+        if (/[a-z]/.test(p))        s++;
+        if (/\d/.test(p))           s++;
+        if (/[^A-Za-z0-9]/.test(p)) s++;
+        return s;
+    }
+
+    const pwdInp  = document.getElementById('new_password');
+    const confInp = document.getElementById('new_password_confirmation');
+    const fill    = document.getElementById('strength-fill');
+    const lbl     = document.getElementById('strength-lbl');
+    const wrap    = document.getElementById('strength-wrap');
+
+    pwdInp.addEventListener('input', function() {
+        const v = this.value;
+        pwdInp.classList.remove('is-error');
+        document.getElementById('err-np').classList.remove('show');
+
+        if (!v) { wrap.style.display='none'; reqs.forEach(r => document.getElementById(r.id).classList.remove('valid')); return; }
+        wrap.style.display = 'block';
+
+        const score = calcScore(v);
+        fill.style.width = Math.max((score/6)*100, 8) + '%';
+        fill.style.background = COLORS[Math.min(score,5)];
+        lbl.textContent = LABELS[Math.min(score,5)];
+        lbl.style.color  = COLORS[Math.min(score,5)];
+
+        reqs.forEach(r => document.getElementById(r.id).classList.toggle('valid', r.test(v)));
+        if (confInp.value) checkConfirm();
+    });
+
+    function checkConfirm() {
         const err = document.getElementById('err-nc');
-        err.textContent = 'Les mots de passe ne correspondent pas';
-        err.classList.add('show');
-        ok = false;
+        if (confInp.value && pwdInp.value !== confInp.value) {
+            confInp.classList.add('is-error');
+            err.textContent = 'Les mots de passe ne correspondent pas';
+            err.classList.add('show');
+        } else {
+            confInp.classList.remove('is-error');
+            err.classList.remove('show');
+        }
     }
+    confInp.addEventListener('input', checkConfirm);
 
-    if (!ok) { e.preventDefault(); return; }
-
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Sécurisation en cours&hellip;`;
-});
-</script>
+    document.getElementById('vaultForm').addEventListener('submit', function(e) {
+        let ok = true;
+        if (!pwdInp.value || pwdInp.value.length < 8) {
+            pwdInp.classList.add('is-error');
+            const err = document.getElementById('err-np');
+            err.textContent = pwdInp.value ? 'Minimum 8 caractères requis' : 'Le mot de passe est requis';
+            err.classList.add('show');
+            ok = false;
+        }
+        if (pwdInp.value && confInp.value && pwdInp.value !== confInp.value) {
+            confInp.classList.add('is-error');
+            const err = document.getElementById('err-nc');
+            err.textContent = 'Les mots de passe ne correspondent pas';
+            err.classList.add('show');
+            ok = false;
+        }
+        if (!ok) { e.preventDefault(); return; }
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span>Sécurisation en cours…</span>';
+    });
+    </script>
 </body>
 </html>

@@ -1,311 +1,372 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Vérifier le code - Portail RH</title>
+    <title>Vérifier le code — Portail RH+</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/images/logo.png') }}">
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Vite Assets -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        .bg-pattern {
-            background-color: #f8fafc;
-            background-image:
-                linear-gradient(135deg, rgba(74, 144, 217, 0.03) 0%, transparent 50%),
-                linear-gradient(225deg, rgba(147, 51, 234, 0.03) 0%, transparent 50%),
-                repeating-linear-gradient(90deg, rgba(74, 144, 217, 0.03) 0px, transparent 1px, transparent 80px, rgba(74, 144, 217, 0.03) 81px),
-                repeating-linear-gradient(0deg, rgba(147, 51, 234, 0.03) 0px, transparent 1px, transparent 80px, rgba(147, 51, 234, 0.03) 81px);
-        }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .dark .bg-pattern {
-            background-color: #0f172a;
-            background-image:
-                linear-gradient(135deg, rgba(74, 144, 217, 0.05) 0%, transparent 50%),
-                linear-gradient(225deg, rgba(147, 51, 234, 0.05) 0%, transparent 50%),
-                repeating-linear-gradient(90deg, rgba(74, 144, 217, 0.05) 0px, transparent 1px, transparent 80px, rgba(74, 144, 217, 0.05) 81px),
-                repeating-linear-gradient(0deg, rgba(147, 51, 234, 0.05) 0px, transparent 1px, transparent 80px, rgba(147, 51, 234, 0.05) 81px);
-        }
+    :root {
+        --ind:    #6366f1; --ind-dk: #4338ca; --ind-dkr: #312e81;
+        --teal:   #14b8a6; --teal-dk:#0d9488;
+        --green:  #10b981; --red: #ef4444;
+        --tx: #1e293b; --mt: #64748b; --br: #e2e8f0; --bg: #f8fafc;
+    }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow:
-                0 8px 32px 0 rgba(31, 38, 135, 0.1),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
-        }
+    body {
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
+        display: flex; align-items: center; justify-content: center;
+        background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 55%, #0F172A 100%);
+        padding: 1.25rem;
+        position: relative; overflow: hidden;
+    }
+    body::before {
+        content: ''; position:fixed; inset:0;
+        background-image:
+            linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),
+            linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px);
+        background-size:44px 44px; pointer-events:none; z-index:0;
+    }
 
-        .dark .glass-card {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow:
-                0 8px 32px 0 rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-        }
+    .au-orbs { position:fixed;inset:0;pointer-events:none;z-index:0; }
+    .au-orb   { position:absolute;border-radius:50%;filter:blur(90px); }
+    .au-orb-1 { width:480px;height:480px;background:var(--ind); opacity:.3;top:-140px;right:-90px;  animation:au-float 22s ease-in-out infinite; }
+    .au-orb-2 { width:380px;height:380px;background:var(--teal);opacity:.2;bottom:-110px;left:-70px;animation:au-float 28s ease-in-out infinite reverse;animation-delay:-8s; }
+    @keyframes au-float {
+        0%,100%{transform:translate(0,0) scale(1);}
+        25%{transform:translate(22px,-22px) scale(1.03);}
+        50%{transform:translate(-16px,16px) scale(.97);}
+        75%{transform:translate(16px,22px) scale(1.01);}
+    }
 
-        .otp-input {
-            width: 3.5rem;
-            height: 4rem;
-            font-size: 1.875rem;
-            font-weight: 700;
-            text-align: center;
-            letter-spacing: 0.05em;
-        }
+    .au-wrap-outer { width:100%;max-width:460px;position:relative;z-index:1; }
+
+    .au-card {
+        background:#fff;border-radius:28px;
+        box-shadow:0 30px 90px rgba(0,0,0,.3);
+        overflow:hidden; animation:au-enter .55s cubic-bezier(.16,1,.3,1);
+    }
+    @keyframes au-enter {
+        from{opacity:0;transform:translateY(32px) scale(.96);}
+        to{opacity:1;transform:translateY(0) scale(1);}
+    }
+
+    /* Header */
+    .au-head {
+        background:linear-gradient(135deg,var(--ind-dkr) 0%,var(--ind-dk) 50%,var(--teal-dk) 100%);
+        padding:2rem 2rem 1.75rem; text-align:center;
+        position:relative; overflow:hidden;
+    }
+    .au-head::before {
+        content:'';position:absolute;top:-60%;right:-40%;width:80%;height:200%;
+        background:radial-gradient(circle,rgba(255,255,255,.14) 0%,transparent 65%);pointer-events:none;
+    }
+    .au-head::after {
+        content:'';position:absolute;inset:0;
+        background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.08) 50%,transparent 60%);
+        transform:translateX(-100%);animation:au-shimmer 3.5s ease-in-out infinite;
+    }
+    @keyframes au-shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(220%)}}
+
+    .au-icon {
+        width:64px;height:64px; background:rgba(255,255,255,.18);backdrop-filter:blur(10px);
+        border-radius:18px;display:flex;align-items:center;justify-content:center;
+        margin:0 auto 1rem;position:relative;z-index:1;
+    }
+    .au-icon svg{width:32px;height:32px;color:#fff;}
+    .au-head h1 { font-family:'Syne',sans-serif;font-size:1.375rem;font-weight:700;color:#fff;margin-bottom:.35rem;position:relative;z-index:1; }
+    .au-head p  { font-size:.875rem;color:rgba(255,255,255,.88);line-height:1.55;position:relative;z-index:1; }
+    .au-head .au-email { font-family:'DM Mono',monospace;font-size:.8125rem;color:rgba(255,255,255,.75); }
+
+    /* Body */
+    .au-body { padding:2rem; }
+
+    /* Alerts */
+    .au-alert {
+        display:flex;align-items:center;gap:.75rem;
+        padding:1rem;border-radius:12px;margin-bottom:1.25rem;
+        font-size:.875rem;font-weight:500;
+    }
+    .au-alert svg{width:18px;height:18px;flex-shrink:0;}
+    .au-alert-ok  {background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7;}
+    .au-alert-err {background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5;}
+
+    /* OTP boxes */
+    .otp-label {
+        display:block; font-size:.8125rem;font-weight:600;color:var(--tx);
+        margin-bottom:1rem; text-align:center;
+    }
+    .otp-boxes {
+        display:flex;justify-content:center;gap:.625rem;margin-bottom:1rem;
+    }
+    .otp-box {
+        width:52px;height:60px;
+        font-family:'DM Mono',monospace;
+        font-size:1.625rem;font-weight:600;
+        text-align:center; letter-spacing:0;
+        color:var(--tx); background:var(--bg);
+        border:2px solid var(--br);
+        border-radius:13px; outline:none;
+        transition:border-color .2s,box-shadow .2s,background .2s;
+        caret-color: var(--ind);
+    }
+    .otp-box:focus {
+        border-color:var(--ind);background:#fff;
+        box-shadow:0 0 0 4px rgba(99,102,241,.12);
+    }
+    .otp-box.filled {
+        border-color:var(--ind);background:rgba(99,102,241,.05);
+    }
+    .otp-box.error {
+        border-color:var(--red);background:rgba(239,68,68,.04);
+        animation:shake .4s ease;
+    }
+    @keyframes shake {
+        0%,100%{transform:translateX(0);}
+        25%{transform:translateX(-5px);}
+        75%{transform:translateX(5px);}
+    }
+
+    /* Timer */
+    .otp-timer {
+        text-align:center;margin-bottom:1.5rem;
+        font-size:.875rem;color:var(--mt);
+    }
+    .otp-timer span {
+        font-family:'DM Mono',monospace;
+        font-weight:600;color:var(--ind);
+    }
+    .otp-timer span.expired { color:var(--red); }
+
+    /* Submit */
+    .au-btn {
+        width:100%;padding:1rem;
+        font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;color:#fff;
+        background:linear-gradient(135deg,var(--ind) 0%,var(--ind-dk) 100%);
+        border:none;border-radius:13px;cursor:pointer;
+        display:flex;align-items:center;justify-content:center;gap:.625rem;
+        transition:transform .25s,box-shadow .25s;
+        box-shadow:0 8px 24px rgba(99,102,241,.35);
+        position:relative;overflow:hidden;margin-bottom:1.125rem;
+    }
+    .au-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--ind-dk) 0%,var(--ind-dkr) 100%);opacity:0;transition:opacity .3s;}
+    .au-btn:hover::before{opacity:1;}
+    .au-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(99,102,241,.45);}
+    .au-btn:active{transform:translateY(0);}
+    .au-btn>*{position:relative;z-index:1;}
+    .au-btn svg{width:18px;height:18px;transition:transform .25s;}
+    .au-btn:hover svg{transform:translateX(4px);}
+
+    /* Resend */
+    .otp-resend {
+        text-align:center;font-size:.875rem;color:var(--mt);
+    }
+    .otp-resend button {
+        background:none;border:none;cursor:pointer;
+        font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:700;
+        color:var(--ind);transition:color .2s;padding:0;
+    }
+    .otp-resend button:hover{color:var(--ind-dk);}
+    .otp-resend button:disabled{opacity:.5;cursor:not-allowed;}
+
+    /* Back link */
+    .au-back {
+        display:flex;align-items:center;justify-content:center;gap:.5rem;
+        font-size:.875rem;font-weight:600;color:var(--ind);text-decoration:none;
+        padding:.625rem;border-radius:11px;transition:background .2s,color .2s;
+        margin-top:.875rem;
+    }
+    .au-back:hover{background:rgba(99,102,241,.07);color:var(--ind-dk);}
+    .au-back svg{width:17px;height:17px;}
+
+    /* Footer */
+    .au-foot {
+        padding:1.25rem 2rem;background:var(--bg);border-top:1px solid var(--br);
+        text-align:center;font-size:.8125rem;color:var(--mt);
+    }
+    .au-foot strong{color:var(--ind);font-weight:700;}
+
+    @media(max-width:480px){
+        .au-card{border-radius:22px;}.au-head{padding:1.5rem 1.5rem 1.25rem;}.au-body{padding:1.5rem;}.au-foot{padding:1rem 1.5rem;}
+        .otp-box{width:44px;height:54px;font-size:1.375rem;}
+        .otp-boxes{gap:.5rem;}
+    }
     </style>
 </head>
-<body class="h-full bg-pattern">
+<body>
 
-    <!-- Theme Toggle Button -->
-    <button class="fixed top-8 right-8 p-3.5 glass-card rounded-2xl hover:scale-110 transition-all duration-300 z-50 group" data-theme-toggle aria-label="Changer le thème">
-        <svg class="w-6 h-6 text-amber-500 hidden dark:block transition-all duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <svg class="w-6 h-6 text-primary-600 dark:text-indigo-400 block dark:hidden transition-all duration-300 group-hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-    </button>
+    <div class="au-orbs">
+        <div class="au-orb au-orb-1"></div>
+        <div class="au-orb au-orb-2"></div>
+    </div>
 
-    <div class="relative flex items-center justify-center min-h-screen px-4 py-6 sm:px-6 lg:px-8">
-        <div class="w-full max-w-md space-y-6 relative z-10">
+    <div class="au-wrap-outer">
+        <div class="au-card">
 
-            <!-- Logo & Title Section -->
-            <div class="text-center space-y-4">
-                <div class="inline-flex items-center justify-center relative group">
-                    <div class="absolute inset-0 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 rounded-3xl blur-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
-                    <div class="relative w-20 h-20 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-3xl shadow-2xl flex items-center justify-center transform group-hover:scale-105 transition-all duration-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-12 h-12 text-white">
-                            <path fill="currentColor" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+            <div class="au-head">
+                <div class="au-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                </div>
+                <h1>Vérifier votre code</h1>
+                <p>Code envoyé à<br><span class="au-email">{{ $email }}</span></p>
+            </div>
+
+            <div class="au-body">
+
+                @if(session('success'))
+                <div class="au-alert au-alert-ok">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>{{ session('success') }}</span>
+                </div>
+                @endif
+
+                @if($errors->any())
+                <div class="au-alert au-alert-err" id="err-banner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                    </svg>
+                    <span>{{ $errors->first() }}</span>
+                </div>
+                @endif
+
+                <form method="POST" action="{{ route('password.verify.code') }}" id="otpForm">
+                    @csrf
+                    <input type="hidden" name="email" value="{{ $email }}">
+                    <input type="hidden" name="code" id="otp-hidden">
+
+                    <label class="otp-label">Code de vérification — 6 chiffres</label>
+
+                    <div class="otp-boxes" id="otp-boxes">
+                        @for($i = 0; $i < 6; $i++)
+                        <input type="text" maxlength="1" inputmode="numeric"
+                               class="otp-box" data-index="{{ $i }}"
+                               autocomplete="off">
+                        @endfor
+                    </div>
+
+                    <div class="otp-timer">
+                        Le code expire dans <span id="timer">10:00</span>
+                    </div>
+
+                    <button type="submit" class="au-btn">
+                        <span>Vérifier le code</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                         </svg>
+                    </button>
+
+                    <div class="otp-resend">
+                        Vous n'avez pas reçu le code ?
+                        <button type="button" id="resend-btn" onclick="resendCode()">Renvoyer</button>
                     </div>
-                </div>
+                </form>
 
-                <div class="space-y-1">
-                    <h1 class="text-4xl font-extrabold">
-                        <span class="bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 bg-clip-text text-transparent">
-                            Vérifier votre code
-                        </span>
-                    </h1>
-                    <p class="text-base text-gray-600 dark:text-gray-400 font-medium">
-                        Entrez le code de vérification envoyé à<br>
-                        <span class="font-bold text-gray-900 dark:text-gray-200">{{ $email }}</span>
-                    </p>
-                </div>
-            </div>
-
-            <!-- Verify Code Form Card -->
-            <div class="relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500 animate-pulse"></div>
-
-                <div class="relative glass-card rounded-3xl p-6 space-y-6">
-
-                    <!-- Success Message -->
-                    @if(session('success'))
-                    <div class="p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-2 border-green-200 dark:border-green-800">
-                        <div class="flex items-center gap-3">
-                            <div class="flex-shrink-0">
-                                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <p class="text-sm font-semibold text-green-800 dark:text-green-200">{{ session('success') }}</p>
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Error Messages -->
-                    @if($errors->any())
-                    <div class="p-4 rounded-2xl bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20 border-2 border-red-200 dark:border-red-800">
-                        <div class="flex items-center gap-3">
-                            <div class="flex-shrink-0">
-                                <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <p class="text-sm font-semibold text-red-800 dark:text-red-200">{{ $errors->first() }}</p>
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Verify Form -->
-                    <form method="POST" action="{{ route('password.verify.code') }}" class="space-y-6">
-                        @csrf
-                        <input type="hidden" name="email" value="{{ $email }}">
-
-                        <!-- OTP Input Fields -->
-                        <div class="space-y-2">
-                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">
-                                Code de vérification (6 chiffres)
-                            </label>
-                            <div class="flex justify-center gap-2" id="otp-container">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="0">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="1">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="2">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="3">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="4">
-                                <input type="text" maxlength="1" class="otp-input rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-gray-100 focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 transition-all" data-index="5">
-                            </div>
-                            <input type="hidden" name="code" id="otp-code" required>
-                        </div>
-
-                        <!-- Timer -->
-                        <div class="text-center space-y-2">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                Le code expire dans <span id="timer" class="font-bold text-primary-600 dark:text-blue-400">10:00</span>
-                            </p>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <button type="submit" class="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 px-6 py-4 font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
-                            <div class="absolute inset-0 bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <span class="relative flex items-center justify-center gap-2 text-base">
-                                Vérifier le code
-                                <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
-                            </span>
-                        </button>
-
-                        <!-- Resend Link -->
-                        <div class="text-center">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                Vous n'avez pas reçu le code ?
-                                <button type="button" onclick="resendCode()" id="resend-button" class="font-bold text-primary-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
-                                    Renvoyer
-                                </button>
-                            </p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="text-center space-y-3">
-                <a href="{{ route('password.request') }}" class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-blue-400 font-medium transition-colors">
-                    ← Retour à la réinitialisation
+                <a href="{{ route('password.request') }}" class="au-back">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+                    </svg>
+                    Retour à la réinitialisation
                 </a>
-                <p class="text-sm text-gray-500 dark:text-gray-400">
-                    © {{ date('Y') }} <span class="font-bold bg-gradient-to-r from-primary-500 to-purple-600 bg-clip-text text-transparent">Portail RH</span> • Tous droits réservés
-                </p>
+            </div>
+
+            <div class="au-foot">
+                &copy; {{ date('Y') }} <strong>Portail RH+</strong> &bull; Tous droits réservés
             </div>
         </div>
     </div>
 
     <script>
-        // OTP Input Management
-        const otpInputs = document.querySelectorAll('.otp-input');
-        const otpCodeInput = document.getElementById('otp-code');
+    (function() {
+        const boxes   = Array.from(document.querySelectorAll('.otp-box'));
+        const hidden  = document.getElementById('otp-hidden');
+        const form    = document.getElementById('otpForm');
+        const timerEl = document.getElementById('timer');
 
-        otpInputs.forEach((input, index) => {
-            input.addEventListener('input', (e) => {
-                // Only allow numbers
-                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        function syncHidden() {
+            hidden.value = boxes.map(b => b.value).join('');
+        }
 
-                // Move to next input
-                if (e.target.value && index < otpInputs.length - 1) {
-                    otpInputs[index + 1].focus();
-                }
+        function markFilled() {
+            boxes.forEach(b => b.classList.toggle('filled', b.value !== ''));
+        }
 
-                // Update hidden input
-                updateOTPCode();
-            });
-
-            input.addEventListener('keydown', (e) => {
-                // Move to previous input on backspace
-                if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                    otpInputs[index - 1].focus();
+        boxes.forEach((box, i) => {
+            box.addEventListener('keydown', e => {
+                if (e.key === 'Backspace' && !box.value && i > 0) {
+                    boxes[i - 1].focus();
+                    boxes[i - 1].value = '';
+                    syncHidden(); markFilled();
                 }
             });
-
-            // Paste handling
-            input.addEventListener('paste', (e) => {
+            box.addEventListener('input', e => {
+                box.value = box.value.replace(/\D/, '');
+                if (box.value && i < 5) boxes[i + 1].focus();
+                syncHidden(); markFilled();
+            });
+            box.addEventListener('paste', e => {
                 e.preventDefault();
-                const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
-                const digits = pastedData.split('');
-
-                digits.forEach((digit, i) => {
-                    if (index + i < otpInputs.length) {
-                        otpInputs[index + i].value = digit;
-                    }
+                const digits = (e.clipboardData || window.clipboardData)
+                    .getData('text').replace(/\D/g, '').substring(0, 6);
+                digits.split('').forEach((d, j) => {
+                    if (boxes[i + j]) boxes[i + j].value = d;
                 });
-
-                // Focus last filled input
-                const lastIndex = Math.min(index + digits.length - 1, otpInputs.length - 1);
-                otpInputs[lastIndex].focus();
-
-                updateOTPCode();
+                const last = Math.min(i + digits.length - 1, 5);
+                boxes[last].focus();
+                syncHidden(); markFilled();
             });
         });
 
-        function updateOTPCode() {
-            const code = Array.from(otpInputs).map(input => input.value).join('');
-            otpCodeInput.value = code;
-        }
-
-        // Timer countdown
-        let timeLeft = 600; // 10 minutes in seconds
-        const timerDisplay = document.getElementById('timer');
-
-        function updateTimer() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-
-            if (timeLeft > 0) {
-                timeLeft--;
-            } else {
-                timerDisplay.textContent = 'Expiré';
-                timerDisplay.classList.add('text-red-600');
+        form.addEventListener('submit', e => {
+            if (hidden.value.length !== 6) {
+                e.preventDefault();
+                boxes.forEach(b => b.classList.add('error'));
+                setTimeout(() => boxes.forEach(b => b.classList.remove('error')), 600);
+                boxes[0].focus();
             }
-        }
+        });
 
-        setInterval(updateTimer, 1000);
+        // Timer
+        let timeLeft = 600;
+        const tick = setInterval(() => {
+            if (timeLeft <= 0) { timerEl.textContent = 'Expiré'; timerEl.classList.add('expired'); clearInterval(tick); return; }
+            timeLeft--;
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            timerEl.textContent = m + ':' + String(s).padStart(2, '0');
+        }, 1000);
 
-        // Resend code function
-        function resendCode() {
-            const button = document.getElementById('resend-button');
-            button.disabled = true;
-            button.textContent = 'Envoi...';
+        // Focus first box
+        boxes[0].focus();
+    })();
 
-            fetch('{{ route('password.resend') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({ email: '{{ $email }}' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Un nouveau code a été envoyé à votre adresse e-mail.');
-                    timeLeft = 600; // Reset timer
-                    button.disabled = false;
-                    button.textContent = 'Renvoyer';
-                } else {
-                    alert('Erreur lors de l\'envoi du code.');
-                    button.disabled = false;
-                    button.textContent = 'Renvoyer';
-                }
-            })
-            .catch(error => {
-                alert('Erreur de connexion.');
-                button.disabled = false;
-                button.textContent = 'Renvoyer';
-            });
-        }
-
-        // Focus first input on load
-        otpInputs[0].focus();
+    function resendCode() {
+        const btn = document.getElementById('resend-btn');
+        btn.disabled = true; btn.textContent = 'Envoi…';
+        fetch('{{ route('password.resend') }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ email: '{{ $email }}' })
+        })
+        .then(r => r.json())
+        .then(d => {
+            btn.disabled = false; btn.textContent = 'Renvoyer';
+            if (d.success) { /* optionally show a toast */ }
+        })
+        .catch(() => { btn.disabled = false; btn.textContent = 'Renvoyer'; });
+    }
     </script>
 </body>
 </html>

@@ -260,49 +260,58 @@
     display: flex; flex-direction: column; max-height: 88vh; overflow: hidden;
     animation: ab-modal-in 0.22s cubic-bezier(0.34,1.56,0.64,1);
 }
-/* Header variants */
+/* ── Le form enveloppant body+footer doit aussi être flex-column ── */
+.ab-modal > form {
+    display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden;
+}
+
+/* Header coloré indigo */
 .ab-modal-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0; border-bottom: 1px solid var(--ab-card-border);
-    flex-shrink: 0; /* never scrolls */
-    background: var(--ab-card-bg);
+    padding: 0; flex-shrink: 0;
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 60%, #1d4ed8 100%);
 }
 .ab-modal-header-inner {
     flex: 1; display: flex; align-items: center; gap: 0.875rem; padding: 1.25rem 1.375rem;
 }
 .ab-modal-header-icon {
-    width: 40px; height: 40px; border-radius: 10px; display: flex;
+    width: 42px; height: 42px; border-radius: 11px; display: flex;
     align-items: center; justify-content: center; flex-shrink: 0;
+    background: rgba(255,255,255,0.15); color: #ffffff;
+    backdrop-filter: blur(4px);
 }
-.ab-modal-header-icon svg { width: 20px; height: 20px; }
+.ab-modal-header-icon svg { width: 20px; height: 20px; stroke: #ffffff; }
 .ab-modal-header-text { flex: 1; }
-.ab-modal-title { font-size: 1.0625rem; font-weight: 700; color: var(--ab-text-primary); margin: 0; line-height: 1.3; }
-.ab-modal-subtitle { font-size: 0.8125rem; color: var(--ab-text-muted); margin: 2px 0 0; }
+.ab-modal-title { font-size: 1.0625rem; font-weight: 700; color: #ffffff; margin: 0; line-height: 1.3; }
+.ab-modal-subtitle { font-size: 0.8125rem; color: rgba(255,255,255,0.65); margin: 2px 0 0; }
 .ab-modal-close {
     width: 36px; height: 36px; border-radius: 10px; border: none;
-    background: transparent; cursor: pointer; display: flex; align-items: center;
-    justify-content: center; color: var(--ab-text-muted); margin-right: 1rem;
+    background: rgba(255,255,255,0.10); cursor: pointer; display: flex; align-items: center;
+    justify-content: center; color: rgba(255,255,255,0.7); margin-right: 1rem;
     transition: background 0.15s, color 0.15s; flex-shrink: 0;
 }
-.ab-modal-close:hover { background: var(--ab-bg); color: var(--ab-text-primary); }
-.ab-modal-close svg { width: 18px; height: 18px; }
-/* Top accent bar — toujours visible (flex-shrink:0) */
-.ab-modal-header-bar {
-    height: 3px; background: linear-gradient(90deg, #4338ca, #6366f1, #14b8a6);
-    flex-shrink: 0;
-}
-/* Colored icon variants */
-.ab-modal-icon-indigo { background: linear-gradient(135deg,#eef2ff,#e0e7ff); color: #4338ca; }
-.ab-modal-icon-teal   { background: linear-gradient(135deg,#f0fdfa,#ccfbf1); color: #0d9488; }
-.ab-modal-icon-red    { background: linear-gradient(135deg,#fef2f2,#fee2e2); color: #dc2626; }
-.dark .ab-modal-icon-indigo { background: rgba(99,102,241,0.18); color: #818cf8; }
-.dark .ab-modal-icon-teal   { background: rgba(20,184,166,0.18); color: #2dd4bf; }
-.dark .ab-modal-icon-red    { background: rgba(239,68,68,0.18);  color: #f87171; }
+.ab-modal-close:hover { background: rgba(255,255,255,0.22); color: #ffffff; }
+.ab-modal-close svg { width: 16px; height: 16px; stroke: currentColor; }
 
-/* Seul le body scroll — header et footer restent statiques */
-.ab-modal-body { padding: 1.375rem 1.375rem; overflow-y: auto; flex: 1; min-height: 0; }
+/* Barre gradient — override couleur par contexte */
+.ab-modal-header-bar { height: 4px; flex-shrink: 0; }
+.ab-modal-header-bar-indigo { background: linear-gradient(90deg, #312e81, #6366f1, #14b8a6); }
+.ab-modal-header-bar-teal   { background: linear-gradient(90deg, #0d9488, #14b8a6, #6366f1); }
+.ab-modal-header-bar-red    { background: linear-gradient(90deg, #dc2626, #ef4444, #f97316); }
+
+/* Header teal (approve) */
+.ab-modal-header-teal {
+    background: linear-gradient(135deg, #0f766e 0%, #0d9488 60%, #14b8a6 100%);
+}
+/* Header rouge (reject) */
+.ab-modal-header-red {
+    background: linear-gradient(135deg, #991b1b 0%, #dc2626 60%, #ef4444 100%);
+}
+
+/* Body scrollable — header et footer fixes */
+.ab-modal-body { padding: 1.375rem; overflow-y: auto; flex: 1; min-height: 0; background: var(--ab-card-bg); }
 .ab-modal-footer {
-    padding: 1.125rem 1.375rem; border-top: 1px solid var(--ab-card-border);
+    padding: 1rem 1.375rem; border-top: 1px solid var(--ab-card-border);
     display: flex; justify-content: flex-end; gap: 0.625rem;
     background: var(--ab-bg); flex-shrink: 0;
 }
@@ -782,10 +791,10 @@
 {{-- Add Absence Modal --}}
 <div class="ab-modal-overlay" id="addAbsenceModal">
     <div class="ab-modal">
-        <div class="ab-modal-header-bar"></div>
+        <div class="ab-modal-header-bar ab-modal-header-bar-indigo"></div>
         <div class="ab-modal-header">
             <div class="ab-modal-header-inner">
-                <div class="ab-modal-header-icon ab-modal-icon-indigo">
+                <div class="ab-modal-header-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
                 </div>
                 <div class="ab-modal-header-text">
@@ -902,10 +911,10 @@
 {{-- Approve Modal --}}
 <div class="ab-modal-overlay" id="approveAbModal">
     <div class="ab-modal" style="max-width:480px;">
-        <div class="ab-modal-header-bar" style="background:linear-gradient(90deg,#0d9488,#14b8a6,#6366f1);"></div>
-        <div class="ab-modal-header">
+        <div class="ab-modal-header-bar ab-modal-header-bar-teal"></div>
+        <div class="ab-modal-header ab-modal-header-teal">
             <div class="ab-modal-header-inner">
-                <div class="ab-modal-header-icon ab-modal-icon-teal">
+                <div class="ab-modal-header-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
                 <div class="ab-modal-header-text">
@@ -952,10 +961,10 @@
 {{-- Reject Modal --}}
 <div class="ab-modal-overlay" id="rejectModal">
     <div class="ab-modal" style="max-width:480px;">
-        <div class="ab-modal-header-bar" style="background:linear-gradient(90deg,#dc2626,#ef4444,#f97316);"></div>
-        <div class="ab-modal-header">
+        <div class="ab-modal-header-bar ab-modal-header-bar-red"></div>
+        <div class="ab-modal-header ab-modal-header-red">
             <div class="ab-modal-header-inner">
-                <div class="ab-modal-header-icon ab-modal-icon-red">
+                <div class="ab-modal-header-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
                 </div>
                 <div class="ab-modal-header-text">

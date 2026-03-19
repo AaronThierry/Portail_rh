@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('title', 'Bulletins de Paie')
@@ -6,1614 +5,1281 @@
 @section('page-subtitle', 'Gestion des fiches de paie du personnel')
 @section('page-icon')
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-    <polyline points="14 2 14 8 20 8"></polyline>
-    <line x1="16" y1="13" x2="8" y2="13"></line>
-    <line x1="16" y1="17" x2="8" y2="17"></line>
-    <polyline points="10 9 9 9 8 9"></polyline>
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
 </svg>
 @endsection
 
 @section('styles')
 <style>
-/* ========================================
-   VARIABLES - Charte RH+
-   ======================================== */
+/* ═══════════════════════════════════════════════════════════════
+   BULLETINS DE PAIE — Indigo × Teal Design System
+   Syne (display) · DM Sans (body) · DM Mono (data)
+   ═══════════════════════════════════════════════════════════════ */
+
 :root {
-    --bp-primary: #6366f1;
-    --bp-primary-dark: #4338ca;
-    --bp-primary-light: #eef2ff;
-    --bp-accent: #FF9500;
-    --bp-accent-light: #FFF7ED;
-    --bp-success: #22C55E;
-    --bp-success-light: #F0FDF4;
-    --bp-danger: #EF4444;
-    --bp-warning: #F59E0B;
-    --bp-bg: #f8fafc;
-    --bp-card-bg: #ffffff;
-    --bp-card-border: #e2e8f0;
-    --bp-text-primary: #1e293b;
-    --bp-text-secondary: #64748b;
-    --bp-text-muted: #94a3b8;
-    --bp-shadow: rgba(0, 0, 0, 0.04);
-    --bp-shadow-lg: rgba(0, 0, 0, 0.08);
+    --bp-ind:     #6366f1;
+    --bp-ind-d:   #4338ca;
+    --bp-ind-900: #312e81;
+    --bp-ind-l:   rgba(99,102,241,.10);
+    --bp-ind-l2:  rgba(99,102,241,.06);
+    --bp-teal:    #14b8a6;
+    --bp-teal-d:  #0d9488;
+    --bp-teal-l:  rgba(20,184,166,.10);
+    --bp-emer:    #10b981;
+    --bp-emer-l:  rgba(16,185,129,.10);
+    --bp-red:     #ef4444;
+    --bp-red-l:   rgba(239,68,68,.10);
+    --bp-amb:     #f59e0b;
+    --bp-amb-l:   rgba(245,158,11,.10);
+    --bp-bg:      #f1f5f9;
+    --bp-surf:    #ffffff;
+    --bp-bdr:     #e2e8f0;
+    --bp-bdr2:    #cbd5e1;
+    --bp-txt:     #0f172a;
+    --bp-txt2:    #475569;
+    --bp-txt3:    #94a3b8;
+    --bp-r:       14px;
+    --bp-sh:      0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --bp-sh-md:   0 4px 16px rgba(0,0,0,.08);
+    --bp-sh-lg:   0 8px 32px rgba(0,0,0,.12);
 }
 
-.dark {
-    --bp-bg: #0f172a;
-    --bp-card-bg: #1e293b;
-    --bp-card-border: #334155;
-    --bp-text-primary: #f1f5f9;
-    --bp-text-secondary: #94a3b8;
-    --bp-text-muted: #64748b;
-    --bp-shadow: rgba(0, 0, 0, 0.3);
-    --bp-shadow-lg: rgba(0, 0, 0, 0.5);
-    --bp-primary-light: rgba(99, 102, 241, 0.15);
-    --bp-accent-light: rgba(255, 149, 0, 0.15);
-    --bp-success-light: rgba(34, 197, 94, 0.15);
+/* ── Page ── */
+.bp { font-family:'DM Sans',sans-serif; color:var(--bp-txt); animation:bp-in .4s cubic-bezier(.16,1,.3,1); }
+@keyframes bp-in { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══════════════════════ HERO ═══════════════════════ */
+.bp-hero {
+    position:relative; overflow:hidden;
+    background:linear-gradient(135deg,#312e81 0%,#4338ca 40%,#0d9488 100%);
+    border-radius:20px; padding:40px 44px 36px;
+    margin-bottom:24px;
+}
+.bp-hero::before {
+    content:''; position:absolute; top:-80px; right:-50px;
+    width:360px; height:360px; border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.07) 0%,transparent 70%);
+    pointer-events:none;
+}
+.bp-hero::after {
+    content:''; position:absolute; bottom:-70px; left:30%;
+    width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle,rgba(20,184,166,.13) 0%,transparent 70%);
+    pointer-events:none;
+}
+.bp-hero-content { position:relative; z-index:1; }
+
+.bp-hero-meta {
+    display:flex; align-items:center; gap:8px;
+    font-size:.65rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:rgba(255,255,255,.55); margin-bottom:16px;
+}
+.bp-live-dot {
+    width:8px; height:8px; border-radius:50%;
+    background:#34d399; flex-shrink:0;
+    box-shadow:0 0 0 3px rgba(52,211,153,.25);
+    animation:bp-dot 2s infinite;
+}
+@keyframes bp-dot {
+    0%,100%{box-shadow:0 0 0 3px rgba(52,211,153,.25)}
+    50%{box-shadow:0 0 0 7px rgba(52,211,153,.07)}
 }
 
-/* ========================================
-   BASE
-   ======================================== */
-.bulletins-page {
-    padding: 1.5rem;
-    min-height: 100vh;
-    background: var(--bp-bg);
+.bp-hero-row { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+.bp-hero-title {
+    font-family:'Syne',sans-serif; font-size:2.2rem; font-weight:800;
+    color:#fff; letter-spacing:-.04em; margin:0 0 8px; line-height:1.1;
 }
+.bp-hero-title span { color:#5eead4; }
+.bp-hero-sub { font-size:.8125rem; color:rgba(255,255,255,.5); margin:0; line-height:1.6; }
 
-/* ========================================
-   HEADER AVEC STATS
-   ======================================== */
-.bp-header {
-    background: var(--bp-card-bg);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 20px var(--bp-shadow);
-    border: 1px solid var(--bp-card-border);
-    position: relative;
-    overflow: hidden;
+.bp-hero-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.bp-btn-hero-outline {
+    display:inline-flex; align-items:center; gap:7px;
+    padding:9px 18px; border-radius:10px;
+    border:1.5px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.08); backdrop-filter:blur(8px);
+    color:rgba(255,255,255,.85); font-size:.8rem; font-weight:600;
+    text-decoration:none; cursor:pointer;
+    transition:all .2s; white-space:nowrap; font-family:'DM Sans',sans-serif;
 }
+.bp-btn-hero-outline svg { width:15px; height:15px; flex-shrink:0; }
+.bp-btn-hero-outline:hover { background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.4); color:#fff; }
 
-.bp-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--bp-primary), var(--bp-accent));
+.bp-btn-hero-fill {
+    display:inline-flex; align-items:center; gap:7px;
+    padding:9px 20px; border-radius:10px;
+    background:rgba(255,255,255,.95);
+    border:none; cursor:pointer;
+    color:var(--bp-ind-d); font-size:.8rem; font-weight:700;
+    text-decoration:none;
+    transition:all .2s; white-space:nowrap; font-family:'DM Sans',sans-serif;
+    box-shadow:0 4px 16px rgba(0,0,0,.15);
 }
+.bp-btn-hero-fill svg { width:15px; height:15px; flex-shrink:0; }
+.bp-btn-hero-fill:hover { background:#fff; transform:translateY(-1px); box-shadow:0 6px 20px rgba(0,0,0,.2); color:var(--bp-ind-900); }
 
-.bp-header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 1.5rem;
+.bp-hero-kpis { display:flex; gap:10px; flex-wrap:wrap; margin-top:28px; padding-top:24px; border-top:1px solid rgba(255,255,255,.1); }
+.bp-hero-kpi {
+    background:rgba(255,255,255,.09); backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.14); border-radius:14px;
+    padding:13px 18px; min-width:110px; flex:1;
+    transition:background .2s; cursor:default;
 }
+.bp-hero-kpi:hover { background:rgba(255,255,255,.14); }
+.bp-hero-kpi-lbl { font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:7px; }
+.bp-hero-kpi-val { font-family:'Syne',sans-serif; font-size:1.7rem; font-weight:700; color:#fff; line-height:1; letter-spacing:-.04em; }
 
-.bp-header-left h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--bp-text-primary);
-    margin: 0 0 0.5rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+/* ═══════════════════════ STAT CARDS ═══════════════════════ */
+.bp-stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:22px; }
+.bp-stat {
+    background:var(--bp-surf); border:1px solid var(--bp-bdr);
+    border-radius:var(--bp-r); padding:20px 22px;
+    display:flex; align-items:center; gap:16px;
+    position:relative; overflow:hidden;
+    box-shadow:var(--bp-sh);
+    transition:all .25s cubic-bezier(.16,1,.3,1); cursor:default;
+    animation:bp-stat-in .4s cubic-bezier(.16,1,.3,1) backwards;
 }
+.bp-stat:nth-child(1){animation-delay:.04s}
+.bp-stat:nth-child(2){animation-delay:.08s}
+.bp-stat:nth-child(3){animation-delay:.12s}
+@keyframes bp-stat-in { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
-.bp-header-left h1 svg {
-    width: 32px;
-    height: 32px;
-    color: var(--bp-primary);
+/* orb top-right */
+.bp-stat::before {
+    content:''; position:absolute; top:-30px; right:-20px;
+    width:110px; height:110px; border-radius:50%;
+    background:radial-gradient(circle,var(--bp-sc-orb,rgba(99,102,241,.07)) 0%,transparent 70%);
+    pointer-events:none;
 }
+/* bottom bar */
+.bp-stat::after {
+    content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg,var(--bp-sc-c,var(--bp-ind)),transparent);
+    transform:scaleX(0); transform-origin:left;
+    transition:transform .3s cubic-bezier(.16,1,.3,1);
+}
+.bp-stat:hover { border-color:var(--bp-sc-c,var(--bp-ind)); transform:translateY(-3px); box-shadow:var(--bp-sh-md); }
+.bp-stat:hover::after { transform:scaleX(1); }
+.bp-stat:hover .bp-stat-icon { transform:scale(1.08) rotate(-5deg); }
 
-.bp-header-left p {
-    color: var(--bp-text-secondary);
-    margin: 0;
-}
-
-.bp-header-actions {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-}
-
-/* Stats Cards Row */
-.bp-stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--bp-card-border);
-}
-
-.bp-stat-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--bp-bg);
-    border-radius: 12px;
-    transition: all 0.2s ease;
-}
-
-.bp-stat-card:hover {
-    transform: translateY(-2px);
-}
+.bp-stat-c-ind  { --bp-sc-c:var(--bp-ind);  --bp-sc-orb:rgba(99,102,241,.07); }
+.bp-stat-c-teal { --bp-sc-c:var(--bp-teal); --bp-sc-orb:rgba(20,184,166,.07); }
+.bp-stat-c-emer { --bp-sc-c:var(--bp-emer); --bp-sc-orb:rgba(16,185,129,.07); }
 
 .bp-stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    width:52px; height:52px; border-radius:14px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bp-sc-orb,var(--bp-ind-l));
+    color:var(--bp-sc-c,var(--bp-ind));
+    transition:transform .2s; position:relative; z-index:1;
 }
+.bp-stat-icon svg { width:24px; height:24px; }
+.bp-stat-body { flex:1; min-width:0; position:relative; z-index:1; }
+.bp-stat-lbl { font-size:.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--bp-txt3); margin-bottom:4px; }
+.bp-stat-val { font-family:'Syne',sans-serif; font-size:2rem; font-weight:700; color:var(--bp-txt); line-height:1; margin-bottom:5px; letter-spacing:-.03em; }
+.bp-stat-sub { font-size:.72rem; color:var(--bp-txt3); font-weight:500; }
 
-.bp-stat-icon svg {
-    width: 24px;
-    height: 24px;
+/* ═══════════════════════ TIMELINE ═══════════════════════ */
+.bp-timeline-card {
+    background:var(--bp-surf); border:1px solid var(--bp-bdr);
+    border-radius:var(--bp-r); padding:18px 22px;
+    box-shadow:var(--bp-sh); margin-bottom:16px;
 }
-
-.bp-stat-icon.blue { background: var(--bp-primary-light); color: var(--bp-primary); }
-.bp-stat-icon.green { background: var(--bp-success-light); color: var(--bp-success); }
-.bp-stat-icon.orange { background: var(--bp-accent-light); color: var(--bp-accent); }
-
-.bp-stat-info h4 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--bp-text-primary);
-    margin: 0;
-    line-height: 1;
+.bp-tl-head {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:16px;
 }
-
-.bp-stat-info p {
-    font-size: 0.8rem;
-    color: var(--bp-text-secondary);
-    margin: 0.25rem 0 0 0;
+.bp-tl-title {
+    font-family:'Syne',sans-serif; font-size:.875rem; font-weight:700;
+    color:var(--bp-txt); letter-spacing:-.01em;
+    display:flex; align-items:center; gap:8px;
 }
+.bp-tl-title-dot { width:6px; height:6px; border-radius:50%; background:var(--bp-ind); }
 
-/* ========================================
-   TIMELINE ANNÉE (NAVIGATION MOIS)
-   ======================================== */
-.bp-timeline-section {
-    background: var(--bp-card-bg);
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 12px var(--bp-shadow);
-    border: 1px solid var(--bp-card-border);
+.bp-year-select {
+    font-family:'DM Mono',monospace; font-size:.8rem; font-weight:600;
+    color:var(--bp-txt); background:var(--bp-bg);
+    border:1.5px solid var(--bp-bdr); border-radius:9px;
+    padding:6px 30px 6px 12px; cursor:pointer; appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 10px center;
+    transition:border-color .2s;
 }
+.bp-year-select:focus { outline:none; border-color:var(--bp-ind); box-shadow:0 0 0 3px var(--bp-ind-l); }
 
-.bp-timeline-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+.bp-month-grid { display:grid; grid-template-columns:repeat(12,1fr); gap:6px; }
+.bp-month {
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:10px 6px 8px;
+    border-radius:10px; border:1.5px solid transparent;
+    text-decoration:none; cursor:pointer;
+    transition:all .2s cubic-bezier(.16,1,.3,1);
+    position:relative;
 }
-
-.bp-timeline-header h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--bp-text-primary);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.bp-month:hover { background:var(--bp-ind-l2); border-color:var(--bp-ind-l); }
+.bp-month.active {
+    background:linear-gradient(135deg,var(--bp-ind-d),var(--bp-ind));
+    border-color:var(--bp-ind); box-shadow:0 4px 14px rgba(99,102,241,.3);
 }
-
-.bp-year-selector {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.bp-year-selector select {
-    padding: 0.5rem 2rem 0.5rem 1rem;
-    border: 1px solid var(--bp-card-border);
-    border-radius: 8px;
-    background: var(--bp-card-bg);
-    color: var(--bp-text-primary);
-    font-weight: 600;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.5rem center;
-}
-
-.bp-timeline-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 0.5rem;
-}
-
-.bp-month-item {
-    position: relative;
-    padding: 0.75rem 0.5rem;
-    text-align: center;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 2px solid transparent;
-    background: var(--bp-bg);
-}
-
-.bp-month-item:hover {
-    border-color: var(--bp-primary);
-    background: var(--bp-primary-light);
-}
-
-.bp-month-item.active {
-    border-color: var(--bp-primary);
-    background: var(--bp-primary);
-    color: white;
-}
-
-.bp-month-item.active .bp-month-name,
-.bp-month-item.active .bp-month-count {
-    color: white;
-}
-
-.bp-month-item.has-data {
-    background: var(--bp-success-light);
-}
-
-.bp-month-item.has-data .bp-month-count {
-    color: var(--bp-success);
-    font-weight: 700;
-}
-
-.bp-month-item.future {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
+.bp-month.is-future { opacity:.45; pointer-events:none; }
 .bp-month-name {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--bp-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--bp-txt2); transition:color .2s;
 }
-
+.bp-month.active .bp-month-name { color:#fff; }
 .bp-month-count {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--bp-text-primary);
-    margin-top: 0.25rem;
+    font-family:'DM Mono',monospace; font-size:.6rem; font-weight:600;
+    padding:1px 6px; border-radius:5px;
+    background:var(--bp-ind-l); color:var(--bp-ind);
+    min-width:18px; text-align:center;
+    transition:all .2s;
 }
-
-/* ========================================
-   FILTRES ET RECHERCHE
-   ======================================== */
-.bp-filters {
-    background: var(--bp-card-bg);
-    border-radius: 16px;
-    padding: 1rem 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 12px var(--bp-shadow);
-    border: 1px solid var(--bp-card-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
+.bp-month.active .bp-month-count { background:rgba(255,255,255,.2); color:#fff; }
+.bp-month-dot {
+    width:5px; height:5px; border-radius:50%;
+    background:var(--bp-bdr2);
 }
+.bp-month.has-data .bp-month-dot { background:var(--bp-teal); }
+.bp-month.active .bp-month-dot { display:none; }
 
-.bp-search-box {
-    position: relative;
-    flex: 1;
-    max-width: 400px;
+/* Reset month filter link */
+.bp-tl-reset {
+    font-size:.72rem; font-weight:600; color:var(--bp-ind);
+    text-decoration:none; padding:5px 12px;
+    background:var(--bp-ind-l); border-radius:8px;
+    transition:all .2s;
 }
+.bp-tl-reset:hover { background:var(--bp-ind); color:#fff; }
 
-.bp-search-box input {
-    width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.75rem;
-    border: 1px solid var(--bp-card-border);
-    border-radius: 10px;
-    background: var(--bp-bg);
-    color: var(--bp-text-primary);
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
+/* ═══════════════════════ FILTERS ═══════════════════════ */
+.bp-filter-bar {
+    background:var(--bp-surf); border:1px solid var(--bp-bdr);
+    border-radius:var(--bp-r); padding:14px 18px;
+    box-shadow:var(--bp-sh); margin-bottom:14px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
 }
-
-.bp-search-box input:focus {
-    outline: none;
-    border-color: var(--bp-primary);
-    box-shadow: 0 0 0 3px var(--bp-primary-light);
+.bp-search-wrap {
+    flex:1; min-width:220px;
+    display:flex; align-items:center; gap:8px;
+    background:var(--bp-bg); border:1.5px solid var(--bp-bdr);
+    border-radius:10px; padding:0 14px; transition:border-color .2s;
 }
-
-.bp-search-box svg {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    color: var(--bp-text-muted);
+.bp-search-wrap:focus-within { border-color:var(--bp-ind); box-shadow:0 0 0 3px var(--bp-ind-l); }
+.bp-search-wrap svg { color:var(--bp-txt3); flex-shrink:0; }
+.bp-search-input {
+    flex:1; border:none; background:transparent; padding:9px 0;
+    font-size:.83rem; color:var(--bp-txt); font-family:'DM Sans',sans-serif;
+    outline:none;
 }
-
-.bp-filter-badges {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+.bp-search-input::placeholder { color:var(--bp-txt3); }
+.bp-search-btn {
+    padding:8px 18px; border-radius:9px;
+    background:linear-gradient(135deg,var(--bp-ind-d),var(--bp-ind));
+    border:none; cursor:pointer; color:#fff; font-size:.8rem; font-weight:600;
+    font-family:'DM Sans',sans-serif; transition:all .2s; white-space:nowrap;
 }
+.bp-search-btn:hover { opacity:.9; transform:translateY(-1px); box-shadow:0 4px 12px rgba(99,102,241,.35); }
 
-.bp-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: var(--bp-primary-light);
-    color: var(--bp-primary);
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
+.bp-filter-tags { display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
+.bp-filter-tag {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:4px 10px 4px 12px; border-radius:8px;
+    background:var(--bp-ind-l); border:1px solid rgba(99,102,241,.2);
+    font-size:.72rem; font-weight:600; color:var(--bp-ind);
 }
+.bp-filter-tag a { color:var(--bp-ind); text-decoration:none; display:flex; align-items:center; opacity:.7; transition:opacity .15s; }
+.bp-filter-tag a:hover { opacity:1; }
+.bp-filter-tag a svg { width:12px; height:12px; }
+.bp-filter-clear { font-size:.72rem; font-weight:600; color:var(--bp-txt3); text-decoration:none; padding:4px 10px; border-radius:8px; transition:all .2s; }
+.bp-filter-clear:hover { background:var(--bp-red-l); color:var(--bp-red); }
 
-.bp-badge .close {
-    cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.2s;
+/* ═══════════════════════ LIST ═══════════════════════ */
+.bp-list-card {
+    background:var(--bp-surf); border:1px solid var(--bp-bdr);
+    border-radius:var(--bp-r); box-shadow:var(--bp-sh); overflow:hidden;
 }
-
-.bp-badge .close:hover {
-    opacity: 1;
+.bp-list-head {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; border-bottom:1px solid var(--bp-bdr);
 }
-
-/* ========================================
-   LISTE DES BULLETINS
-   ======================================== */
-.bp-list-section {
-    background: var(--bp-card-bg);
-    border-radius: 16px;
-    box-shadow: 0 2px 12px var(--bp-shadow);
-    border: 1px solid var(--bp-card-border);
-    overflow: hidden;
+.bp-list-title {
+    font-family:'Syne',sans-serif; font-size:.875rem; font-weight:700;
+    color:var(--bp-txt); letter-spacing:-.01em;
+    display:flex; align-items:center; gap:10px;
 }
-
-.bp-list-header {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--bp-card-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.bp-list-header h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--bp-text-primary);
-    margin: 0;
-}
-
 .bp-list-count {
-    font-size: 0.85rem;
-    color: var(--bp-text-secondary);
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:24px; height:20px; padding:0 7px;
+    border-radius:6px; background:var(--bp-ind-l);
+    font-size:.65rem; font-weight:700; color:var(--bp-ind);
+    font-family:'DM Mono',monospace; letter-spacing:.02em;
 }
 
-/* Bulletin Item */
+/* Bulletin item */
 .bp-item {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    align-items: center;
-    gap: 1.25rem;
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--bp-card-border);
-    transition: background 0.2s ease;
+    display:flex; align-items:center; gap:14px;
+    padding:14px 20px; border-bottom:1px solid var(--bp-bdr);
+    transition:background .15s; position:relative;
+    animation:bp-item-in .3s cubic-bezier(.16,1,.3,1) backwards;
 }
-
-.bp-item:last-child {
-    border-bottom: none;
-}
-
-.bp-item:hover {
-    background: var(--bp-bg);
-}
+@keyframes bp-item-in { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:translateX(0)} }
+.bp-item:last-child { border-bottom:none; }
+.bp-item:hover { background:#fafbff; }
+.bp-item:hover .bp-item-icon { transform:scale(1.05); }
 
 .bp-item-icon {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    flex-shrink: 0;
+    width:44px; height:44px; border-radius:12px; flex-shrink:0;
+    background:linear-gradient(135deg,var(--bp-ind-l),rgba(99,102,241,.04));
+    border:1.5px solid rgba(99,102,241,.15);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--bp-ind); transition:transform .2s;
 }
+.bp-item-icon svg { width:20px; height:20px; }
 
-.bp-item-icon svg {
-    width: 24px;
-    height: 24px;
-}
-
-.bp-item-info {
-    min-width: 0;
-}
-
+.bp-item-main { flex:1; min-width:0; }
 .bp-item-name {
-    font-weight: 600;
-    color: var(--bp-text-primary);
-    margin: 0 0 0.25rem 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size:.875rem; font-weight:600; color:var(--bp-txt);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    line-height:1.3; margin-bottom:3px;
 }
-
 .bp-item-meta {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.8rem;
-    color: var(--bp-text-secondary);
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.bp-item-meta-dot { width:3px; height:3px; border-radius:50%; background:var(--bp-txt3); flex-shrink:0; }
+.bp-item-meta span { font-size:.72rem; color:var(--bp-txt3); font-family:'DM Mono',monospace; white-space:nowrap; }
+
+.bp-item-period {
+    flex-shrink:0;
+    display:flex; align-items:center; gap:6px;
+}
+.bp-period-badge {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:4px 12px; border-radius:8px;
+    background:linear-gradient(135deg,var(--bp-ind-l),var(--bp-teal-l));
+    border:1px solid rgba(99,102,241,.15);
+    font-size:.72rem; font-weight:700; color:var(--bp-ind-d);
+    font-family:'DM Mono',monospace; white-space:nowrap;
 }
 
-.bp-item-meta span {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
+.bp-item-actions { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.bp-act-btn {
+    width:34px; height:34px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    border:1.5px solid var(--bp-bdr); background:transparent;
+    color:var(--bp-txt3); cursor:pointer; text-decoration:none;
+    transition:all .2s;
 }
+.bp-act-btn svg { width:15px; height:15px; }
+.bp-act-btn:hover { transform:scale(1.05); }
+.bp-act-btn-view:hover  { background:var(--bp-ind-l);  border-color:rgba(99,102,241,.3); color:var(--bp-ind); }
+.bp-act-btn-dl:hover    { background:var(--bp-teal-l); border-color:rgba(20,184,166,.3); color:var(--bp-teal-d); }
+.bp-act-btn-del:hover   { background:var(--bp-red-l);  border-color:rgba(239,68,68,.3);  color:var(--bp-red); }
 
-.bp-item-periode {
-    text-align: center;
-}
-
-.bp-item-periode .mois {
-    font-weight: 700;
-    color: var(--bp-primary);
-    font-size: 1rem;
-}
-
-.bp-item-periode .annee {
-    font-size: 0.75rem;
-    color: var(--bp-text-secondary);
-}
-
-.bp-item-actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.bp-action-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    background: var(--bp-bg);
-    color: var(--bp-text-secondary);
-}
-
-.bp-action-btn:hover {
-    background: var(--bp-primary-light);
-    color: var(--bp-primary);
-}
-
-.bp-action-btn.danger:hover {
-    background: #FEE2E2;
-    color: var(--bp-danger);
-}
-
-/* ========================================
-   EMPTY STATE
-   ======================================== */
+/* Empty state */
 .bp-empty {
-    padding: 4rem 2rem;
-    text-align: center;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:60px 24px; gap:16px; text-align:center;
 }
-
 .bp-empty-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1.5rem;
-    background: var(--bp-bg);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width:72px; height:72px; border-radius:20px;
+    background:var(--bp-ind-l); display:flex; align-items:center; justify-content:center;
+    color:var(--bp-ind); margin-bottom:4px;
 }
-
-.bp-empty-icon svg {
-    width: 40px;
-    height: 40px;
-    color: var(--bp-text-muted);
+.bp-empty-icon svg { width:36px; height:36px; }
+.bp-empty-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; color:var(--bp-txt); margin:0; }
+.bp-empty-sub { font-size:.83rem; color:var(--bp-txt3); margin:0; max-width:320px; line-height:1.6; }
+.bp-empty-btn {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 22px; border-radius:11px; border:none; cursor:pointer;
+    background:linear-gradient(135deg,var(--bp-ind-d),var(--bp-ind));
+    color:#fff; font-size:.83rem; font-weight:600;
+    font-family:'DM Sans',sans-serif;
+    transition:all .2s; box-shadow:0 4px 14px rgba(99,102,241,.35);
 }
+.bp-empty-btn:hover { opacity:.9; transform:translateY(-1px); }
+.bp-empty-btn svg { width:16px; height:16px; }
 
-.bp-empty h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--bp-text-primary);
-    margin: 0 0 0.5rem 0;
+/* Pagination */
+.bp-pagination { display:flex; justify-content:center; padding:16px 20px; }
+.bp-pagination .pagination { display:flex; gap:4px; align-items:center; list-style:none; margin:0; padding:0; }
+.bp-pagination .page-item .page-link {
+    display:flex; align-items:center; justify-content:center;
+    min-width:34px; height:34px; padding:0 10px;
+    border:1.5px solid var(--bp-bdr); border-radius:9px;
+    font-size:.78rem; font-weight:600; color:var(--bp-txt2);
+    text-decoration:none; font-family:'DM Mono',monospace;
+    transition:all .2s;
 }
+.bp-pagination .page-item .page-link:hover { border-color:var(--bp-ind); color:var(--bp-ind); background:var(--bp-ind-l); }
+.bp-pagination .page-item.active .page-link { background:linear-gradient(135deg,var(--bp-ind-d),var(--bp-ind)); border-color:var(--bp-ind); color:#fff; }
+.bp-pagination .page-item.disabled .page-link { opacity:.4; pointer-events:none; }
 
-.bp-empty p {
-    color: var(--bp-text-secondary);
-    margin: 0 0 1.5rem 0;
-}
-
-/* ========================================
-   BOUTONS
-   ======================================== */
-.bp-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    text-decoration: none;
-}
-
-.bp-btn svg {
-    width: 18px;
-    height: 18px;
-}
-
-.bp-btn-primary {
-    background: linear-gradient(135deg, var(--bp-primary) 0%, var(--bp-primary-dark) 100%);
-    color: white;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-}
-
-.bp-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-}
-
-.bp-btn-secondary {
-    background: var(--bp-bg);
-    color: var(--bp-text-primary);
-    border: 1px solid var(--bp-card-border);
-}
-
-.bp-btn-secondary:hover {
-    border-color: var(--bp-primary);
-    color: var(--bp-primary);
-}
-
-/* ========================================
-   MODAL UPLOAD
-   ======================================== */
+/* ═══════════════════════ MODAL ═══════════════════════ */
 .bp-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
+    position:fixed; inset:0; z-index:1050;
+    background:rgba(15,23,42,.6); backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px; opacity:0; pointer-events:none;
+    transition:opacity .25s;
 }
-
-.bp-modal-overlay.show {
-    opacity: 1;
-    visibility: visible;
-}
+.bp-modal-overlay.open { opacity:1; pointer-events:all; }
 
 .bp-modal {
-    background: var(--bp-card-bg);
-    border-radius: 20px;
-    width: 100%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow: hidden;
-    transform: scale(0.9) translateY(20px);
-    transition: transform 0.3s ease;
+    background:var(--bp-surf); border-radius:18px;
+    width:100%; max-width:560px; max-height:88vh;
+    display:flex; flex-direction:column; overflow:hidden;
+    box-shadow:0 24px 64px rgba(0,0,0,.18);
+    transform:translateY(20px) scale(.98);
+    transition:transform .3s cubic-bezier(.16,1,.3,1);
 }
+.bp-modal-overlay.open .bp-modal { transform:translateY(0) scale(1); }
 
-.bp-modal-overlay.show .bp-modal {
-    transform: scale(1) translateY(0);
-}
+.bp-modal > form { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; }
 
 .bp-modal-header {
-    background: linear-gradient(135deg, var(--bp-primary) 0%, var(--bp-primary-dark) 100%);
-    padding: 1.5rem 2rem;
-    color: white;
-    position: relative;
+    background:linear-gradient(135deg,#312e81 0%,#4338ca 60%,#1d4ed8 100%);
+    padding:24px 28px 22px; flex-shrink:0;
+    display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
 }
-
-.bp-modal-header h2 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin: 0 0 0.25rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+.bp-modal-header-left { display:flex; align-items:center; gap:14px; }
+.bp-modal-header-icon {
+    width:44px; height:44px; border-radius:12px;
+    background:rgba(255,255,255,.15);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; flex-shrink:0;
 }
-
-.bp-modal-header p {
-    margin: 0;
-    opacity: 0.9;
-    font-size: 0.9rem;
+.bp-modal-header-icon svg { width:22px; height:22px; }
+.bp-modal-header-title {
+    font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700;
+    color:#fff; margin:0 0 3px; line-height:1.2;
 }
-
+.bp-modal-header-sub { font-size:.75rem; color:rgba(255,255,255,.55); margin:0; }
 .bp-modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    width: 36px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
+    width:32px; height:32px; border-radius:8px;
+    background:rgba(255,255,255,.12); border:none; cursor:pointer;
+    color:rgba(255,255,255,.7); display:flex; align-items:center; justify-content:center;
+    transition:all .2s; flex-shrink:0;
 }
+.bp-modal-close:hover { background:rgba(255,255,255,.22); color:#fff; }
+.bp-modal-close svg { width:16px; height:16px; }
 
-.bp-modal-close:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-.bp-modal-body {
-    padding: 2rem;
-    overflow-y: auto;
-    max-height: calc(90vh - 200px);
-}
-
-.bp-form-group {
-    margin-bottom: 1.5rem;
-}
-
-.bp-form-group label {
-    display: block;
-    font-weight: 600;
-    color: var(--bp-text-primary);
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.bp-form-group label span {
-    color: var(--bp-danger);
-}
-
-.bp-form-control {
-    width: 100%;
-    padding: 0.875rem 1rem;
-    border: 1px solid var(--bp-card-border);
-    border-radius: 10px;
-    background: var(--bp-bg);
-    color: var(--bp-text-primary);
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
-}
-
-.bp-form-control:focus {
-    outline: none;
-    border-color: var(--bp-primary);
-    box-shadow: 0 0 0 3px var(--bp-primary-light);
-}
-
-.bp-form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-/* Searchable Select */
-.bp-search-select { position: relative; }
-.bp-search-select .bp-search-input {
-    width: 100%; padding: 0.875rem 1rem 0.875rem 2.5rem; background: var(--bp-bg);
-    border: 1px solid var(--bp-card-border); border-radius: 10px;
-    font-size: 0.95rem; color: var(--bp-text-primary); box-sizing: border-box; transition: all 0.2s ease;
-}
-.bp-search-select .bp-search-input:focus { outline: none; border-color: var(--bp-primary); box-shadow: 0 0 0 3px var(--bp-primary-light); }
-.bp-search-select .bp-search-icon {
-    position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
-    width: 16px; height: 16px; color: var(--bp-text-muted); pointer-events: none;
-}
-.bp-search-select .bp-search-clear {
-    position: absolute; right: 0.625rem; top: 50%; transform: translateY(-50%);
-    width: 20px; height: 20px; border: none; background: none; cursor: pointer;
-    color: var(--bp-text-muted); display: none; padding: 0; font-size: 1.125rem; line-height: 1;
-}
-.bp-search-select .bp-search-clear:hover { color: var(--bp-text-primary); }
-.bp-search-dropdown {
-    display: none; position: absolute; top: 100%; left: 0; right: 0;
-    background: var(--bp-card-bg); border: 1px solid var(--bp-card-border);
-    border-radius: 10px; max-height: 220px; overflow-y: auto; z-index: 100;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-top: 4px;
-}
-.bp-search-option {
-    padding: 0.75rem 1rem; cursor: pointer; font-size: 0.95rem;
-    color: var(--bp-text-primary); transition: background 0.15s;
-}
-.bp-search-option:hover { background: var(--bp-primary-light); }
-.bp-search-option .bp-opt-sub { color: var(--bp-text-muted); font-size: 0.8125rem; }
-.bp-search-no-results {
-    padding: 0.875rem 1rem; color: var(--bp-text-muted); font-style: italic;
-    font-size: 0.875rem; text-align: center; display: none;
-}
-
-/* Form Errors */
-.bp-form-error {
-    font-size: 0.8125rem; color: var(--bp-danger); margin-top: 0.375rem;
-}
-.bp-form-group.has-error .bp-form-control,
-.bp-form-group.has-error .bp-search-input {
-    border-color: var(--bp-danger);
-}
-.bp-errors-summary {
-    background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25);
-    border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1rem;
-}
-.bp-errors-summary p {
-    font-size: 0.875rem; font-weight: 600; color: var(--bp-danger); margin: 0 0 0.5rem;
-}
-.bp-errors-summary ul {
-    margin: 0; padding-left: 1.25rem; list-style: disc;
-}
-.bp-errors-summary li {
-    font-size: 0.8125rem; color: var(--bp-danger); margin-bottom: 0.25rem;
-}
-
-/* File Upload Zone */
-.bp-upload-zone {
-    border: 2px dashed var(--bp-card-border);
-    border-radius: 12px;
-    padding: 2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: var(--bp-bg);
-}
-
-.bp-upload-zone:hover,
-.bp-upload-zone.dragover {
-    border-color: var(--bp-primary);
-    background: var(--bp-primary-light);
-}
-
-.bp-upload-zone.has-file {
-    border-color: var(--bp-success);
-    background: var(--bp-success-light);
-}
-
-.bp-upload-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 1rem;
-    background: var(--bp-primary-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--bp-primary);
-}
-
-.bp-upload-icon svg {
-    width: 28px;
-    height: 28px;
-}
-
-.bp-upload-zone h4 {
-    font-size: 1rem;
-    color: var(--bp-text-primary);
-    margin: 0 0 0.5rem 0;
-}
-
-.bp-upload-zone p {
-    font-size: 0.85rem;
-    color: var(--bp-text-secondary);
-    margin: 0;
-}
-
-.bp-file-selected {
-    display: none;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: white;
-    border-radius: 10px;
-    margin-top: 1rem;
-}
-
-.bp-upload-zone.has-file .bp-file-selected {
-    display: flex;
-}
-
-.bp-file-icon {
-    width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
-.bp-file-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.bp-file-info h5 {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--bp-text-primary);
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.bp-file-info p {
-    font-size: 0.8rem;
-    color: var(--bp-text-secondary);
-    margin: 0.25rem 0 0 0;
-}
-
-.bp-file-remove {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    border: none;
-    background: #FEE2E2;
-    color: var(--bp-danger);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Checkbox */
-.bp-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-}
-
-.bp-checkbox input {
-    width: 20px;
-    height: 20px;
-    accent-color: var(--bp-primary);
-}
-
-.bp-checkbox span {
-    font-size: 0.9rem;
-    color: var(--bp-text-secondary);
-}
+.bp-modal-body { flex:1; overflow-y:auto; min-height:0; padding:24px 28px; scrollbar-width:thin; scrollbar-color:var(--bp-bdr) transparent; }
+.bp-modal-body::-webkit-scrollbar { width:4px; }
+.bp-modal-body::-webkit-scrollbar-thumb { background:var(--bp-bdr2); border-radius:2px; }
 
 .bp-modal-footer {
-    padding: 1.5rem 2rem;
-    border-top: 1px solid var(--bp-card-border);
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
+    flex-shrink:0; background:var(--bp-bg);
+    border-top:1px solid var(--bp-bdr); padding:16px 28px;
+    display:flex; align-items:center; justify-content:flex-end; gap:10px;
 }
 
-/* ========================================
-   PAGINATION
-   ======================================== */
-.bp-pagination {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid var(--bp-card-border);
-    display: flex;
-    justify-content: center;
+/* ── Form elements ── */
+.bp-field { margin-bottom:18px; }
+.bp-field:last-child { margin-bottom:0; }
+.bp-field-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+.bp-label {
+    display:block; font-size:.72rem; font-weight:700; letter-spacing:.04em;
+    text-transform:uppercase; color:var(--bp-txt2); margin-bottom:7px;
 }
+.bp-label span { color:var(--bp-red); margin-left:2px; }
 
-/* ========================================
-   RESPONSIVE
-   ======================================== */
-@media (max-width: 1024px) {
-    .bp-timeline-grid {
-        grid-template-columns: repeat(6, 1fr);
-    }
+.bp-input, .bp-select, .bp-textarea {
+    width:100%; padding:10px 14px;
+    border:1.5px solid var(--bp-bdr); border-radius:10px;
+    background:var(--bp-bg); color:var(--bp-txt);
+    font-family:'DM Sans',sans-serif; font-size:.83rem;
+    transition:border-color .2s, box-shadow .2s; box-sizing:border-box;
 }
+.bp-input:focus, .bp-select:focus, .bp-textarea:focus {
+    outline:none; border-color:var(--bp-ind);
+    box-shadow:0 0 0 3px rgba(99,102,241,.12);
+}
+.bp-select { appearance:none; cursor:pointer; padding-right:36px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 12px center;
+}
+.bp-textarea { resize:vertical; min-height:80px; line-height:1.6; }
 
-@media (max-width: 768px) {
-    .bulletins-page {
-        padding: 1rem;
-    }
+/* Error */
+.bp-error-box {
+    background:var(--bp-red-l); border:1px solid rgba(239,68,68,.2);
+    border-radius:10px; padding:12px 16px; margin-bottom:18px;
+    font-size:.78rem; color:var(--bp-red); line-height:1.6;
+}
+.bp-error-box ul { margin:4px 0 0; padding-left:16px; }
+.bp-field-error { font-size:.72rem; color:var(--bp-red); margin-top:5px; font-weight:500; }
 
-    .bp-header-content {
-        flex-direction: column;
-    }
+/* Searchable select */
+.bp-ss-wrap { position:relative; }
+.bp-ss-input-wrap {
+    display:flex; align-items:center; gap:8px;
+    border:1.5px solid var(--bp-bdr); border-radius:10px;
+    background:var(--bp-bg); padding:0 14px;
+    transition:border-color .2s, box-shadow .2s; cursor:text;
+}
+.bp-ss-input-wrap.focused { border-color:var(--bp-ind); box-shadow:0 0 0 3px rgba(99,102,241,.12); }
+.bp-ss-input-wrap svg { color:var(--bp-txt3); flex-shrink:0; }
+.bp-ss-input {
+    flex:1; border:none; background:transparent; padding:10px 0;
+    font-size:.83rem; color:var(--bp-txt); font-family:'DM Sans',sans-serif; outline:none;
+}
+.bp-ss-input::placeholder { color:var(--bp-txt3); }
+.bp-ss-clear { background:none; border:none; cursor:pointer; color:var(--bp-txt3); padding:4px; border-radius:4px; transition:color .15s; display:none; }
+.bp-ss-clear:hover { color:var(--bp-red); }
+.bp-ss-clear svg { width:14px; height:14px; display:block; }
 
-    .bp-stats-row {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.bp-ss-dropdown {
+    position:absolute; top:calc(100% + 6px); left:0; right:0;
+    background:var(--bp-surf); border:1.5px solid var(--bp-bdr);
+    border-radius:12px; box-shadow:var(--bp-sh-lg);
+    max-height:220px; overflow-y:auto; z-index:100;
+    scrollbar-width:thin; scrollbar-color:var(--bp-bdr) transparent;
+    display:none;
+}
+.bp-ss-dropdown.open { display:block; }
+.bp-ss-dropdown::-webkit-scrollbar { width:4px; }
+.bp-ss-opt {
+    padding:10px 14px; cursor:pointer; font-size:.83rem; color:var(--bp-txt);
+    transition:background .12s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.bp-ss-opt:first-child { border-radius:10px 10px 0 0; }
+.bp-ss-opt:last-child { border-radius:0 0 10px 10px; }
+.bp-ss-opt:hover { background:var(--bp-ind-l2); }
+.bp-ss-opt.hidden { display:none; }
+.bp-ss-opt.selected { background:var(--bp-ind-l); color:var(--bp-ind); font-weight:600; }
+.bp-ss-no-results { padding:14px; text-align:center; font-size:.78rem; color:var(--bp-txt3); }
 
-    .bp-timeline-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
+/* Upload zone */
+.bp-upload-zone {
+    border:2px dashed var(--bp-bdr2); border-radius:12px;
+    padding:28px 20px; text-align:center; cursor:pointer;
+    transition:all .2s; position:relative;
+}
+.bp-upload-zone:hover, .bp-upload-zone.dragover {
+    border-color:var(--bp-ind); background:var(--bp-ind-l2);
+}
+.bp-upload-zone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+.bp-uz-icon {
+    width:48px; height:48px; border-radius:13px;
+    background:var(--bp-ind-l); display:flex; align-items:center; justify-content:center;
+    color:var(--bp-ind); margin:0 auto 12px;
+}
+.bp-uz-icon svg { width:24px; height:24px; }
+.bp-uz-title { font-size:.83rem; font-weight:600; color:var(--bp-txt); margin-bottom:4px; }
+.bp-uz-sub { font-size:.72rem; color:var(--bp-txt3); }
 
-    .bp-item {
-        grid-template-columns: auto 1fr;
-        gap: 1rem;
-    }
+.bp-file-preview {
+    display:none; align-items:center; gap:12px;
+    padding:12px 14px; background:var(--bp-ind-l2);
+    border:1.5px solid rgba(99,102,241,.2); border-radius:10px;
+    margin-top:10px;
+}
+.bp-file-preview.show { display:flex; }
+.bp-file-icon { color:var(--bp-ind); flex-shrink:0; }
+.bp-file-icon svg { width:24px; height:24px; display:block; }
+.bp-file-info { flex:1; min-width:0; }
+.bp-file-name { font-size:.8rem; font-weight:600; color:var(--bp-txt); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bp-file-size { font-size:.7rem; color:var(--bp-txt3); font-family:'DM Mono',monospace; margin-top:2px; }
+.bp-file-remove { background:none; border:none; cursor:pointer; color:var(--bp-txt3); padding:4px; border-radius:6px; transition:all .15s; flex-shrink:0; }
+.bp-file-remove:hover { color:var(--bp-red); background:var(--bp-red-l); }
+.bp-file-remove svg { width:14px; height:14px; display:block; }
 
-    .bp-item-periode,
-    .bp-item-salaire,
-    .bp-item-actions {
-        grid-column: 2;
-    }
+/* Checkbox */
+.bp-check-wrap { display:flex; align-items:flex-start; gap:10px; cursor:pointer; }
+.bp-check-wrap input[type="checkbox"] {
+    width:17px; height:17px; border-radius:5px; flex-shrink:0;
+    border:1.5px solid var(--bp-bdr2); cursor:pointer;
+    accent-color:var(--bp-ind); margin-top:1px;
+}
+.bp-check-lbl { font-size:.82rem; color:var(--bp-txt2); line-height:1.5; }
+.bp-check-lbl strong { color:var(--bp-txt); font-weight:600; }
 
-    .bp-form-row {
-        grid-template-columns: 1fr;
-    }
+/* Modal buttons */
+.bp-btn-cancel {
+    padding:9px 20px; border-radius:10px;
+    border:1.5px solid var(--bp-bdr); background:transparent;
+    color:var(--bp-txt2); font-size:.8rem; font-weight:600;
+    font-family:'DM Sans',sans-serif; cursor:pointer; transition:all .2s;
+}
+.bp-btn-cancel:hover { border-color:var(--bp-bdr2); background:var(--bp-bg); }
+.bp-btn-submit {
+    display:inline-flex; align-items:center; gap:7px;
+    padding:9px 22px; border-radius:10px; border:none; cursor:pointer;
+    background:linear-gradient(135deg,var(--bp-ind-d),var(--bp-ind));
+    color:#fff; font-size:.8rem; font-weight:700;
+    font-family:'DM Sans',sans-serif;
+    transition:all .2s; box-shadow:0 4px 14px rgba(99,102,241,.35);
+}
+.bp-btn-submit:hover { opacity:.9; transform:translateY(-1px); }
+.bp-btn-submit svg { width:15px; height:15px; }
+
+/* ── Toasts ── */
+.bp-toast-wrap { position:fixed; bottom:24px; right:24px; z-index:2000; display:flex; flex-direction:column; gap:10px; }
+.bp-toast {
+    display:flex; align-items:center; gap:12px;
+    padding:13px 18px; border-radius:12px;
+    box-shadow:0 8px 28px rgba(0,0,0,.15);
+    min-width:280px; max-width:380px;
+    animation:bp-toast-in .3s cubic-bezier(.16,1,.3,1);
+}
+@keyframes bp-toast-in { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+.bp-toast.success { background:var(--bp-surf); border-left:4px solid var(--bp-emer); }
+.bp-toast.error   { background:var(--bp-surf); border-left:4px solid var(--bp-red); }
+.bp-toast-icon { flex-shrink:0; }
+.bp-toast.success .bp-toast-icon { color:var(--bp-emer); }
+.bp-toast.error   .bp-toast-icon { color:var(--bp-red); }
+.bp-toast-icon svg { width:18px; height:18px; display:block; }
+.bp-toast-text { flex:1; font-size:.8rem; font-weight:600; color:var(--bp-txt); line-height:1.4; }
+
+/* ── Responsive ── */
+@media(max-width:1024px) {
+    .bp-stats-grid { grid-template-columns:repeat(2,1fr); }
+    .bp-month-grid { grid-template-columns:repeat(6,1fr); }
+}
+@media(max-width:768px) {
+    .bp-stats-grid { grid-template-columns:1fr; }
+    .bp-hero { padding:28px 24px; }
+    .bp-hero-title { font-size:1.7rem; }
+    .bp-hero-actions { flex-direction:column; align-items:flex-start; }
+    .bp-hero-row { flex-direction:column; align-items:flex-start; }
+    .bp-month-grid { grid-template-columns:repeat(4,1fr); }
+    .bp-field-row { grid-template-columns:1fr; }
+    .bp-item { flex-wrap:wrap; gap:10px; }
+    .bp-item-period { order:3; }
+    .bp-item-actions { margin-left:auto; }
 }
 </style>
 @endsection
 
 @section('content')
-<div class="bulletins-page">
-    <!-- Header avec Stats -->
-    <div class="bp-header">
-        <div class="bp-header-content">
-            <div class="bp-header-left">
-                <h1>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                    </svg>
-                    Bulletins de Paie
-                </h1>
-                <p>Gérez et distribuez les fiches de paie de vos employés</p>
-            </div>
-            <div class="bp-header-actions">
-                <a href="{{ route('admin.bulletins-paie.export', ['annee' => $anneeSelectionnee, 'mois' => $moisSelectionne]) }}" class="bp-btn bp-btn-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    Exporter
-                </a>
-                <a href="{{ route('admin.bulletins-paie.import.index') }}" class="bp-btn bp-btn-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-                        <polyline points="16 6 12 2 8 6"></polyline>
-                        <line x1="12" y1="2" x2="12" y2="15"></line>
-                    </svg>
-                    Import ZIP
-                </a>
-                <button type="button" class="bp-btn bp-btn-primary" onclick="openUploadModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    Ajouter un bulletin
-                </button>
-            </div>
-        </div>
+<div class="bp">
 
-        <!-- Stats -->
-        <div class="bp-stats-row">
-            <div class="bp-stat-card">
-                <div class="bp-stat-icon blue">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                    </svg>
+    {{-- ══ HERO ══ --}}
+    <div class="bp-hero">
+        <div class="bp-hero-content">
+            <div class="bp-hero-meta">
+                <span class="bp-live-dot"></span>
+                <span>Portail RH+ &mdash; Bulletins de Paie</span>
+            </div>
+            <div class="bp-hero-row">
+                <div class="bp-hero-left">
+                    <h1 class="bp-hero-title">Fiches de paie &middot; <span>{{ $anneeSelectionnee }}</span></h1>
+                    <p class="bp-hero-sub">{{ $stats['total_employes'] }} employé{{ $stats['total_employes'] > 1 ? 's' : '' }} couverts &mdash; {{ $stats['total_bulletins'] }} bulletin{{ $stats['total_bulletins'] > 1 ? 's' : '' }} générés</p>
                 </div>
-                <div class="bp-stat-info">
-                    <h4>{{ $stats['total_bulletins'] ?? 0 }}</h4>
-                    <p>Bulletins en {{ $anneeSelectionnee }}</p>
+                <div class="bp-hero-actions">
+                    <a href="{{ route('admin.bulletins-paie.export', ['annee' => $anneeSelectionnee]) }}" class="bp-btn-hero-outline">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Exporter
+                    </a>
+                    <a href="{{ route('admin.bulletins-paie.import.index') }}" class="bp-btn-hero-outline">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        Import ZIP
+                    </a>
+                    <button onclick="openUploadModal()" class="bp-btn-hero-fill">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Nouveau bulletin
+                    </button>
                 </div>
             </div>
-            <div class="bp-stat-card">
-                <div class="bp-stat-icon green">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
+            <div class="bp-hero-kpis">
+                <div class="bp-hero-kpi">
+                    <div class="bp-hero-kpi-lbl">Total bulletins</div>
+                    <div class="bp-hero-kpi-val">{{ $stats['total_bulletins'] }}</div>
                 </div>
-                <div class="bp-stat-info">
-                    <h4>{{ $stats['total_employes'] ?? 0 }}</h4>
-                    <p>Employés concernés</p>
+                <div class="bp-hero-kpi">
+                    <div class="bp-hero-kpi-lbl">Employés couverts</div>
+                    <div class="bp-hero-kpi-val">{{ $stats['total_employes'] }}</div>
                 </div>
+                <div class="bp-hero-kpi">
+                    <div class="bp-hero-kpi-lbl">Année en cours</div>
+                    <div class="bp-hero-kpi-val">{{ $anneeSelectionnee }}</div>
+                </div>
+                @if($moisSelectionne)
+                <div class="bp-hero-kpi">
+                    <div class="bp-hero-kpi-lbl">Mois sélectionné</div>
+                    <div class="bp-hero-kpi-val">{{ \App\Models\BulletinPaie::MOIS_NOMS[(int)$moisSelectionne] ?? $moisSelectionne }}</div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
 
-    <!-- Timeline Année -->
-    <div class="bp-timeline-section">
-        <div class="bp-timeline-header">
-            <h3>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
+    {{-- ══ STAT CARDS ══ --}}
+    <div class="bp-stats-grid">
+        <div class="bp-stat bp-stat-c-ind">
+            <div class="bp-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
                 </svg>
-                Calendrier des bulletins
-            </h3>
-            <div class="bp-year-selector">
-                <select onchange="window.location.href='{{ route('admin.bulletins-paie.index') }}?annee=' + this.value">
-                    @foreach($anneesDisponibles as $annee)
-                        <option value="{{ $annee }}" {{ $annee == $anneeSelectionnee ? 'selected' : '' }}>{{ $annee }}</option>
-                    @endforeach
-                    @if(!$anneesDisponibles->contains(now()->year))
-                        <option value="{{ now()->year }}" {{ now()->year == $anneeSelectionnee ? 'selected' : '' }}>{{ now()->year }}</option>
-                    @endif
-                </select>
+            </div>
+            <div class="bp-stat-body">
+                <div class="bp-stat-lbl">Total bulletins</div>
+                <div class="bp-stat-val">{{ $stats['total_bulletins'] }}</div>
+                <div class="bp-stat-sub">{{ $anneeSelectionnee }}{{ $moisSelectionne ? ' · ' . (\App\Models\BulletinPaie::MOIS_NOMS[(int)$moisSelectionne] ?? $moisSelectionne) : ' · Tous les mois' }}</div>
             </div>
         </div>
+        <div class="bp-stat bp-stat-c-teal">
+            <div class="bp-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+            </div>
+            <div class="bp-stat-body">
+                <div class="bp-stat-lbl">Employés couverts</div>
+                <div class="bp-stat-val">{{ $stats['total_employes'] }}</div>
+                <div class="bp-stat-sub">Avec au moins un bulletin</div>
+            </div>
+        </div>
+        <div class="bp-stat bp-stat-c-emer">
+            <div class="bp-stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/>
+                </svg>
+            </div>
+            <div class="bp-stat-body">
+                <div class="bp-stat-lbl">Mois distribués</div>
+                <div class="bp-stat-val">{{ $stats['total_bulletins'] > 0 ? (int)ceil($stats['total_bulletins'] / max($stats['total_employes'],1)) : 0 }}</div>
+                <div class="bp-stat-sub">Moyenne par employé</div>
+            </div>
+        </div>
+    </div>
 
-        <div class="bp-timeline-grid">
-            @foreach($timeline as $mois => $data)
-                @php
-                    $isFuture = ($anneeSelectionnee == now()->year && $mois > now()->month);
-                    $isActive = $moisSelectionne == $mois;
-                    $hasData = $data['total'] > 0;
-                @endphp
-                <a href="{{ route('admin.bulletins-paie.index', ['annee' => $anneeSelectionnee, 'mois' => $isActive ? null : $mois]) }}"
-                   class="bp-month-item {{ $isActive ? 'active' : '' }} {{ $hasData ? 'has-data' : '' }} {{ $isFuture ? 'future' : '' }}"
-                   @if($isFuture) onclick="return false;" @endif>
-                    <div class="bp-month-name">{{ $data['mois_court'] }}</div>
-                    <div class="bp-month-count">{{ $data['total'] }}</div>
+    {{-- ══ TIMELINE ══ --}}
+    <div class="bp-timeline-card">
+        <div class="bp-tl-head">
+            <div class="bp-tl-title">
+                <span class="bp-tl-title-dot"></span>
+                Calendrier annuel
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                @if($moisSelectionne)
+                <a href="{{ route('admin.bulletins-paie.index', ['annee' => $anneeSelectionnee]) }}" class="bp-tl-reset">
+                    Tous les mois
                 </a>
+                @endif
+                <form method="GET" action="{{ route('admin.bulletins-paie.index') }}" style="display:flex;align-items:center;gap:0">
+                    @if($search)<input type="hidden" name="search" value="{{ $search }}">@endif
+                    <select name="annee" class="bp-year-select" onchange="this.form.submit()">
+                        @foreach($anneesDisponibles as $annee)
+                        <option value="{{ $annee }}" {{ $annee == $anneeSelectionnee ? 'selected' : '' }}>{{ $annee }}</option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="bp-month-grid">
+            @foreach($timeline as $num => $data)
+            @php
+                $isFuture = $anneeSelectionnee == date('Y') && $num > date('n');
+                $hasData = $data['total'] > 0;
+                $isActive = $moisSelectionne == $num;
+                $url = route('admin.bulletins-paie.index', ['annee' => $anneeSelectionnee, 'mois' => $num, 'search' => $search]);
+                $classes = 'bp-month' . ($isActive ? ' active' : '') . ($isFuture ? ' is-future' : '') . ($hasData ? ' has-data' : '');
+            @endphp
+            <a href="{{ $isFuture ? '#' : $url }}" class="{{ $classes }}">
+                <span class="bp-month-name">{{ $data['mois_court'] }}</span>
+                @if($hasData)
+                    <span class="bp-month-count">{{ $data['total'] }}</span>
+                @else
+                    <span class="bp-month-dot"></span>
+                @endif
+            </a>
             @endforeach
         </div>
     </div>
 
-    <!-- Filtres -->
-    <div class="bp-filters">
-        <form action="{{ route('admin.bulletins-paie.index') }}" method="GET" class="bp-search-box">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="hidden" name="annee" value="{{ $anneeSelectionnee }}">
+    {{-- ══ FILTERS ══ --}}
+    <div class="bp-filter-bar">
+        <form method="GET" action="{{ route('admin.bulletins-paie.index') }}" style="display:contents">
+            @if($anneeSelectionnee)<input type="hidden" name="annee" value="{{ $anneeSelectionnee }}">@endif
             @if($moisSelectionne)<input type="hidden" name="mois" value="{{ $moisSelectionne }}">@endif
-            <input type="text" name="search" value="{{ $search }}" placeholder="Rechercher par nom, prénom ou matricule...">
+            <div class="bp-search-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" name="search" class="bp-search-input" placeholder="Rechercher par employé, matricule…" value="{{ $search }}">
+            </div>
+            <button type="submit" class="bp-search-btn">Rechercher</button>
         </form>
-
-        <div class="bp-filter-badges">
+        @if($moisSelectionne || $search)
+        <div class="bp-filter-tags">
             @if($moisSelectionne)
-                <span class="bp-badge">
-                    {{ \App\Models\BulletinPaie::MOIS_NOMS[$moisSelectionne] }} {{ $anneeSelectionnee }}
-                    <a href="{{ route('admin.bulletins-paie.index', ['annee' => $anneeSelectionnee]) }}" class="close">&times;</a>
-                </span>
+            <div class="bp-filter-tag">
+                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                {{ \App\Models\BulletinPaie::MOIS_NOMS[(int)$moisSelectionne] ?? $moisSelectionne }}
+                <a href="{{ route('admin.bulletins-paie.index', ['annee' => $anneeSelectionnee, 'search' => $search]) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </a>
+            </div>
             @endif
             @if($search)
-                <span class="bp-badge">
-                    "{{ $search }}"
-                    <a href="{{ route('admin.bulletins-paie.index', ['annee' => $anneeSelectionnee, 'mois' => $moisSelectionne]) }}" class="close">&times;</a>
-                </span>
-            @endif
-        </div>
-    </div>
-
-    <!-- Liste des Bulletins -->
-    <div class="bp-list-section">
-        <div class="bp-list-header">
-            <h3>
-                @if($moisSelectionne)
-                    Bulletins de {{ \App\Models\BulletinPaie::MOIS_NOMS[$moisSelectionne] }} {{ $anneeSelectionnee }}
-                @else
-                    Tous les bulletins de {{ $anneeSelectionnee }}
-                @endif
-            </h3>
-            <span class="bp-list-count">{{ $bulletins->total() }} bulletin(s)</span>
-        </div>
-
-        @if($bulletins->count() > 0)
-            @foreach($bulletins as $bulletin)
-                <div class="bp-item">
-                    <div class="bp-item-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                        </svg>
-                    </div>
-                    <div class="bp-item-info">
-                        <h4 class="bp-item-name">{{ $bulletin->personnel?->nom_complet ?? '— Personnel supprimé —' }}</h4>
-                        <div class="bp-item-meta">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                                </svg>
-                                {{ $bulletin->personnel?->matricule ?? 'N/A' }}
-                            </span>
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                {{ $bulletin->fichier_taille_formatee }}
-                            </span>
-                            <span>{{ $bulletin->created_at->format('d/m/Y') }}</span>
-                        </div>
-                    </div>
-                    <div class="bp-item-periode">
-                        <div class="mois">{{ $bulletin->mois_court }}</div>
-                        <div class="annee">{{ $bulletin->annee }}</div>
-                    </div>
-                    <div class="bp-item-actions">
-                        <a href="{{ route('admin.bulletins-paie.preview', $bulletin) }}" target="_blank" class="bp-action-btn" title="Prévisualiser">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </a>
-                        <a href="{{ route('admin.bulletins-paie.download', $bulletin) }}" class="bp-action-btn" title="Télécharger">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                        </a>
-                        <form action="{{ route('admin.bulletins-paie.destroy', $bulletin) }}" method="POST" style="display: inline;" onsubmit="return confirm('Supprimer ce bulletin ?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bp-action-btn danger" title="Supprimer">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            @endforeach
-
-            @if($bulletins->hasPages())
-                <div class="bp-pagination">
-                    {{ $bulletins->links() }}
-                </div>
-            @endif
-        @else
-            <div class="bp-empty">
-                <div class="bp-empty-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                    </svg>
-                </div>
-                <h3>Aucun bulletin trouvé</h3>
-                <p>
-                    @if($moisSelectionne)
-                        Aucun bulletin de paie pour {{ \App\Models\BulletinPaie::MOIS_NOMS[$moisSelectionne] }} {{ $anneeSelectionnee }}.
-                    @else
-                        Aucun bulletin de paie pour l'année {{ $anneeSelectionnee }}.
-                    @endif
-                </p>
-                <button type="button" class="bp-btn bp-btn-primary" onclick="openUploadModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    Ajouter un bulletin
-                </button>
+            <div class="bp-filter-tag">
+                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                "{{ Str::limit($search, 20) }}"
+                <a href="{{ route('admin.bulletins-paie.index', ['annee' => $anneeSelectionnee, 'mois' => $moisSelectionne]) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </a>
             </div>
+            @endif
+            <a href="{{ route('admin.bulletins-paie.index', ['annee' => $anneeSelectionnee]) }}" class="bp-filter-clear">Réinitialiser</a>
+        </div>
         @endif
     </div>
-</div>
 
-<!-- Modal Upload -->
-<div class="bp-modal-overlay" id="uploadModal">
-    <div class="bp-modal">
-        <div class="bp-modal-header">
-            <h2>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
+    {{-- ══ BULLETIN LIST ══ --}}
+    <div class="bp-list-card">
+        <div class="bp-list-head">
+            <div class="bp-list-title">
+                Bulletins
+                @if($bulletins->total() > 0)
+                <span class="bp-list-count">{{ $bulletins->total() }}</span>
+                @endif
+            </div>
+            @if($bulletins->total() > 0)
+            <button onclick="openUploadModal()" class="bp-btn-submit" style="font-size:.75rem;padding:7px 16px;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
-                Ajouter un bulletin de paie
-            </h2>
-            <p>Uploadez le fichier PDF du bulletin</p>
-            <button type="button" class="bp-modal-close" onclick="closeUploadModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
+                Ajouter
             </button>
+            @endif
         </div>
 
-        <form action="{{ route('admin.bulletins-paie.store') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+        @forelse($bulletins as $i => $bulletin)
+        <div class="bp-item" style="animation-delay:{{ $i * 0.03 }}s">
+            <div class="bp-item-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+            </div>
+            <div class="bp-item-main">
+                <div class="bp-item-name">{{ $bulletin->personnel->nom_complet }}</div>
+                <div class="bp-item-meta">
+                    <span>{{ $bulletin->personnel->matricule }}</span>
+                    <span class="bp-item-meta-dot"></span>
+                    <span>{{ $bulletin->fichier_taille_formatee }}</span>
+                    <span class="bp-item-meta-dot"></span>
+                    <span>{{ $bulletin->created_at->format('d/m/Y') }}</span>
+                </div>
+            </div>
+            <div class="bp-item-period">
+                <span class="bp-period-badge">{{ $bulletin->mois_court }} {{ $bulletin->annee }}</span>
+            </div>
+            <div class="bp-item-actions">
+                <a href="{{ route('admin.bulletins-paie.preview', $bulletin) }}" target="_blank" class="bp-act-btn bp-act-btn-view" title="Aperçu">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </a>
+                <a href="{{ route('admin.bulletins-paie.download', $bulletin) }}" class="bp-act-btn bp-act-btn-dl" title="Télécharger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                </a>
+                <form method="POST" action="{{ route('admin.bulletins-paie.destroy', $bulletin) }}" style="display:contents"
+                      onsubmit="return confirm('Supprimer ce bulletin ?')">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="bp-act-btn bp-act-btn-del" title="Supprimer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                            <path d="M10 11v6"/><path d="M14 11v6"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        @empty
+        <div class="bp-empty">
+            <div class="bp-empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                </svg>
+            </div>
+            <h3 class="bp-empty-title">Aucun bulletin trouvé</h3>
+            <p class="bp-empty-sub">
+                @if($search || $moisSelectionne)
+                    Aucun résultat pour ces filtres. Modifiez votre recherche ou sélectionnez un autre mois.
+                @else
+                    Commencez par ajouter un premier bulletin de paie pour vos employés.
+                @endif
+            </p>
+            <button onclick="openUploadModal()" class="bp-empty-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Ajouter un bulletin
+            </button>
+        </div>
+        @endforelse
+
+        @if($bulletins->hasPages())
+        <div class="bp-pagination">
+            {{ $bulletins->appends(request()->query())->links() }}
+        </div>
+        @endif
+    </div>
+
+</div>
+
+{{-- ══ MODAL UPLOAD ══ --}}
+<div class="bp-modal-overlay" id="uploadModal">
+    <div class="bp-modal">
+        <form method="POST" action="{{ route('admin.bulletins-paie.store') }}" enctype="multipart/form-data">
             @csrf
+            {{-- Header --}}
+            <div class="bp-modal-header">
+                <div class="bp-modal-header-left">
+                    <div class="bp-modal-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="bp-modal-header-title">Ajouter un bulletin</div>
+                        <div class="bp-modal-header-sub">Fiche de paie au format PDF</div>
+                    </div>
+                </div>
+                <button type="button" class="bp-modal-close" onclick="closeUploadModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            {{-- Body --}}
             <div class="bp-modal-body">
                 @if($errors->any())
-                <div class="bp-errors-summary">
-                    <p>Veuillez corriger les erreurs suivantes :</p>
+                <div class="bp-error-box">
+                    <strong>Veuillez corriger les erreurs :</strong>
                     <ul>
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                        @foreach($errors->all() as $e)
+                        <li>{{ $e }}</li>
                         @endforeach
                     </ul>
                 </div>
                 @endif
 
-                <!-- Sélection employé -->
-                <div class="bp-form-group {{ $errors->has('personnel_id') ? 'has-error' : '' }}">
-                    <label>Employé <span>*</span></label>
-                    <div class="bp-search-select" id="bpPersonnelSearch">
-                        <svg class="bp-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" class="bp-search-input" placeholder="Rechercher un employé..." autocomplete="off">
-                        <button type="button" class="bp-search-clear" title="Effacer">&times;</button>
-                        <input type="hidden" name="personnel_id" value="{{ old('personnel_id') }}" required>
-                        <div class="bp-search-dropdown">
-                            @foreach($personnels as $personnel)
-                                <div class="bp-search-option" data-value="{{ $personnel->id }}" data-text="{{ $personnel->matricule }} - {{ $personnel->nom }} {{ $personnel->prenoms }}">
-                                    {{ $personnel->matricule }} - {{ $personnel->nom }} {{ $personnel->prenoms }}
-                                </div>
-                            @endforeach
-                            <div class="bp-search-no-results">Aucun résultat</div>
-                        </div>
-                    </div>
-                    @error('personnel_id')
-                        <div class="bp-form-error">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- Période -->
-                <div class="bp-form-row">
-                    <div class="bp-form-group">
-                        <label>Mois <span>*</span></label>
-                        <select name="mois" class="bp-form-control" required>
-                            @foreach(\App\Models\BulletinPaie::MOIS_NOMS as $num => $nom)
-                                <option value="{{ $num }}" {{ $moisSelectionne == $num || (!$moisSelectionne && $num == now()->month) ? 'selected' : '' }}>
-                                    {{ $nom }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="bp-form-group">
-                        <label>Année <span>*</span></label>
-                        <select name="annee" class="bp-form-control" required>
-                            @for($y = now()->year; $y >= now()->year - 5; $y--)
-                                <option value="{{ $y }}" {{ $anneeSelectionnee == $y ? 'selected' : '' }}>{{ $y }}</option>
-                            @endfor
-                        </select>
-                    </div>
-                </div>
-
-                @error('periode')
-                    <div class="bp-form-error" style="margin-top: -0.5rem; margin-bottom: 0.75rem;">{{ $message }}</div>
-                @enderror
-
-                <!-- Upload fichier -->
-                <div class="bp-form-group {{ $errors->has('fichier') ? 'has-error' : '' }}">
-                    <label>Fichier PDF <span>*</span></label>
-                    <div class="bp-upload-zone" id="uploadZone">
-                        <input type="file" name="fichier" id="fichierInput" accept=".pdf" required hidden>
-                        <div class="bp-upload-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="17 8 12 3 7 8"></polyline>
-                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                {{-- Personnel --}}
+                <div class="bp-field">
+                    <label class="bp-label">Employé <span>*</span></label>
+                    <div class="bp-ss-wrap" id="personnelSelectWrap">
+                        <input type="hidden" name="personnel_id" id="personnelId" value="{{ old('personnel_id') }}">
+                        <div class="bp-ss-input-wrap" id="ssInputWrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                             </svg>
-                        </div>
-                        <h4>Glissez-déposez votre fichier ici</h4>
-                        <p>ou cliquez pour parcourir (PDF uniquement, max 10 Mo)</p>
-
-                        <div class="bp-file-selected">
-                            <div class="bp-file-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>
-                            </div>
-                            <div class="bp-file-info">
-                                <h5 id="fileName">document.pdf</h5>
-                                <p id="fileSize">0 Ko</p>
-                            </div>
-                            <button type="button" class="bp-file-remove" onclick="removeFile(event)">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                            <input type="text" class="bp-ss-input" id="personnelSearch" placeholder="Rechercher un employé…" autocomplete="off">
+                            <button type="button" class="bp-ss-clear" id="personnelClear">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                                 </svg>
                             </button>
                         </div>
+                        <div class="bp-ss-dropdown" id="personnelDropdown">
+                            @foreach($personnels as $p)
+                            <div class="bp-ss-opt" data-value="{{ $p->id }}" data-label="{{ $p->matricule }} — {{ $p->nom_complet }}">
+                                {{ $p->matricule }} — {{ $p->nom_complet }}
+                            </div>
+                            @endforeach
+                            <div class="bp-ss-no-results" id="ssNoResults" style="display:none">Aucun résultat</div>
+                        </div>
                     </div>
-                    @error('fichier')
-                        <div class="bp-form-error">{{ $message }}</div>
-                    @enderror
+                    @error('personnel_id')<div class="bp-field-error">{{ $message }}</div>@enderror
                 </div>
 
-                <!-- Options -->
-                <div class="bp-form-group">
-                    <label class="bp-checkbox">
-                        <input type="checkbox" name="visible_employe" value="1" checked>
-                        <span>Rendre visible à l'employé</span>
+                {{-- Mois / Année --}}
+                <div class="bp-field-row">
+                    <div>
+                        <label class="bp-label">Mois <span>*</span></label>
+                        <select name="mois" class="bp-select">
+                            <option value="">Sélectionner…</option>
+                            @foreach(\App\Models\BulletinPaie::MOIS_NOMS as $num => $nom)
+                            <option value="{{ $num }}" {{ old('mois', $moisSelectionne) == $num ? 'selected' : '' }}>{{ $nom }}</option>
+                            @endforeach
+                        </select>
+                        @error('mois')<div class="bp-field-error">{{ $message }}</div>@enderror
+                    </div>
+                    <div>
+                        <label class="bp-label">Année <span>*</span></label>
+                        <select name="annee" class="bp-select">
+                            <option value="">Sélectionner…</option>
+                            @foreach(range(date('Y'), date('Y') - 5) as $a)
+                            <option value="{{ $a }}" {{ old('annee', $anneeSelectionnee) == $a ? 'selected' : '' }}>{{ $a }}</option>
+                            @endforeach
+                        </select>
+                        @error('annee')<div class="bp-field-error">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+
+                {{-- File upload --}}
+                <div class="bp-field">
+                    <label class="bp-label">Fichier PDF <span>*</span></label>
+                    <div class="bp-upload-zone" id="uploadZone">
+                        <input type="file" name="fichier" id="fileInput" accept=".pdf">
+                        <div class="bp-uz-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                        </div>
+                        <div class="bp-uz-title">Glissez votre PDF ici</div>
+                        <div class="bp-uz-sub">ou cliquez pour parcourir · max 10 Mo</div>
+                    </div>
+                    <div class="bp-file-preview" id="filePreview">
+                        <div class="bp-file-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                        </div>
+                        <div class="bp-file-info">
+                            <div class="bp-file-name" id="fileName"></div>
+                            <div class="bp-file-size" id="fileSize"></div>
+                        </div>
+                        <button type="button" class="bp-file-remove" id="removeFile">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    @error('fichier')<div class="bp-field-error">{{ $message }}</div>@enderror
+                </div>
+
+                {{-- Visibility --}}
+                <div class="bp-field">
+                    <label class="bp-check-wrap">
+                        <input type="checkbox" name="visible_employe" value="1" {{ old('visible_employe', '1') == '1' ? 'checked' : '' }}>
+                        <span class="bp-check-lbl"><strong>Rendre visible à l'employé</strong> — Il pourra consulter ce bulletin depuis son espace</span>
                     </label>
                 </div>
 
-                <!-- Commentaire -->
-                <div class="bp-form-group">
-                    <label>Commentaire (optionnel)</label>
-                    <textarea name="commentaire" class="bp-form-control" rows="2" placeholder="Note interne..."></textarea>
+                {{-- Comment --}}
+                <div class="bp-field">
+                    <label class="bp-label">Commentaire <span style="color:var(--bp-txt3);font-weight:400;text-transform:none;letter-spacing:0">(facultatif)</span></label>
+                    <textarea name="commentaire" class="bp-textarea" placeholder="Note interne ou message pour l'employé…">{{ old('commentaire') }}</textarea>
                 </div>
             </div>
 
+            {{-- Footer --}}
             <div class="bp-modal-footer">
-                <button type="button" class="bp-btn bp-btn-secondary" onclick="closeUploadModal()">Annuler</button>
-                <button type="submit" class="bp-btn bp-btn-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                <button type="button" class="bp-btn-cancel" onclick="closeUploadModal()">Annuler</button>
+                <button type="submit" class="bp-btn-submit" id="submitBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
-                    Uploader le bulletin
+                    Enregistrer le bulletin
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-@if(session('success'))
-<div class="alert-toast success" id="successToast">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-    </svg>
-    {{ session('success') }}
+{{-- ══ TOASTS ══ --}}
+<div class="bp-toast-wrap">
+    @if(session('success'))
+    <div class="bp-toast success" id="toastSuccess">
+        <div class="bp-toast-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+        </div>
+        <div class="bp-toast-text">{{ session('success') }}</div>
+    </div>
+    @endif
+    @if(session('error'))
+    <div class="bp-toast error" id="toastError">
+        <div class="bp-toast-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+        </div>
+        <div class="bp-toast-text">{{ session('error') }}</div>
+    </div>
+    @endif
 </div>
-@endif
-
-@if(session('error'))
-<div class="alert-toast error" id="errorToast">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="15" y1="9" x2="9" y2="15"></line>
-        <line x1="9" y1="9" x2="15" y2="15"></line>
-    </svg>
-    {{ session('error') }}
-</div>
-@endif
-
-@if(session('success') || session('error'))
-<style>
-.alert-toast {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 500;
-    z-index: 2000;
-    animation: slideIn 0.3s ease, slideOut 0.3s ease 4s forwards;
-}
-.alert-toast.success {
-    background: #10B981;
-    color: white;
-}
-.alert-toast.error {
-    background: #EF4444;
-    color: white;
-}
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-@keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100%); opacity: 0; }
-}
-</style>
-@endif
 @endsection
 
 @section('scripts')
 <script>
-// Modal functions
+/* ── Modal ── */
 function openUploadModal() {
-    document.getElementById('uploadModal').classList.add('show');
+    document.getElementById('uploadModal').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
-
 function closeUploadModal() {
-    document.getElementById('uploadModal').classList.remove('show');
+    document.getElementById('uploadModal').classList.remove('open');
     document.body.style.overflow = '';
-    document.getElementById('uploadForm').reset();
-    document.getElementById('uploadZone').classList.remove('has-file');
 }
-
-// Close on click outside
 document.getElementById('uploadModal').addEventListener('click', function(e) {
     if (e.target === this) closeUploadModal();
 });
-
-// Close on Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeUploadModal();
 });
 
-// File Upload Zone
-const uploadZone = document.getElementById('uploadZone');
-const fichierInput = document.getElementById('fichierInput');
-const fileNameEl = document.getElementById('fileName');
-const fileSizeEl = document.getElementById('fileSize');
+/* ── File upload drag-drop ── */
+const zone   = document.getElementById('uploadZone');
+const input  = document.getElementById('fileInput');
+const prev   = document.getElementById('filePreview');
+const fname  = document.getElementById('fileName');
+const fsize  = document.getElementById('fileSize');
+const rmBtn  = document.getElementById('removeFile');
 
-uploadZone.addEventListener('click', function(e) {
-    if (!e.target.closest('.bp-file-remove')) {
-        fichierInput.click();
-    }
+zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('dragover'); });
+zone.addEventListener('dragleave', ()  => zone.classList.remove('dragover'));
+zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('dragover');
+    if (e.dataTransfer.files[0]) displayFile(e.dataTransfer.files[0]);
 });
+input.addEventListener('change', () => { if (input.files[0]) displayFile(input.files[0]); });
 
-uploadZone.addEventListener('dragover', function(e) {
+rmBtn.addEventListener('click', e => {
     e.preventDefault();
-    this.classList.add('dragover');
-});
-
-uploadZone.addEventListener('dragleave', function(e) {
-    e.preventDefault();
-    this.classList.remove('dragover');
-});
-
-uploadZone.addEventListener('drop', function(e) {
-    e.preventDefault();
-    this.classList.remove('dragover');
-    if (e.dataTransfer.files.length) {
-        fichierInput.files = e.dataTransfer.files;
-        displayFile(e.dataTransfer.files[0]);
-    }
-});
-
-fichierInput.addEventListener('change', function() {
-    if (this.files.length) {
-        displayFile(this.files[0]);
-    }
+    input.value = '';
+    prev.classList.remove('show');
+    zone.style.display = '';
 });
 
 function displayFile(file) {
     if (file.type !== 'application/pdf') {
-        alert('Seuls les fichiers PDF sont acceptés.');
+        alert('Veuillez sélectionner un fichier PDF.');
+        input.value = '';
         return;
     }
-    uploadZone.classList.add('has-file');
-    fileNameEl.textContent = file.name;
-    fileSizeEl.textContent = formatFileSize(file.size);
+    if (file.size > 10 * 1024 * 1024) {
+        alert('Le fichier dépasse la limite de 10 Mo.');
+        input.value = '';
+        return;
+    }
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    fname.textContent = file.name;
+    fsize.textContent = formatFileSize(file.size);
+    prev.classList.add('show');
+    zone.style.display = 'none';
 }
 
-function removeFile(e) {
-    e.stopPropagation();
-    fichierInput.value = '';
-    uploadZone.classList.remove('has-file');
+function formatFileSize(b) {
+    if (b < 1024)       return b + ' o';
+    if (b < 1024*1024)  return (b/1024).toFixed(1) + ' Ko';
+    return (b/(1024*1024)).toFixed(1) + ' Mo';
 }
 
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Ko';
-    const k = 1024;
-    const sizes = ['octets', 'Ko', 'Mo', 'Go'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
+/* ── Searchable personnel select ── */
+const searchInput  = document.getElementById('personnelSearch');
+const hiddenInput  = document.getElementById('personnelId');
+const dropdown     = document.getElementById('personnelDropdown');
+const clearBtn     = document.getElementById('personnelClear');
+const noResults    = document.getElementById('ssNoResults');
+const inputWrap    = document.getElementById('ssInputWrap');
+const opts         = dropdown.querySelectorAll('.bp-ss-opt');
+let selectedLabel  = '';
 
-// Client-side validation before submit
-document.getElementById('uploadForm').addEventListener('submit', function(e) {
-    var hidden = document.querySelector('#bpPersonnelSearch input[name="personnel_id"]');
-    if (!hidden || !hidden.value) {
+function openDropdown() { dropdown.classList.add('open'); inputWrap.classList.add('focused'); }
+function closeDropdown() { dropdown.classList.remove('open'); inputWrap.classList.remove('focused'); }
+
+searchInput.addEventListener('focus', openDropdown);
+searchInput.addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    let visible = 0;
+    opts.forEach(o => {
+        const match = o.dataset.label.toLowerCase().includes(q);
+        o.classList.toggle('hidden', !match);
+        if (match) visible++;
+    });
+    noResults.style.display = visible === 0 ? '' : 'none';
+    if (!q) { hiddenInput.value = ''; clearBtn.style.display = 'none'; selectedLabel = ''; }
+    openDropdown();
+});
+
+opts.forEach(o => {
+    o.addEventListener('mousedown', e => {
         e.preventDefault();
-        var searchInput = document.querySelector('#bpPersonnelSearch .bp-search-input');
-        if (searchInput) searchInput.focus();
-        alert('Veuillez sélectionner un employé.');
-        return false;
+        opts.forEach(x => x.classList.remove('selected'));
+        o.classList.add('selected');
+        hiddenInput.value = o.dataset.value;
+        searchInput.value = o.dataset.label;
+        selectedLabel = o.dataset.label;
+        clearBtn.style.display = 'flex';
+        closeDropdown();
+    });
+});
+
+clearBtn.addEventListener('click', () => {
+    hiddenInput.value = '';
+    searchInput.value = '';
+    selectedLabel = '';
+    clearBtn.style.display = 'none';
+    opts.forEach(o => { o.classList.remove('hidden', 'selected'); });
+    noResults.style.display = 'none';
+    searchInput.focus();
+});
+
+document.addEventListener('click', e => {
+    if (!document.getElementById('personnelSelectWrap').contains(e.target)) {
+        if (!hiddenInput.value) searchInput.value = '';
+        else searchInput.value = selectedLabel;
+        closeDropdown();
     }
 });
 
-// Auto-open modal if validation errors
-@if($errors->any())
-    openUploadModal();
-@endif
-
-// ── Searchable Personnel Select ──
+// Restore old() value on reload after validation error
+@if(old('personnel_id'))
 (function() {
-    var wrapper = document.getElementById('bpPersonnelSearch');
-    if (!wrapper) return;
-    var input = wrapper.querySelector('.bp-search-input');
-    var hidden = wrapper.querySelector('input[name="personnel_id"]');
-    var dropdown = wrapper.querySelector('.bp-search-dropdown');
-    var options = wrapper.querySelectorAll('.bp-search-option');
-    var noResults = wrapper.querySelector('.bp-search-no-results');
-    var clearBtn = wrapper.querySelector('.bp-search-clear');
-
-    function showDropdown() { dropdown.style.display = 'block'; }
-    function hideDropdown() { dropdown.style.display = 'none'; }
-
-    function filterOptions() {
-        var term = input.value.toLowerCase().trim();
-        var visible = 0;
-        options.forEach(function(opt) {
-            var match = opt.getAttribute('data-text').toLowerCase().indexOf(term) !== -1;
-            opt.style.display = match ? '' : 'none';
-            if (match) visible++;
-        });
-        noResults.style.display = visible === 0 ? 'block' : 'none';
-        if (visible === 1 && term.length > 0) {
-            options.forEach(function(opt) {
-                if (opt.style.display !== 'none') selectOption(opt);
-            });
-        }
-    }
-
-    function selectOption(opt) {
-        hidden.value = opt.getAttribute('data-value');
-        input.value = opt.getAttribute('data-text');
-        clearBtn.style.display = 'block';
-        hideDropdown();
-    }
-
-    function clearSelection() {
-        hidden.value = '';
-        input.value = '';
-        clearBtn.style.display = 'none';
-        options.forEach(function(opt) { opt.style.display = ''; });
-        noResults.style.display = 'none';
-    }
-
-    input.addEventListener('focus', function() { showDropdown(); filterOptions(); });
-    input.addEventListener('input', function() {
-        hidden.value = '';
-        clearBtn.style.display = input.value ? 'block' : 'none';
-        showDropdown();
-        filterOptions();
-    });
-    options.forEach(function(opt) {
-        opt.addEventListener('click', function() { selectOption(opt); });
-    });
-    clearBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        clearSelection();
-        input.focus();
-    });
-    document.addEventListener('click', function(e) {
-        if (!wrapper.contains(e.target)) hideDropdown();
-    });
-
-    // Restore old() value on load
-    if (hidden.value) {
-        options.forEach(function(opt) {
-            if (opt.getAttribute('data-value') === hidden.value) {
-                input.value = opt.getAttribute('data-text');
-                clearBtn.style.display = 'block';
-            }
-        });
-    }
-
-    // Reset on form reset
-    var form = wrapper.closest('form');
-    if (form) {
-        form.addEventListener('reset', function() {
-            setTimeout(function() { clearSelection(); }, 0);
-        });
+    const oldId = "{{ old('personnel_id') }}";
+    const opt = dropdown.querySelector(`.bp-ss-opt[data-value="${oldId}"]`);
+    if (opt) {
+        hiddenInput.value = oldId;
+        searchInput.value = opt.dataset.label;
+        selectedLabel = opt.dataset.label;
+        opt.classList.add('selected');
+        clearBtn.style.display = 'flex';
     }
 })();
+@endif
 
-// Auto-hide toasts
-setTimeout(function() {
-    var toast = document.getElementById('successToast');
-    if (toast) toast.remove();
-    var errorToast = document.getElementById('errorToast');
-    if (errorToast) errorToast.remove();
-}, 5000);
+// Prevent submit without personnel
+document.querySelector('.bp-modal form').addEventListener('submit', function(e) {
+    if (!hiddenInput.value) {
+        e.preventDefault();
+        searchInput.focus();
+        inputWrap.style.borderColor = 'var(--bp-red)';
+        setTimeout(() => inputWrap.style.borderColor = '', 2000);
+    }
+});
+
+/* ── Auto-open on validation errors ── */
+@if($errors->any())
+openUploadModal();
+@endif
+
+/* ── Toast auto-hide ── */
+['toastSuccess', 'toastError'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .5s'; setTimeout(()=>el.remove(),500); }, 5000);
+});
 </script>
 @endsection

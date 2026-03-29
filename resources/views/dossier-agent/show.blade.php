@@ -654,7 +654,9 @@
     border-radius: var(--e-radius-xl);
     width: 100%;
     max-width: 660px;
-    max-height: 92vh;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.3),
                 0 0 0 1px rgba(255, 255, 255, 0.05);
@@ -666,13 +668,22 @@
     transform: scale(1) translateY(0);
 }
 
-/* Modal Header — dark gradient slate */
+#uploadForm {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Modal Header — Indigo × Teal gradient */
 .ds-modal-header {
-    background: linear-gradient(135deg, var(--e-slate-800) 0%, var(--e-slate-900) 100%);
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 60%, #1d4ed8 100%);
     color: white;
     padding: 1.75rem 2rem 1.5rem;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .ds-modal-header::before {
@@ -682,7 +693,7 @@
     right: -20%;
     width: 280px;
     height: 280px;
-    background: radial-gradient(circle, rgba(59, 125, 216, 0.25) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.2) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
 }
@@ -690,8 +701,12 @@
 .ds-modal-header::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    bottom: -60px;
+    left: 20%;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
     pointer-events: none;
 }
 
@@ -706,13 +721,13 @@
 .ds-modal-icon {
     width: 50px;
     height: 50px;
-    background: rgba(59, 125, 216, 0.2);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(8px);
     border-radius: var(--e-radius);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(59, 125, 216, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     flex-shrink: 0;
 }
 
@@ -761,8 +776,9 @@
 
 .ds-modal-body {
     padding: 1.75rem 2rem;
-    max-height: calc(92vh - 200px);
+    flex: 1;
     overflow-y: auto;
+    min-height: 0;
 }
 
 .ds-modal-body::-webkit-scrollbar {
@@ -827,8 +843,8 @@
 
 .ds-form-control:focus {
     outline: none;
-    border-color: var(--e-blue);
-    box-shadow: 0 0 0 3px rgba(59, 125, 216, 0.12);
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
 .ds-form-control::placeholder {
@@ -849,16 +865,16 @@
 }
 
 .ds-file-upload-zone:hover {
-    border-color: var(--e-blue);
-    background: var(--e-blue-wash);
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.04);
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(59, 125, 216, 0.1);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
 }
 
 .ds-file-upload-zone.dragover {
-    border-color: var(--e-blue);
+    border-color: #6366f1;
     border-style: solid;
-    background: var(--e-blue-pale);
+    background: rgba(99, 102, 241, 0.08);
     transform: scale(1.01);
 }
 
@@ -872,7 +888,7 @@
     width: 68px;
     height: 68px;
     margin: 0 auto 1rem;
-    background: linear-gradient(135deg, var(--e-blue) 0%, var(--e-blue-deep) 100%);
+    background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
     border-radius: 18px;
     display: flex;
     align-items: center;
@@ -880,7 +896,7 @@
     color: white;
     position: relative;
     z-index: 1;
-    box-shadow: 0 8px 24px rgba(59, 125, 216, 0.3);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1136,6 +1152,7 @@
     display: flex;
     gap: 0.75rem;
     justify-content: flex-end;
+    flex-shrink: 0;
 }
 
 .ds-btn-modal {
@@ -1171,14 +1188,14 @@
 }
 
 .ds-btn-modal-submit {
-    background: var(--e-blue);
+    background: linear-gradient(135deg, #4338ca, #6366f1);
     color: white;
-    box-shadow: 0 4px 14px rgba(59, 125, 216, 0.3);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
 }
 
 .ds-btn-modal-submit:hover {
-    background: var(--e-blue-deep);
-    box-shadow: 0 6px 18px rgba(59, 125, 216, 0.4);
+    opacity: 0.92;
+    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45);
     transform: translateY(-1px);
 }
 
@@ -1765,7 +1782,7 @@ uploadModal.addEventListener('click', function(e) {
 
 // Click sur la zone de drop
 dropZone.addEventListener('click', (e) => {
-    if (!e.target.closest('.remove-file')) {
+    if (!e.target.closest('.ds-file-remove-btn')) {
         fileInput.click();
     }
 });

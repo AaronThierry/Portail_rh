@@ -1517,7 +1517,7 @@
                         Fichier <span class="ds-required">*</span>
                     </label>
                     <div class="ds-file-upload-zone" id="dropZone">
-                        <input type="file" name="document" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.webp" required style="display: none;">
+                        <input type="file" name="document" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.webp" required style="position:absolute;width:0;height:0;opacity:0;overflow:hidden;border:0;padding:0;">
                         <div class="ds-file-upload-icon" id="uploadIcon">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
@@ -1866,6 +1866,9 @@ uploadModal.addEventListener('click', function(e) {
     if (e.target === this) closeUploadModal();
 });
 
+// Stopper la propagation du clic sur fileInput → évite la boucle dropZone→fileInput→dropZone
+fileInput.addEventListener('click', (e) => e.stopPropagation());
+
 // Click sur la zone de drop
 dropZone.addEventListener('click', (e) => {
     if (!e.target.closest('.ds-file-remove-btn')) {
@@ -1879,8 +1882,7 @@ dropZone.addEventListener('dragover', (e) => {
     dropZone.classList.add('dragover');
 });
 
-dropZone.addEventListener('dragleave', (e) => {
-    e.preventDefault();
+dropZone.addEventListener('dragleave', () => {
     dropZone.classList.remove('dragover');
 });
 
@@ -1888,7 +1890,9 @@ dropZone.addEventListener('drop', (e) => {
     e.preventDefault();
     dropZone.classList.remove('dragover');
     if (e.dataTransfer.files.length) {
-        fileInput.files = e.dataTransfer.files;
+        const dt = new DataTransfer();
+        dt.items.add(e.dataTransfer.files[0]);
+        fileInput.files = dt.files;
         displayFileInfo(e.dataTransfer.files[0]);
     }
 });
@@ -1979,23 +1983,93 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeUploadModal();
 });
 
-// Animation d'entrée du modal
-uploadModal.addEventListener('transitionend', function(e) {
-    if (e.propertyName === 'opacity' && this.classList.contains('show')) {
-        this.querySelector('.ds-modal-content').focus();
-    }
-});
+// ── Toasts ──
+function dsShowToast(type, msg) {
+    const wrap = document.getElementById('dsToastWrap');
+    const id = 'dsToast_' + Date.now();
+    const icon = type === 'success'
+        ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`
+        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+    const label = type === 'success' ? 'Succès' : 'Erreur';
+    const el = document.createElement('div');
+    el.className = `ds-toast ds-toast-${type}`;
+    el.id = id;
+    el.innerHTML = `
+        <div class="ds-toast-icon">${icon}</div>
+        <div class="ds-toast-body">
+            <div class="ds-toast-title">${label}</div>
+            <div class="ds-toast-msg">${msg}</div>
+        </div>
+        <button class="ds-toast-close" onclick="dsHideToast('${id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>`;
+    wrap.appendChild(el);
+    setTimeout(() => dsHideToast(id), 5000);
+}
 
-// ── Toasts auto-hide ──
 function dsHideToast(id) {
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.add('ds-toast-hiding');
     setTimeout(() => el.remove(), 420);
 }
+
+// Auto-hide toasts affichés via session (page rechargée)
 ['dsToastSuccess', 'dsToastError'].forEach(id => {
     const el = document.getElementById(id);
     if (el) setTimeout(() => dsHideToast(id), 5000);
+});
+
+// ── Soumission AJAX du formulaire ──
+uploadForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!fileInput.files.length) {
+        dsShowToast('error', 'Veuillez sélectionner un fichier.');
+        return;
+    }
+
+    const submitBtn = document.getElementById('submitBtn');
+    const originalHtml = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Envoi…`;
+
+    // Ajouter animation spin
+    if (!document.getElementById('ds-spin-style')) {
+        const s = document.createElement('style');
+        s.id = 'ds-spin-style';
+        s.textContent = '@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}';
+        document.head.appendChild(s);
+    }
+
+    try {
+        const formData = new FormData(uploadForm);
+        const response = await fetch(uploadForm.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            dsShowToast('success', data.message || 'Document uploadé avec succès.');
+            closeUploadModal();
+            setTimeout(() => location.reload(), 1200);
+        } else {
+            const msg = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Erreur lors de l\'upload.');
+            dsShowToast('error', msg);
+        }
+    } catch (err) {
+        dsShowToast('error', 'Erreur réseau. Veuillez réessayer.');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHtml;
+    }
 });
 </script>
 @endsection

@@ -133,9 +133,9 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
 });
 
 // ============================================================================
-// PORTAIL ADMIN - Super Admin + RH (validation) + Chef d'Entreprise (lecture + validation)
+// PORTAIL ADMIN - Super Admin + RH + Chef d'Entreprise + Agent administratif
 // ============================================================================
-Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|Chef d'Entreprise"])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|Chef d'Entreprise|Agent administratif"])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard admin
     Route::get('/', [DashbordController::class, 'index'])->name('dashboard');
 

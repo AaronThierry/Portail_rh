@@ -331,28 +331,91 @@
 }
 
 /* ==================== FLASH MESSAGES ==================== */
-.ds-flash {
-    padding: 1rem 1.25rem;
-    border-radius: var(--e-radius);
-    margin-bottom: 1.5rem;
+/* ==================== TOASTS ==================== */
+.ds-toast-wrap {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.ds-toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px 14px 14px;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 8px 32px rgba(0,0,0,.14), 0 1px 4px rgba(0,0,0,.06);
+    min-width: 280px;
+    max-width: 400px;
+    pointer-events: all;
+    animation: ds-toast-in .35s cubic-bezier(.16,1,.3,1);
+    transition: opacity .4s, transform .4s;
+}
+
+@keyframes ds-toast-in {
+    from { opacity: 0; transform: translateX(24px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.ds-toast.ds-toast-success { border-left: 4px solid #10b981; }
+.ds-toast.ds-toast-error   { border-left: 4px solid #ef4444; }
+
+.ds-toast-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    font-size: 0.875rem;
+    justify-content: center;
+    margin-top: 1px;
+}
+.ds-toast.ds-toast-success .ds-toast-icon { background: rgba(16,185,129,.10); color: #10b981; }
+.ds-toast.ds-toast-error   .ds-toast-icon { background: rgba(239,68,68,.10);  color: #ef4444; }
+.ds-toast-icon svg { width: 17px; height: 17px; }
+
+.ds-toast-body { flex: 1; min-width: 0; }
+.ds-toast-title {
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 3px;
+}
+.ds-toast.ds-toast-success .ds-toast-title { color: #059669; }
+.ds-toast.ds-toast-error   .ds-toast-title { color: #dc2626; }
+.ds-toast-msg {
+    font-size: .835rem;
     font-weight: 500;
-    animation: ds-slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    color: #0f172a;
+    line-height: 1.45;
 }
 
-.ds-flash-success {
-    background: var(--e-emerald-pale);
-    color: #065f46;
-    border: 1px solid rgba(5, 150, 105, 0.2);
+.ds-toast-close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 2px;
+    border-radius: 5px;
+    transition: color .15s;
+    line-height: 1;
+    margin-top: 2px;
 }
+.ds-toast-close:hover { color: #475569; }
+.ds-toast-close svg { width: 14px; height: 14px; display: block; }
 
-.ds-flash-error {
-    background: var(--e-red-pale);
-    color: #991b1b;
-    border: 1px solid rgba(220, 38, 38, 0.2);
+.ds-toast.ds-toast-hiding {
+    opacity: 0;
+    transform: translateX(20px);
 }
 
 /* ==================== DOCUMENTS SECTION ==================== */
@@ -1362,23 +1425,6 @@
         </div>
     </div>
 
-    @if(session('success'))
-    <div class="ds-flash ds-flash-success">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        {{ session('success') }}
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div class="ds-flash ds-flash-error">
-        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        {{ session('error') }}
-    </div>
-    @endif
 
     <!-- Documents par catégorie -->
     @foreach($categories as $categorie)
@@ -1650,6 +1696,46 @@
         </form>
     </div>
 </div>
+
+{{-- ══ TOASTS ══ --}}
+<div class="ds-toast-wrap" id="dsToastWrap">
+    @if(session('success'))
+    <div class="ds-toast ds-toast-success" id="dsToastSuccess">
+        <div class="ds-toast-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+        </div>
+        <div class="ds-toast-body">
+            <div class="ds-toast-title">Succès</div>
+            <div class="ds-toast-msg">{{ session('success') }}</div>
+        </div>
+        <button class="ds-toast-close" onclick="dsHideToast('dsToastSuccess')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+    @endif
+    @if(session('error'))
+    <div class="ds-toast ds-toast-error" id="dsToastError">
+        <div class="ds-toast-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+        </div>
+        <div class="ds-toast-body">
+            <div class="ds-toast-title">Erreur</div>
+            <div class="ds-toast-msg">{{ session('error') }}</div>
+        </div>
+        <button class="ds-toast-close" onclick="dsHideToast('dsToastError')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+    @endif
+</div>
 @endsection
 
 @section('scripts')
@@ -1898,6 +1984,18 @@ uploadModal.addEventListener('transitionend', function(e) {
     if (e.propertyName === 'opacity' && this.classList.contains('show')) {
         this.querySelector('.ds-modal-content').focus();
     }
+});
+
+// ── Toasts auto-hide ──
+function dsHideToast(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('ds-toast-hiding');
+    setTimeout(() => el.remove(), 420);
+}
+['dsToastSuccess', 'dsToastError'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) setTimeout(() => dsHideToast(id), 5000);
 });
 </script>
 @endsection

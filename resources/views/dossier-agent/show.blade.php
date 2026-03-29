@@ -330,93 +330,130 @@
     background: var(--e-bg);
 }
 
-/* ==================== FLASH MESSAGES ==================== */
-/* ==================== TOASTS ==================== */
-.ds-toast-wrap {
+/* ==================== NOTIFICATIONS PREMIUM ==================== */
+.hrp-notif {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    pointer-events: none;
-}
-
-.ds-toast {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 14px 18px 14px 14px;
-    border-radius: 14px;
-    background: #ffffff;
-    box-shadow: 0 8px 32px rgba(0,0,0,.14), 0 1px 4px rgba(0,0,0,.06);
-    min-width: 280px;
-    max-width: 400px;
+    top: 20px;
+    left: 50%;
+    width: min(480px, calc(100vw - 32px));
+    background: #fff;
+    border-radius: 16px;
+    padding: 0;
+    z-index: 100001;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.18), 0 4px 16px rgba(0,0,0,.08);
+    transform: translateX(-50%) translateY(-130%) scale(.92);
+    opacity: 0;
+    transition: transform .52s cubic-bezier(.34,1.56,.64,1), opacity .28s ease;
     pointer-events: all;
-    animation: ds-toast-in .35s cubic-bezier(.16,1,.3,1);
-    transition: opacity .4s, transform .4s;
 }
-
-@keyframes ds-toast-in {
-    from { opacity: 0; transform: translateX(24px); }
-    to   { opacity: 1; transform: translateX(0); }
+.hrp-notif.hrp-show {
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
 }
-
-.ds-toast.ds-toast-success { border-left: 4px solid #10b981; }
-.ds-toast.ds-toast-error   { border-left: 4px solid #ef4444; }
-
-.ds-toast-icon {
+.hrp-notif::before {
+    content: '';
+    display: block;
+    height: 5px;
+    width: 100%;
+}
+.hrp-notif-success::before { background: linear-gradient(90deg, #059669, #10b981, #34d399); }
+.hrp-notif-error::before   { background: linear-gradient(90deg, #dc2626, #ef4444, #f87171); }
+.hrp-notif-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+}
+.hrp-notif-icon-bg {
     flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 1px;
+    position: relative;
 }
-.ds-toast.ds-toast-success .ds-toast-icon { background: rgba(16,185,129,.10); color: #10b981; }
-.ds-toast.ds-toast-error   .ds-toast-icon { background: rgba(239,68,68,.10);  color: #ef4444; }
-.ds-toast-icon svg { width: 17px; height: 17px; }
-
-.ds-toast-body { flex: 1; min-width: 0; }
-.ds-toast-title {
-    font-size: .78rem;
+.hrp-notif-success .hrp-notif-icon-bg {
+    background: linear-gradient(135deg, #d1fae5, #6ee7b7);
+    box-shadow: 0 0 0 8px rgba(16,185,129,.1);
+}
+.hrp-notif-error .hrp-notif-icon-bg {
+    background: linear-gradient(135deg, #fee2e2, #fca5a5);
+    box-shadow: 0 0 0 8px rgba(239,68,68,.1);
+}
+.hrp-notif-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    pointer-events: none;
+}
+.hrp-notif-success .hrp-notif-ring { border-color: rgba(16,185,129,.35); }
+.hrp-notif-icon-bg svg { width: 26px; height: 26px; }
+.hrp-notif-success .hrp-notif-icon-bg svg { color: #059669; }
+.hrp-notif-error   .hrp-notif-icon-bg svg { color: #dc2626; }
+.hrp-check-path {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+}
+.hrp-notif-success .hrp-check-path {
+    animation: hrp-check .55s cubic-bezier(.65,0,.35,1) .2s forwards;
+}
+.hrp-notif-success .hrp-notif-ring {
+    animation: hrp-ring 1.1s cubic-bezier(.4,0,.6,1) .45s both;
+}
+@keyframes hrp-check {
+    to { stroke-dashoffset: 0; }
+}
+@keyframes hrp-ring {
+    0%   { transform: scale(1);   opacity: .6; }
+    60%  { transform: scale(1.25); opacity: .15; }
+    100% { transform: scale(1.4);  opacity: 0; }
+}
+.hrp-notif-content { flex: 1; min-width: 0; }
+.hrp-notif-title {
+    font-size: .8rem;
     font-weight: 700;
-    letter-spacing: .03em;
+    letter-spacing: .05em;
     text-transform: uppercase;
-    color: #64748b;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
 }
-.ds-toast.ds-toast-success .ds-toast-title { color: #059669; }
-.ds-toast.ds-toast-error   .ds-toast-title { color: #dc2626; }
-.ds-toast-msg {
-    font-size: .835rem;
+.hrp-notif-success .hrp-notif-title { color: #059669; }
+.hrp-notif-error   .hrp-notif-title { color: #dc2626; }
+.hrp-notif-msg {
+    font-size: .875rem;
     font-weight: 500;
-    color: #0f172a;
-    line-height: 1.45;
+    color: #1e293b;
+    line-height: 1.5;
 }
-
-.ds-toast-close {
+.hrp-notif-close {
     flex-shrink: 0;
     background: none;
     border: none;
     cursor: pointer;
     color: #94a3b8;
-    padding: 2px;
-    border-radius: 5px;
-    transition: color .15s;
-    line-height: 1;
+    padding: 4px;
+    border-radius: 8px;
+    transition: color .15s, background .15s;
+    align-self: flex-start;
     margin-top: 2px;
 }
-.ds-toast-close:hover { color: #475569; }
-.ds-toast-close svg { width: 14px; height: 14px; display: block; }
-
-.ds-toast.ds-toast-hiding {
-    opacity: 0;
-    transform: translateX(20px);
+.hrp-notif-close:hover { color: #475569; background: #f1f5f9; }
+.hrp-notif-close svg { width: 16px; height: 16px; display: block; }
+.hrp-notif-progress {
+    height: 3px;
+    background: #f1f5f9;
+    overflow: hidden;
 }
+.hrp-notif-bar {
+    height: 100%;
+    transform-origin: left;
+    transform: scaleX(1);
+}
+.hrp-notif-success .hrp-notif-bar { background: linear-gradient(90deg, #059669, #10b981, #34d399); }
+.hrp-notif-error   .hrp-notif-bar { background: linear-gradient(90deg, #dc2626, #ef4444); }
 
 /* ==================== DOCUMENTS SECTION ==================== */
 .ds-docs-section {
@@ -1697,45 +1734,34 @@
     </div>
 </div>
 
-{{-- ══ TOASTS ══ --}}
-<div class="ds-toast-wrap" id="dsToastWrap">
-    @if(session('success'))
-    <div class="ds-toast ds-toast-success" id="dsToastSuccess">
-        <div class="ds-toast-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+{{-- ══ NOTIFICATION PREMIUM ══ --}}
+<div class="hrp-notif" id="hrpNotif" role="alert" aria-live="polite">
+    <div class="hrp-notif-inner">
+        <div class="hrp-notif-icon-bg">
+            <div class="hrp-notif-ring"></div>
+            <svg id="hrpNotifIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline class="hrp-check-path" points="20 6 9 17 4 12"/>
             </svg>
         </div>
-        <div class="ds-toast-body">
-            <div class="ds-toast-title">Succès</div>
-            <div class="ds-toast-msg">{{ session('success') }}</div>
+        <div class="hrp-notif-content">
+            <div class="hrp-notif-title" id="hrpNotifTitle">Succès</div>
+            <div class="hrp-notif-msg" id="hrpNotifMsg"></div>
         </div>
-        <button class="ds-toast-close" onclick="dsHideToast('dsToastSuccess')">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <button class="hrp-notif-close" onclick="hrpHideNotif()" aria-label="Fermer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
         </button>
     </div>
-    @endif
-    @if(session('error'))
-    <div class="ds-toast ds-toast-error" id="dsToastError">
-        <div class="ds-toast-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-        </div>
-        <div class="ds-toast-body">
-            <div class="ds-toast-title">Erreur</div>
-            <div class="ds-toast-msg">{{ session('error') }}</div>
-        </div>
-        <button class="ds-toast-close" onclick="dsHideToast('dsToastError')">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-        </button>
-    </div>
-    @endif
+    <div class="hrp-notif-progress"><div class="hrp-notif-bar" id="hrpNotifBar"></div></div>
 </div>
+
+@if(session('success'))
+<script>document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>showNotification(@json(session('success')),'success',7000),400));</script>
+@endif
+@if(session('error'))
+<script>document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>showNotification(@json(session('error')),'error',7000),400));</script>
+@endif
 @endsection
 
 @section('scripts')
@@ -1983,49 +2009,57 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeUploadModal();
 });
 
-// ── Toasts ──
-function dsShowToast(type, msg) {
-    const wrap = document.getElementById('dsToastWrap');
-    const id = 'dsToast_' + Date.now();
-    const icon = type === 'success'
-        ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`
-        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
-    const label = type === 'success' ? 'Succès' : 'Erreur';
-    const el = document.createElement('div');
-    el.className = `ds-toast ds-toast-${type}`;
-    el.id = id;
-    el.innerHTML = `
-        <div class="ds-toast-icon">${icon}</div>
-        <div class="ds-toast-body">
-            <div class="ds-toast-title">${label}</div>
-            <div class="ds-toast-msg">${msg}</div>
-        </div>
-        <button class="ds-toast-close" onclick="dsHideToast('${id}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>`;
-    wrap.appendChild(el);
-    setTimeout(() => dsHideToast(id), 5000);
+// ── Notifications premium ──
+let _hrpTimer = null, _hrpBarAnim = null;
+
+function showNotification(msg, type = 'success', duration = 6000) {
+    const notif   = document.getElementById('hrpNotif');
+    const titleEl = document.getElementById('hrpNotifTitle');
+    const msgEl   = document.getElementById('hrpNotifMsg');
+    const bar     = document.getElementById('hrpNotifBar');
+    const iconEl  = document.getElementById('hrpNotifIcon');
+
+    // Mettre à jour le type
+    notif.className = `hrp-notif hrp-notif-${type}`;
+
+    // Icône
+    if (type === 'success') {
+        iconEl.innerHTML = `<polyline class="hrp-check-path" points="20 6 9 17 4 12"/>`;
+    } else {
+        iconEl.innerHTML = `<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>`;
+    }
+
+    // Contenu
+    titleEl.textContent = type === 'success' ? 'Succès' : 'Erreur';
+    msgEl.textContent   = msg;
+
+    // Barre de progression
+    if (_hrpBarAnim) { _hrpBarAnim.cancel(); _hrpBarAnim = null; }
+    _hrpBarAnim = bar.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], {
+        duration, easing: 'linear', fill: 'forwards'
+    });
+
+    // Afficher
+    void notif.offsetWidth; // reflow
+    notif.classList.add('hrp-show');
+
+    // Auto-hide
+    if (_hrpTimer) clearTimeout(_hrpTimer);
+    _hrpTimer = setTimeout(hrpHideNotif, duration);
 }
 
-function dsHideToast(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.add('ds-toast-hiding');
-    setTimeout(() => el.remove(), 420);
+function hrpHideNotif() {
+    const notif = document.getElementById('hrpNotif');
+    notif.classList.remove('hrp-show');
+    if (_hrpTimer) { clearTimeout(_hrpTimer); _hrpTimer = null; }
 }
-
-// Auto-hide toasts affichés via session (page rechargée)
-['dsToastSuccess', 'dsToastError'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) setTimeout(() => dsHideToast(id), 5000);
-});
 
 // ── Soumission AJAX du formulaire ──
 uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (!fileInput.files.length) {
-        dsShowToast('error', 'Veuillez sélectionner un fichier.');
+        showNotification('Veuillez sélectionner un fichier.', 'error');
         return;
     }
 
@@ -2057,15 +2091,15 @@ uploadForm.addEventListener('submit', async (e) => {
         const data = await response.json();
 
         if (data.success) {
-            dsShowToast('success', data.message || 'Document uploadé avec succès.');
+            showNotification(data.message || 'Document uploadé avec succès.', 'success');
             closeUploadModal();
-            setTimeout(() => location.reload(), 1200);
+            setTimeout(() => location.reload(), 1400);
         } else {
             const msg = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Erreur lors de l\'upload.');
-            dsShowToast('error', msg);
+            showNotification(msg, 'error');
         }
     } catch (err) {
-        dsShowToast('error', 'Erreur réseau. Veuillez réessayer.');
+        showNotification('Erreur réseau. Veuillez réessayer.', 'error');
     } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalHtml;

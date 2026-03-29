@@ -40,7 +40,7 @@ return new class extends Migration
                     'name'                  => $data['name'],
                     'entreprise_id'         => $entrepriseId,
                     'password'              => Hash::make('RH@2025!'),
-                    'role'                  => 'agent_administratif',
+                    'role'                  => 'admin',
                     'status'                => 'active',
                     'force_password_change' => true,
                     'email_verified_at'     => now(),

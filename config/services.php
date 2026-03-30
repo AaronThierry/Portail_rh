@@ -36,6 +36,11 @@ return [
         'model' => env('OLLAMA_MODEL', 'llama3.2'),
     ],
 
+    'groq' => [
+        'api_key' => env('GROQ_API_KEY', ''),
+        'model'   => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
+    ],
+
     'wasender' => [
         'api_key' => env('WASENDER_API_KEY', ''),
     ],

@@ -6,25 +6,27 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Ollama Service — chatbot IA local (gratuit, zéro config cloud)
+ * OllamaService — propulsé par Groq (modèles open-source Llama 3, gratuit)
  *
- * Utilise Ollama pour alimenter l'assistant RH dans la section requêtes.
- * Ollama doit être installé et actif sur le serveur :
- *   curl -fsSL https://ollama.com/install.sh | sh
- *   ollama pull llama3.2
+ * Groq sert les mêmes modèles open-source qu'Ollama (Llama 3.x, Mixtral…)
+ * sans nécessiter d'installation serveur. API gratuite, ultra-rapide.
  *
  * Configuration requise dans .env :
- *   OLLAMA_URL=http://localhost:11434
- *   OLLAMA_MODEL=llama3.2
+ *   GROQ_API_KEY=gsk_...     (compte gratuit sur console.groq.com)
+ *   GROQ_MODEL=llama-3.3-70b-versatile   (optionnel)
+ *
+ * Fallback : si Groq échoue, essaie Ollama local (OLLAMA_URL)
  */
 class OllamaService
 {
-    protected string $url;
-    protected string $model;
+    protected string $groqKey;
+    protected string $groqModel;
+    protected string $ollamaUrl;
+    protected string $ollamaModel;
 
     protected const SYSTEM_PROMPT = <<<'PROMPT'
 Tu es un assistant RH virtuel intégré au Portail RH+.
-Tu aides les responsables et chefs d'entreprise à trouver des réponses à leurs questions avant de contacter le support humain.
+Tu aides les employés, responsables et chefs d'entreprise à trouver des réponses à leurs questions avant de contacter le support humain.
 
 Tes domaines de compétence :
 - Gestion des congés et absences (demandes, soldes, procédures)
@@ -43,50 +45,42 @@ PROMPT;
 
     public function __construct()
     {
-        $this->url   = rtrim(config('services.ollama.url', 'http://localhost:11434'), '/');
-        $this->model = config('services.ollama.model', 'llama3.2');
+        $this->groqKey     = config('services.groq.api_key', '');
+        $this->groqModel   = config('services.groq.model', 'llama-3.3-70b-versatile');
+        $this->ollamaUrl   = rtrim(config('services.ollama.url', 'http://localhost:11434'), '/');
+        $this->ollamaModel = config('services.ollama.model', 'llama3.2');
     }
 
     /**
      * Envoyer un message et obtenir la réponse du bot.
      *
-     * @param array $history Historique de la conversation [{role, content}, ...]
-     *                       Sans le message système (ajouté automatiquement)
-     * @return string Réponse générée par le modèle
+     * @param array $history Historique [{role, content}, ...] (sans message système)
+     * @return string Réponse générée
      */
     public function chat(array $history): string
     {
-        $messages = array_merge(
-            [['role' => 'system', 'content' => self::SYSTEM_PROMPT]],
-            $history
-        );
+        // Filtrer les doublons de messages système
+        $messages = array_values(array_filter($history, fn($m) => $m['role'] !== 'system'));
 
-        try {
-            $response = Http::connectTimeout(5)->timeout(30)->post("{$this->url}/api/chat", [
-                'model'    => $this->model,
-                'messages' => $messages,
-                'stream'   => false,
-            ]);
-
-            if ($response->successful()) {
-                return $response->json('message.content')
-                    ?? "Je n'ai pas pu générer une réponse. Veuillez réessayer.";
+        // ── 1. Essai Groq (open-source Llama 3, gratuit) ──
+        if (!empty($this->groqKey)) {
+            $result = $this->groqChat($messages, self::SYSTEM_PROMPT, 512);
+            if ($result !== null) {
+                return $result;
             }
+        }
 
-            Log::error('Ollama: erreur API', [
-                'status' => $response->status(),
-                'body'   => $response->body(),
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Ollama: exception', ['error' => $e->getMessage()]);
+        // ── 2. Fallback Ollama local ──
+        $result = $this->ollamaChat($messages);
+        if ($result !== null) {
+            return $result;
         }
 
         return "Je rencontre des difficultés techniques. Vous pouvez soumettre votre requête directement à un agent.";
     }
 
     /**
-     * Générer un résumé court de la conversation pour pré-remplir le formulaire
+     * Générer un résumé court de la conversation.
      */
     public function summarize(array $history): string
     {
@@ -99,32 +93,19 @@ PROMPT;
             ->map(fn($m) => ($m['role'] === 'user' ? 'Moi' : 'Assistant') . ' : ' . $m['content'])
             ->implode("\n\n");
 
-        $summaryMessages = [
-            [
-                'role'    => 'system',
-                'content' => 'Tu es un assistant qui résume des conversations de support. Sois très concis.',
-            ],
-            [
-                'role'    => 'user',
-                'content' => "Résume cette conversation en 2-3 phrases pour décrire le problème à un agent de support :\n\n{$conversation}",
-            ],
-        ];
+        $messages = [[
+            'role'    => 'user',
+            'content' => "Résume cette conversation en 2-3 phrases pour décrire le problème à un agent de support :\n\n{$conversation}",
+        ]];
+        $system = 'Tu es un assistant qui résume des conversations de support. Sois très concis.';
 
-        try {
-            $response = Http::connectTimeout(5)->timeout(20)->post("{$this->url}/api/chat", [
-                'model'    => $this->model,
-                'messages' => $summaryMessages,
-                'stream'   => false,
-            ]);
-
-            if ($response->successful()) {
-                return $response->json('message.content', $conversation);
+        if (!empty($this->groqKey)) {
+            $result = $this->groqChat($messages, $system, 200);
+            if ($result !== null) {
+                return $result;
             }
-        } catch (\Exception $e) {
-            Log::error('Ollama: erreur summarize', ['error' => $e->getMessage()]);
         }
 
-        // Fallback : retourner les 2 premiers messages utilisateur bruts
         return collect($history)
             ->where('role', 'user')
             ->take(2)
@@ -133,12 +114,10 @@ PROMPT;
     }
 
     /**
-     * Analyse l'historique et détecte si la conversation nécessite une escalade vers un agent humain.
-     * Retourne un tableau avec : requires_ticket, suggested_sujet, suggested_categorie, suggested_priorite
+     * Analyse l'historique et détecte si une escalade est nécessaire.
      */
     public function detectEscalation(array $history): array
     {
-        // Concaténer tous les messages utilisateur pour analyse
         $userText = strtolower(collect($history)
             ->where('role', 'user')
             ->pluck('content')
@@ -149,7 +128,6 @@ PROMPT;
             ->pluck('content')
             ->implode(' '));
 
-        // ── Détection de priorité urgente ──────────────────────────────
         $urgentKeywords = [
             'urgent', 'critique', 'bloquant', 'bloqué', 'panne', 'impossible',
             'immédiatement', 'maintenant', 'aujourd\'hui', 'grave', 'sérieux',
@@ -157,7 +135,6 @@ PROMPT;
         ];
         $isUrgent = collect($urgentKeywords)->contains(fn($k) => str_contains($userText, $k));
 
-        // ── Détection de catégorie ─────────────────────────────────────
         $facturationKeywords = [
             'facture', 'paiement', 'abonnement', 'prix', 'tarif', 'remboursement',
             'facturation', 'double débit', 'prélevé', 'erreur de paiement', 'billing',
@@ -175,7 +152,6 @@ PROMPT;
             $categorie = 'support';
         }
 
-        // ── Demande explicite de ticket par l'utilisateur ─────────────
         $lastUserMsg = strtolower(collect($history)->where('role', 'user')->last()['content'] ?? '');
         $explicitTicketKeywords = [
             'créer un ticket', 'creer un ticket', 'ouvrir un ticket', 'ouvre un ticket',
@@ -189,7 +165,6 @@ PROMPT;
             fn($k) => str_contains($lastUserMsg, $k)
         );
 
-        // ── Détection d'escalade nécessaire ───────────────────────────
         $escaladeKeywords = [
             'supprimer', 'modifier mes données', 'rembourse', 'annuler mon abonnement',
             'données perdues', 'bug bloquant', 'ne fonctionne pas du tout', 'panne totale',
@@ -202,13 +177,10 @@ PROMPT;
             fn($k) => str_contains($userText, $k) || str_contains($botText, $k)
         );
 
-        // Escalader après 5+ échanges sans résolution
-        $userMsgCount = collect($history)->where('role', 'user')->count();
-        if ($userMsgCount >= 5) {
+        if (collect($history)->where('role', 'user')->count() >= 5) {
             $requiresTicket = true;
         }
 
-        // ── Suggestion de sujet ────────────────────────────────────────
         $firstUserMsg = collect($history)->where('role', 'user')->first()['content'] ?? '';
         $sujet = mb_strlen($firstUserMsg) > 100
             ? mb_substr($firstUserMsg, 0, 97) . '…'
@@ -224,6 +196,67 @@ PROMPT;
 
     public function isEnabled(): bool
     {
-        return !empty($this->url) && !empty($this->model);
+        return !empty($this->groqKey) || !empty($this->ollamaUrl);
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Méthodes privées
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private function groqChat(array $messages, string $system, int $maxTokens): ?string
+    {
+        try {
+            $payload = [
+                'model'       => $this->groqModel,
+                'max_tokens'  => $maxTokens,
+                'messages'    => array_merge(
+                    [['role' => 'system', 'content' => $system]],
+                    $messages
+                ),
+            ];
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->groqKey,
+                'Content-Type'  => 'application/json',
+            ])
+            ->connectTimeout(5)
+            ->timeout(30)
+            ->post('https://api.groq.com/openai/v1/chat/completions', $payload);
+
+            if ($response->successful()) {
+                return $response->json('choices.0.message.content') ?? null;
+            }
+
+            Log::error('Groq API: erreur', [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Groq API: exception', ['error' => $e->getMessage()]);
+        }
+
+        return null;
+    }
+
+    private function ollamaChat(array $messages): ?string
+    {
+        try {
+            $response = Http::connectTimeout(3)->timeout(20)->post("{$this->ollamaUrl}/api/chat", [
+                'model'    => $this->ollamaModel,
+                'messages' => array_merge(
+                    [['role' => 'system', 'content' => self::SYSTEM_PROMPT]],
+                    $messages
+                ),
+                'stream'   => false,
+            ]);
+
+            if ($response->successful()) {
+                return $response->json('message.content') ?? null;
+            }
+        } catch (\Exception $e) {
+            Log::error('Ollama: exception', ['error' => $e->getMessage()]);
+        }
+
+        return null;
     }
 }

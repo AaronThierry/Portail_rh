@@ -62,7 +62,7 @@ PROMPT;
         // Filtrer les doublons de messages système
         $messages = array_values(array_filter($history, fn($m) => $m['role'] !== 'system'));
 
-        // ── 1. Essai Groq (open-source Llama 3, gratuit) ──
+        // ── 1. Groq (Llama 3 open-source, gratuit) ──
         if (!empty($this->groqKey)) {
             $result = $this->groqChat($messages, self::SYSTEM_PROMPT, 512);
             if ($result !== null) {
@@ -70,13 +70,14 @@ PROMPT;
             }
         }
 
-        // ── 2. Fallback Ollama local ──
+        // ── 2. Ollama local (si installé) ──
         $result = $this->ollamaChat($messages);
         if ($result !== null) {
             return $result;
         }
 
-        return "Je rencontre des difficultés techniques. Vous pouvez soumettre votre requête directement à un agent.";
+        // ── 3. Fallback par règles — toujours disponible, sans API ──
+        return $this->ruleBasedChat($messages);
     }
 
     /**
@@ -196,12 +197,61 @@ PROMPT;
 
     public function isEnabled(): bool
     {
-        return !empty($this->groqKey) || !empty($this->ollamaUrl);
+        return true; // Toujours activé grâce au fallback par règles
     }
 
     // ──────────────────────────────────────────────────────────────────────────
     // Méthodes privées
     // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Fallback intelligent basé sur des règles RH — fonctionne sans API.
+     */
+    private function ruleBasedChat(array $messages): string
+    {
+        $lastMsg = strtolower(collect($messages)->where('role', 'user')->last()['content'] ?? '');
+
+        $rules = [
+            // Salutations
+            ['keywords' => ['bonjour', 'bonsoir', 'salut', 'hello', 'hi', 'coucou', 'bonne journée'],
+             'response' => "Bonjour ! Je suis votre assistant RH. Comment puis-je vous aider aujourd'hui ? Vous pouvez me poser des questions sur vos congés, bulletins de paie, ou tout autre sujet RH."],
+
+            // Congés
+            ['keywords' => ['congé', 'conges', 'vacances', 'absence', 'solde', 'rtt', 'arrêt maladie', 'arrêt de travail'],
+             'response' => "Pour vos congés et absences, vous pouvez soumettre une demande directement depuis votre espace employé, section \"Mes absences\". Votre solde de congés disponible est affiché sur votre tableau de bord. Si vous avez un arrêt maladie, transmettez le volet 3 à votre employeur sous 48h. Avez-vous une question spécifique ?"],
+
+            // Bulletins de paie
+            ['keywords' => ['bulletin', 'paie', 'salaire', 'fiche de paie', 'rémunération', 'virement', 'paiement salaire'],
+             'response' => "Vos bulletins de paie sont accessibles dans l'espace \"Mes bulletins\" de votre portail. Ils sont généralement disponibles en fin de mois. Si un bulletin est manquant ou comporte une erreur, je vous recommande de le signaler via un ticket de support en précisant le mois concerné."],
+
+            // Connexion / mot de passe
+            ['keywords' => ['connexion', 'connecter', 'mot de passe', 'login', 'identifiant', 'compte bloqué', 'accès refusé', 'oublié'],
+             'response' => "Pour les problèmes de connexion, utilisez le lien \"Mot de passe oublié\" sur la page de connexion pour réinitialiser votre mot de passe par email. Si votre compte est bloqué après plusieurs tentatives, attendez 15 minutes ou contactez votre administrateur RH. Avez-vous pu résoudre le problème ?"],
+
+            // Documents
+            ['keywords' => ['document', 'contrat', 'attestation', 'certificat', 'justificatif', 'dossier'],
+             'response' => "Vos documents RH (contrat, attestations, certificats) sont disponibles dans la section \"Mon dossier\" de votre espace employé. Pour demander un document spécifique non disponible, créez un ticket de support en précisant le type de document souhaité."],
+
+            // Ticket / support
+            ['keywords' => ['ticket', 'support', 'problème', 'signaler', 'incident', 'bug', 'erreur', 'contacter', 'agent'],
+             'response' => "Je vais vous aider à créer un ticket de support. Décrivez brièvement votre problème dans le formulaire ci-dessous — un agent RH vous répondra dans les meilleurs délais. Pouvez-vous me donner plus de détails sur votre situation ?"],
+
+            // Remerciements
+            ['keywords' => ['merci', 'thank', 'parfait', 'super', "c'est bon", 'ok', 'compris', 'd\'accord'],
+             'response' => "Avec plaisir ! N'hésitez pas si vous avez d'autres questions. Bonne journée !"],
+        ];
+
+        foreach ($rules as $rule) {
+            foreach ($rule['keywords'] as $keyword) {
+                if (str_contains($lastMsg, $keyword)) {
+                    return $rule['response'];
+                }
+            }
+        }
+
+        // Réponse par défaut contextuelle
+        return "Je comprends votre question. Pour vous apporter la meilleure réponse possible, je vous suggère de préciser votre demande ou de créer un ticket de support — un agent RH qualifié vous répondra rapidement. Avez-vous d'autres détails à partager ?";
+    }
 
     private function groqChat(array $messages, string $system, int $maxTokens): ?string
     {

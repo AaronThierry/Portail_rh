@@ -148,8 +148,8 @@ class UserController extends Controller
      */
     protected function getRedirectRouteByRole($user): string
     {
-        // Super Admin, Admin, RH, Manager et Chef d'Entreprise → portail admin
-        if ($user->hasRole(['Super Admin', 'Admin', 'RH', 'Manager', "Chef d'Entreprise"])) {
+        // Super Admin, Admin, RH, Manager, Chef d'Entreprise et Agent administratif → portail admin
+        if ($user->hasRole(['Super Admin', 'Admin', 'RH', 'Manager', "Chef d'Entreprise", 'Agent administratif'])) {
             return route('admin.dashboard');
         }
 

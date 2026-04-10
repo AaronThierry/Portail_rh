@@ -1030,6 +1030,7 @@
 /* Modal Body */
 .usr-modal-body {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
     padding: 28px;
     background: white;
@@ -1239,6 +1240,7 @@
     padding: 20px 28px;
     background: var(--usr-gray-50);
     border-top: 1px solid var(--usr-gray-200);
+    flex-shrink: 0;
 }
 
 .usr-btn {

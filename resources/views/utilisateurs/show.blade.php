@@ -7,7 +7,7 @@
     <!-- Header avec retour -->
     <div class="mb-8">
         <div class="flex items-center gap-4 mb-4">
-            <a href="{{ route('utilisateurs.index') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+            <a href="{{ route('admin.utilisateurs.index') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
@@ -68,7 +68,7 @@
 
                     <!-- Actions -->
                     <div class="flex gap-2 justify-center">
-                        <a href="{{ route('utilisateurs.edit', $user->id) }}" class="btn bg-white text-purple-600 hover:bg-purple-50 flex-1">
+                        <a href="{{ route('admin.utilisateurs.edit', $user->id) }}" class="btn bg-white text-purple-600 hover:bg-purple-50 flex-1">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>

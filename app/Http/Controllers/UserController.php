@@ -416,6 +416,15 @@ class UserController extends Controller
     }
 
     /**
+     * Affiche le formulaire d'édition d'un utilisateur
+     */
+    public function edit($id)
+    {
+        $user = User::with('personnel')->findOrFail($id);
+        return view('utilisateurs.edit', compact('user'));
+    }
+
+    /**
      * Crée un nouvel utilisateur
      */
     public function store(Request $request)

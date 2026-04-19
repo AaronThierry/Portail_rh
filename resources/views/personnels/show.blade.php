@@ -2157,7 +2157,7 @@ select.form-input-compact:hover {
                     <span class="info-value-modern">{{ $personnel->numero_identification ?? '—' }}</span>
                 </div>
                 <div class="info-item-modern">
-                    <span class="info-label-modern">Police d'assurance</span>
+                    <span class="info-label-modern">Police</span>
                     <span class="info-value-modern">{{ $personnel->police ?? '—' }}</span>
                 </div>
             </div>
@@ -2410,8 +2410,8 @@ select.form-input-compact:hover {
                             <input type="text" id="edit_numero_identification" name="numero_identification" class="form-input-compact" placeholder="CNI, Passeport...">
                         </div>
                         <div class="form-group-compact">
-                            <label for="edit_police" class="form-label-compact">Police d'assurance <span style="color:#ef4444">*</span></label>
-                            <input type="text" id="edit_police" name="police" class="form-input-compact" placeholder="N° de police d'assurance" required>
+                            <label for="edit_police" class="form-label-compact">Police <span style="color:#ef4444">*</span></label>
+                            <input type="text" id="edit_police" name="police" class="form-input-compact" placeholder="N° de police" required>
                         </div>
                     </div>
                 </div>

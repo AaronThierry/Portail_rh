@@ -82,7 +82,7 @@ class UpdatePersonnelRequest extends FormRequest
             'date_naissance.before' => 'La date de naissance doit être dans le passé',
             'photo.image' => 'Le fichier doit être une image',
             'photo.max' => 'La photo ne doit pas dépasser 2 Mo',
-            'police.required' => 'Le numéro de police d\'assurance est obligatoire',
+            'police.required' => 'Le numéro de police est obligatoire',
         ];
     }
 }

@@ -39,11 +39,14 @@
 
 /* ── Page wrapper ── */
 .bi-page {
-    background: var(--bi-bg);
+    background: #0b1120 !important;
     min-height: 100vh;
     font-family: 'DM Sans', sans-serif;
-    color: var(--bi-txt);
+    color: #e2e8f0;
 }
+/* Force dark background on content containers */
+.bi-page .bi-body,
+.bi-page ~ * { background: transparent; }
 
 /* ── HERO ── */
 .bi-hero {
@@ -159,12 +162,12 @@
 
 /* ── CARDS ── */
 .bi-card {
-    background: var(--bi-surf2);
-    border: 1px solid var(--bi-bdr);
+    background: #1a2236;
+    border: 1px solid rgba(255,255,255,.08);
     border-radius: 18px;
     padding: 1.75rem;
     margin-bottom: 1.25rem;
-    box-shadow: var(--bi-sh);
+    box-shadow: 0 1px 4px rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.25);
     animation: bi-fadeUp .45s ease;
 }
 .bi-card-title {
@@ -188,8 +191,8 @@
     width: 30px; height: 30px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: .75rem; font-weight: 700; font-family: 'DM Mono', monospace;
-    background: var(--bi-surf3); color: var(--bi-txt3);
-    border: 1.5px solid var(--bi-bdr2); flex-shrink: 0;
+    background: #1e2a3e; color: #4b5563;
+    border: 1.5px solid rgba(255,255,255,.14); flex-shrink: 0;
     transition: all .3s;
 }
 .bi-step.active .bi-step-num {
@@ -207,8 +210,8 @@
 
 /* ── NAMING CONVENTION ── */
 .bi-convention {
-    background: var(--bi-surf3);
-    border: 1px solid var(--bi-bdr2);
+    background: #1e2a3e;
+    border: 1px solid rgba(255,255,255,.14);
     border-radius: 12px;
     padding: 1.1rem 1.35rem;
     margin-bottom: 1.5rem;
@@ -259,8 +262,8 @@
 .bi-label-req { color: var(--bi-red); margin-left: 2px; }
 .bi-select {
     padding: .6rem .9rem;
-    border: 1.5px solid var(--bi-bdr); border-radius: 10px;
-    background: var(--bi-surf3); color: var(--bi-txt);
+    border: 1.5px solid rgba(255,255,255,.08); border-radius: 10px;
+    background: #1e2a3e; color: #e2e8f0;
     font-family: 'DM Sans', sans-serif; font-size: .85rem;
     outline: none; transition: border-color .2s, box-shadow .2s;
     appearance: none;
@@ -269,7 +272,7 @@
     background-position: right .75rem center;
     padding-right: 2.5rem;
 }
-.bi-select:focus { border-color: var(--bi-ind); box-shadow: 0 0 0 3px var(--bi-ind-l); }
+.bi-select:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.18); }
 .bi-select option { background: #1a2236; color: #e2e8f0; }
 .bi-error-msg { font-size: .75rem; color: var(--bi-red); }
 
@@ -277,7 +280,7 @@
 .bi-toggle-row {
     display: flex; align-items: center; gap: .75rem;
     padding: .8rem 1rem;
-    background: var(--bi-surf3); border: 1.5px solid var(--bi-bdr);
+    background: #1e2a3e; border: 1.5px solid rgba(255,255,255,.08);
     border-radius: 10px; cursor: pointer;
     transition: border-color .2s, background .2s;
     height: 100%;
@@ -302,7 +305,7 @@
     cursor: pointer;
     position: relative;
     transition: all .25s cubic-bezier(.4,0,.2,1);
-    background: var(--bi-surf3);
+    background: #1e2a3e;
     overflow: hidden;
 }
 .bi-drop-zone::before {
@@ -444,26 +447,26 @@
 .bi-preview-table th {
     text-align: left; padding: .6rem .9rem;
     font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
-    color: var(--bi-txt3); background: var(--bi-surf);
-    border-bottom: 1px solid var(--bi-bdr);
+    color: #4b5563; background: #111827;
+    border-bottom: 1px solid rgba(255,255,255,.08);
 }
 .bi-preview-table td {
     padding: .75rem .9rem;
-    border-bottom: 1px solid var(--bi-bdr);
-    color: var(--bi-txt2); vertical-align: middle;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    color: #94a3b8; vertical-align: middle;
 }
 .bi-preview-table tr:last-child td { border-bottom: none; }
 
 /* Row status */
-.bi-row-ok   td { background: rgba(16,185,129,.05); }
-.bi-row-nf   td { background: rgba(239,68,68,.05); }
-.bi-row-dup  td { background: rgba(245,158,11,.05); }
-.bi-row-pend td { background: var(--bi-surf2); }
-.bi-row-parse td { background: rgba(75,85,99,.08); }
-.bi-row-ok:hover   td { background: rgba(16,185,129,.1); }
-.bi-row-nf:hover   td { background: rgba(239,68,68,.1); }
-.bi-row-dup:hover  td { background: rgba(245,158,11,.1); }
-.bi-row-pend:hover td { background: var(--bi-surf3); }
+.bi-row-ok   td { background: rgba(16,185,129,.06); }
+.bi-row-nf   td { background: rgba(239,68,68,.06); }
+.bi-row-dup  td { background: rgba(245,158,11,.06); }
+.bi-row-pend td { background: #1a2236; }
+.bi-row-parse td { background: rgba(255,255,255,.02); }
+.bi-row-ok:hover   td { background: rgba(16,185,129,.12); }
+.bi-row-nf:hover   td { background: rgba(239,68,68,.12); }
+.bi-row-dup:hover  td { background: rgba(245,158,11,.12); }
+.bi-row-pend:hover td { background: #1e2a3e; }
 
 /* Status pill */
 .bi-pill {
@@ -497,12 +500,12 @@
 .bi-hist-table th {
     text-align: left; padding: .55rem .9rem;
     font-size: .63rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
-    color: var(--bi-txt3); border-bottom: 1px solid var(--bi-bdr);
+    color: #4b5563; border-bottom: 1px solid rgba(255,255,255,.08);
 }
-.bi-hist-table td { padding: .85rem .9rem; border-bottom: 1px solid var(--bi-bdr); font-size: .82rem; color: var(--bi-txt2); }
+.bi-hist-table td { padding: .85rem .9rem; border-bottom: 1px solid rgba(255,255,255,.05); font-size: .82rem; color: #94a3b8; }
 .bi-hist-table tr:last-child td { border-bottom: none; }
-.bi-hist-table tr:hover td { background: var(--bi-surf3); }
-.bi-hist-table strong { color: var(--bi-txt); font-weight: 600; }
+.bi-hist-table tr:hover td { background: #1e2a3e; }
+.bi-hist-table strong { color: #e2e8f0; font-weight: 600; }
 
 .bi-badge {
     display: inline-flex; align-items: center; gap: .3rem;
@@ -525,15 +528,24 @@
 .bi-empty { text-align: center; padding: 2.5rem 1rem; color: var(--bi-txt3); }
 .bi-empty-icon {
     width: 64px; height: 64px; border-radius: 18px;
-    background: var(--bi-ind-l); display: flex; align-items: center; justify-content: center;
-    color: var(--bi-ind); margin: 0 auto .75rem;
+    background: rgba(99,102,241,.18); display: flex; align-items: center; justify-content: center;
+    color: #6366f1; margin: 0 auto .75rem;
 }
 .bi-empty-icon svg { width: 30px; height: 30px; }
-.bi-empty-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--bi-txt); margin: 0 0 .3rem; }
-.bi-empty-sub { font-size: .82rem; color: var(--bi-txt3); margin: 0; }
+.bi-empty-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #e2e8f0; margin: 0 0 .3rem; }
+.bi-empty-sub { font-size: .82rem; color: #4b5563; margin: 0; }
 
 /* Divider */
-.bi-divider { border: none; border-top: 1px solid var(--bi-bdr); margin: 1.5rem 0; }
+.bi-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 1.5rem 0; }
+
+/* Hint message */
+.bi-hint-msg {
+    font-size: .78rem; color: #f59e0b; font-weight: 500;
+    display: none; align-items: center; gap: .4rem;
+    animation: bi-fadeUp .25s ease;
+}
+.bi-hint-msg.visible { display: flex; }
+.bi-hint-msg svg { width: 15px; height: 15px; flex-shrink: 0; }
 </style>
 @endsection
 
@@ -804,7 +816,7 @@
             </div>
 
             {{-- Actions étape 2 --}}
-            <div class="bi-actions">
+            <div class="bi-actions" style="flex-wrap:wrap;">
                 <button type="button" class="bi-btn bi-btn-teal" id="lancerImportBtn" disabled>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="16 16 12 12 8 16"/>
@@ -820,6 +832,10 @@
                 <div class="bi-progress-msg" id="importMsg">
                     <svg class="bi-spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
                     Import en cours, veuillez patienter…
+                </div>
+                <div class="bi-hint-msg" id="lancerHintMsg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Cliquez d'abord sur <strong style="color:#fbbf24;margin:0 .2rem;">Analyser les fichiers</strong> (sélectionnez l'entreprise si ce n'est pas fait)
                 </div>
             </div>
         </div>
@@ -922,6 +938,7 @@ const phasePreview   = document.getElementById('phasePreview');
 const previewTbody   = document.getElementById('previewTbody');
 const lancerBtn      = document.getElementById('lancerImportBtn');
 const importMsg      = document.getElementById('importMsg');
+const lancerHintMsg  = document.getElementById('lancerHintMsg');
 const resetBtn       = document.getElementById('resetBtn');
 const nfAlert        = document.getElementById('nfAlert');
 const nfAlertText    = document.getElementById('nfAlertText');
@@ -1142,9 +1159,20 @@ analyserBtn.addEventListener('click', async () => {
 
 // ── Lancer l'import ──────────────────────────────────────────
 lancerBtn.addEventListener('click', () => {
-    if (!currentFile || !entrepriseEl.value || !analysed) return;
+    if (!currentFile || !entrepriseEl.value || !analysed) {
+        lancerHintMsg.classList.add('visible');
+        // Scroll to analyser button and flash it
+        analyserBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        analyserBtn.style.boxShadow = '0 0 0 4px rgba(245,158,11,.5)';
+        setTimeout(() => { analyserBtn.style.boxShadow = ''; lancerHintMsg.classList.remove('visible'); }, 3000);
+        return;
+    }
     const okCount = parsedFiles.filter(r => r.statut === 'ok').length;
-    if (okCount === 0) return;
+    if (okCount === 0) {
+        lancerHintMsg.classList.add('visible');
+        setTimeout(() => lancerHintMsg.classList.remove('visible'), 3000);
+        return;
+    }
 
     lancerBtn.disabled = true;
     lancerBtn.innerHTML = `<svg class="bi-spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Envoi…`;

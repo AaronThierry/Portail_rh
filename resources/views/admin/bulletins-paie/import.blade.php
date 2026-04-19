@@ -915,7 +915,7 @@
 @endsection
 
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="{{ asset('assets/js/jszip.min.js') }}"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════
 //  BULLETIN IMPORT — 3-phase smart import with AJAX preview
@@ -1149,7 +1149,8 @@ analyserBtn.addEventListener('click', async () => {
 
         analysed = true; updateChips(); renderPreviewTable(); setStep(2);
     } catch (err) {
-        alert('Erreur lors de l\'analyse : ' + err.message);
+        nfAlertText.innerHTML = '<strong>Erreur lors de l\'analyse :</strong> ' + err.message + ' — Vérifiez que les routes ont bien été rechargées sur le serveur (<code>php artisan route:clear</code>).';
+        nfAlert.style.display = 'flex';
     } finally {
         analyserBtn.disabled = false;
         analyserBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Ré-analyser`;

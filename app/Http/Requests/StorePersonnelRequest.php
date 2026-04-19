@@ -44,6 +44,7 @@ class StorePersonnelRequest extends FormRequest
 
             // Documents
             'numero_identification' => ['nullable', 'string', 'max:100', Rule::unique('personnels', 'numero_identification')->whereNull('deleted_at')],
+            'police' => ['required', 'string', 'max:100'],
 
             // Poste et contrat
             'poste' => ['nullable', 'string', 'max:150'],
@@ -74,6 +75,7 @@ class StorePersonnelRequest extends FormRequest
             'prenoms.required' => 'Le(s) prénom(s) est/sont requis',
             'email.email' => 'L\'adresse email doit être valide',
             'email.unique' => 'Cet email est déjà utilisé',
+            'police.required' => 'Le numéro de police d\'assurance est obligatoire',
             'type_contrat.required' => 'Le type de contrat est requis',
             'date_fin_contrat.required_if' => 'La date de fin de contrat est requise pour un CDD',
             'date_fin_contrat.after' => 'La date de fin doit être après la date d\'embauche',
@@ -101,6 +103,7 @@ class StorePersonnelRequest extends FormRequest
             'email' => 'email',
             'telephone' => 'téléphone',
             'numero_identification' => 'numéro d\'identification',
+            'police' => 'police d\'assurance',
             'poste' => 'poste',
             'date_naissance' => 'date de naissance',
             'type_contrat' => 'type de contrat',

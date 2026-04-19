@@ -2156,6 +2156,10 @@ select.form-input-compact:hover {
                     <span class="info-label-modern">N° Identification</span>
                     <span class="info-value-modern">{{ $personnel->numero_identification ?? '—' }}</span>
                 </div>
+                <div class="info-item-modern">
+                    <span class="info-label-modern">Police d'assurance</span>
+                    <span class="info-value-modern">{{ $personnel->police ?? '—' }}</span>
+                </div>
             </div>
         </div>
 
@@ -2404,6 +2408,10 @@ select.form-input-compact:hover {
                         <div class="form-group-compact">
                             <label for="edit_numero_identification" class="form-label-compact">N° Identification</label>
                             <input type="text" id="edit_numero_identification" name="numero_identification" class="form-input-compact" placeholder="CNI, Passeport...">
+                        </div>
+                        <div class="form-group-compact">
+                            <label for="edit_police" class="form-label-compact">Police d'assurance <span style="color:#ef4444">*</span></label>
+                            <input type="text" id="edit_police" name="police" class="form-input-compact" placeholder="N° de police d'assurance" required>
                         </div>
                     </div>
                 </div>
@@ -3128,6 +3136,7 @@ async function editPersonnel() {
         sexe: "{{ $personnel->sexe ?? '' }}",
         date_naissance: "{{ $personnel->date_naissance ? $personnel->date_naissance->format('Y-m-d') : '' }}",
         numero_identification: "{{ $personnel->numero_identification ?? '' }}",
+        police: "{{ $personnel->police ?? '' }}",
         email: "{{ $personnel->email ?? '' }}",
         telephone_code_pays: "{{ $personnel->telephone_code_pays ?? '' }}",
         telephone: "{{ $personnel->telephone ?? '' }}",
@@ -3152,6 +3161,7 @@ async function editPersonnel() {
     document.getElementById('edit_sexe').value = personnel.sexe || '';
     document.getElementById('edit_date_naissance').value = personnel.date_naissance || '';
     document.getElementById('edit_numero_identification').value = personnel.numero_identification || '';
+    document.getElementById('edit_police').value = personnel.police || '';
     document.getElementById('edit_telephone_code_pays').value = personnel.telephone_code_pays || '';
     document.getElementById('edit_telephone').value = personnel.telephone || '';
     document.getElementById('edit_telephone_whatsapp').checked = personnel.telephone_whatsapp;

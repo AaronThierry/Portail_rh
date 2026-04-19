@@ -46,6 +46,7 @@ class UpdatePersonnelRequest extends FormRequest
 
             // Documents
             'numero_identification' => ['nullable', 'string', 'max:100', Rule::unique('personnels', 'numero_identification')->ignore($personnelId)->whereNull('deleted_at')],
+            'police' => ['sometimes', 'required', 'string', 'max:100'],
 
             // Poste et contrat
             'poste' => ['nullable', 'string', 'max:150'],
@@ -81,6 +82,7 @@ class UpdatePersonnelRequest extends FormRequest
             'date_naissance.before' => 'La date de naissance doit être dans le passé',
             'photo.image' => 'Le fichier doit être une image',
             'photo.max' => 'La photo ne doit pas dépasser 2 Mo',
+            'police.required' => 'Le numéro de police d\'assurance est obligatoire',
         ];
     }
 }

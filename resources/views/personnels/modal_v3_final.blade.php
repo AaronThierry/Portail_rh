@@ -999,6 +999,11 @@
                                 <input type="text" name="numero_identification" class="pm-form-input" placeholder="CNI, Passeport, etc.">
                             </div>
                             <div class="pm-form-group">
+                                <label class="pm-form-label required">Police d'assurance</label>
+                                <input type="text" name="police" id="pm_police" class="pm-form-input" placeholder="N° de police d'assurance" required>
+                                <span class="pm-form-hint">Numéro de police d'assurance obligatoire</span>
+                            </div>
+                            <div class="pm-form-group">
                                 <label class="pm-form-label">Photo</label>
                                 <input type="file" name="photo" class="pm-form-input" accept="image/*">
                                 <span class="pm-form-hint">JPG, PNG - Max 2 Mo</span>
@@ -1242,6 +1247,14 @@ function validateStepV3(step) {
             isValid = false;
         }
         return isValid;
+    }
+
+    if (step === 2) {
+        const police = form.querySelector('[name="police"]');
+        if (!police.value.trim()) {
+            showFieldError(police, 'Le numéro de police d\'assurance est obligatoire');
+            return false;
+        }
     }
 
     if (step === 3) {

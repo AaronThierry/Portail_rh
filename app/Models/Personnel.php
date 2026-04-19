@@ -100,6 +100,7 @@ class Personnel extends Model
         'telephone_whatsapp',
         'callmebot_apikey',
         'numero_identification',
+        'police',
         'poste',
         'date_naissance',
         'type_contrat',

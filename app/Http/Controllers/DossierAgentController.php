@@ -180,8 +180,9 @@ class DossierAgentController extends Controller
             // Chemin de stockage organisé
             $chemin = DocumentAgent::genererCheminStockage($personnel, $nomFichier);
 
-            // Stockage du fichier
-            Storage::disk('dossiers_agents')->put($chemin, file_get_contents($file));
+            // Stockage du fichier (stream pour éviter les limites mémoire)
+            $dir = ltrim(dirname($chemin), '/\\');
+            Storage::disk('dossiers_agents')->putFileAs($dir, $file, $nomFichier);
 
             // Création du document en base
             $document = DocumentAgent::create([
@@ -525,7 +526,8 @@ class DossierAgentController extends Controller
                 $nomFichier = Str::uuid() . '.' . $extension;
                 $chemin = DocumentAgent::genererCheminStockage($personnel, $nomFichier);
 
-                Storage::disk('dossiers_agents')->put($chemin, file_get_contents($file));
+                $dir = ltrim(dirname($chemin), '/\\');
+                Storage::disk('dossiers_agents')->putFileAs($dir, $file, $nomFichier);
 
                 $document = DocumentAgent::create([
                     'personnel_id'  => $personnel->id,

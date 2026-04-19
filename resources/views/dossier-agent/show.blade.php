@@ -2088,7 +2088,12 @@ uploadForm.addEventListener('submit', async (e) => {
             body: formData,
         });
 
-        const data = await response.json();
+        let data;
+        try { data = await response.json(); }
+        catch {
+            showNotification(`Erreur serveur (${response.status}). Veuillez réessayer.`, 'error');
+            return;
+        }
 
         if (data.success) {
             showNotification(data.message || 'Document uploadé avec succès.', 'success');
@@ -2099,7 +2104,7 @@ uploadForm.addEventListener('submit', async (e) => {
             showNotification(msg, 'error');
         }
     } catch (err) {
-        showNotification('Erreur réseau. Veuillez réessayer.', 'error');
+        showNotification('Erreur réseau : ' + (err.message || 'Veuillez réessayer.'), 'error');
     } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalHtml;

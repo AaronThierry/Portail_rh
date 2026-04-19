@@ -233,6 +233,39 @@ class PersonnelController extends Controller
     }
 
     /**
+     * Upload AJAX de la photo de profil
+     */
+    public function uploadPhoto(Request $request, $personnelId)
+    {
+        $request->validate([
+            'photo' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        try {
+            $personnel = Personnel::findOrFail($personnelId);
+
+            if ($personnel->entreprise_id !== auth()->user()->entreprise_id && !auth()->user()->hasRole('Super Admin')) {
+                return response()->json(['success' => false, 'message' => 'Accès non autorisé'], 403);
+            }
+
+            if ($personnel->photo) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($personnel->photo);
+            }
+
+            $path = $request->file('photo')->store('personnels/photos', 'public');
+            $personnel->update(['photo' => $path]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Photo mise à jour avec succès',
+                'photo_url' => $personnel->fresh()->photo_url,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Erreur lors de l\'upload'], 500);
+        }
+    }
+
+    /**
      * Supprimer un personnel (soft delete)
      */
     public function destroy($id)

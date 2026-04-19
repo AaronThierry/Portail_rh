@@ -141,6 +141,7 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
 
     // Gestion des personnels (Super Admin : CRUD complet / Chef d'Entreprise : lecture seule via contrôleur)
     Route::resource('personnels', PersonnelController::class);
+    Route::post('personnels/{personnel}/upload-photo', [PersonnelController::class, 'uploadPhoto'])->name('personnels.upload-photo');
 
     // Gestion des départements (désactivé)
     // Route::resource('departements', DepartementController::class);

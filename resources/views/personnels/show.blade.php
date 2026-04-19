@@ -29,7 +29,7 @@
 }
 
 .back-button:hover {
-    color: #667eea;
+    color: #6366f1;
     transform: translateX(-4px);
 }
 
@@ -55,7 +55,7 @@
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #0d9488 100%);
 }
 
 .personnel-header:hover {
@@ -68,7 +68,7 @@
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #667eea;
+    border: 4px solid #6366f1;
     box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
 }
 
@@ -118,7 +118,7 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #0d9488 100%);
     color: #ffffff;
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
@@ -174,7 +174,7 @@
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #0d9488 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -207,7 +207,7 @@
     padding: 6px;
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     border-radius: 8px;
-    color: #667eea;
+    color: #6366f1;
 }
 
 .detail-row {
@@ -354,7 +354,7 @@
 }
 
 .modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #0d9488 100%);
     padding: 24px;
     border-radius: 20px 20px 0 0;
     display: flex;
@@ -435,7 +435,7 @@
 
 .form-input:focus, .form-select:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #6366f1;
     box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
 }
 
@@ -470,7 +470,7 @@
     width: 20px;
     height: 20px;
     cursor: pointer;
-    accent-color: #667eea;
+    accent-color: #6366f1;
 }
 
 .modal-footer {
@@ -601,7 +601,7 @@
     justify-content: center;
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
     border-radius: 10px;
-    color: #667eea;
+    color: #6366f1;
 }
 
 .section-title {
@@ -666,7 +666,7 @@ textarea.form-input {
 }
 
 .status-toggle:hover {
-    border-color: #667eea;
+    border-color: #6366f1;
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
 }
 
@@ -837,7 +837,7 @@ textarea.form-input {
 }
 
 .section-title-compact svg {
-    color: #667eea;
+    color: #6366f1;
     flex-shrink: 0;
 }
 
@@ -900,7 +900,7 @@ select.form-input-compact {
 
 /* Select hover effect */
 select.form-input-compact:hover {
-    border-color: #667eea;
+    border-color: #6366f1;
     background-color: var(--bg-secondary);
 }
 
@@ -911,7 +911,7 @@ select.form-input-compact:hover {
 
 .form-input-compact:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #6366f1;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -936,7 +936,7 @@ select.form-input-compact:hover {
     width: 18px;
     height: 18px;
     cursor: pointer;
-    accent-color: #667eea;
+    accent-color: #6366f1;
 }
 
 .status-toggle-compact {
@@ -948,7 +948,7 @@ select.form-input-compact:hover {
 }
 
 .status-toggle-compact:hover {
-    border-color: #667eea;
+    border-color: #6366f1;
 }
 
 .toggle-input-compact {
@@ -1008,7 +1008,7 @@ select.form-input-compact:hover {
     align-items: center;
     gap: 16px;
     padding: 20px 24px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #0d9488 100%);
     border-radius: 16px 16px 0 0;
     position: relative;
     overflow: hidden;
@@ -1284,7 +1284,7 @@ select.form-input-compact:hover {
 }
 
 .btn-primary-compact {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #0d9488 100%);
     color: #ffffff;
 }
 
@@ -1463,7 +1463,7 @@ select.form-input-compact:hover {
     display: flex;
     align-items: center;
     gap: 6px;
-    color: #667eea;
+    color: #6366f1;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.2s ease;
@@ -1513,7 +1513,7 @@ select.form-input-compact:hover {
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #312e81 0%, #6366f1 50%, #0d9488 100%);
 }
 
 .hero-content {
@@ -1534,14 +1534,75 @@ select.form-input-compact:hover {
     height: 110px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #667eea;
-    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.25);
+    border: 4px solid #6366f1;
+    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.25);
     transition: all 0.3s ease;
+    display: block;
 }
 
-.hero-photo:hover {
-    transform: scale(1.03);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+.photo-upload-wrap {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.photo-upload-wrap:hover .hero-photo {
+    filter: brightness(0.7);
+}
+
+.photo-upload-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.75);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+}
+
+.photo-upload-wrap:hover .photo-upload-overlay {
+    opacity: 1;
+}
+
+.photo-upload-overlay svg {
+    width: 22px;
+    height: 22px;
+}
+
+.photo-upload-spin {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-upload-spin.active {
+    display: flex;
+}
+
+@keyframes spinRing {
+    to { transform: rotate(360deg); }
+}
+
+.photo-spin-ring {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spinRing 0.8s linear infinite;
 }
 
 .photo-badge {
@@ -1582,7 +1643,7 @@ select.form-input-compact:hover {
 
 .hero-subtitle {
     font-size: 0.9375rem;
-    color: #667eea;
+    color: #818cf8;
     font-weight: 600;
     margin: 0 0 14px 0;
 }
@@ -1598,8 +1659,8 @@ select.form-input-compact:hover {
     align-items: center;
     gap: 6px;
     padding: 7px 12px;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-    border: 1px solid rgba(102, 126, 234, 0.2);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(20, 184, 166, 0.07) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.22);
     border-radius: 10px;
     font-size: 0.8125rem;
     color: var(--text-primary);
@@ -1608,13 +1669,13 @@ select.form-input-compact:hover {
 }
 
 .meta-badge:hover {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(20, 184, 166, 0.12) 100%);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
 }
 
 .meta-badge svg {
-    color: #667eea;
+    color: #818cf8;
     flex-shrink: 0;
     width: 14px;
     height: 14px;
@@ -1626,7 +1687,7 @@ select.form-input-compact:hover {
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #0d9488 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -1707,7 +1768,7 @@ select.form-input-compact:hover {
 
 /* Couleurs des icônes par type de carte */
 .card-personal .card-icon-modern {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #0d9488 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
@@ -1903,8 +1964,8 @@ select.form-input-compact:hover {
 }
 
 .dark .hero-photo {
-    border-color: #818cf8;
-    box-shadow: 0 12px 24px rgba(129, 140, 248, 0.3);
+    border-color: #6366f1;
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.35);
 }
 
 .dark .hero-name {
@@ -1997,7 +2058,20 @@ select.form-input-compact:hover {
         <div class="hero-content">
             <div class="hero-left">
                 <div class="photo-container">
-                    <img src="{{ $personnel->photo_url }}" alt="{{ $personnel->nom_complet }}" class="hero-photo">
+                    <div class="photo-upload-wrap" onclick="document.getElementById('photoFileInput').click()" title="Changer la photo">
+                        <img src="{{ $personnel->photo_url }}" alt="{{ $personnel->nom_complet }}" class="hero-photo" id="heroPhotoImg">
+                        <div class="photo-upload-overlay">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                <circle cx="12" cy="13" r="4"/>
+                            </svg>
+                            Modifier
+                        </div>
+                        <div class="photo-upload-spin" id="photoSpinner">
+                            <div class="photo-spin-ring"></div>
+                        </div>
+                    </div>
+                    <input type="file" id="photoFileInput" accept="image/jpeg,image/png,image/webp" style="display:none">
                     <div class="photo-badge {{ $personnel->is_active ? 'badge-active' : 'badge-inactive' }}">
                         {{ $personnel->is_active ? '✓ Actif' : '✗ Inactif' }}
                     </div>
@@ -3588,5 +3662,110 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+/* ========== PHOTO UPLOAD ========== */
+(function() {
+    const input   = document.getElementById('photoFileInput');
+    const imgEl   = document.getElementById('heroPhotoImg');
+    const spinner = document.getElementById('photoSpinner');
+    const uploadUrl = '{{ route('admin.personnels.upload-photo', $personnel->id) }}';
+    const csrfToken = '{{ csrf_token() }}';
+
+    if (!input) return;
+
+    input.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) {
+            psNotif('error', 'Fichier trop lourd', 'La photo doit faire moins de 2 Mo.');
+            return;
+        }
+
+        const fd = new FormData();
+        fd.append('photo', file);
+
+        spinner.classList.add('active');
+
+        fetch(uploadUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            },
+            body: fd,
+        })
+        .then(r => r.json())
+        .then(data => {
+            spinner.classList.remove('active');
+            if (data.success) {
+                imgEl.src = data.photo_url + '?t=' + Date.now();
+                psNotif('success', 'Photo mise à jour', 'La photo de profil a été modifiée avec succès.');
+            } else {
+                psNotif('error', 'Erreur', data.message || 'Impossible de mettre à jour la photo.');
+            }
+        })
+        .catch(() => {
+            spinner.classList.remove('active');
+            psNotif('error', 'Erreur réseau', 'Veuillez réessayer.');
+        });
+
+        // Reset input so the same file can be reselected
+        this.value = '';
+    });
+})();
+
+/* ========== PREMIUM NOTIFICATION ========== */
+function psNotif(type, title, msg, duration) {
+    duration = duration || 4000;
+    const existing = document.getElementById('psNotifEl');
+    if (existing) existing.remove();
+
+    const colors = {
+        success: { top: 'linear-gradient(90deg,#10b981,#059669)', icon: '#10b981', bg: '#111827' },
+        error:   { top: 'linear-gradient(90deg,#ef4444,#dc2626)', icon: '#ef4444', bg: '#111827' },
+        info:    { top: 'linear-gradient(90deg,#6366f1,#0d9488)', icon: '#6366f1', bg: '#111827' },
+    };
+    const c = colors[type] || colors.info;
+
+    const icons = {
+        success: '<circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/>',
+        error:   '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+        info:    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+    };
+
+    const el = document.createElement('div');
+    el.id = 'psNotifEl';
+    el.style.cssText = `
+        position:fixed; top:24px; left:50%; transform:translateX(-50%) translateY(-130%);
+        background:${c.bg}; border:1px solid rgba(255,255,255,.1); border-radius:16px;
+        box-shadow:0 20px 60px rgba(0,0,0,.5); min-width:320px; max-width:440px;
+        z-index:100001; transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+        overflow:hidden; font-family:inherit;
+    `;
+    el.innerHTML = `
+        <div style="height:5px;background:${c.top};border-radius:16px 16px 0 0;"></div>
+        <div style="padding:16px 18px;display:flex;align-items:flex-start;gap:14px;">
+            <div style="flex-shrink:0;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${c.icon}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${icons[type]||icons.info}</svg>
+            </div>
+            <div style="flex:1;min-width:0;">
+                <div style="font-weight:700;font-size:.9375rem;color:#e2e8f0;margin-bottom:3px;">${title}</div>
+                <div style="font-size:.8125rem;color:#94a3b8;line-height:1.5;">${msg}</div>
+            </div>
+            <button onclick="this.closest('#psNotifEl').remove()" style="flex-shrink:0;background:none;border:none;color:#64748b;cursor:pointer;font-size:1.1rem;line-height:1;padding:0;">&times;</button>
+        </div>
+        <div id="psNotifBar" style="height:3px;background:${c.top};transition:width linear ${duration}ms;width:100%;border-radius:0 0 16px 16px;"></div>
+    `;
+    document.body.appendChild(el);
+    requestAnimationFrame(() => {
+        el.style.transform = 'translateX(-50%) translateY(0)';
+        setTimeout(() => { const b = document.getElementById('psNotifBar'); if(b) b.style.width='0'; }, 50);
+    });
+    setTimeout(() => {
+        el.style.transform = 'translateX(-50%) translateY(-130%)';
+        setTimeout(() => el.remove(), 400);
+    }, duration);
+}
 </script>
 @endsection

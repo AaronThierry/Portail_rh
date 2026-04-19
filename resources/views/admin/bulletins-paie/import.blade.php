@@ -754,7 +754,7 @@
     </div>{{-- /bi-card --}}
 
     {{-- Formulaire caché pour la soumission réelle --}}
-    <form action="{{ route('admin.bulletins-paie.import.store') }}" method="POST" enctype="multipart/form-data" id="importForm" style="display:none;">
+    <form action="{{ url('/admin/bulletins-paie/import') }}" method="POST" enctype="multipart/form-data" id="importForm" style="display:none;">
         @csrf
         <input type="file" name="fichier_zip" id="hiddenZipInput">
         <input type="hidden" name="entreprise_id" id="hiddenEntrepriseId">
@@ -833,7 +833,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 const CSRF     = '{{ csrf_token() }}';
-const PREVIEW_URL = '{{ route("admin.bulletins-paie.import.preview") }}';
+const PREVIEW_URL = '{{ url("/admin/bulletins-paie/import/preview") }}';
 
 // DOM refs
 const dropZone       = document.getElementById('dropZone');

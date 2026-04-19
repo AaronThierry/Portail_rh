@@ -636,10 +636,7 @@ class DossierAgentController extends Controller
             ->orderBy('date_expiration')
             ->get();
 
-        return response()->json([
-            'expires' => $documentsExpires,
-            'expirent_bientot' => $documentsExpirentBientot,
-        ]);
+        return view('dossier-agent.alertes', compact('documentsExpires', 'documentsExpirentBientot'));
     }
 
     /**

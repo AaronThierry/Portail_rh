@@ -838,6 +838,8 @@
     overflow: hidden;
     box-shadow: 0 24px 48px rgba(0,0,0,.2), 0 0 0 1px rgba(0,0,0,.05);
     animation: da-scale .35s cubic-bezier(.16,1,.3,1);
+    display: flex;
+    flex-direction: column;
 }
 
 .da-modal-head {
@@ -896,7 +898,8 @@
 .da-modal-body {
     padding: 1.5rem 1.75rem;
     overflow-y: auto;
-    max-height: calc(90vh - 200px);
+    flex: 1;
+    min-height: 0;
 }
 
 .da-form-group { margin-bottom: 1.25rem; }
@@ -990,6 +993,7 @@
     border-top: 1px solid var(--da-border);
     display: flex; justify-content: flex-end; gap: .625rem;
     background: var(--da-bg);
+    flex-shrink: 0;
 }
 
 /* ══════════════════════════════════
@@ -1308,7 +1312,7 @@
                 </svg>
             </button>
         </div>
-        <form id="quickUploadForm" enctype="multipart/form-data">
+        <form id="quickUploadForm" enctype="multipart/form-data" style="display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;">
             @csrf
             <input type="hidden" name="personnel_id" id="quickUploadPersonnelId">
             <div class="da-modal-body">
@@ -1401,33 +1405,52 @@ fileUploadLabel.addEventListener('drop', function(e) {
 /* ── Upload submit ── */
 quickUploadForm.addEventListener('submit', async function(e) {
     e.preventDefault();
-    const submitBtn  = document.getElementById('uploadSubmitBtn');
-    const orig       = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:da-glow 1s infinite"><circle cx="12" cy="12" r="10"/></svg> Upload...';
+
+    if (!fileInput.files.length) {
+        showToast('Veuillez sélectionner au moins un fichier.', 'error');
+        return;
+    }
+
+    const submitBtn = document.getElementById('uploadSubmitBtn');
+    const orig      = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="30" stroke-dashoffset="10"/></svg> En cours...';
     submitBtn.disabled = true;
 
     const personnelId = document.getElementById('quickUploadPersonnelId').value;
-    const formData    = new FormData(this);
+    if (!personnelId) {
+        showToast('Employé non identifié. Fermez et réessayez.', 'error');
+        submitBtn.innerHTML = orig;
+        submitBtn.disabled  = false;
+        return;
+    }
+
+    const formData = new FormData(this);
 
     try {
         const response = await fetch(`/admin/dossier-agent/${personnelId}/upload-multiple`, {
             method : 'POST',
             body   : formData,
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Accept'      : 'application/json'
+                'X-CSRF-TOKEN'     : document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept'           : 'application/json',
+                'X-Requested-With' : 'XMLHttpRequest'
             }
         });
-        const data = await response.json();
-        if (data.success) {
-            showToast(data.message || 'Documents uploadés avec succès', 'success');
+
+        let data;
+        try { data = await response.json(); }
+        catch { throw new Error('Réponse invalide du serveur'); }
+
+        if (response.ok && data.success) {
             closeQuickUpload();
-            setTimeout(() => window.location.reload(), 1500);
+            showToast(data.message || `${data.uploaded?.length ?? ''} document(s) uploadé(s) avec succès.`, 'success');
+            setTimeout(() => window.location.reload(), 1800);
         } else {
-            showToast(data.message || 'Erreur lors de l\'upload', 'error');
+            const msg = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : 'Erreur lors de l\'upload.');
+            showToast(msg, 'error');
         }
     } catch(err) {
-        showToast('Erreur de connexion', 'error');
+        showToast('Erreur réseau. Vérifiez votre connexion.', 'error');
     } finally {
         submitBtn.innerHTML = orig;
         submitBtn.disabled  = false;
@@ -1445,23 +1468,55 @@ document.getElementById('daSearchInput').addEventListener('keydown', function(e)
     if (e.key === 'Enter') { e.preventDefault(); document.getElementById('searchForm').submit(); }
 });
 
-/* ── Toast ── */
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `da-toast ${type}`;
-    toast.innerHTML = `
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            ${type === 'success'
-                ? '<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>'
-                : '<path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'}
-        </svg>
-        ${message}`;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity   = '0';
-        toast.style.transform = 'translateY(20px)';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+/* ── Notification premium ── */
+let _daNotifTimer = null;
+function showToast(msg, type = 'success', duration = 5000) {
+    let el = document.getElementById('daNotif');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'daNotif';
+        el.style.cssText = 'position:fixed;top:20px;left:50%;width:min(480px,calc(100vw - 32px));background:#fff;border-radius:16px;padding:0;z-index:100001;overflow:hidden;transform:translateX(-50%) translateY(-130%) scale(.92);opacity:0;transition:transform .52s cubic-bezier(.34,1.56,.64,1),opacity .28s ease;box-shadow:0 20px 60px rgba(0,0,0,.18)';
+        el.innerHTML = `<div style="height:5px;width:100%;" id="daNotifBar"></div>
+            <div style="display:flex;align-items:center;gap:16px;padding:18px 20px;">
+                <div id="daNotifIcon" style="width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;"></div>
+                <div style="flex:1"><strong id="daNotifTitle" style="display:block;font-size:.9375rem;font-weight:700;color:#111827;margin-bottom:2px;"></strong>
+                    <span id="daNotifMsg" style="font-size:.8125rem;color:#6b7280;"></span></div>
+                <button onclick="daHideNotif()" style="width:32px;height:32px;border-radius:8px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#9ca3af;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div style="height:3px;background:#f3f4f6;"><div id="daNotifProgress" style="height:100%;transform-origin:left;"></div></div>`;
+        document.body.appendChild(el);
+    }
+    const isSuccess = type === 'success';
+    document.getElementById('daNotifBar').style.background = isSuccess
+        ? 'linear-gradient(90deg,#059669,#10b981,#34d399)'
+        : 'linear-gradient(90deg,#dc2626,#ef4444,#f87171)';
+    document.getElementById('daNotifIcon').style.background = isSuccess
+        ? 'linear-gradient(135deg,#d1fae5,#6ee7b7)'
+        : 'linear-gradient(135deg,#fee2e2,#fca5a5)';
+    document.getElementById('daNotifIcon').style.boxShadow = isSuccess
+        ? '0 0 0 8px rgba(16,185,129,.1)'
+        : '0 0 0 8px rgba(239,68,68,.1)';
+    document.getElementById('daNotifIcon').innerHTML = isSuccess
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M20 6L9 17l-5-5"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    document.getElementById('daNotifTitle').textContent = isSuccess ? 'Succès' : 'Erreur';
+    document.getElementById('daNotifMsg').textContent   = msg;
+    const prog = document.getElementById('daNotifProgress');
+    prog.style.background = isSuccess ? 'linear-gradient(90deg,#059669,#10b981)' : 'linear-gradient(90deg,#dc2626,#ef4444)';
+    prog.style.animation  = 'none'; prog.offsetHeight;
+    prog.style.transition = `transform ${duration}ms linear`;
+    prog.style.transform  = 'scaleX(1)';
+    el.style.transform    = 'translateX(-50%) translateY(0) scale(1)';
+    el.style.opacity      = '1';
+    requestAnimationFrame(() => { prog.style.transform = 'scaleX(0)'; });
+    if (_daNotifTimer) clearTimeout(_daNotifTimer);
+    _daNotifTimer = setTimeout(daHideNotif, duration);
+}
+function daHideNotif() {
+    const el = document.getElementById('daNotif');
+    if (el) { el.style.transform = 'translateX(-50%) translateY(-130%) scale(.92)'; el.style.opacity = '0'; }
 }
 
 /* ── Counter animation (hero KPIs) ── */

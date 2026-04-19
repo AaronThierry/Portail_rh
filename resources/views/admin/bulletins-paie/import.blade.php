@@ -922,7 +922,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 const CSRF        = '{{ csrf_token() }}';
-const PREVIEW_URL = '{{ url("/admin/bulletins-paie/import/preview") }}';
+const PREVIEW_URL = '{{ url("/admin/bulletins-paie/import-preview") }}';
 
 const dropZone       = document.getElementById('dropZone');
 const fileInput      = document.getElementById('fichierZip');

@@ -258,8 +258,9 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
     });
 
     // Import automatique des bulletins de paie
-    Route::get('bulletins-paie/import',  [BulletinImportController::class, 'index'])->name('bulletins-paie.import.index');
-    Route::post('bulletins-paie/import', [BulletinImportController::class, 'store'])->name('bulletins-paie.import.store');
+    Route::get('bulletins-paie/import',          [BulletinImportController::class, 'index'])->name('bulletins-paie.import.index');
+    Route::post('bulletins-paie/import',         [BulletinImportController::class, 'store'])->name('bulletins-paie.import.store');
+    Route::post('bulletins-paie/import-preview', [BulletinImportController::class, 'preview'])->name('bulletins-paie.import.preview');
 
     // Gestion des bulletins de paie
     Route::get('bulletins-paie', [BulletinPaieController::class, 'index'])->name('bulletins-paie.index');

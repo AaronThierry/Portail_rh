@@ -617,23 +617,70 @@
 .bp-btn-submit:hover { opacity:.9; transform:translateY(-1px); }
 .bp-btn-submit svg { width:15px; height:15px; }
 
-/* ── Toasts ── */
-.bp-toast-wrap { position:fixed; bottom:24px; right:24px; z-index:2000; display:flex; flex-direction:column; gap:10px; }
-.bp-toast {
-    display:flex; align-items:center; gap:12px;
-    padding:13px 18px; border-radius:12px;
-    box-shadow:0 8px 28px rgba(0,0,0,.15);
-    min-width:280px; max-width:380px;
-    animation:bp-toast-in .3s cubic-bezier(.16,1,.3,1);
+/* ── Notification premium ── */
+.bp-notif {
+    position:fixed; top:20px; left:50%; width:min(480px,calc(100vw - 32px));
+    background:#fff; border-radius:16px; padding:0; z-index:100001; overflow:hidden;
+    transform:translateX(-50%) translateY(-130%) scale(.92); opacity:0;
+    transition:transform .52s cubic-bezier(.34,1.56,.64,1),opacity .28s ease;
+    box-shadow:0 20px 60px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.04);
 }
-@keyframes bp-toast-in { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
-.bp-toast.success { background:var(--bp-surf); border-left:4px solid var(--bp-emer); }
-.bp-toast.error   { background:var(--bp-surf); border-left:4px solid var(--bp-red); }
-.bp-toast-icon { flex-shrink:0; }
-.bp-toast.success .bp-toast-icon { color:var(--bp-emer); }
-.bp-toast.error   .bp-toast-icon { color:var(--bp-red); }
-.bp-toast-icon svg { width:18px; height:18px; display:block; }
-.bp-toast-text { flex:1; font-size:.8rem; font-weight:600; color:var(--bp-txt); line-height:1.4; }
+.bp-notif.bp-notif-show { transform:translateX(-50%) translateY(0) scale(1); opacity:1; }
+.bp-notif::before { content:''; display:block; height:5px; width:100%; }
+.bp-notif-success::before { background:linear-gradient(90deg,#059669,#10b981,#34d399); }
+.bp-notif-error::before   { background:linear-gradient(90deg,#dc2626,#ef4444,#f87171); }
+.bp-notif-inner { display:flex; align-items:center; gap:16px; padding:18px 20px; }
+.bp-notif-icon { width:52px; height:52px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; }
+.bp-notif-success .bp-notif-icon { background:linear-gradient(135deg,#d1fae5,#6ee7b7); box-shadow:0 0 0 8px rgba(16,185,129,.1); }
+.bp-notif-error   .bp-notif-icon { background:linear-gradient(135deg,#fee2e2,#fca5a5); box-shadow:0 0 0 8px rgba(239,68,68,.1); }
+.bp-notif-icon svg { width:24px; height:24px; }
+.bp-notif-text { flex:1; }
+.bp-notif-text strong { display:block; font-size:.9375rem; font-weight:700; color:#111827; margin-bottom:2px; }
+.bp-notif-text span { font-size:.8125rem; color:#6b7280; }
+.bp-notif-close { width:32px; height:32px; border-radius:8px; border:none; background:none;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; color:#9ca3af;
+    flex-shrink:0; transition:background .15s; }
+.bp-notif-close:hover { background:#f3f4f6; }
+.bp-notif-close svg { width:16px; height:16px; }
+.bp-notif-bar { height:3px; background:#f3f4f6; }
+.bp-notif-progress { height:100%; transform-origin:left; }
+.bp-notif-success .bp-notif-progress { background:linear-gradient(90deg,#059669,#10b981); }
+.bp-notif-error   .bp-notif-progress { background:linear-gradient(90deg,#dc2626,#ef4444); }
+@keyframes bp-notif-bar { from{transform:scaleX(1)} to{transform:scaleX(0)} }
+
+/* ── List avatar ── */
+.bp-item-avatar {
+    width:44px; height:44px; border-radius:12px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Syne',sans-serif; font-size:.8rem; font-weight:700;
+    color:#fff; position:relative; overflow:hidden;
+    background:linear-gradient(135deg,var(--bp-ind-d),var(--bp-ind));
+    transition:transform .2s;
+}
+.bp-item:hover .bp-item-avatar { transform:scale(1.05); }
+
+/* ── Salary chip ── */
+.bp-salary-chip {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 9px; border-radius:7px; font-size:.68rem; font-weight:700;
+    font-family:'DM Mono',monospace; white-space:nowrap;
+    background:var(--bp-emer-l); color:#059669;
+    border:1px solid rgba(16,185,129,.2);
+}
+
+/* ── Modal salary row ── */
+.bp-salary-row {
+    display:grid; grid-template-columns:1fr 1fr; gap:14px;
+    padding:14px 16px; background:linear-gradient(135deg,rgba(99,102,241,.04),rgba(20,184,166,.04));
+    border:1.5px solid rgba(99,102,241,.12); border-radius:12px;
+    margin-bottom:18px;
+}
+.bp-salary-lbl { font-size:.6rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--bp-txt3); margin-bottom:6px; }
+.bp-salary-input-wrap { position:relative; }
+.bp-salary-input-wrap input { padding-right:40px; }
+.bp-salary-currency { position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    font-size:.7rem; font-weight:700; color:var(--bp-txt3); font-family:'DM Mono',monospace; pointer-events:none; }
 
 /* ── Responsive ── */
 @media(max-width:1024px) {
@@ -862,22 +909,23 @@
         </div>
 
         @forelse($bulletins as $i => $bulletin)
+        @php
+            $initials = collect(explode(' ', $bulletin->personnel->nom_complet))->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+            $colors = ['linear-gradient(135deg,#6366f1,#4338ca)','linear-gradient(135deg,#14b8a6,#0d9488)','linear-gradient(135deg,#8b5cf6,#7c3aed)','linear-gradient(135deg,#f59e0b,#d97706)','linear-gradient(135deg,#ef4444,#dc2626)'];
+            $colorIdx = crc32($bulletin->personnel->nom_complet) % count($colors);
+        @endphp
         <div class="bp-item" style="animation-delay:{{ $i * 0.03 }}s">
-            <div class="bp-item-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-                </svg>
-            </div>
+            <div class="bp-item-avatar" style="background:{{ $colors[$colorIdx] }}">{{ $initials }}</div>
             <div class="bp-item-main">
                 <div class="bp-item-name">{{ $bulletin->personnel->nom_complet }}</div>
                 <div class="bp-item-meta">
                     <span>{{ $bulletin->personnel->matricule }}</span>
                     <span class="bp-item-meta-dot"></span>
                     <span>{{ $bulletin->fichier_taille_formatee }}</span>
+                    @if($bulletin->salaire_net)
                     <span class="bp-item-meta-dot"></span>
-                    <span>{{ $bulletin->created_at->format('d/m/Y') }}</span>
+                    <span class="bp-salary-chip">{{ number_format($bulletin->salaire_net, 0, ',', ' ') }} FCFA</span>
+                    @endif
                 </div>
             </div>
             <div class="bp-item-period">
@@ -947,20 +995,23 @@
         <form method="POST" action="{{ route('admin.bulletins-paie.store') }}" enctype="multipart/form-data">
             @csrf
             {{-- Header --}}
-            <div class="bp-modal-header">
-                <div class="bp-modal-header-left">
-                    <div class="bp-modal-header-icon">
+            <div class="bp-modal-header" style="position:relative;overflow:hidden;">
+                <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(20,184,166,.25) 0%,transparent 70%);pointer-events:none;"></div>
+                <div style="position:absolute;bottom:-60px;left:20%;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 70%);pointer-events:none;"></div>
+                <div class="bp-modal-header-left" style="position:relative;z-index:1;">
+                    <div class="bp-modal-header-icon" style="background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);border-radius:14px;width:52px;height:52px;">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
                         </svg>
                     </div>
                     <div>
-                        <div class="bp-modal-header-title">Ajouter un bulletin</div>
-                        <div class="bp-modal-header-sub">Fiche de paie au format PDF</div>
+                        <div class="bp-modal-header-title" style="font-size:1.15rem;">Ajouter un bulletin de paie</div>
+                        <div class="bp-modal-header-sub">Fiche de paie PDF &mdash; Portail RH+</div>
                     </div>
                 </div>
-                <button type="button" class="bp-modal-close" onclick="closeUploadModal()">
+                <button type="button" class="bp-modal-close" onclick="closeUploadModal()" style="position:relative;z-index:1;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
@@ -1032,19 +1083,37 @@
                     </div>
                 </div>
 
+                {{-- Salaires --}}
+                <div class="bp-salary-row">
+                    <div>
+                        <div class="bp-salary-lbl">Salaire brut</div>
+                        <div class="bp-salary-input-wrap">
+                            <input type="number" name="salaire_brut" class="bp-input" placeholder="0" value="{{ old('salaire_brut') }}" min="0" step="500">
+                            <span class="bp-salary-currency">FCFA</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="bp-salary-lbl">Salaire net</div>
+                        <div class="bp-salary-input-wrap">
+                            <input type="number" name="salaire_net" class="bp-input" placeholder="0" value="{{ old('salaire_net') }}" min="0" step="500">
+                            <span class="bp-salary-currency">FCFA</span>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- File upload --}}
                 <div class="bp-field">
                     <label class="bp-label">Fichier PDF <span>*</span></label>
-                    <div class="bp-upload-zone" id="uploadZone">
+                    <div class="bp-upload-zone" id="uploadZone" style="background:linear-gradient(135deg,rgba(99,102,241,.03),rgba(20,184,166,.03));">
                         <input type="file" name="fichier" id="fileInput" accept=".pdf">
-                        <div class="bp-uz-icon">
+                        <div class="bp-uz-icon" style="background:linear-gradient(135deg,var(--bp-ind-l),var(--bp-teal-l));border:1px solid rgba(99,102,241,.15);">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                             </svg>
                         </div>
-                        <div class="bp-uz-title">Glissez votre PDF ici</div>
-                        <div class="bp-uz-sub">ou cliquez pour parcourir · max 10 Mo</div>
+                        <div class="bp-uz-title" style="font-weight:700;">Glissez votre PDF ici</div>
+                        <div class="bp-uz-sub">ou cliquez pour parcourir &middot; <strong>PDF uniquement</strong> &middot; max 10 Mo</div>
                     </div>
                     <div class="bp-file-preview" id="filePreview">
                         <div class="bp-file-icon">
@@ -1096,28 +1165,19 @@
     </div>
 </div>
 
-{{-- ══ TOASTS ══ --}}
-<div class="bp-toast-wrap">
-    @if(session('success'))
-    <div class="bp-toast success" id="toastSuccess">
-        <div class="bp-toast-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
+{{-- ══ NOTIFICATION PREMIUM ══ --}}
+<div class="bp-notif" id="bpNotif" role="alert">
+    <div class="bp-notif-inner">
+        <div class="bp-notif-icon" id="bpNotifIcon"></div>
+        <div class="bp-notif-text">
+            <strong id="bpNotifTitle"></strong>
+            <span id="bpNotifMsg"></span>
         </div>
-        <div class="bp-toast-text">{{ session('success') }}</div>
+        <button class="bp-notif-close" onclick="bpHideNotif()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
     </div>
-    @endif
-    @if(session('error'))
-    <div class="bp-toast error" id="toastError">
-        <div class="bp-toast-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-        </div>
-        <div class="bp-toast-text">{{ session('error') }}</div>
-    </div>
-    @endif
+    <div class="bp-notif-bar"><div class="bp-notif-progress" id="bpNotifProgress"></div></div>
 </div>
 @endsection
 
@@ -1164,12 +1224,12 @@ rmBtn.addEventListener('click', e => {
 
 function displayFile(file) {
     if (file.type !== 'application/pdf') {
-        alert('Veuillez sélectionner un fichier PDF.');
+        bpShowNotif('error', 'Format invalide', 'Veuillez sélectionner un fichier PDF uniquement.');
         input.value = '';
         return;
     }
     if (file.size > 10 * 1024 * 1024) {
-        alert('Le fichier dépasse la limite de 10 Mo.');
+        bpShowNotif('error', 'Fichier trop lourd', 'Le fichier dépasse la limite de 10 Mo.');
         input.value = '';
         return;
     }
@@ -1276,10 +1336,40 @@ document.querySelector('.bp-modal form').addEventListener('submit', function(e) 
 openUploadModal();
 @endif
 
-/* ── Toast auto-hide ── */
-['toastSuccess', 'toastError'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity .5s'; setTimeout(()=>el.remove(),500); }, 5000);
-});
+/* ── Notification premium ── */
+let _bpNotifTimer = null;
+function bpShowNotif(type, title, msg, duration = 6000) {
+    const el   = document.getElementById('bpNotif');
+    const icon = document.getElementById('bpNotifIcon');
+    const t    = document.getElementById('bpNotifTitle');
+    const m    = document.getElementById('bpNotifMsg');
+    const bar  = document.getElementById('bpNotifProgress');
+    const isS  = type === 'success';
+    el.className = 'bp-notif bp-notif-' + type;
+    icon.style.background  = isS ? 'linear-gradient(135deg,#d1fae5,#6ee7b7)' : 'linear-gradient(135deg,#fee2e2,#fca5a5)';
+    icon.style.boxShadow   = isS ? '0 0 0 8px rgba(16,185,129,.1)' : '0 0 0 8px rgba(239,68,68,.1)';
+    icon.innerHTML = isS
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M20 6L9 17l-5-5"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    t.textContent = title;
+    m.textContent = msg;
+    bar.style.animation = 'none'; bar.offsetHeight;
+    bar.style.transition = `transform ${duration}ms linear`;
+    bar.style.transform  = 'scaleX(1)';
+    el.classList.add('bp-notif-show');
+    requestAnimationFrame(() => { bar.style.transform = 'scaleX(0)'; });
+    if (_bpNotifTimer) clearTimeout(_bpNotifTimer);
+    _bpNotifTimer = setTimeout(bpHideNotif, duration);
+}
+function bpHideNotif() {
+    document.getElementById('bpNotif').classList.remove('bp-notif-show');
+}
+
+@if(session('success'))
+setTimeout(() => bpShowNotif('success', 'Succès', @json(session('success')), 7000), 400);
+@endif
+@if(session('error'))
+setTimeout(() => bpShowNotif('error', 'Erreur', @json(session('error')), 7000), 400);
+@endif
 </script>
 @endsection

@@ -136,6 +136,13 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
 // PORTAIL ADMIN - Super Admin + RH + Chef d'Entreprise + Agent administratif
 // ============================================================================
 Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|Chef d'Entreprise|Agent administratif"])->prefix('admin')->name('admin.')->group(function () {
+    // Purger les bulletins soft-deleted (pour permettre ré-import)
+    Route::get('bulletins-purge-deleted', function () {
+        $count = \App\Models\BulletinPaie::onlyTrashed()->forceDelete();
+        return response("$count bulletin(s) soft-deleted purgés définitivement — " . now(), 200)
+            ->header('Content-Type', 'text/plain');
+    })->name('bulletins-purge-deleted');
+
     // Vérifier les doublons bulletins
     Route::get('bulletins-check-doublons', function () {
         $doublons = \Illuminate\Support\Facades\DB::select("

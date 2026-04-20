@@ -267,7 +267,50 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
 
     // Import automatique des bulletins de paie
     Route::get('bulletins-paie/import',          [BulletinImportController::class, 'index'])->name('bulletins-paie.import.index');
-    Route::post('bulletins-paie/import',         [BulletinImportController::class, 'store'])->name('bulletins-paie.import.store');
+    Route::post('bulletins-paie/import', function (\Illuminate\Http\Request $request) {
+        $request->validate([
+            'fichier_zip'   => ['required', 'file', 'mimes:zip', 'max:102400'],
+            'entreprise_id' => ['required', 'exists:entreprises,id'],
+            'notifier'      => ['nullable', 'boolean'],
+        ]);
+        $entrepriseId = (int) $request->entreprise_id;
+        $notifier     = (bool) $request->input('notifier', false);
+        $zip          = $request->file('fichier_zip');
+        $zipPath      = $zip->store('imports/bulletins/zips', 'local');
+
+        $import = \App\Models\BulletinImport::create([
+            'entreprise_id' => $entrepriseId,
+            'uploaded_by'   => \Illuminate\Support\Facades\Auth::id(),
+            'fichier_zip'   => $zipPath,
+            'statut'        => 'en_cours',
+        ]);
+
+        try {
+            $svc    = new \App\Services\BulletinImportServiceFix();
+            $result = $svc->processZip($zip, $entrepriseId, \Illuminate\Support\Facades\Auth::id(), $notifier);
+
+            $statut = 'termine';
+            if ($result['succes'] === 0 && $result['total'] > 0) $statut = 'echec';
+            elseif (!empty($result['erreurs'])) $statut = 'partiel';
+
+            $import->update([
+                'total'           => $result['total'],
+                'succes'          => $result['succes'],
+                'doublons'        => $result['doublons'],
+                'erreurs_count'   => count($result['erreurs']),
+                'erreurs'         => $result['erreurs'],
+                'bulletins_crees' => $result['bulletins_ids'],
+                'statut'          => $statut,
+            ]);
+
+            return redirect()->route('admin.bulletins-paie.import.index')
+                ->with('import_result', $result)->with('import_statut', $statut);
+        } catch (\Exception $e) {
+            $import->update(['statut' => 'echec', 'erreurs' => [['fichier' => 'ZIP', 'raison' => $e->getMessage()]]]);
+            return redirect()->route('admin.bulletins-paie.import.index')
+                ->with('error', 'Erreur : ' . $e->getMessage());
+        }
+    })->name('bulletins-paie.import.store');
     Route::post('bulletins-paie/import-preview', function (\Illuminate\Http\Request $request) {
         $request->validate([
             'filenames'     => ['required', 'array', 'min:1', 'max:200'],

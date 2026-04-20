@@ -65,7 +65,8 @@ class BulletinImportServiceFix
             return;
         }
 
-        if (BulletinPaie::where('personnel_id', $personnel->id)->where('mois', $parsed['mois'])->where('annee', $parsed['annee'])->exists()) {
+        // Vérifier doublon (withTrashed pour attraper les enregistrements soft-deleted)
+        if (BulletinPaie::withTrashed()->where('personnel_id', $personnel->id)->where('mois', $parsed['mois'])->where('annee', $parsed['annee'])->exists()) {
             $this->result['doublons']++;
             return;
         }
@@ -110,11 +111,20 @@ class BulletinImportServiceFix
             if ($notifier && $personnel->user) {
                 try { $personnel->user->notify(new BulletinPaieNotification($bulletin)); } catch (\Exception $e) {}
             }
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            Storage::disk('public')->delete($destination);
+            // Contrainte unique = doublon
+            if ($e->errorInfo[1] === 1062) {
+                $this->result['doublons']++;
+            } else {
+                $this->result['erreurs'][] = ['fichier' => $basename, 'raison' => 'DB: ' . $e->getMessage()];
+                Log::error('BulletinImportServiceFix', ['fichier' => $basename, 'error' => $e->getMessage()]);
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             Storage::disk('public')->delete($destination);
-            $this->result['erreurs'][] = ['fichier' => $basename, 'raison' => 'DB: ' . $e->getMessage()];
-            Log::error('BulletinImportServiceFix', ['fichier' => $basename, 'error' => $e->getMessage()]);
+            $this->result['erreurs'][] = ['fichier' => $basename, 'raison' => $e->getMessage()];
         }
     }
 

@@ -136,6 +136,14 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
 // PORTAIL ADMIN - Super Admin + RH + Chef d'Entreprise + Agent administratif
 // ============================================================================
 Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|Chef d'Entreprise|Agent administratif"])->prefix('admin')->name('admin.')->group(function () {
+    // Cache / OPcache reset (admin only)
+    Route::get('cache-clear', function () {
+        Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        if (function_exists('opcache_reset')) { opcache_reset(); }
+        return response('Caches vidés — OPcache FPM + Laravel — ' . now(), 200)
+            ->header('Content-Type', 'text/plain');
+    })->name('cache-clear');
+
     // Dashboard admin
     Route::get('/', [DashbordController::class, 'index'])->name('dashboard');
 

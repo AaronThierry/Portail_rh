@@ -268,7 +268,22 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
     // Import automatique des bulletins de paie
     Route::get('bulletins-paie/import',          [BulletinImportController::class, 'index'])->name('bulletins-paie.import.index');
     Route::post('bulletins-paie/import',         [BulletinImportController::class, 'store'])->name('bulletins-paie.import.store');
-    Route::post('bulletins-paie/import-preview', [BulletinImportController::class, 'preview'])->name('bulletins-paie.import.preview');
+    Route::post('bulletins-paie/import-preview', function (\Illuminate\Http\Request $request, \App\Services\BulletinImportService $svc) {
+        $request->validate([
+            'filenames'     => ['required', 'array', 'min:1', 'max:200'],
+            'filenames.*'   => ['required', 'string', 'max:500'],
+            'entreprise_id' => ['required', 'exists:entreprises,id'],
+        ]);
+        $rows  = $svc->preview($request->input('filenames'), (int) $request->input('entreprise_id'));
+        $stats = [
+            'total'     => count($rows),
+            'ok'        => count(array_filter($rows, fn($r) => $r['statut'] === 'ok')),
+            'doublons'  => count(array_filter($rows, fn($r) => $r['statut'] === 'doublon')),
+            'not_found' => count(array_filter($rows, fn($r) => $r['statut'] === 'not_found')),
+            'errors'    => count(array_filter($rows, fn($r) => $r['statut'] === 'parse_error')),
+        ];
+        return response()->json(['rows' => $rows, 'stats' => $stats]);
+    })->name('bulletins-paie.import.preview');
 
     // Gestion des bulletins de paie
     Route::get('bulletins-paie', [BulletinPaieController::class, 'index'])->name('bulletins-paie.index');

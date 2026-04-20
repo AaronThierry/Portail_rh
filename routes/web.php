@@ -136,6 +136,29 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
 // PORTAIL ADMIN - Super Admin + RH + Chef d'Entreprise + Agent administratif
 // ============================================================================
 Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|Chef d'Entreprise|Agent administratif"])->prefix('admin')->name('admin.')->group(function () {
+    // Vérifier les doublons bulletins
+    Route::get('bulletins-check-doublons', function () {
+        $doublons = \Illuminate\Support\Facades\DB::select("
+            SELECT bp.personnel_id, p.nom, p.prenoms, p.matricule, bp.mois, bp.annee, COUNT(*) as nb,
+                   GROUP_CONCAT(bp.id ORDER BY bp.id) as ids
+            FROM bulletins_paie bp
+            JOIN personnels p ON p.id = bp.personnel_id
+            WHERE bp.deleted_at IS NULL
+            GROUP BY bp.personnel_id, bp.mois, bp.annee
+            HAVING COUNT(*) > 1
+            ORDER BY bp.annee, bp.mois
+        ");
+        if (empty($doublons)) {
+            return response('✓ Aucun doublon trouvé — ' . now(), 200)->header('Content-Type', 'text/plain');
+        }
+        $out = "DOUBLONS TROUVÉS (" . count($doublons) . ") — " . now() . "\n\n";
+        foreach ($doublons as $d) {
+            $out .= "  Employé: {$d->nom} {$d->prenoms} (matricule: {$d->matricule})\n";
+            $out .= "  Période: {$d->mois}/{$d->annee} — {$d->nb} bulletins — IDs: {$d->ids}\n\n";
+        }
+        return response($out, 200)->header('Content-Type', 'text/plain');
+    })->name('bulletins-check-doublons');
+
     // Cache / OPcache reset (admin only)
     Route::get('cache-clear', function () {
         Illuminate\Support\Facades\Artisan::call('optimize:clear');

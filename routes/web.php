@@ -268,13 +268,69 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
     // Import automatique des bulletins de paie
     Route::get('bulletins-paie/import',          [BulletinImportController::class, 'index'])->name('bulletins-paie.import.index');
     Route::post('bulletins-paie/import',         [BulletinImportController::class, 'store'])->name('bulletins-paie.import.store');
-    Route::post('bulletins-paie/import-preview', function (\Illuminate\Http\Request $request, \App\Services\BulletinImportService $svc) {
+    Route::post('bulletins-paie/import-preview', function (\Illuminate\Http\Request $request) {
         $request->validate([
             'filenames'     => ['required', 'array', 'min:1', 'max:200'],
             'filenames.*'   => ['required', 'string', 'max:500'],
             'entreprise_id' => ['required', 'exists:entreprises,id'],
         ]);
-        $rows  = $svc->preview($request->input('filenames'), (int) $request->input('entreprise_id'));
+        $filenames    = $request->input('filenames');
+        $entrepriseId = (int) $request->input('entreprise_id');
+        $rows = [];
+        foreach ($filenames as $filename) {
+            $base = pathinfo($filename, PATHINFO_FILENAME);
+            if (!preg_match('/^Bulletin_(.+)_(\d{4}-\d{2}-\d{2})_au_(\d{4}-\d{2}-\d{2})$/i', $base, $m)) {
+                $rows[] = ['fichier' => $filename, 'police' => null, 'nom' => null, 'periode' => null, 'personnel' => null, 'doublon' => false, 'statut' => 'parse_error', 'raison' => 'Format invalide.'];
+                continue;
+            }
+            $parts  = explode('_', $m[1], 2);
+            $police = $parts[0];
+            $nom    = isset($parts[1]) ? str_replace('_', ' ', $parts[1]) : '';
+            $annee  = (int) substr($m[2], 0, 4);
+            $mois   = (int) substr($m[2], 5, 2);
+            if ($annee < 2000 || $annee > 2100 || $mois < 1 || $mois > 12) {
+                $rows[] = ['fichier' => $filename, 'police' => $police, 'nom' => $nom, 'periode' => null, 'personnel' => null, 'doublon' => false, 'statut' => 'parse_error', 'raison' => 'Date invalide.'];
+                continue;
+            }
+            // Recherche par police (avec fallback si colonne absente)
+            $personnel = null;
+            try {
+                $personnel = \App\Models\Personnel::where('police', $police)->where('entreprise_id', $entrepriseId)->first();
+            } catch (\Exception $e) {}
+            // Fallback par nom si police introuvable
+            if (!$personnel && trim($nom) !== '') {
+                $nameParts = array_filter(explode(' ', trim($nom)), fn($p) => strlen($p) >= 3);
+                if ($nameParts) {
+                    $personnel = \App\Models\Personnel::where('entreprise_id', $entrepriseId)
+                        ->where(function ($q) use ($nameParts) {
+                            foreach ($nameParts as $p) {
+                                $q->where(function ($qq) use ($p) {
+                                    $qq->where('nom', 'like', "%{$p}%")->orWhere('prenoms', 'like', "%{$p}%");
+                                });
+                            }
+                        })->first();
+                }
+            }
+            $doublon = false;
+            if ($personnel) {
+                $doublon = \App\Models\BulletinPaie::where('personnel_id', $personnel->id)->where('mois', $mois)->where('annee', $annee)->exists();
+            }
+            $rows[] = [
+                'fichier'   => $filename,
+                'police'    => $police,
+                'nom'       => $nom,
+                'periode'   => sprintf('%02d/%d', $mois, $annee),
+                'personnel' => $personnel ? [
+                    'id'          => $personnel->id,
+                    'nom_complet' => trim(($personnel->nom ?? '') . ' ' . ($personnel->prenoms ?? '')),
+                    'matricule'   => $personnel->matricule ?? null,
+                    'police'      => $personnel->police ?? null,
+                ] : null,
+                'doublon'   => $doublon,
+                'statut'    => $doublon ? 'doublon' : ($personnel ? 'ok' : 'not_found'),
+                'raison'    => $doublon ? 'Bulletin déjà existant pour cette période' : (!$personnel ? "Police «{$police}» introuvable" : null),
+            ];
+        }
         $stats = [
             'total'     => count($rows),
             'ok'        => count(array_filter($rows, fn($r) => $r['statut'] === 'ok')),

@@ -1133,7 +1133,24 @@ analyserBtn.addEventListener('click', async () => {
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
             body: JSON.stringify({ filenames: validFilenames, entreprise_id: entrepriseEl.value }),
         });
-        if (!resp.ok) throw new Error(`Erreur serveur (${resp.status})`);
+        if (!resp.ok) {
+            let detail = '';
+            const ct = resp.headers.get('content-type') || '';
+            try {
+                if (ct.includes('application/json')) {
+                    const j = await resp.json();
+                    detail = j.message || (j.errors ? Object.values(j.errors).flat().join(' · ') : '') || JSON.stringify(j);
+                } else {
+                    const txt = await resp.text();
+                    // Session expirée → redirect → HTML reçu
+                    if (resp.status === 200 || txt.includes('<html')) {
+                        throw new Error('Session expirée — rechargez la page et reconnectez-vous.');
+                    }
+                    detail = txt.substring(0, 300);
+                }
+            } catch(pe) { if (pe.message.includes('Session')) throw pe; }
+            throw new Error(`HTTP ${resp.status}${detail ? ' — ' + detail : ''}`);
+        }
         const data = await resp.json();
 
         const resultMap = {};
@@ -1149,7 +1166,7 @@ analyserBtn.addEventListener('click', async () => {
 
         analysed = true; updateChips(); renderPreviewTable(); setStep(2);
     } catch (err) {
-        nfAlertText.innerHTML = '<strong>Erreur lors de l\'analyse :</strong> ' + err.message + ' — Vérifiez que les routes ont bien été rechargées sur le serveur (<code>php artisan route:clear</code>).';
+        nfAlertText.innerHTML = '<strong>Erreur lors de l\'analyse :</strong> ' + esc(err.message);
         nfAlert.style.display = 'flex';
     } finally {
         analyserBtn.disabled = false;

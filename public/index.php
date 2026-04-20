@@ -5,9 +5,6 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// TEMP: reset OPcache web (FPM) — remove after deploy
-if (function_exists('opcache_reset')) { opcache_reset(); }
-
 /*
 |--------------------------------------------------------------------------
 | Check If The Application Is Under Maintenance

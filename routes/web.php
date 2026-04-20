@@ -313,8 +313,9 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
             $result = $svc->processZip($zip, $entrepriseId, \Illuminate\Support\Facades\Auth::id(), $notifier);
 
             $statut = 'termine';
-            if ($result['succes'] === 0 && $result['total'] > 0) $statut = 'echec';
+            if (!empty($result['erreurs']) && $result['succes'] === 0) $statut = 'echec';
             elseif (!empty($result['erreurs'])) $statut = 'partiel';
+            elseif ($result['succes'] === 0 && $result['doublons'] > 0) $statut = 'partiel';
 
             $import->update([
                 'total'           => $result['total'],

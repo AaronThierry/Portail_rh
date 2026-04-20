@@ -65,8 +65,8 @@ class BulletinImportServiceFix
             return;
         }
 
-        // Vérifier doublon (withTrashed pour attraper les enregistrements soft-deleted)
-        if (BulletinPaie::withTrashed()->where('personnel_id', $personnel->id)->where('mois', $parsed['mois'])->where('annee', $parsed['annee'])->exists()) {
+        // Vérifier doublon (sans withTrashed : un bulletin soft-deleted permet un ré-import)
+        if (BulletinPaie::where('personnel_id', $personnel->id)->where('mois', $parsed['mois'])->where('annee', $parsed['annee'])->exists()) {
             $this->result['doublons']++;
             return;
         }

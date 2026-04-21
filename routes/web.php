@@ -422,7 +422,13 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
     Route::get('bulletins-paie/export', [BulletinPaieController::class, 'export'])->name('bulletins-paie.export');
     Route::get('bulletins-paie/{bulletin}', [BulletinPaieController::class, 'show'])->name('bulletins-paie.show');
     Route::put('bulletins-paie/{bulletin}', [BulletinPaieController::class, 'update'])->name('bulletins-paie.update');
-    Route::delete('bulletins-paie/{bulletin}', [BulletinPaieController::class, 'destroy'])->name('bulletins-paie.destroy');
+    Route::delete('bulletins-paie/{bulletin}', function (\App\Models\BulletinPaie $bulletin) {
+        if ($bulletin->fichier_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($bulletin->fichier_path)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($bulletin->fichier_path);
+        }
+        $bulletin->forceDelete();
+        return back()->with('success', 'Bulletin supprimé définitivement.');
+    })->name('bulletins-paie.destroy');
     Route::get('bulletins-paie/{bulletin}/download', [BulletinPaieController::class, 'download'])->name('bulletins-paie.download');
     Route::get('bulletins-paie/{bulletin}/preview', [BulletinPaieController::class, 'preview'])->name('bulletins-paie.preview');
     Route::post('bulletins-paie/{bulletin}/replace', [BulletinPaieController::class, 'replaceFichier'])->name('bulletins-paie.replace');

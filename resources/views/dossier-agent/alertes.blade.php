@@ -281,7 +281,7 @@
             <div class="da-breadcrumb">
                 <a href="{{ route('admin.dashboard') }}">Tableau de bord</a>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                <a href="{{ route('admin.dossier-agent.index') }}">Dossiers Agents</a>
+                <a href="{{ route('admin.dossiers-agents.index') }}">Dossiers Agents</a>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                 <span style="color:#fff">Alertes</span>
             </div>
@@ -308,7 +308,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('admin.dossier-agent.index') }}" class="da-btn da-btn-outline">
+                    <a href="{{ route('admin.dossiers-agents.index') }}" class="da-btn da-btn-outline">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
                         Retour aux dossiers
                     </a>
@@ -531,7 +531,7 @@
         </div>
         <h3 style="font-size:1.125rem;font-weight:600;color:var(--da-text);margin:0 0 .5rem">Aucune alerte</h3>
         <p style="color:var(--da-text-2);margin:0 0 1.25rem">Tous les documents sont valides. Aucun document n'expire dans les 30 prochains jours.</p>
-        <a href="{{ route('admin.dossier-agent.index') }}" class="da-btn" style="background:var(--da-ind-pale);color:var(--da-ind);border-color:rgba(99,102,241,.2)">
+        <a href="{{ route('admin.dossiers-agents.index') }}" class="da-btn" style="background:var(--da-ind-pale);color:var(--da-ind);border-color:rgba(99,102,241,.2)">
             Retour aux dossiers
         </a>
     </div>

@@ -299,7 +299,10 @@
     box-shadow: var(--sh-sm);
     transition: box-shadow .2s, transform .2s, border-color .2s;
     animation: rh-up .45s ease both;
-    cursor: default;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    color: inherit;
 }
 .scard:nth-child(1) { animation-delay: .06s; }
 .scard:nth-child(2) { animation-delay: .10s; }
@@ -462,7 +465,9 @@
     gap: 12px;
     padding: 11px 20px;
     transition: background .12s;
-    cursor: default;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
 }
 .act-item:hover { background: var(--n-50); }
 .act-item + .act-item { border-top: 1px solid var(--n-100); }
@@ -863,7 +868,7 @@
     {{-- ══════════════════════ KPI ══════════════════════ --}}
     <div class="dash-stats">
 
-        <div class="scard sc-ind">
+        <a href="{{ route('espace-employe.documents') }}" class="scard sc-ind">
             <div class="scard-top">
                 <span class="scard-label">Documents</span>
                 <div class="scard-icon">
@@ -872,9 +877,9 @@
             </div>
             <div class="scard-val" data-count="{{ $stats['documents'] }}">0</div>
             <span class="scard-badge">Dossier actif</span>
-        </div>
+        </a>
 
-        <div class="scard sc-teal">
+        <a href="{{ route('espace-employe.conges') }}" class="scard sc-teal">
             <div class="scard-top">
                 <span class="scard-label">Congés restants</span>
                 <div class="scard-icon">
@@ -883,9 +888,9 @@
             </div>
             <div class="scard-val" data-count="{{ $stats['conges_restants'] }}">0</div>
             <span class="scard-badge">Jours disponibles</span>
-        </div>
+        </a>
 
-        <div class="scard sc-amber">
+        <a href="{{ route('espace-employe.demandes') }}" class="scard sc-amber">
             <div class="scard-top">
                 <span class="scard-label">Demandes</span>
                 <div class="scard-icon">
@@ -894,9 +899,9 @@
             </div>
             <div class="scard-val" data-count="{{ $stats['demandes_en_cours'] }}">0</div>
             <span class="scard-badge">En cours</span>
-        </div>
+        </a>
 
-        <div class="scard sc-rose">
+        <a href="{{ route('espace-employe.profil') }}" class="scard sc-rose">
             <div class="scard-top">
                 <span class="scard-label">Ancienneté</span>
                 <div class="scard-icon">
@@ -905,7 +910,7 @@
             </div>
             <div class="scard-val" data-count="{{ $stats['anciennete'] }}">0</div>
             <span class="scard-badge">{{ $stats['anciennete'] <= 1 ? 'An de service' : 'Ans de service' }}</span>
-        </div>
+        </a>
 
     </div>
 
@@ -928,7 +933,14 @@
             </div>
             <div class="act-list">
                 @forelse($activities as $activity)
-                <div class="act-item">
+                @php
+                    $actUrl = match($activity['icon'] ?? 'file') {
+                        'calendar' => route('espace-employe.conges'),
+                        'user'     => route('espace-employe.profil'),
+                        default    => route('espace-employe.documents'),
+                    };
+                @endphp
+                <a href="{{ $actUrl }}" class="act-item">
                     <div class="act-ico act-ico-{{ $activity['icon'] ?? 'file' }}">
                         @if(($activity['icon'] ?? '') === 'calendar')
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
@@ -948,7 +960,7 @@
                         </div>
                     </div>
                     <div class="act-date">{{ $activity['date']->format('d/m/Y') }}</div>
-                </div>
+                </a>
                 @empty
                 <div class="act-empty">
                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>

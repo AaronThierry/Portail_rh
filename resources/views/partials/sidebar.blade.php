@@ -100,7 +100,7 @@
                 <span class="nav-section-title">Ressources Humaines</span>
             </div>
             <div class="nav-items">
-                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', "Chef d'Entreprise"]))
+                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', "Chef d'Entreprise", 'Agent administratif']))
                     <a href="{{ route('admin.personnels.index') }}" class="nav-link {{ Request::is('admin/personnels*') ? 'active' : '' }}" data-tooltip="Personnel">
                         <span class="nav-link-icon">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +121,7 @@
                         <span class="nav-link-indicator"></span>
                     </a>
 
-                    @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH']))
+                    @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Agent administratif']))
                     <a href="{{ route('admin.dossier-agent.categories') }}" class="nav-link {{ Request::is('admin/dossier-agent/categories*') ? 'active' : '' }}" data-tooltip="Répertoires Documents">
                         <span class="nav-link-icon">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@
         @endif
 
         <!-- SECTION: Gestion Documentaire -->
-        @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Employé', "Chef d'Entreprise"]))
+        @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Employé', "Chef d'Entreprise", 'Agent administratif']))
         <div class="nav-section">
             <div class="nav-section-header">
                 <span class="nav-section-icon">
@@ -163,7 +163,7 @@
                 <span class="nav-section-title">Documents & Demandes</span>
             </div>
             <div class="nav-items">
-                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH', "Chef d'Entreprise"]))
+                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH', "Chef d'Entreprise", 'Agent administratif']))
                 <a href="{{ route('admin.bulletins-paie.index') }}" class="nav-link {{ Request::is('admin/bulletins-paie*') ? 'active' : '' }}" data-tooltip="Bulletins de Paie">
                     <span class="nav-link-icon">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,691 +1,826 @@
 @extends('layouts.app')
 
-@section('title', 'Assistant IA')
+@section('title', 'Assistant RH IA')
 
 @section('content')
 <style>
+/* ═══════════════════════════════════════════════════════════
+   ASSISTANT RH IA  —  Design Pro
+   ═══════════════════════════════════════════════════════════ */
 :root {
-    --ai-bg:      #F2F4F8;
-    --ai-surface: #FFFFFF;
-    --ai-border:  #E2E5EA;
-    --ai-ind-50:  #EEEFFE;
-    --ai-ind-100: #D5D9FB;
-    --ai-ind-400: #5566D4;
-    --ai-ind-600: #2535A8;
-    --ai-ind-700: #1A2785;
-    --ai-ind-800: #111C62;
-    --ai-ind-900: #0A1040;
-    --ai-teal-300:#2ECABB;
-    --ai-teal-400:#0AAFA2;
-    --ai-teal-50: #E5FAF8;
-    --ai-teal-100:#B0EFE9;
-    --ai-n-100:   #F0F2F5;
-    --ai-n-200:   #E2E5EA;
-    --ai-n-400:   #9CA3B0;
-    --ai-n-500:   #6B7382;
-    --ai-n-800:   #1E2330;
-    --ai-rose-400:#FB7185;
-    --ai-green-400:#34D399;
-    --sh: 0 2px 8px rgba(10,16,64,.08),0 1px 3px rgba(10,16,64,.04);
-    --sh-md: 0 4px 16px rgba(10,16,64,.10),0 2px 6px rgba(10,16,64,.05);
-    --sh-lg: 0 12px 32px rgba(10,16,64,.12),0 4px 10px rgba(10,16,64,.06);
-    --r: 8px; --r-lg: 12px; --r-xl: 16px; --r-f: 9999px;
+    --c-bg:      #F0F2F7;
+    --c-surface: #FFFFFF;
+    --c-border:  #E4E7EE;
+    --c-ind-50:  #EEEFFE;
+    --c-ind-100: #D5D9FB;
+    --c-ind-200: #B0BAEC;
+    --c-ind-500: #3748C8;
+    --c-ind-600: #2535A8;
+    --c-ind-700: #1A2785;
+    --c-ind-800: #111C62;
+    --c-ind-900: #0A1040;
+    --c-teal-300:#2ECABB;
+    --c-teal-400:#0AAFA2;
+    --c-teal-50: #E5FAF8;
+    --c-teal-100:#B0EFE9;
+    --c-n-100:   #F3F5F8;
+    --c-n-200:   #E4E7EE;
+    --c-n-300:   #C8CDD8;
+    --c-n-400:   #9CA4B2;
+    --c-n-500:   #6B7382;
+    --c-n-600:   #4B5363;
+    --c-n-800:   #1E2330;
+    --c-rose-400:#FB7185;
+    --c-green-400:#34D399;
+    --c-amber-400:#F59E0B;
+    --sh-sm: 0 1px 4px rgba(10,16,64,.07);
+    --sh:    0 2px 10px rgba(10,16,64,.09);
+    --sh-md: 0 4px 20px rgba(10,16,64,.11);
+    --sh-lg: 0 12px 40px rgba(10,16,64,.13);
+    --r: 8px; --r-lg: 12px; --r-xl: 18px; --r-2xl: 24px; --r-f: 9999px;
+    --font:  'DM Sans', system-ui, sans-serif;
+    --font-d:'Syne', 'DM Sans', system-ui, sans-serif;
+    --font-m:'DM Mono', monospace;
 }
 
-@keyframes fadeUp   { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-@keyframes msgIn    { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-@keyframes spin     { to{transform:rotate(360deg)} }
-@keyframes blink    { 0%,100%{opacity:1} 50%{opacity:.3} }
-@keyframes pulse-ai { 0%,100%{box-shadow:0 0 0 0 rgba(10,175,162,.4)} 70%{box-shadow:0 0 0 8px rgba(10,175,162,0)} }
+@keyframes fadeUp  { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes msgIn   { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+@keyframes spin    { to{transform:rotate(360deg)} }
+@keyframes blink3  { 0%,80%,100%{opacity:0} 40%{opacity:1} }
+@keyframes gradAni { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+@keyframes pulseDot{ 0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.5)} 50%{box-shadow:0 0 0 7px rgba(52,211,153,0)} }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
-.ai-wrap {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    grid-template-rows: auto 1fr auto;
-    gap: 0;
-    height: calc(100vh - 56px - 3rem);
-    min-height: 580px;
+/* ── Root container ── */
+.ast {
+    display: flex;
+    height: calc(100vh - var(--header-h, 56px) - 3rem);
+    min-height: 560px;
     border-radius: var(--r-xl);
     overflow: hidden;
     box-shadow: var(--sh-lg);
-    border: 1px solid var(--ai-border);
-    background: var(--ai-surface);
-    font-family: 'DM Sans', system-ui, sans-serif;
+    border: 1px solid var(--c-border);
+    font-family: var(--font);
+    background: var(--c-surface);
+    animation: fadeUp .35s ease both;
 }
 
-/* ── Header ── */
-.ai-header {
-    grid-column: 1 / -1;
-    background: linear-gradient(135deg, var(--ai-ind-900) 0%, var(--ai-ind-700) 60%, var(--ai-teal-400) 100%);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.ai-header-left { display: flex; align-items: center; gap: 12px; }
-
-.ai-avatar {
-    width: 40px; height: 40px;
-    background: rgba(255,255,255,.1);
-    border: 1px solid rgba(255,255,255,.18);
-    border-radius: var(--r-lg);
-    display: flex; align-items: center; justify-content: center;
+/* ══════════════════════════════════════
+   LEFT PANEL — Document manager
+══════════════════════════════════════ */
+.ast-left {
+    width: 272px;
     flex-shrink: 0;
-    animation: pulse-ai 3s ease-out infinite;
-}
-.ai-avatar svg { width: 22px; height: 22px; color: var(--ai-teal-300); }
-
-.ai-header-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.0625rem; font-weight: 700;
-    color: #fff; letter-spacing: -.02em; line-height: 1.2;
-}
-.ai-header-sub {
-    font-size: .7rem; font-weight: 500;
-    color: rgba(255,255,255,.5); letter-spacing: .06em;
-    text-transform: uppercase; margin-top: 1px;
-}
-
-.ai-model-badge {
-    display: flex; align-items: center; gap: 5px;
-    background: rgba(255,255,255,.1);
-    border: 1px solid rgba(255,255,255,.14);
-    border-radius: var(--r-f);
-    padding: 4px 10px;
-    font-size: .68rem; font-weight: 600;
-    color: rgba(255,255,255,.8);
-    backdrop-filter: blur(4px);
-    white-space: nowrap;
-}
-.ai-model-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--ai-green-400);
-    box-shadow: 0 0 6px rgba(52,211,153,.6);
-    flex-shrink: 0;
-}
-
-/* ── Messages area ── */
-.ai-messages {
-    grid-column: 1;
-    overflow-y: auto;
-    padding: 20px;
+    background: linear-gradient(180deg, var(--c-ind-900) 0%, #0E1550 100%);
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    background: var(--ai-n-100);
-    scrollbar-width: thin;
-    scrollbar-color: var(--ai-n-200) transparent;
-}
-.ai-messages::-webkit-scrollbar { width: 4px; }
-.ai-messages::-webkit-scrollbar-thumb { background: var(--ai-n-200); border-radius: 4px; }
-
-/* Welcome */
-.ai-welcome {
-    text-align: center;
-    padding: 32px 20px;
-    animation: fadeUp .4s ease both;
-}
-.ai-welcome-icon {
-    width: 56px; height: 56px;
-    background: linear-gradient(135deg, var(--ai-ind-600), var(--ai-teal-400));
-    border-radius: var(--r-xl);
-    display: inline-flex; align-items: center; justify-content: center;
-    margin-bottom: 14px;
-    box-shadow: 0 8px 24px rgba(10,175,162,.3);
-}
-.ai-welcome-icon svg { width: 28px; height: 28px; color: #fff; }
-.ai-welcome h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.125rem; font-weight: 700;
-    color: var(--ai-ind-800); margin-bottom: 6px;
-}
-.ai-welcome p { font-size: .8125rem; color: var(--ai-n-500); line-height: 1.5; max-width: 320px; margin: 0 auto; }
-
-.ai-suggestions {
-    display: flex; flex-wrap: wrap; gap: 6px;
-    justify-content: center; margin-top: 16px;
-}
-.ai-sug {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 6px 12px;
-    background: var(--ai-surface); border: 1.5px solid var(--ai-border);
-    border-radius: var(--r-f);
-    font-size: .75rem; font-weight: 500; color: var(--ai-ind-600);
-    cursor: pointer; transition: all .14s;
-}
-.ai-sug:hover { background: var(--ai-ind-50); border-color: var(--ai-ind-400); transform: translateY(-1px); }
-.ai-sug svg { width: 12px; height: 12px; flex-shrink: 0; }
-
-/* Message bubbles */
-.ai-msg { display: flex; gap: 10px; animation: msgIn .25s ease both; }
-
-.ai-msg.user  { flex-direction: row-reverse; }
-.ai-msg.user .ai-msg-bubble {
-    background: linear-gradient(135deg, var(--ai-ind-600), var(--ai-ind-700));
-    color: #fff;
-    border-radius: var(--r-lg) var(--r-lg) 4px var(--r-lg);
-}
-.ai-msg.user .ai-msg-time { color: rgba(255,255,255,.55); }
-
-.ai-msg-icon {
-    width: 32px; height: 32px; flex-shrink: 0;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    align-self: flex-end;
-}
-.ai-msg.assistant .ai-msg-icon {
-    background: linear-gradient(135deg, var(--ai-ind-600), var(--ai-teal-400));
-    box-shadow: 0 2px 8px rgba(10,175,162,.25);
-}
-.ai-msg.assistant .ai-msg-icon svg { width: 16px; height: 16px; color: #fff; }
-.ai-msg.user .ai-msg-icon { background: var(--ai-ind-100); }
-.ai-msg.user .ai-msg-icon svg { width: 16px; height: 16px; color: var(--ai-ind-600); }
-
-.ai-msg-bubble {
-    max-width: 72%;
-    background: var(--ai-surface);
-    border: 1px solid var(--ai-border);
-    border-radius: var(--r-lg) var(--r-lg) var(--r-lg) 4px;
-    padding: 10px 14px;
-    box-shadow: var(--sh);
-    line-height: 1.6;
-    font-size: .875rem;
-    color: var(--ai-n-800);
-}
-.ai-msg-bubble p { margin-bottom: 6px; }
-.ai-msg-bubble p:last-child { margin-bottom: 0; }
-.ai-msg-bubble ul, .ai-msg-bubble ol { padding-left: 18px; margin: 6px 0; }
-.ai-msg-bubble li { margin-bottom: 3px; }
-.ai-msg-bubble strong { font-weight: 600; }
-.ai-msg-bubble code { font-family: 'DM Mono', monospace; font-size: .8em; background: rgba(0,0,0,.05); padding: 1px 5px; border-radius: 4px; }
-
-.ai-msg-time { font-size: .6rem; color: var(--ai-n-400); margin-top: 4px; font-family: 'DM Mono', monospace; }
-
-/* Typing indicator */
-.ai-typing .ai-msg-bubble {
-    display: flex; align-items: center; gap: 4px; padding: 12px 16px;
-}
-.ai-typing-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--ai-teal-400);
-    animation: blink 1.2s ease infinite;
-}
-.ai-typing-dot:nth-child(2) { animation-delay: .2s; }
-.ai-typing-dot:nth-child(3) { animation-delay: .4s; }
-
-/* ── Documents panel ── */
-.ai-docs-panel {
-    grid-column: 2;
-    grid-row: 2;
-    border-left: 1px solid var(--ai-border);
-    display: flex; flex-direction: column;
-    background: var(--ai-surface);
+    border-right: 1px solid rgba(255,255,255,.05);
     overflow: hidden;
 }
 
-.ai-docs-header {
-    padding: 14px 16px 12px;
-    border-bottom: 1px solid var(--ai-border);
-    display: flex; align-items: center; justify-content: space-between;
+/* Brand */
+.ast-brand {
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
     flex-shrink: 0;
 }
-.ai-docs-title {
-    font-family: 'Syne', sans-serif;
-    font-size: .8125rem; font-weight: 700;
-    color: var(--ai-ind-800);
-    display: flex; align-items: center; gap: 7px;
+.ast-brand-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
 }
-.ai-docs-title svg { width: 14px; height: 14px; color: var(--ai-teal-400); }
-.ai-docs-count {
-    font-size: .6rem; font-weight: 600;
-    color: var(--ai-n-500);
-    background: var(--ai-n-100); border: 1px solid var(--ai-border);
-    padding: 1px 7px; border-radius: var(--r-f);
-    font-family: 'DM Mono', monospace;
+.ast-brand-mark {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--c-ind-600) 0%, var(--c-teal-400) 100%);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(10,175,162,.35);
+}
+.ast-brand-mark svg { width: 19px; height: 19px; color: #fff; }
+.ast-brand-name {
+    font-family: var(--font-d);
+    font-size: .9375rem; font-weight: 700;
+    color: #fff; letter-spacing: -.02em; line-height: 1.1;
+}
+.ast-brand-sub {
+    font-size: .62rem; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: rgba(255,255,255,.38);
+    margin-top: 1px;
 }
 
-.ai-docs-list {
-    flex: 1; overflow-y: auto; padding: 8px;
-    scrollbar-width: thin; scrollbar-color: var(--ai-n-200) transparent;
+/* Status pill */
+.ast-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: var(--r-f);
+    padding: 4px 10px;
+    font-size: .68rem; font-weight: 600;
+    color: rgba(255,255,255,.6);
 }
-.ai-docs-list::-webkit-scrollbar { width: 3px; }
+.ast-status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--c-green-400);
+    animation: pulseDot 2.5s ease infinite;
+    flex-shrink: 0;
+}
 
-.ai-doc-item {
+/* Docs list */
+.ast-docs-head {
+    padding: 14px 16px 8px;
+    font-size: .6rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: rgba(255,255,255,.28);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.ast-docs-count {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: var(--r-f);
+    padding: 1px 7px;
+    font-size: .6rem; color: rgba(255,255,255,.45);
+    font-family: var(--font-m);
+}
+
+.ast-docs-list {
+    flex: 1; overflow-y: auto; padding: 0 8px 8px;
+    scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.08) transparent;
+}
+.ast-docs-list::-webkit-scrollbar { width: 3px; }
+.ast-docs-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 4px; }
+
+.ast-doc-item {
     display: flex; align-items: center; gap: 9px;
     padding: 8px 10px; border-radius: var(--r);
-    border: 1px solid var(--ai-border);
-    margin-bottom: 6px;
-    background: var(--ai-n-100);
-    transition: background .12s;
-}
-.ai-doc-item:hover { background: var(--ai-ind-50); border-color: var(--ai-ind-100); }
-.ai-doc-icon {
-    width: 28px; height: 28px;
-    background: #fff; border: 1px solid var(--ai-border);
-    border-radius: var(--r);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-}
-.ai-doc-icon svg { width: 13px; height: 13px; color: var(--ai-rose-400); }
-.ai-doc-info { flex: 1; min-width: 0; }
-.ai-doc-name { font-size: .75rem; font-weight: 600; color: var(--ai-n-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ai-doc-size { font-size: .6rem; color: var(--ai-n-400); font-family: 'DM Mono', monospace; margin-top: 1px; }
-.ai-doc-del {
-    width: 24px; height: 24px; border-radius: var(--r);
-    border: none; background: transparent; cursor: pointer;
-    color: var(--ai-n-400); display: flex; align-items: center; justify-content: center;
-    transition: all .13s; flex-shrink: 0; padding: 0;
-}
-.ai-doc-del:hover { background: #FFE4E6; color: var(--ai-rose-400); }
-.ai-doc-del svg { width: 12px; height: 12px; }
-
-.ai-docs-empty { padding: 20px; text-align: center; color: var(--ai-n-400); font-size: .78rem; }
-.ai-docs-empty svg { width: 32px; height: 32px; opacity: .3; margin-bottom: 8px; }
-
-/* Upload form */
-.ai-upload-form {
-    border-top: 1px solid var(--ai-border);
-    padding: 12px;
-    flex-shrink: 0;
-}
-.ai-upload-label { font-size: .7rem; font-weight: 700; color: var(--ai-n-500); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; display: block; }
-
-.ai-input-sm {
-    width: 100%;
-    padding: 7px 10px;
-    border: 1.5px solid var(--ai-border);
-    border-radius: var(--r);
-    font-size: .8125rem;
-    font-family: inherit;
-    color: var(--ai-n-800);
-    background: #fff;
-    outline: none;
-    transition: border-color .14s;
-    margin-bottom: 6px;
-}
-.ai-input-sm:focus { border-color: var(--ai-ind-400); }
-
-.ai-file-drop {
-    width: 100%;
-    border: 2px dashed var(--ai-border);
-    border-radius: var(--r);
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all .14s;
-    margin-bottom: 8px;
-    background: var(--ai-n-100);
+    margin-bottom: 4px;
+    transition: background .13s;
+    cursor: default;
     position: relative;
 }
-.ai-file-drop:hover { border-color: var(--ai-ind-400); background: var(--ai-ind-50); }
-.ai-file-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.ai-file-drop-text { font-size: .72rem; color: var(--ai-n-500); pointer-events: none; }
-.ai-file-drop-text svg { width: 16px; height: 16px; display: block; margin: 0 auto 4px; opacity: .5; }
+.ast-doc-item:hover { background: rgba(255,255,255,.06); }
+.ast-doc-ico {
+    width: 30px; height: 30px; flex-shrink: 0;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: var(--r);
+    display: flex; align-items: center; justify-content: center;
+}
+.ast-doc-ico svg { width: 14px; height: 14px; color: var(--c-rose-400); }
+.ast-doc-info { flex: 1; min-width: 0; }
+.ast-doc-name { font-size: .78rem; font-weight: 600; color: rgba(255,255,255,.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ast-doc-size { font-size: .6rem; color: rgba(255,255,255,.35); font-family: var(--font-m); margin-top: 1px; }
+.ast-doc-del {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: none; background: transparent; cursor: pointer;
+    color: rgba(255,255,255,.25);
+    display: flex; align-items: center; justify-content: center;
+    transition: all .12s; flex-shrink: 0; padding: 0;
+    opacity: 0;
+}
+.ast-doc-item:hover .ast-doc-del { opacity: 1; }
+.ast-doc-del:hover { background: rgba(251,113,133,.18); color: var(--c-rose-400); }
+.ast-doc-del svg { width: 11px; height: 11px; }
 
-.ai-btn-upload {
+.ast-docs-empty {
+    padding: 24px 16px; text-align: center;
+    color: rgba(255,255,255,.25); font-size: .78rem;
+}
+.ast-docs-empty svg { width: 36px; height: 36px; opacity: .18; display: block; margin: 0 auto 10px; }
+
+/* Upload form */
+.ast-upload {
+    border-top: 1px solid rgba(255,255,255,.06);
+    padding: 12px 12px 16px;
+    flex-shrink: 0;
+}
+.ast-upload-title {
+    font-size: .6rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: rgba(255,255,255,.28);
+    margin-bottom: 10px;
+}
+.ast-inp {
     width: 100%;
-    padding: 8px;
-    background: var(--ai-ind-600);
-    color: #fff;
-    border: none; border-radius: var(--r);
-    font-size: .8125rem; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-    transition: background .14s, transform .14s;
+    padding: 8px 10px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: var(--r);
+    font-size: .8125rem; font-family: var(--font);
+    color: rgba(255,255,255,.9);
+    outline: none;
+    transition: border-color .14s, background .14s;
+    margin-bottom: 6px;
+}
+.ast-inp::placeholder { color: rgba(255,255,255,.28); }
+.ast-inp:focus { border-color: var(--c-teal-400); background: rgba(255,255,255,.09); }
+
+.ast-drop {
+    width: 100%; border: 1.5px dashed rgba(255,255,255,.14);
+    border-radius: var(--r); padding: 10px;
+    text-align: center; cursor: pointer;
+    transition: all .14s; margin-bottom: 8px;
+    background: rgba(255,255,255,.03);
+    position: relative;
+}
+.ast-drop:hover { border-color: var(--c-teal-400); background: rgba(10,175,162,.06); }
+.ast-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.ast-drop-lbl { font-size: .72rem; color: rgba(255,255,255,.35); pointer-events: none; }
+.ast-drop-lbl svg { width: 16px; height: 16px; display: block; margin: 0 auto 4px; opacity: .5; }
+
+.ast-upload-btn {
+    width: 100%; padding: 9px;
+    background: linear-gradient(135deg, var(--c-ind-600), var(--c-teal-400));
+    color: #fff; border: none; border-radius: var(--r);
+    font-size: .8125rem; font-weight: 600; font-family: var(--font);
+    cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: opacity .14s, transform .14s;
+    box-shadow: 0 4px 14px rgba(10,175,162,.3);
 }
-.ai-btn-upload:hover { background: var(--ai-ind-700); transform: translateY(-1px); }
-.ai-btn-upload svg { width: 13px; height: 13px; }
-.ai-btn-upload:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+.ast-upload-btn:hover { opacity: .9; transform: translateY(-1px); }
+.ast-upload-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.ast-upload-btn svg { width: 13px; height: 13px; }
 
-/* ── Footer / input ── */
-.ai-footer {
-    grid-column: 1 / 2;
-    border-top: 1px solid var(--ai-border);
-    padding: 12px 16px;
-    background: var(--ai-surface);
-    display: flex; flex-direction: column; gap: 10px;
+/* ══════════════════════════════════════
+   RIGHT PANEL — Chat
+══════════════════════════════════════ */
+.ast-right {
+    flex: 1; min-width: 0;
+    display: flex; flex-direction: column;
+    background: var(--c-n-100);
 }
 
-.ai-quick-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.ai-chip {
-    padding: 4px 10px;
-    background: var(--ai-n-100); border: 1.5px solid var(--ai-border);
+/* Chat header */
+.ast-chat-head {
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+    box-shadow: var(--sh-sm);
+}
+.ast-chat-head-info { display: flex; align-items: center; gap: 10px; }
+.ast-chat-head-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--c-ind-600), var(--c-teal-400));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(10,175,162,.3);
+    flex-shrink: 0;
+}
+.ast-chat-head-avatar svg { width: 17px; height: 17px; color: #fff; }
+.ast-chat-head-name {
+    font-family: var(--font-d);
+    font-size: .9375rem; font-weight: 700;
+    color: var(--c-ind-800); letter-spacing: -.02em;
+}
+.ast-chat-head-docs { font-size: .72rem; color: var(--c-n-400); margin-top: 1px; }
+
+.ast-model-tag {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--c-teal-50); border: 1px solid var(--c-teal-100);
+    border-radius: var(--r-f); padding: 4px 10px;
+    font-size: .68rem; font-weight: 600; color: var(--c-teal-400);
+}
+.ast-model-tag svg { width: 11px; height: 11px; }
+
+/* Messages */
+.ast-msgs {
+    flex: 1; overflow-y: auto;
+    padding: 24px 24px 16px;
+    display: flex; flex-direction: column; gap: 20px;
+    scrollbar-width: thin; scrollbar-color: var(--c-n-200) transparent;
+}
+.ast-msgs::-webkit-scrollbar { width: 4px; }
+.ast-msgs::-webkit-scrollbar-thumb { background: var(--c-n-200); border-radius: 4px; }
+
+/* Welcome state */
+.ast-welcome {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 32px 24px; text-align: center;
+    animation: fadeUp .4s ease both;
+    gap: 0;
+}
+.ast-welcome-glyph {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--c-ind-600) 0%, var(--c-teal-400) 100%);
+    border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    box-shadow: 0 12px 32px rgba(10,175,162,.28);
+}
+.ast-welcome-glyph svg { width: 36px; height: 36px; color: #fff; }
+.ast-welcome h2 {
+    font-family: var(--font-d);
+    font-size: 1.375rem; font-weight: 800;
+    color: var(--c-ind-800); letter-spacing: -.03em;
+    margin-bottom: 8px;
+}
+.ast-welcome p {
+    font-size: .875rem; color: var(--c-n-500);
+    line-height: 1.6; max-width: 340px; margin-bottom: 28px;
+}
+
+.ast-sug-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; width: 100%; max-width: 480px;
+}
+.ast-sug-card {
+    background: var(--c-surface);
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--r-lg);
+    padding: 12px 14px;
+    text-align: left; cursor: pointer;
+    transition: all .15s;
+    display: flex; flex-direction: column; gap: 4px;
+}
+.ast-sug-card:hover {
+    border-color: var(--c-ind-200);
+    background: var(--c-ind-50);
+    transform: translateY(-2px);
+    box-shadow: var(--sh);
+}
+.ast-sug-card-icon {
+    width: 28px; height: 28px; border-radius: var(--r);
+    background: var(--c-n-100); display: flex; align-items: center; justify-content: center;
+    margin-bottom: 4px; transition: background .15s;
+}
+.ast-sug-card-icon svg { width: 14px; height: 14px; color: var(--c-ind-500); }
+.ast-sug-card:hover .ast-sug-card-icon { background: var(--c-ind-100); }
+.ast-sug-label { font-size: .8125rem; font-weight: 600; color: var(--c-n-800); }
+.ast-sug-desc  { font-size: .72rem; color: var(--c-n-400); }
+
+/* Message row */
+.ast-msg { display: flex; gap: 10px; max-width: 100%; animation: msgIn .22s ease both; }
+.ast-msg.user { flex-direction: row-reverse; align-self: flex-end; max-width: 75%; }
+.ast-msg.assistant { align-self: flex-start; max-width: 85%; }
+
+.ast-msg-av {
+    width: 30px; height: 30px; border-radius: 50%;
+    flex-shrink: 0; align-self: flex-end;
+    display: flex; align-items: center; justify-content: center;
+}
+.ast-msg.assistant .ast-msg-av {
+    background: linear-gradient(135deg, var(--c-ind-600), var(--c-teal-400));
+    box-shadow: 0 2px 8px rgba(10,175,162,.25);
+}
+.ast-msg.assistant .ast-msg-av svg { width: 15px; height: 15px; color: #fff; }
+.ast-msg.user .ast-msg-av { background: var(--c-ind-100); }
+.ast-msg.user .ast-msg-av svg { width: 14px; height: 14px; color: var(--c-ind-600); }
+
+.ast-msg-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ast-msg.user .ast-msg-body { align-items: flex-end; }
+
+.ast-bubble {
+    padding: 11px 15px;
+    border-radius: var(--r-lg);
+    font-size: .875rem; line-height: 1.65;
+    position: relative;
+}
+.ast-msg.assistant .ast-bubble {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    color: var(--c-n-800);
+    border-radius: var(--r-lg) var(--r-lg) var(--r-lg) 4px;
+    box-shadow: var(--sh-sm);
+}
+.ast-msg.user .ast-bubble {
+    background: linear-gradient(135deg, var(--c-ind-600), var(--c-ind-700));
+    color: #fff;
+    border-radius: var(--r-lg) var(--r-lg) 4px var(--r-lg);
+    box-shadow: 0 4px 14px rgba(37,53,168,.25);
+}
+
+/* Markdown in bubble */
+.ast-bubble p { margin-bottom: 6px; }
+.ast-bubble p:last-child { margin-bottom: 0; }
+.ast-bubble ul,.ast-bubble ol { padding-left: 16px; margin: 6px 0; }
+.ast-bubble li { margin-bottom: 3px; }
+.ast-bubble strong { font-weight: 700; }
+.ast-bubble em { font-style: italic; }
+.ast-bubble code {
+    font-family: var(--font-m); font-size: .8em;
+    background: rgba(0,0,0,.06); padding: 2px 6px; border-radius: 4px;
+}
+.ast-msg.user .ast-bubble code { background: rgba(255,255,255,.15); }
+.ast-bubble h3 { font-weight: 700; margin-bottom: 4px; margin-top: 8px; }
+
+.ast-msg-time {
+    font-size: .6rem; color: var(--c-n-300);
+    font-family: var(--font-m);
+}
+.ast-msg.user .ast-msg-time { color: rgba(255,255,255,.4); }
+
+/* Typing */
+.ast-typing .ast-bubble {
+    display: flex; align-items: center; gap: 4px;
+    padding: 14px 16px;
+}
+.ast-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--c-teal-400);
+    animation: blink3 1.4s ease infinite;
+}
+.ast-dot:nth-child(2) { animation-delay: .16s; }
+.ast-dot:nth-child(3) { animation-delay: .32s; }
+
+/* Source tag */
+.ast-source {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: .65rem; font-weight: 600;
+    color: var(--c-teal-400);
+    background: var(--c-teal-50); border: 1px solid var(--c-teal-100);
+    padding: 2px 8px; border-radius: var(--r-f);
+    margin-top: 4px;
+}
+.ast-source svg { width: 10px; height: 10px; }
+
+/* ── Input area ── */
+.ast-input-wrap {
+    background: var(--c-surface);
+    border-top: 1px solid var(--c-border);
+    padding: 14px 20px 16px;
+    flex-shrink: 0;
+}
+
+.ast-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.ast-chip {
+    padding: 4px 11px;
+    background: var(--c-n-100); border: 1.5px solid var(--c-border);
     border-radius: var(--r-f);
-    font-size: .72rem; font-weight: 500; color: var(--ai-n-500);
+    font-size: .72rem; font-weight: 500; color: var(--c-n-500);
     cursor: pointer; transition: all .13s; white-space: nowrap;
 }
-.ai-chip:hover { background: var(--ai-teal-50); border-color: var(--ai-teal-400); color: var(--ai-teal-400); }
+.ast-chip:hover { background: var(--c-teal-50); border-color: var(--c-teal-400); color: var(--c-teal-400); }
 
-.ai-input-row { display: flex; gap: 8px; }
-
-.ai-textarea {
-    flex: 1;
-    padding: 10px 14px;
-    border: 1.5px solid var(--ai-border);
-    border-radius: var(--r-lg);
-    font-size: .875rem; font-family: inherit;
-    color: var(--ai-n-800);
-    background: var(--ai-n-100);
-    outline: none; resize: none;
-    transition: border-color .14s, background .14s;
-    line-height: 1.5;
-    min-height: 44px; max-height: 120px;
+.ast-input-row {
+    display: flex; align-items: flex-end; gap: 8px;
+    background: var(--c-n-100);
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--r-xl);
+    padding: 8px 8px 8px 16px;
+    transition: border-color .15s, box-shadow .15s;
 }
-.ai-textarea:focus { border-color: var(--ai-ind-400); background: #fff; }
-.ai-textarea::placeholder { color: var(--ai-n-400); }
+.ast-input-row:focus-within {
+    border-color: var(--c-ind-200);
+    box-shadow: 0 0 0 3px rgba(55,72,200,.08);
+    background: var(--c-surface);
+}
 
-.ai-send-btn {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, var(--ai-ind-600), var(--ai-teal-400));
+.ast-textarea {
+    flex: 1; border: none; background: transparent;
+    outline: none; resize: none;
+    font-size: .9375rem; font-family: var(--font);
+    color: var(--c-n-800); line-height: 1.5;
+    min-height: 28px; max-height: 120px;
+    padding: 2px 0;
+}
+.ast-textarea::placeholder { color: var(--c-n-300); }
+
+.ast-send {
+    width: 38px; height: 38px; flex-shrink: 0;
     border: none; border-radius: var(--r-lg);
+    background: linear-gradient(135deg, var(--c-ind-600), var(--c-teal-400));
     color: #fff; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
     transition: opacity .14s, transform .14s;
-    box-shadow: 0 4px 12px rgba(37,53,168,.3);
+    box-shadow: 0 3px 10px rgba(37,53,168,.28);
 }
-.ai-send-btn:hover { opacity: .9; transform: translateY(-1px); }
-.ai-send-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-.ai-send-btn svg { width: 18px; height: 18px; }
-.ai-send-btn .spinner { animation: spin .8s linear infinite; }
+.ast-send:hover:not(:disabled) { opacity: .9; transform: translateY(-1px); }
+.ast-send:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.ast-send svg { width: 16px; height: 16px; }
+.ast-send .spin-ico { animation: spin .8s linear infinite; }
 
-/* ── No-docs panel (employee, no management) ── */
-.ai-docs-panel.no-manage .ai-upload-form { display: none; }
+.ast-hint {
+    text-align: center; font-size: .65rem; color: var(--c-n-300);
+    margin-top: 8px; font-family: var(--font-m);
+}
 
-/* ── Flash messages ── */
-.ai-flash { padding: 10px 14px; border-radius: var(--r); font-size: .8125rem; font-weight: 500; margin-bottom: 12px; }
-.ai-flash.success { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
-.ai-flash.error   { background: #FFE4E6; color: #9F1239; border: 1px solid #FECDD3; }
+/* ── Alert ── */
+.ast-alert { padding: 10px 14px; border-radius: var(--r); font-size: .8125rem; font-weight: 500; margin-bottom: 12px; }
+.ast-alert.ok  { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+.ast-alert.err { background: #FFE4E6; color: #9F1239; border: 1px solid #FECDD3; }
 
 /* ── Responsive ── */
-@media (max-width: 900px) {
-    .ai-wrap { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto auto; }
-    .ai-docs-panel { grid-column: 1; grid-row: 4; border-left: none; border-top: 1px solid var(--ai-border); max-height: 280px; }
-    .ai-footer { grid-column: 1; }
+@media (max-width: 860px) {
+    .ast { flex-direction: column; height: auto; min-height: unset; }
+    .ast-left { width: 100%; max-height: 300px; }
+    .ast-right { height: calc(100vh - 360px - var(--header-h,56px)); min-height: 400px; }
+}
+@media (max-width: 600px) {
+    .ast-sug-grid { grid-template-columns: 1fr; }
+    .ast-msgs { padding: 16px 14px 10px; }
+    .ast-input-wrap { padding: 10px 12px 12px; }
+    .ast-msg.user,.ast-msg.assistant { max-width: 95%; }
 }
 </style>
 
 @if(session('success'))
-<div class="ai-flash success">{{ session('success') }}</div>
+<div class="ast-alert ok">{{ session('success') }}</div>
 @endif
 @if($errors->any())
-<div class="ai-flash error">{{ $errors->first() }}</div>
+<div class="ast-alert err">{{ $errors->first() }}</div>
 @endif
 
-<div class="ai-wrap">
+<div class="ast">
 
-    {{-- ── Header ── --}}
-    <div class="ai-header">
-        <div class="ai-header-left">
-            <div class="ai-avatar">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
-                    <circle cx="9" cy="13" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/>
-                </svg>
-            </div>
-            <div>
-                <div class="ai-header-title">Assistant RH IA</div>
-                <div class="ai-header-sub">Basé sur vos documents officiels</div>
-            </div>
-        </div>
-        <div class="ai-model-badge">
-            <span class="ai-model-dot"></span>
-            Gemini 2.0 Flash · Gratuit
-        </div>
-    </div>
+    {{-- ══════════ LEFT — Documents ══════════ --}}
+    <div class="ast-left">
 
-    {{-- ── Messages ── --}}
-    <div class="ai-messages" id="aiMessages">
-        <div class="ai-welcome">
-            <div class="ai-welcome-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
+        <div class="ast-brand">
+            <div class="ast-brand-row">
+                <div class="ast-brand-mark">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+                        <circle cx="9" cy="13" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="ast-brand-name">Assistant RH</div>
+                    <div class="ast-brand-sub">Portail RH+</div>
+                </div>
             </div>
-            <h3>Bonjour, je suis votre assistant RH</h3>
-            <p>Je peux répondre à vos questions en me basant sur
-                @if($docs->isNotEmpty())
-                    <strong>{{ $docs->count() }} document(s)</strong> chargé(s).
-                @else
-                    les documents disponibles. <em>Aucun document chargé pour l'instant.</em>
-                @endif
-            </p>
-            <div class="ai-suggestions">
-                <button class="ai-sug" onclick="suggest(this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Durée du préavis
-                </button>
-                <button class="ai-sug" onclick="suggest(this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    Jours de congés annuels
-                </button>
-                <button class="ai-sug" onclick="suggest(this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    Mutuelle et prévoyance
-                </button>
-                <button class="ai-sug" onclick="suggest(this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                    Heures supplémentaires
-                </button>
-                <button class="ai-sug" onclick="suggest(this)">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    Grille salariale
-                </button>
+            <div class="ast-status">
+                <span class="ast-status-dot"></span>
+                Gemini 2.0 Flash · Gratuit
             </div>
         </div>
-    </div>
 
-    {{-- ── Footer / Input ── --}}
-    <div class="ai-footer">
-        <div class="ai-quick-chips" id="quickChips">
-            <span class="ai-chip" onclick="suggest(this)">Congé maladie</span>
-            <span class="ai-chip" onclick="suggest(this)">Prime d'ancienneté</span>
-            <span class="ai-chip" onclick="suggest(this)">Période d'essai</span>
-            <span class="ai-chip" onclick="suggest(this)">Télétravail</span>
-        </div>
-        <div class="ai-input-row">
-            <textarea class="ai-textarea" id="aiInput" placeholder="Posez votre question…" rows="1" onkeydown="handleKey(event)"></textarea>
-            <button class="ai-send-btn" id="aiSendBtn" onclick="sendMessage()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    {{-- ── Documents panel ── --}}
-    <div class="ai-docs-panel {{ $canManage ? '' : 'no-manage' }}">
-        <div class="ai-docs-header">
-            <span class="ai-docs-title">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                Documents
-            </span>
-            <span class="ai-docs-count">{{ $docs->count() }}</span>
+        <div class="ast-docs-head">
+            <span>Base documentaire</span>
+            <span class="ast-docs-count">{{ $docs->count() }}</span>
         </div>
 
-        <div class="ai-docs-list">
+        <div class="ast-docs-list">
             @forelse($docs as $doc)
-            <div class="ai-doc-item">
-                <div class="ai-doc-icon">
+            <div class="ast-doc-item">
+                <div class="ast-doc-ico">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 </div>
-                <div class="ai-doc-info">
-                    <div class="ai-doc-name" title="{{ $doc->nom }}">{{ $doc->nom }}</div>
-                    <div class="ai-doc-size">{{ $doc->tailleFormatee() }}</div>
+                <div class="ast-doc-info">
+                    <div class="ast-doc-name" title="{{ $doc->nom }}">{{ $doc->nom }}</div>
+                    <div class="ast-doc-size">PDF · {{ $doc->tailleFormatee() }}</div>
                 </div>
                 @if($canManage)
-                <form method="POST" action="{{ route('admin.assistant.documents.destroy', $doc) }}" onsubmit="return confirm('Supprimer ce document ?')">
+                <form method="POST" action="{{ route('admin.assistant.documents.destroy', $doc) }}" onsubmit="return confirm('Supprimer «{{ $doc->nom }}» ?')">
                     @csrf @method('DELETE')
-                    <button type="submit" class="ai-doc-del" title="Supprimer">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                    <button type="submit" class="ast-doc-del" title="Supprimer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
                     </button>
                 </form>
                 @endif
             </div>
             @empty
-            <div class="ai-docs-empty">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" display="block" style="margin:0 auto 8px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                Aucun document chargé
+            <div class="ast-docs-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+                Aucun document chargé.<br>Ajoutez un PDF ci-dessous.
             </div>
             @endforelse
         </div>
 
         @if($canManage)
-        <div class="ai-upload-form">
-            <span class="ai-upload-label">Ajouter un document</span>
-            <form method="POST" action="{{ route('admin.assistant.documents.upload') }}" enctype="multipart/form-data" id="uploadForm">
+        <div class="ast-upload">
+            <div class="ast-upload-title">Ajouter un document</div>
+            <form method="POST" action="{{ route('admin.assistant.documents.upload') }}" enctype="multipart/form-data" id="astUploadForm">
                 @csrf
-                <input type="text" class="ai-input-sm" name="nom" placeholder="Nom du document" required>
-                <div class="ai-file-drop" id="fileDrop">
-                    <input type="file" name="pdf" accept=".pdf" onchange="updateDropLabel(this)" required>
-                    <div class="ai-file-drop-text">
+                <input type="text" class="ast-inp" name="nom" placeholder="Nom du document…" required>
+                <div class="ast-drop" id="astDrop">
+                    <input type="file" name="pdf" accept=".pdf" onchange="onFileChange(this)" required>
+                    <div class="ast-drop-lbl">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                        <span id="dropLabel">Glisser un PDF ou cliquer</span>
+                        <span id="astDropLbl">Glisser un PDF ici</span>
                     </div>
                 </div>
-                <button type="submit" class="ai-btn-upload" id="uploadBtn">
+                <button type="submit" class="ast-upload-btn" id="astUpBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                     Téléverser
                 </button>
             </form>
         </div>
         @endif
+
     </div>
 
+    {{-- ══════════ RIGHT — Chat ══════════ --}}
+    <div class="ast-right">
+
+        <div class="ast-chat-head">
+            <div class="ast-chat-head-info">
+                <div class="ast-chat-head-avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <div>
+                    <div class="ast-chat-head-name">Assistant RH IA</div>
+                    <div class="ast-chat-head-docs">
+                        {{ $docs->count() > 0 ? $docs->count() . ' document(s) · ' . $docs->sum('taille') / 1024 | round(0) . ' Ko' : 'Aucun document chargé' }}
+                    </div>
+                </div>
+            </div>
+            <div class="ast-model-tag">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Gemini 2.0 Flash
+            </div>
+        </div>
+
+        <div class="ast-msgs" id="astMsgs">
+            <div class="ast-welcome" id="astWelcome">
+                <div class="ast-welcome-glyph">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+                        <circle cx="9" cy="13" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h2>Que puis-je faire pour vous ?</h2>
+                <p>Je réponds à toutes vos questions RH en me basant sur vos documents officiels — convention collective, règlement intérieur, fiches de poste…</p>
+                <div class="ast-sug-grid">
+                    <button class="ast-sug-card" onclick="askSug(this)">
+                        <div class="ast-sug-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                        <div class="ast-sug-label">Congés & absences</div>
+                        <div class="ast-sug-desc">Droits, procédures, délais</div>
+                    </button>
+                    <button class="ast-sug-card" onclick="askSug(this)">
+                        <div class="ast-sug-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                        <div class="ast-sug-label">Rémunération</div>
+                        <div class="ast-sug-desc">Salaires, primes, avantages</div>
+                    </button>
+                    <button class="ast-sug-card" onclick="askSug(this)">
+                        <div class="ast-sug-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                        <div class="ast-sug-label">Droits & obligations</div>
+                        <div class="ast-sug-desc">Règlement, sanctions, préavis</div>
+                    </button>
+                    <button class="ast-sug-card" onclick="askSug(this)">
+                        <div class="ast-sug-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                        <div class="ast-sug-label">Conditions de travail</div>
+                        <div class="ast-sug-desc">Horaires, télétravail, équipements</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ast-input-wrap">
+            <div class="ast-chips">
+                <span class="ast-chip" onclick="chip(this)">Durée du préavis</span>
+                <span class="ast-chip" onclick="chip(this)">Congé maladie</span>
+                <span class="ast-chip" onclick="chip(this)">Prime d'ancienneté</span>
+                <span class="ast-chip" onclick="chip(this)">Heures supplémentaires</span>
+                <span class="ast-chip" onclick="chip(this)">Période d'essai</span>
+            </div>
+            <div class="ast-input-row">
+                <textarea class="ast-textarea" id="astInput" placeholder="Posez votre question…" rows="1"
+                    onkeydown="onKey(event)" oninput="autoResize(this)"></textarea>
+                <button class="ast-send" id="astSend" onclick="send()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </div>
+            <div class="ast-hint">Entrée pour envoyer · Maj+Entrée pour saut de ligne</div>
+        </div>
+
+    </div>
 </div>
 
 <script>
-(function () {
+(function(){
     'use strict';
 
+    var msgs    = document.getElementById('astMsgs');
+    var input   = document.getElementById('astInput');
+    var sendBtn = document.getElementById('astSend');
+    var welcome = document.getElementById('astWelcome');
     var history = [];
-    var input   = document.getElementById('aiInput');
-    var sendBtn = document.getElementById('aiSendBtn');
-    var msgs    = document.getElementById('aiMessages');
 
-    /* ── Auto-resize textarea ── */
-    input.addEventListener('input', function () {
-        this.style.height = 'auto';
-        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-    });
+    var SEND_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+    var SPIN_ICON = '<svg class="spin-ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
+    var AI_AV    = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>';
+    var USER_AV  = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
 
-    /* ── Send on Enter (Shift+Enter = newline) ── */
-    window.handleKey = function (e) {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-    };
+    function now(){
+        return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    }
 
-    /* ── Quick suggestions ── */
-    window.suggest = function (el) {
-        input.value = el.textContent.trim();
-        input.focus();
-        sendMessage();
-    };
+    function esc(s){
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
 
-    /* ── Format markdown-lite ── */
-    function formatText(text) {
-        return text
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    function md(text){
+        return esc(text)
             .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
             .replace(/\*(.+?)\*/g,'<em>$1</em>')
-            .replace(/`(.+?)`/g,'<code>$1</code>')
-            .replace(/^### (.+)$/gm,'<strong>$1</strong>')
-            .replace(/^## (.+)$/gm,'<strong>$1</strong>')
-            .replace(/^# (.+)$/gm,'<strong>$1</strong>')
-            .replace(/^[\*\-] (.+)$/gm,'• $1')
-            .replace(/^\d+\. (.+)$/gm,'→ $1')
+            .replace(/`([^`]+)`/g,'<code>$1</code>')
+            .replace(/^#{1,3} (.+)$/gm,'<h3>$1</h3>')
+            .replace(/^[\*\-•] (.+)$/gm,'<li>$1</li>')
+            .replace(/(<li>.*<\/li>)/gs, function(m){ return '<ul>'+m+'</ul>'; })
+            .replace(/^\d+\. (.+)$/gm,'<li>$1</li>')
+            .replace(/\n\n/g,'</p><p>')
             .replace(/\n/g,'<br>');
     }
 
-    function addMsg(role, text) {
-        var welcome = msgs.querySelector('.ai-welcome');
-        if (welcome) welcome.remove();
+    function scrollBottom(){ msgs.scrollTop = msgs.scrollHeight; }
 
-        var time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-        var div  = document.createElement('div');
-        div.className = 'ai-msg ' + role;
-
-        var iconSvg = role === 'assistant'
-            ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>'
-            : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
-
-        div.innerHTML = '<div class="ai-msg-icon">' + iconSvg + '</div>'
-            + '<div><div class="ai-msg-bubble">' + formatText(text) + '</div>'
-            + '<div class="ai-msg-time">' + time + '</div></div>';
-
-        msgs.appendChild(div);
-        msgs.scrollTop = msgs.scrollHeight;
-        return div;
-    }
-
-    function addTyping() {
+    function addMsg(role, text){
+        if(welcome){ welcome.remove(); welcome = null; }
+        var t   = now();
         var div = document.createElement('div');
-        div.className = 'ai-msg assistant ai-typing';
-        div.innerHTML = '<div class="ai-msg-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div>'
-            + '<div class="ai-msg-bubble"><span class="ai-typing-dot"></span><span class="ai-typing-dot"></span><span class="ai-typing-dot"></span></div>';
+        div.className = 'ast-msg ' + role;
+        var av  = role === 'assistant' ? AI_AV : USER_AV;
+        var bubble = role === 'assistant'
+            ? '<div class="ast-bubble"><p>' + md(text) + '</p></div>'
+            : '<div class="ast-bubble">' + esc(text) + '</div>';
+        div.innerHTML =
+            '<div class="ast-msg-av">' + av + '</div>' +
+            '<div class="ast-msg-body">' + bubble +
+            '<div class="ast-msg-time">' + t + '</div>' +
+            (role === 'assistant' ? '<div class="ast-source"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Basé sur vos documents</div>' : '') +
+            '</div>';
         msgs.appendChild(div);
-        msgs.scrollTop = msgs.scrollHeight;
+        scrollBottom();
         return div;
     }
 
-    window.sendMessage = function () {
-        var q = input.value.trim();
-        if (!q || sendBtn.disabled) return;
+    function addTyping(){
+        if(welcome){ welcome.remove(); welcome = null; }
+        var div = document.createElement('div');
+        div.className = 'ast-msg assistant ast-typing';
+        div.innerHTML = '<div class="ast-msg-av">'+AI_AV+'</div>'
+            +'<div class="ast-msg-body"><div class="ast-bubble">'
+            +'<span class="ast-dot"></span><span class="ast-dot"></span><span class="ast-dot"></span>'
+            +'</div></div>';
+        msgs.appendChild(div);
+        scrollBottom();
+        return div;
+    }
 
+    window.send = function(){
+        var q = input.value.trim();
+        if(!q || sendBtn.disabled) return;
         addMsg('user', q);
         input.value = '';
         input.style.height = 'auto';
         sendBtn.disabled = true;
-        sendBtn.innerHTML = '<svg class="spinner" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>';
+        sendBtn.innerHTML = SPIN_ICON;
+
+        history.push({ role:'user', content: q });
+        if(history.length > 14) history = history.slice(-14);
 
         var typing = addTyping();
 
-        // Keep last 6 messages in history
-        history.push({ role: 'user', content: q });
-        if (history.length > 12) history = history.slice(-12);
-
-        fetch('{{ route("admin.assistant.chat") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json',
+        fetch('{{ route("admin.assistant.chat") }}',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,
+                'Accept':'application/json'
             },
-            body: JSON.stringify({ question: q, history: history.slice(0, -1) }),
+            body: JSON.stringify({ question: q, history: history.slice(0,-1) })
         })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
+        .then(function(r){ return r.json(); })
+        .then(function(d){
             typing.remove();
-            var answer = data.answer || 'Désolé, je n\'ai pas pu répondre.';
-            addMsg('assistant', answer);
-            history.push({ role: 'model', content: answer });
-            if (history.length > 12) history = history.slice(-12);
+            var ans = d.answer || 'Désolé, je n\'ai pas pu répondre.';
+            addMsg('assistant', ans);
+            history.push({ role:'model', content: ans });
+            if(history.length > 14) history = history.slice(-14);
         })
-        .catch(function() {
+        .catch(function(){
             typing.remove();
             addMsg('assistant', 'Une erreur réseau s\'est produite. Veuillez réessayer.');
         })
-        .finally(function() {
+        .finally(function(){
             sendBtn.disabled = false;
-            sendBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+            sendBtn.innerHTML = SEND_ICON;
             input.focus();
         });
     };
 
-    /* ── Upload form ── */
-    window.updateDropLabel = function (input) {
-        var lbl = document.getElementById('dropLabel');
-        if (lbl && input.files[0]) lbl.textContent = input.files[0].name;
+    window.onKey = function(e){
+        if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); send(); }
     };
 
-    var uploadForm = document.getElementById('uploadForm');
-    if (uploadForm) {
-        uploadForm.addEventListener('submit', function() {
-            var btn = document.getElementById('uploadBtn');
-            if (btn) { btn.disabled = true; btn.textContent = 'Envoi en cours…'; }
+    window.autoResize = function(el){
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    };
+
+    window.chip = function(el){
+        input.value = el.textContent.trim();
+        input.focus();
+        send();
+    };
+
+    window.askSug = function(el){
+        var lbl = el.querySelector('.ast-sug-label');
+        if(lbl){ input.value = 'Quelles sont les règles concernant : ' + lbl.textContent.trim() + ' ?'; }
+        send();
+    };
+
+    window.onFileChange = function(inp){
+        var lbl = document.getElementById('astDropLbl');
+        if(lbl && inp.files[0]) lbl.textContent = inp.files[0].name;
+    };
+
+    var upForm = document.getElementById('astUploadForm');
+    if(upForm){
+        upForm.addEventListener('submit', function(){
+            var btn = document.getElementById('astUpBtn');
+            if(btn){ btn.disabled = true; btn.textContent = 'Envoi en cours…'; }
         });
     }
 

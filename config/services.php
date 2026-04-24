@@ -41,6 +41,11 @@ return [
         'model'   => env('GROQ_MODEL', 'llama-3.3-70b-versatile'),
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY', ''),
+        'model'   => env('GEMINI_MODEL', 'gemini-2.0-flash'),
+    ],
+
     'wasender' => [
         'api_key' => env('WASENDER_API_KEY', ''),
     ],

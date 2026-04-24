@@ -177,6 +177,12 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
     // Dashboard admin
     Route::get('/', [DashbordController::class, 'index'])->name('dashboard');
 
+    // Assistant IA
+    Route::get('assistant', [\App\Http\Controllers\AssistantController::class, 'index'])->name('assistant.index');
+    Route::post('assistant/chat', [\App\Http\Controllers\AssistantController::class, 'chat'])->name('assistant.chat');
+    Route::post('assistant/documents', [\App\Http\Controllers\AssistantController::class, 'uploadDocument'])->name('assistant.documents.upload');
+    Route::delete('assistant/documents/{document}', [\App\Http\Controllers\AssistantController::class, 'deleteDocument'])->name('assistant.documents.destroy');
+
     // Gestion des personnels (Super Admin : CRUD complet / Chef d'Entreprise : lecture seule via contrôleur)
     Route::resource('personnels', PersonnelController::class);
     Route::post('personnels/{personnel}/upload-photo', [PersonnelController::class, 'uploadPhoto'])->name('personnels.upload-photo');

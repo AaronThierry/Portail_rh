@@ -293,6 +293,30 @@
         </div>
         @endif
 
+        <!-- SECTION: Assistant IA -->
+        <div class="nav-section">
+            <div class="nav-section-header">
+                <span class="nav-section-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
+                        <circle cx="9" cy="13" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/>
+                    </svg>
+                </span>
+                <span class="nav-section-title">Intelligence IA</span>
+            </div>
+            <div class="nav-items">
+                <a href="{{ route('admin.assistant.index') }}" class="nav-link {{ Request::is('admin/assistant*') ? 'active' : '' }}" data-tooltip="Assistant RH IA">
+                    <span class="nav-link-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-link-text">Assistant RH IA</span>
+                    <span class="nav-link-indicator"></span>
+                </a>
+            </div>
+        </div>
+
         <!-- SECTION: Organisation -->
         @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin']))
         <div class="nav-section">

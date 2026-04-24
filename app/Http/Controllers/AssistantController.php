@@ -7,6 +7,7 @@ use App\Services\GeminiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Smalot\PdfParser\Parser as PdfParser;
 
 class AssistantController extends Controller
 {
@@ -35,37 +36,19 @@ class AssistantController extends Controller
         $user = auth()->user();
 
         $docs = AssistantDocument::where('actif', true)
+            ->whereNotNull('contenu_texte')
             ->when(!$user->hasRole('Super Admin') && $user->entreprise_id, fn($q) =>
                 $q->where('entreprise_id', $user->entreprise_id)
             )
             ->get();
 
-        // Refresh expired URIs
-        $fileUris = [];
-        foreach ($docs as $doc) {
-            if ($doc->isUriExpired()) {
-                try {
-                    $result = $gemini->uploadFile(Storage::disk('public')->path($doc->fichier_path), $doc->nom);
-                    $doc->update([
-                        'gemini_file_uri'  => $result['uri'],
-                        'gemini_file_name' => $result['name'],
-                        'uri_expires_at'   => $result['expires_at'],
-                    ]);
-                    $fileUris[] = $result['uri'];
-                } catch (\Exception $e) {
-                    Log::error('Gemini re-upload failed', ['id' => $doc->id, 'error' => $e->getMessage()]);
-                }
-            } else {
-                $fileUris[] = $doc->gemini_file_uri;
-            }
-        }
+        $docTexts = $docs->map(fn($d) => [
+            'nom'   => $d->nom,
+            'texte' => $d->contenu_texte,
+        ])->toArray();
 
         try {
-            $answer = $gemini->ask(
-                $request->question,
-                array_filter($fileUris),
-                $request->history ?? []
-            );
+            $answer = $gemini->ask($request->question, $docTexts, $request->history ?? []);
             return response()->json(['answer' => $answer]);
         } catch (\Exception $e) {
             Log::error('Gemini chat error', ['error' => $e->getMessage()]);
@@ -73,7 +56,7 @@ class AssistantController extends Controller
         }
     }
 
-    public function uploadDocument(Request $request, GeminiService $gemini)
+    public function uploadDocument(Request $request)
     {
         $request->validate([
             'pdf' => 'required|file|mimes:pdf|max:20480',
@@ -84,23 +67,23 @@ class AssistantController extends Controller
         $file = $request->file('pdf');
         $path = $file->store('assistant-docs', 'public');
 
+        $contenuTexte = null;
         try {
-            $result = $gemini->uploadFile(Storage::disk('public')->path($path), $request->nom);
+            $parser       = new PdfParser();
+            $pdf          = $parser->parseFile(Storage::disk('public')->path($path));
+            $contenuTexte = $pdf->getText();
         } catch (\Exception $e) {
-            Storage::disk('public')->delete($path);
-            return back()->withErrors(['pdf' => 'Erreur upload Gemini : ' . $e->getMessage()]);
+            Log::warning('PDF text extraction failed', ['nom' => $request->nom, 'error' => $e->getMessage()]);
         }
 
         AssistantDocument::create([
-            'nom'              => $request->nom,
-            'fichier_path'     => $path,
-            'gemini_file_uri'  => $result['uri'],
-            'gemini_file_name' => $result['name'],
-            'uri_expires_at'   => $result['expires_at'],
-            'actif'            => true,
-            'entreprise_id'    => $user->hasRole('Super Admin') ? null : $user->entreprise_id,
-            'taille'           => $file->getSize(),
-            'uploaded_by'      => $user->id,
+            'nom'           => $request->nom,
+            'fichier_path'  => $path,
+            'contenu_texte' => $contenuTexte,
+            'actif'         => true,
+            'entreprise_id' => $user->hasRole('Super Admin') ? null : $user->entreprise_id,
+            'taille'        => $file->getSize(),
+            'uploaded_by'   => $user->id,
         ]);
 
         return back()->with('success', "Document «{$request->nom}» ajouté à l'assistant.");

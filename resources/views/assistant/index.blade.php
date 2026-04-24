@@ -558,7 +558,12 @@
                 </div>
                 <div class="ast-doc-info">
                     <div class="ast-doc-name" title="{{ $doc->nom }}">{{ $doc->nom }}</div>
-                    <div class="ast-doc-size">PDF · {{ $doc->tailleFormatee() }}</div>
+                    <div class="ast-doc-size">
+                        PDF · {{ $doc->tailleFormatee() }}
+                        @if(!$doc->contenu_texte)
+                            &nbsp;<span style="color:var(--c-amber-400);font-size:.58rem;" title="Extraction de texte non disponible">⚠ non indexé</span>
+                        @endif
+                    </div>
                 </div>
                 @if($canManage)
                 <form method="POST" action="{{ route('admin.assistant.documents.destroy', $doc) }}" onsubmit="return confirm('Supprimer «{{ $doc->nom }}» ?')">
@@ -611,7 +616,11 @@
                 <div>
                     <div class="ast-chat-head-name">Assistant RH IA</div>
                     <div class="ast-chat-head-docs">
-                        {{ $docs->count() > 0 ? $docs->count() . ' document(s) · ' . $docs->sum('taille') / 1024 | round(0) . ' Ko' : 'Aucun document chargé' }}
+                        @if($docs->count() > 0)
+                            {{ $docs->count() }} document(s) · {{ round($docs->sum('taille') / 1024) }} Ko
+                        @else
+                            Aucun document chargé
+                        @endif
                     </div>
                 </div>
             </div>

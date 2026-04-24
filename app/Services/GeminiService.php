@@ -9,8 +9,7 @@ class GeminiService
 {
     private string $apiKey;
     private string $model;
-    private string $apiBase  = 'https://generativelanguage.googleapis.com/v1beta';
-    private string $uploadBase = 'https://generativelanguage.googleapis.com/upload/v1beta';
+    private string $apiBase = 'https://generativelanguage.googleapis.com/v1beta';
 
     public function __construct()
     {
@@ -19,70 +18,31 @@ class GeminiService
     }
 
     /**
-     * Upload a PDF to Gemini Files API.
-     * Returns uri, gemini file name, and expiry time (48h).
+     * Ask a question using pre-extracted document texts as context.
+     * $docTexts = [['nom' => '...', 'texte' => '...']]
+     * $history  = [['role'=>'user','content'=>'...'],['role'=>'model','content'=>'...']]
      */
-    public function uploadFile(string $filePath, string $displayName): array
+    public function ask(string $question, array $docTexts, array $history = []): string
     {
-        $fileContent = file_get_contents($filePath);
-        $fileSize    = strlen($fileContent);
-
-        // Step 1 — initiate resumable upload
-        $init = Http::withHeaders([
-            'X-Goog-Upload-Protocol'             => 'resumable',
-            'X-Goog-Upload-Command'              => 'start',
-            'X-Goog-Upload-Header-Content-Length'=> $fileSize,
-            'X-Goog-Upload-Header-Content-Type'  => 'application/pdf',
-            'Content-Type'                       => 'application/json',
-        ])->post("{$this->uploadBase}/files?key={$this->apiKey}", [
-            'file' => ['display_name' => $displayName],
-        ]);
-
-        $uploadUrl = $init->header('X-Goog-Upload-URL');
-
-        if (!$uploadUrl) {
-            throw new \RuntimeException('Gemini Files API : URL upload introuvable. ' . $init->body());
-        }
-
-        // Step 2 — upload bytes
-        $upload = Http::withHeaders([
-            'Content-Length'        => $fileSize,
-            'X-Goog-Upload-Offset'  => '0',
-            'X-Goog-Upload-Command' => 'upload, finalize',
-        ])->withBody($fileContent, 'application/pdf')->post($uploadUrl);
-
-        if (!$upload->ok()) {
-            throw new \RuntimeException('Gemini upload échoué : ' . $upload->status() . ' ' . $upload->body());
-        }
-
-        $file = $upload->json('file');
-
-        return [
-            'uri'        => $file['uri'],
-            'name'       => $file['name'],
-            'expires_at' => now()->addHours(47),
-        ];
-    }
-
-    /**
-     * Ask a question using the given Gemini file URIs as context.
-     * $history = [['role'=>'user','content'=>'...'],['role'=>'model','content'=>'...']]
-     */
-    public function ask(string $question, array $fileUris, array $history = []): string
-    {
-        if (empty($fileUris)) {
+        if (empty($docTexts)) {
             return 'Aucun document disponible. Veuillez contacter votre administrateur pour ajouter des documents à l\'assistant.';
         }
 
         $systemPrompt = "Tu es un assistant RH professionnel pour le Portail RH+. "
             . "Tu réponds exclusivement en français, de façon claire, concise et professionnelle. "
-            . "Tu bases tes réponses uniquement sur les documents fournis. "
+            . "Tu bases tes réponses uniquement sur les documents fournis ci-dessous. "
             . "Si une information n'est pas dans les documents, dis-le clairement sans inventer. "
             . "Utilise des listes à puces ou de la mise en forme quand c'est utile pour la lisibilité.";
 
+        // Build context block from all documents
+        $contextBlock = '';
+        foreach ($docTexts as $doc) {
+            $contextBlock .= "\n\n=== Document : {$doc['nom']} ===\n{$doc['texte']}";
+        }
+
         $contents = [];
 
-        // Conversation history (sans les PDFs pour ne pas répéter)
+        // Conversation history
         foreach ($history as $msg) {
             $contents[] = [
                 'role'  => $msg['role'],
@@ -90,14 +50,11 @@ class GeminiService
             ];
         }
 
-        // Current user message: PDFs + question
-        $userParts = [];
-        foreach ($fileUris as $uri) {
-            $userParts[] = ['file_data' => ['mime_type' => 'application/pdf', 'file_uri' => $uri]];
-        }
-        $userParts[] = ['text' => $question];
-
-        $contents[] = ['role' => 'user', 'parts' => $userParts];
+        // Current question with document context injected
+        $contents[] = [
+            'role'  => 'user',
+            'parts' => [['text' => "Voici les documents de référence :{$contextBlock}\n\nQuestion : {$question}"]],
+        ];
 
         $response = Http::timeout(45)->post(
             "{$this->apiBase}/models/{$this->model}:generateContent?key={$this->apiKey}",

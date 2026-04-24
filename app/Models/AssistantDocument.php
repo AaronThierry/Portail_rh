@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AssistantDocument extends Model
 {
     protected $fillable = [
-        'nom', 'fichier_path', 'gemini_file_uri', 'gemini_file_name',
+        'nom', 'fichier_path', 'contenu_texte', 'gemini_file_uri', 'gemini_file_name',
         'actif', 'entreprise_id', 'taille', 'uploaded_by', 'uri_expires_at',
     ];
 

@@ -34,10 +34,19 @@ class GeminiService
             . "Si une information n'est pas dans les documents, dis-le clairement sans inventer. "
             . "Utilise des listes à puces ou de la mise en forme quand c'est utile pour la lisibilité.";
 
-        // Build context block from all documents
-        $contextBlock = '';
+        // Build context block — truncate each doc to avoid 429 token quota on free tier
+        $maxCharsPerDoc   = 30000;
+        $maxCharsTotal    = 80000;
+        $contextBlock     = '';
+        $totalChars       = 0;
         foreach ($docTexts as $doc) {
-            $contextBlock .= "\n\n=== Document : {$doc['nom']} ===\n{$doc['texte']}";
+            if ($totalChars >= $maxCharsTotal) break;
+            $texte = mb_substr($doc['texte'], 0, $maxCharsPerDoc);
+            if ($totalChars + mb_strlen($texte) > $maxCharsTotal) {
+                $texte = mb_substr($texte, 0, $maxCharsTotal - $totalChars);
+            }
+            $contextBlock .= "\n\n=== Document : {$doc['nom']} ===\n{$texte}";
+            $totalChars   += mb_strlen($texte);
         }
 
         $contents = [];

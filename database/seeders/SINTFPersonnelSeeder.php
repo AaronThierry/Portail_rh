@@ -41,7 +41,7 @@ class SINTFPersonnelSeeder extends Seeder
                 'nom'                   => $nom,
                 'prenoms'               => $prenoms,
                 'civilite'              => $row['civilite'],
-                'sexe'                  => $row['sexe'],
+                'sexe'                  => $row['sexe'] === 'Masculin' ? 'M' : 'F',
                 'date_naissance'        => $row['date_naissance'],
                 'adresse'               => $row['adresse'],
                 'telephone'             => $row['telephone'],

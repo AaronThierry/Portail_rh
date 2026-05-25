@@ -16,17 +16,13 @@
 
     <style>
     /* ═══════════════════════════════════════════════════════════════
-       PORTAIL RH+  ·  ESPACE EMPLOYÉ  ·  Sidebar Pro v2
+       PORTAIL RH+  ·  ESPACE EMPLOYÉ  ·  TopNav + Burger Dropdown
        ═══════════════════════════════════════════════════════════════ */
 
     :root {
         --ind-50:  #EEEFFE; --ind-100: #D5D9FB; --ind-200: #B0B8F5;
         --ind-300: #808FE8; --ind-400: #5566D4; --ind-500: #3748C8;
         --ind-600: #2535A8; --ind-700: #1A2785; --ind-800: #111C62; --ind-900: #0A1040;
-
-        --teal-50:  #E5FAF8; --teal-100: #B0EFE9;
-        --teal-300: #2ECABB; --teal-400: #0AAFA2;
-        --teal-500: #078F84; --teal-600: #056B62;
 
         /* Orange palette — Espace Employé */
         --org-50:  #FFF7ED; --org-100: #FFEDD5; --org-200: #FED7AA;
@@ -55,30 +51,25 @@
         --shadow-lg: 0 12px 32px rgba(10,16,64,.12), 0 4px 10px rgba(10,16,64,.06);
         --shadow-xl: 0 24px 48px rgba(10,16,64,.14), 0 8px 16px rgba(10,16,64,.06);
 
-        /* Sidebar */
-        --sb-w:  64px;
-        --sb-wE: 240px;
-        --hd-h:  56px;
+        --hd-h: 58px;
+
+        /* Topnav dark bg (same palette as old sidebar) */
+        --tn-bg-1: #1A0800;
+        --tn-bg-2: #2C1200;
+        --tn-border: rgba(255,255,255,.07);
+        --tn-text: rgba(255,255,255,.9);
+        --tn-text-dim: rgba(255,255,255,.55);
 
         --font:   'DM Sans', system-ui, sans-serif;
         --font-d: 'Syne', 'DM Sans', system-ui, sans-serif;
         --font-m: 'DM Mono', monospace;
         --r-sm: 4px; --r: 8px; --r-lg: 12px; --r-xl: 16px; --r-2xl: 24px; --r-f: 9999px;
-
-        /* Sidebar bg tokens */
-        --sb-bg-1: #1A0800;
-        --sb-bg-2: #2C1200;
-        --sb-item-hover: rgba(255,255,255,.07);
-        --sb-item-active: rgba(249,115,22,.16);
-        --sb-border: rgba(255,255,255,.06);
-        --sb-text-muted: rgba(255,255,255,.38);
-        --sb-text-dim: rgba(255,255,255,.6);
-        --sb-text: rgba(255,255,255,.92);
     }
 
-    @keyframes fadeUp   { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:translateY(0) } }
-    @keyframes slideDown{ from { opacity:0; transform:translateY(-6px)  } to { opacity:1; transform:translateY(0) } }
-    @keyframes pulse    { 0%,100% { opacity:1 } 50% { opacity:.5 } }
+    @keyframes fadeUp    { from { opacity:0; transform:translateY(8px)  } to { opacity:1; transform:translateY(0) } }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-6px)  } to { opacity:1; transform:translateY(0) } }
+    @keyframes dropIn    { from { opacity:0; transform:translateY(-10px) } to { opacity:1; transform:translateY(0) } }
+    @keyframes pulse     { 0%,100% { opacity:1 } 50% { opacity:.5 } }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -96,434 +87,146 @@
     /* ────────────────────────────────────────
        LAYOUT
     ──────────────────────────────────────── */
-    .ee-layout { display: flex; min-height: 100vh; }
-
-    /* ────────────────────────────────────────
-       SIDEBAR
-    ──────────────────────────────────────── */
-    .ee-sidebar {
-        width: var(--sb-w);
-        background: linear-gradient(180deg, var(--sb-bg-1) 0%, var(--sb-bg-2) 100%);
-        border-right: 1px solid var(--sb-border);
-        position: fixed;
-        inset: 0 auto 0 0;
-        z-index: 100;
+    .ee-layout {
         display: flex;
         flex-direction: column;
-        overflow: visible;
-        transition: width .26s cubic-bezier(.4,0,.2,1);
-        /* subtle inner glow */
-        box-shadow: inset -1px 0 0 rgba(255,255,255,.03), 2px 0 24px rgba(7,9,46,.35);
+        min-height: 100vh;
     }
 
-    /* Expanded state: pinned OR hovered */
-    html.sb-pinned .ee-sidebar,
-    html.sb-open   .ee-sidebar {
-        width: var(--sb-wE);
-        overflow: hidden;
-    }
-    html.sb-pinned .ee-main { margin-left: var(--sb-wE); }
-
-    /* ── Brand ── */
-    .ee-brand {
+    /* ────────────────────────────────────────
+       TOP NAV BAR (fixed)
+    ──────────────────────────────────────── */
+    .ee-topnav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
         height: var(--hd-h);
+        background: linear-gradient(135deg, var(--tn-bg-1) 0%, var(--tn-bg-2) 100%);
+        border-bottom: 1px solid var(--tn-border);
+        box-shadow: 0 2px 20px rgba(0,0,0,.35);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        padding: 0 1.25rem;
+        gap: 1rem;
+    }
+
+    .ee-topnav-left  {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        flex: 1;
+        min-width: 0;
+    }
+    .ee-topnav-center {
+        flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-shrink: 0;
-        border-bottom: 1px solid var(--sb-border);
-        padding: 0;
-        gap: 0;
-        overflow: hidden;
-        transition: padding .26s, gap .26s;
-        position: relative;
+        min-width: 0;
     }
-    html.sb-pinned .ee-brand,
-    html.sb-open   .ee-brand { justify-content: flex-start; padding: 0 12px; gap: 10px; }
+    .ee-topnav-right {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        flex: 1;
+        justify-content: flex-end;
+    }
 
+    /* ── Burger button ── */
+    .ee-burger {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 38px; height: 38px;
+        border: 1px solid rgba(255,255,255,.14);
+        border-radius: var(--r);
+        background: rgba(255,255,255,.06);
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        transition: background .15s, border-color .15s;
+    }
+    .ee-burger:hover {
+        background: rgba(255,255,255,.12);
+        border-color: rgba(255,255,255,.24);
+    }
+    html.menu-open .ee-burger {
+        background: rgba(249,115,22,.18);
+        border-color: rgba(249,115,22,.4);
+    }
+    .ee-burger span {
+        display: block;
+        width: 18px; height: 2px;
+        background: var(--tn-text);
+        border-radius: 2px;
+        transform-origin: center;
+        transition: transform .26s cubic-bezier(.4,0,.2,1), opacity .2s, width .22s;
+    }
+    /* Burger → X animation */
+    html.menu-open .ee-burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    html.menu-open .ee-burger span:nth-child(2) { opacity: 0; width: 0; }
+    html.menu-open .ee-burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── Brand link ── */
+    .ee-brand-link {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        text-decoration: none;
+        flex-shrink: 0;
+    }
     .ee-brand-mark {
-        width: 36px; height: 36px;
+        width: 33px; height: 33px;
         background: linear-gradient(135deg, var(--org-600) 0%, var(--org-400) 100%);
-        border-radius: var(--r-lg);
+        border-radius: var(--r);
         display: flex; align-items: center; justify-content: center;
         flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(249,115,22,.4);
+        box-shadow: 0 3px 10px rgba(249,115,22,.4);
     }
-    .ee-brand-mark svg { width: 18px; height: 18px; color: #fff; stroke-width: 2; }
-
-    .ee-brand-info {
-        max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
-        transition: max-width .26s cubic-bezier(.4,0,.2,1), opacity .18s .05s;
-        flex: 1; min-width: 0;
-    }
-    html.sb-pinned .ee-brand-info,
-    html.sb-open   .ee-brand-info { max-width: 160px; opacity: 1; }
-
+    .ee-brand-mark svg { width: 16px; height: 16px; color: #fff; stroke-width: 2; }
     .ee-brand-name {
         font-family: var(--font-d);
-        font-size: 1.0625rem; font-weight: 700;
-        color: #fff; letter-spacing: -.02em; line-height: 1.15;
+        font-size: .9375rem; font-weight: 700;
+        color: var(--tn-text); letter-spacing: -.02em; line-height: 1.15;
     }
     .ee-brand-name em { font-style: normal; color: var(--org-300); }
     .ee-brand-sub {
-        display: block; font-size: .6rem; font-weight: 600;
-        color: var(--sb-text-muted); letter-spacing: .1em; text-transform: uppercase;
+        display: block;
+        font-size: .5625rem; font-weight: 600;
+        color: var(--tn-text-dim); letter-spacing: .1em; text-transform: uppercase;
         margin-top: 1px;
     }
 
-    /* Pin toggle button */
-    .ee-pin-btn {
-        position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-        width: 22px; height: 22px;
-        background: rgba(255,255,255,.07);
-        border: 1px solid rgba(255,255,255,.1);
-        border-radius: 6px;
-        display: none;
-        align-items: center; justify-content: center;
-        cursor: pointer;
-        color: var(--sb-text-dim);
-        transition: background .14s, color .14s, transform .26s;
-        flex-shrink: 0;
-        padding: 0;
-    }
-    .ee-pin-btn svg { width: 12px; height: 12px; stroke-width: 2.2; transition: transform .26s; }
-    .ee-pin-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
-    html.sb-pinned .ee-pin-btn svg,
-    html.sb-open   .ee-pin-btn svg { transform: rotate(180deg); }
-    html.sb-pinned .ee-pin-btn,
-    html.sb-open   .ee-pin-btn { display: flex; }
-
-    /* ── User card ── */
-    .ee-user-card {
-        display: flex; align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        height: 56px;
-        padding: 0;
-        gap: 0;
-        text-decoration: none;
-        border-bottom: 1px solid var(--sb-border);
-        overflow: hidden;
-        transition: padding .26s, gap .26s, background .14s;
-        position: relative;
-    }
-    html.sb-pinned .ee-user-card,
-    html.sb-open   .ee-user-card { justify-content: flex-start; padding: 0 12px; gap: 10px; }
-    .ee-user-card:hover { background: var(--sb-item-hover); }
-
-    .ee-user-avatar-wrap {
-        position: relative; flex-shrink: 0;
-    }
-    .ee-user-avatar {
-        width: 32px; height: 32px;
-        border-radius: 50%; object-fit: cover; display: block;
-        border: 2px solid transparent;
-        background-clip: padding-box;
-        box-shadow: 0 0 0 2px rgba(249,115,22,.4);
-        transition: box-shadow .2s;
-    }
-    .ee-user-card:hover .ee-user-avatar { box-shadow: 0 0 0 2px var(--org-400); }
-    .ee-user-online {
-        position: absolute; bottom: 0; right: 0;
-        width: 8px; height: 8px;
-        background: var(--green-400); border: 2px solid var(--sb-bg-1);
-        border-radius: 50%;
-    }
-
-    .ee-user-info {
-        max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
-        transition: max-width .26s cubic-bezier(.4,0,.2,1), opacity .18s .05s;
-        min-width: 0; flex: 1;
-    }
-    html.sb-pinned .ee-user-info,
-    html.sb-open   .ee-user-info { max-width: 160px; opacity: 1; }
-
-    .ee-user-name {
-        font-size: .8125rem; font-weight: 600; color: var(--sb-text);
-        line-height: 1.2; overflow: hidden; text-overflow: ellipsis;
-    }
-    .ee-user-role {
-        font-size: .6875rem; color: var(--sb-text-muted);
-        margin-top: 1px; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    /* ── Navigation ── */
-    .ee-nav {
-        flex: 1; width: 100%;
-        display: flex; flex-direction: column;
-        align-items: center;
-        padding: 8px 0 4px;
-        overflow-y: auto; overflow-x: hidden;
-        scrollbar-width: none;
-        transition: align-items .1s;
-    }
-    .ee-nav::-webkit-scrollbar { display: none; }
-    html.sb-pinned .ee-nav,
-    html.sb-open   .ee-nav { align-items: stretch; padding: 8px 0 4px; }
-
-    .ee-nav-section {
-        width: 100%;
-        display: flex; flex-direction: column; align-items: center;
-        margin-bottom: 4px;
-    }
-    html.sb-pinned .ee-nav-section,
-    html.sb-open   .ee-nav-section { align-items: stretch; padding: 0 8px; }
-
-    /* Section title */
-    .ee-nav-label {
-        height: 20px;
-        display: flex; align-items: center; justify-content: center;
-        margin: 4px 0 2px;
-        overflow: hidden;
-    }
-    html.sb-pinned .ee-nav-label,
-    html.sb-open   .ee-nav-label { justify-content: flex-start; margin: 6px 4px 2px; }
-
-    .ee-nav-label-dot {
-        width: 4px; height: 4px; border-radius: 50%;
-        background: rgba(255,255,255,.12); flex-shrink: 0;
-        transition: opacity .2s;
-    }
-    .ee-nav-label-text {
-        max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
-        font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-        color: var(--sb-text-muted);
-        transition: max-width .26s cubic-bezier(.4,0,.2,1), opacity .18s .06s;
-    }
-    html.sb-pinned .ee-nav-label-dot,
-    html.sb-open   .ee-nav-label-dot { opacity: 0; }
-    html.sb-pinned .ee-nav-label-text,
-    html.sb-open   .ee-nav-label-text { max-width: 180px; opacity: 1; }
-
-    /* Nav link */
-    .ee-nav-link {
-        position: relative;
-        width: 40px; height: 40px;
-        border-radius: var(--r-lg);
-        display: flex; align-items: center; justify-content: center;
-        gap: 0;
-        color: var(--sb-text-dim);
-        text-decoration: none;
-        transition:
-            background .14s, color .14s, box-shadow .14s,
-            width .26s cubic-bezier(.4,0,.2,1),
-            height .26s, border-radius .26s, padding .26s, gap .26s;
-        margin-bottom: 2px;
-        flex-shrink: 0;
-        overflow: hidden;
-    }
-    .ee-nav-link svg {
-        width: 18px; height: 18px; stroke-width: 1.8; flex-shrink: 0;
-        transition: color .14s;
-    }
-    .ee-nav-link:hover {
-        background: var(--sb-item-hover);
-        color: var(--sb-text);
-    }
-    .ee-nav-link.active {
-        background: var(--sb-item-active);
-        color: var(--org-300);
-        box-shadow: inset 3px 0 0 var(--org-400);
-    }
-    .ee-nav-link.active svg { filter: drop-shadow(0 0 6px rgba(249,115,22,.45)); }
-
-    /* Label in nav link */
-    .ee-nav-link-label {
-        max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
-        font-size: .875rem; font-weight: 500; color: inherit;
-        transition: max-width .26s cubic-bezier(.4,0,.2,1), opacity .18s .06s;
-        flex-shrink: 0; flex: 1;
-    }
-    html.sb-pinned .ee-nav-link,
-    html.sb-open   .ee-nav-link {
-        width: 100%; height: 36px; border-radius: var(--r);
-        justify-content: flex-start; padding: 0 10px; gap: 10px;
-    }
-    html.sb-pinned .ee-nav-link-label,
-    html.sb-open   .ee-nav-link-label { max-width: 180px; opacity: 1; }
-
-    /* Badge on nav link */
-    .ee-nav-badge {
-        margin-left: auto; flex-shrink: 0;
-        min-width: 18px; height: 18px;
-        background: var(--rose-400);
-        color: #fff; font-size: .6rem; font-weight: 700;
-        border-radius: var(--r-f);
-        display: none; align-items: center; justify-content: center;
-        padding: 0 4px;
-    }
-    html.sb-pinned .ee-nav-badge[data-count]:not([data-count="0"]),
-    html.sb-open   .ee-nav-badge[data-count]:not([data-count="0"]) { display: flex; }
-
-    /* Tooltip (collapsed only) */
-    .ee-nav-link[data-tip]::after {
-        content: attr(data-tip);
-        position: absolute; left: calc(100% + 10px); top: 50%;
-        transform: translateY(-50%) translateX(-4px);
-        background: var(--org-700); color: rgba(255,255,255,.92);
-        font-family: var(--font); font-size: .72rem; font-weight: 500;
-        white-space: nowrap; padding: 5px 11px;
-        border-radius: var(--r); border: 1px solid rgba(255,255,255,.08);
-        box-shadow: var(--shadow-lg);
-        pointer-events: none; opacity: 0;
-        transition: opacity .15s, transform .15s; z-index: 999;
-    }
-    .ee-nav-link[data-tip]:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
-    html.sb-pinned .ee-nav-link[data-tip]::after,
-    html.sb-open   .ee-nav-link[data-tip]::after { display: none; }
-
-    /* ── Sidebar Divider ── */
-    .ee-sidebar-divider {
-        width: 32px; height: 1px;
-        background: var(--sb-border);
-        margin: 4px auto;
-        flex-shrink: 0;
-        transition: width .26s;
-    }
-    html.sb-pinned .ee-sidebar-divider,
-    html.sb-open   .ee-sidebar-divider { width: calc(100% - 16px); margin: 4px 8px; }
-
-    /* ── Footer ── */
-    .ee-sidebar-footer {
-        width: 100%; flex-shrink: 0;
-        border-top: 1px solid var(--sb-border);
-        padding: 6px 0 12px;
-        display: flex; flex-direction: column; align-items: center; gap: 1px;
-    }
-    html.sb-pinned .ee-sidebar-footer,
-    html.sb-open   .ee-sidebar-footer { align-items: stretch; padding: 6px 8px 12px; }
-
-    .ee-footer-btn {
-        position: relative;
-        width: 40px; height: 38px;
-        border-radius: var(--r-lg);
-        display: flex; align-items: center; justify-content: center;
-        gap: 0;
-        color: var(--sb-text-muted);
-        background: transparent; border: none; cursor: pointer;
-        text-decoration: none; overflow: hidden; flex-shrink: 0;
-        transition:
-            background .14s, color .14s,
-            width .26s cubic-bezier(.4,0,.2,1), height .26s,
-            border-radius .26s, padding .26s, gap .26s;
-    }
-    .ee-footer-btn svg { width: 17px; height: 17px; stroke-width: 1.8; flex-shrink: 0; }
-    .ee-footer-btn:hover { background: var(--sb-item-hover); color: var(--sb-text); }
-    .ee-footer-btn.danger:hover { background: rgba(251,113,133,.12); color: var(--rose-400); }
-    .ee-footer-btn.accent { color: rgba(249,115,22,.8); }
-    .ee-footer-btn.accent:hover { background: rgba(249,115,22,.12); color: var(--org-300); }
-
-    .ee-footer-btn-label {
-        max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
-        font-size: .875rem; font-weight: 500; color: inherit;
-        transition: max-width .26s cubic-bezier(.4,0,.2,1), opacity .18s .06s;
-        flex-shrink: 0; flex: 1;
-    }
-    html.sb-pinned .ee-footer-btn,
-    html.sb-open   .ee-footer-btn {
-        width: 100%; height: 36px; border-radius: var(--r);
-        justify-content: flex-start; padding: 0 10px; gap: 10px;
-    }
-    html.sb-pinned .ee-footer-btn-label,
-    html.sb-open   .ee-footer-btn-label { max-width: 180px; opacity: 1; }
-
-    /* Footer tooltips */
-    .ee-footer-btn[data-tip]::after {
-        content: attr(data-tip);
-        position: absolute; left: calc(100% + 10px); top: 50%;
-        transform: translateY(-50%) translateX(-4px);
-        background: var(--org-700); color: rgba(255,255,255,.92);
-        font-family: var(--font); font-size: .72rem; font-weight: 500;
-        white-space: nowrap; padding: 5px 11px;
-        border-radius: var(--r); border: 1px solid rgba(255,255,255,.08);
-        box-shadow: var(--shadow-lg);
-        pointer-events: none; opacity: 0;
-        transition: opacity .15s, transform .15s; z-index: 999;
-    }
-    .ee-footer-btn[data-tip]:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
-    html.sb-pinned .ee-footer-btn[data-tip]::after,
-    html.sb-open   .ee-footer-btn[data-tip]::after { display: none; }
-
-    /* Form inside footer */
-    .ee-footer-form { width: 100%; display: flex; }
-    .ee-footer-form .ee-footer-btn { width: 40px; }
-    html.sb-pinned .ee-footer-form .ee-footer-btn,
-    html.sb-open   .ee-footer-form .ee-footer-btn { width: 100%; }
-
-    /* ────────────────────────────────────────
-       MAIN
-    ──────────────────────────────────────── */
-    .ee-main {
-        flex: 1;
-        margin-left: var(--sb-w);
-        min-height: 100vh;
-        display: flex; flex-direction: column;
-        transition: margin-left .26s cubic-bezier(.4,0,.2,1);
-    }
-
-    /* ────────────────────────────────────────
-       HEADER
-    ──────────────────────────────────────── */
-    .ee-header {
-        background: var(--surface);
-        border-bottom: 1px solid var(--border);
-        padding: 0 1.5rem;
-        height: var(--hd-h);
-        display: flex; align-items: center; justify-content: space-between;
-        position: sticky; top: 0; z-index: 50;
-        box-shadow: var(--shadow-sm);
-        flex-shrink: 0;
-    }
-
-    .ee-header-left  { display: flex; align-items: center; gap: .75rem; }
-    .ee-header-right { display: flex; align-items: center; gap: .375rem; }
-
-    /* Desktop sidebar toggle (hamburger in header) */
-    .ee-sb-toggle {
-        width: 34px; height: 34px;
-        border: 1.5px solid var(--border); border-radius: var(--r);
-        background: var(--surface); color: var(--text-2); cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        transition: all .15s;
-    }
-    .ee-sb-toggle:hover { background: var(--org-50); border-color: var(--org-300); color: var(--org-500); }
-    .ee-sb-toggle svg { width: 17px; height: 17px; stroke-width: 1.8; }
-    @media (max-width: 1024px) { .ee-sb-toggle { display: none; } }
-
-    .ee-mobile-toggle {
-        display: none;
-        width: 34px; height: 34px;
-        border: 1.5px solid var(--border); border-radius: var(--r);
-        background: var(--surface); color: var(--text-2); cursor: pointer;
-        align-items: center; justify-content: center; transition: all .15s;
-    }
-    .ee-mobile-toggle:hover { background: var(--org-50); border-color: var(--org-300); color: var(--org-500); }
-    .ee-mobile-toggle svg { width: 17px; height: 17px; }
-    @media (max-width: 1024px) { .ee-mobile-toggle { display: flex; } }
-
-    .ee-page-info { display: flex; flex-direction: column; gap: 1px; }
-    .ee-page-title {
+    /* ── Page title (centered in nav) ── */
+    .ee-nav-page-title {
         font-family: var(--font-d);
-        font-size: 1rem; font-weight: 700;
-        color: var(--org-600); letter-spacing: -.01em; line-height: 1.2;
+        font-size: .9375rem; font-weight: 600;
+        color: rgba(255,255,255,.75);
+        letter-spacing: -.01em;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        max-width: 260px;
     }
-    .ee-breadcrumb {
-        display: flex; align-items: center; gap: .375rem;
-        font-size: .72rem; color: var(--text-3);
-    }
-    .ee-breadcrumb a { color: var(--org-500); text-decoration: none; font-weight: 500; }
-    .ee-breadcrumb a:hover { text-decoration: underline; }
-    .ee-breadcrumb svg { width: 9px; height: 9px; opacity: .4; }
 
+    /* ── Header right buttons ── */
     .ee-header-btn {
         position: relative;
-        width: 34px; height: 34px;
-        border: 1.5px solid var(--border); border-radius: var(--r);
-        background: var(--surface); color: var(--text-2); cursor: pointer;
+        width: 35px; height: 35px;
+        border: 1px solid rgba(255,255,255,.13);
+        border-radius: var(--r);
+        background: rgba(255,255,255,.06);
+        color: var(--tn-text-dim);
+        cursor: pointer;
         display: flex; align-items: center; justify-content: center;
-        transition: all .15s;
+        transition: background .14s, color .14s, border-color .14s;
+        flex-shrink: 0;
     }
-    .ee-header-btn:hover { background: var(--org-50); border-color: var(--org-300); color: var(--org-500); }
+    .ee-header-btn:hover {
+        background: rgba(255,255,255,.12);
+        color: var(--tn-text);
+        border-color: rgba(255,255,255,.24);
+    }
     .ee-header-btn svg { width: 16px; height: 16px; stroke-width: 1.8; }
 
     .ee-header-btn .hb-badge {
@@ -532,27 +235,28 @@
         background: var(--rose-400); color: #fff;
         font-size: .5rem; font-weight: 700; border-radius: var(--r-f);
         display: flex; align-items: center; justify-content: center;
-        padding: 0 3px; border: 2px solid var(--surface);
+        padding: 0 3px; border: 2px solid var(--tn-bg-1);
     }
     .ee-notif-dot::after {
-        content: ''; position: absolute; top: 6px; right: 6px;
+        content: ''; position: absolute; top: 5px; right: 5px;
         width: 7px; height: 7px; background: var(--rose-400);
-        border-radius: 50%; border: 1.5px solid var(--surface);
+        border-radius: 50%; border: 1.5px solid var(--tn-bg-1);
     }
 
+    /* ── Avatar in topnav ── */
     .ee-hd-avatar {
         position: relative; display: flex; align-items: center;
-        text-decoration: none; margin-left: .25rem;
+        text-decoration: none; margin-left: .1rem;
     }
     .ee-hd-avatar img {
         width: 30px; height: 30px; border-radius: 50%; object-fit: cover;
-        border: 2px solid var(--border); transition: border-color .15s; display: block;
+        border: 2px solid rgba(255,255,255,.18); transition: border-color .15s; display: block;
     }
     .ee-hd-avatar:hover img { border-color: var(--org-400); }
     .ee-hd-avatar-dot {
         position: absolute; bottom: -1px; right: -1px;
         width: 8px; height: 8px;
-        background: var(--green-400); border: 2px solid var(--surface); border-radius: 50%;
+        background: var(--green-400); border: 2px solid var(--tn-bg-1); border-radius: 50%;
     }
 
     /* ────────────────────────────────────────
@@ -560,7 +264,8 @@
     ──────────────────────────────────────── */
     .ee-notif-wrap { position: relative; }
     .ee-notif-drop {
-        display: none; position: absolute; top: calc(100% + 8px); right: 0;
+        display: none;
+        position: absolute; top: calc(100% + 10px); right: 0;
         width: 340px; max-width: calc(100vw - 2rem);
         background: var(--surface); border: 1px solid var(--border);
         border-radius: var(--r-xl); box-shadow: var(--shadow-xl);
@@ -595,9 +300,238 @@
     .ee-notif-empty { padding: 2rem; text-align: center; font-size: .8125rem; color: var(--text-2); }
 
     /* ────────────────────────────────────────
-       CONTENT & FOOTER
+       BURGER DROPDOWN MENU (fixed below topnav)
     ──────────────────────────────────────── */
+    .ee-menu-drop {
+        position: fixed;
+        top: var(--hd-h);
+        left: 0; right: 0;
+        z-index: 95;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 8px 40px rgba(7,9,46,.14), 0 2px 8px rgba(7,9,46,.08);
+        max-height: calc(100vh - var(--hd-h));
+        overflow-y: auto;
+
+        /* Hidden state */
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity .22s cubic-bezier(.4,0,.2,1), transform .22s cubic-bezier(.4,0,.2,1);
+    }
+    html.menu-open .ee-menu-drop {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .ee-menu-inner {
+        max-width: 520px;
+        margin: 0 auto;
+        padding: .875rem 1rem 1.125rem;
+    }
+
+    /* User card at top of dropdown */
+    .ee-menu-user {
+        display: flex;
+        align-items: center;
+        gap: .875rem;
+        padding: .75rem 1rem;
+        background: linear-gradient(135deg, var(--org-50) 0%, var(--n-50) 100%);
+        border: 1px solid var(--org-100);
+        border-radius: var(--r-lg);
+        text-decoration: none;
+        margin-bottom: .875rem;
+        transition: border-color .15s, background .15s;
+        position: relative;
+        overflow: hidden;
+    }
+    .ee-menu-user::before {
+        content: '';
+        position: absolute; left: 0; top: 0; bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--org-400), var(--org-600));
+        border-radius: 3px 0 0 3px;
+    }
+    .ee-menu-user:hover {
+        background: linear-gradient(135deg, var(--org-100) 0%, var(--org-50) 100%);
+        border-color: var(--org-200);
+    }
+    .ee-menu-user-avatar {
+        width: 42px; height: 42px;
+        border-radius: 50%; object-fit: cover;
+        border: 2px solid var(--org-200);
+        flex-shrink: 0;
+        box-shadow: 0 0 0 3px rgba(249,115,22,.12);
+    }
+    .ee-menu-user-info { min-width: 0; flex: 1; }
+    .ee-menu-user-name {
+        font-size: .9rem; font-weight: 600;
+        color: var(--text); line-height: 1.2;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ee-menu-user-role {
+        font-size: .75rem; color: var(--text-2);
+        margin-top: 2px;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ee-menu-user-arrow {
+        color: var(--text-3); flex-shrink: 0;
+    }
+    .ee-menu-user-arrow svg { width: 14px; height: 14px; stroke-width: 2; }
+
+    /* Section group */
+    .ee-menu-section { margin-bottom: .125rem; }
+
+    .ee-menu-section-label {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .5rem 1rem .3rem;
+        font-size: .625rem; font-weight: 700;
+        letter-spacing: .13em; text-transform: uppercase;
+        color: var(--text-3);
+    }
+    .ee-menu-section-label::before {
+        content: '';
+        display: block;
+        width: 4px; height: 4px; border-radius: 50%;
+        background: var(--org-400);
+        flex-shrink: 0;
+    }
+
+    /* Nav link inside dropdown */
+    .ee-menu-link {
+        display: flex;
+        align-items: center;
+        gap: .875rem;
+        padding: 0 1rem;
+        height: 46px;
+        border-radius: var(--r);
+        text-decoration: none;
+        color: var(--text-2);
+        font-size: .875rem; font-weight: 500;
+        transition: background .13s, color .13s, box-shadow .13s;
+        margin-bottom: 1px;
+        position: relative;
+    }
+    .ee-menu-link svg {
+        width: 18px; height: 18px;
+        stroke-width: 1.8; flex-shrink: 0;
+        color: var(--text-3);
+        transition: color .13s;
+    }
+    .ee-menu-link:hover {
+        background: var(--n-50);
+        color: var(--text);
+    }
+    .ee-menu-link:hover svg { color: var(--org-400); }
+    .ee-menu-link.active {
+        background: var(--org-50);
+        color: var(--org-600);
+        box-shadow: inset 3px 0 0 var(--org-400);
+        font-weight: 600;
+    }
+    .ee-menu-link.active svg {
+        color: var(--org-500);
+        filter: drop-shadow(0 0 5px rgba(249,115,22,.4));
+    }
+
+    /* Badge on link */
+    .ee-menu-badge {
+        margin-left: auto; flex-shrink: 0;
+        min-width: 18px; height: 18px;
+        background: var(--rose-400);
+        color: #fff; font-size: .6rem; font-weight: 700;
+        border-radius: var(--r-f);
+        display: flex; align-items: center; justify-content: center;
+        padding: 0 4px;
+    }
+
+    /* Divider between sections */
+    .ee-menu-divider {
+        height: 1px;
+        background: var(--n-100);
+        margin: .5rem 1rem;
+    }
+
+    /* Footer actions (admin / logout) */
+    .ee-menu-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        padding-top: .5rem;
+        margin-top: .375rem;
+        border-top: 1px solid var(--border);
+    }
+    .ee-menu-footer-form { width: 100%; }
+    .ee-menu-footer-btn {
+        display: flex; align-items: center; gap: .875rem;
+        padding: 0 1rem;
+        height: 42px;
+        width: 100%;
+        border-radius: var(--r);
+        text-decoration: none;
+        font-size: .875rem; font-weight: 500;
+        color: var(--text-2);
+        background: transparent; border: none; cursor: pointer;
+        font-family: var(--font);
+        text-align: left;
+        transition: background .13s, color .13s;
+    }
+    .ee-menu-footer-btn svg {
+        width: 17px; height: 17px; stroke-width: 1.8; flex-shrink: 0;
+    }
+    .ee-menu-footer-btn.accent { color: var(--org-500); }
+    .ee-menu-footer-btn.accent:hover { background: var(--org-50); color: var(--org-600); }
+    .ee-menu-footer-btn.danger:hover { background: var(--rose-100); color: var(--rose-800); }
+
+    /* ────────────────────────────────────────
+       OVERLAY (closes menu on outside click)
+    ──────────────────────────────────────── */
+    .ee-overlay {
+        display: none;
+        position: fixed; inset: 0;
+        top: var(--hd-h);
+        z-index: 90;
+        cursor: default;
+    }
+    html.menu-open .ee-overlay { display: block; }
+
+    /* ────────────────────────────────────────
+       MAIN CONTENT
+    ──────────────────────────────────────── */
+    .ee-main {
+        flex: 1;
+        margin-top: var(--hd-h);
+        display: flex; flex-direction: column;
+        min-height: calc(100vh - var(--hd-h));
+    }
+
+    /* Breadcrumb sub-bar */
+    .ee-breadcrumb-bar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: .4rem 1.5rem;
+        display: flex; align-items: center; gap: .375rem;
+        font-size: .72rem; color: var(--text-3);
+    }
+    .ee-breadcrumb-bar a { color: var(--org-500); text-decoration: none; font-weight: 500; }
+    .ee-breadcrumb-bar a:hover { text-decoration: underline; }
+    .ee-breadcrumb-bar svg { width: 9px; height: 9px; opacity: .4; }
+
+    /* Page header (title + breadcrumb inside content area) */
+    .ee-page-header {
+        margin-bottom: 1.25rem;
+    }
+    .ee-page-title {
+        font-family: var(--font-d);
+        font-size: 1.125rem; font-weight: 700;
+        color: var(--org-600); letter-spacing: -.02em; line-height: 1.2;
+    }
+
     .ee-content { flex: 1; padding: 1.5rem; }
+
     .ee-footer {
         padding: .875rem 1.5rem;
         background: var(--surface); border-top: 1px solid var(--border);
@@ -606,16 +540,6 @@
     .ee-footer p { font-size: .72rem; color: var(--text-3); }
     .ee-footer a { color: var(--org-500); text-decoration: none; font-weight: 600; }
     .ee-footer a:hover { color: var(--org-600); }
-
-    /* ────────────────────────────────────────
-       MOBILE OVERLAY
-    ──────────────────────────────────────── */
-    .ee-overlay {
-        display: none; position: fixed; inset: 0;
-        background: rgba(7,9,46,.45); backdrop-filter: blur(4px);
-        z-index: 90; opacity: 0; transition: opacity .28s;
-    }
-    .ee-overlay.active { display: block; opacity: 1; }
 
     /* ────────────────────────────────────────
        SCROLLBAR
@@ -628,321 +552,264 @@
     /* ────────────────────────────────────────
        RESPONSIVE
     ──────────────────────────────────────── */
-    @media (max-width: 1024px) {
-        .ee-sidebar {
-            transform: translateX(-100%);
-            box-shadow: none;
-            transition: transform .28s cubic-bezier(.4,0,.2,1), width .26s cubic-bezier(.4,0,.2,1);
-        }
-        .ee-sidebar.mob-open {
-            transform: translateX(0);
-            width: var(--sb-wE) !important;
-            overflow: hidden;
-            box-shadow: 4px 0 40px rgba(7,9,46,.3);
-        }
-        .ee-sidebar.mob-open .ee-brand-info,
-        .ee-sidebar.mob-open .ee-user-info,
-        .ee-sidebar.mob-open .ee-nav-link-label,
-        .ee-sidebar.mob-open .ee-footer-btn-label,
-        .ee-sidebar.mob-open .ee-nav-label-text { max-width: 180px; opacity: 1; }
-        .ee-sidebar.mob-open .ee-brand,
-        .ee-sidebar.mob-open .ee-user-card { justify-content: flex-start; padding: 0 12px; gap: 10px; }
-        .ee-sidebar.mob-open .ee-nav { align-items: stretch; }
-        .ee-sidebar.mob-open .ee-nav-section,
-        .ee-sidebar.mob-open .ee-sidebar-footer { align-items: stretch; padding: 0 8px; }
-        .ee-sidebar.mob-open .ee-sidebar-footer { padding: 6px 8px 12px; }
-        .ee-sidebar.mob-open .ee-nav-link,
-        .ee-sidebar.mob-open .ee-footer-btn { width: 100%; height: 36px; border-radius: var(--r); justify-content: flex-start; padding: 0 10px; gap: 10px; }
-        .ee-sidebar.mob-open .ee-footer-form .ee-footer-btn { width: 100%; }
-        .ee-sidebar.mob-open .ee-nav-label { justify-content: flex-start; margin: 6px 4px 2px; }
-        .ee-sidebar.mob-open .ee-nav-label-dot { opacity: 0; }
-        .ee-sidebar.mob-open .ee-sidebar-divider { width: calc(100% - 16px); margin: 4px 8px; }
-        .ee-sidebar.mob-open .ee-pin-btn { display: none; }
-        html.sb-pinned .ee-main { margin-left: var(--sb-w); }
-        .ee-main { margin-left: 0 !important; }
-        .ee-content { padding: 1rem; }
-    }
     @media (max-width: 640px) {
-        .ee-header { padding: 0 1rem; }
+        .ee-topnav { padding: 0 .875rem; gap: .625rem; }
+        .ee-brand-sub { display: none; }
+        .ee-nav-page-title { display: none; }
         .ee-content { padding: .875rem; }
-        .ee-page-title { font-size: .9375rem; }
-        .ee-breadcrumb { display: none; }
+        .ee-breadcrumb-bar { padding: .4rem .875rem; }
+        .ee-menu-inner { padding: .75rem .75rem 1rem; }
+        .ee-menu-link { height: 48px; }
+    }
+    @media (max-width: 400px) {
+        .ee-brand-name { font-size: .8125rem; }
     }
     </style>
     @yield('styles')
 </head>
 <body>
+
+<!-- Invisible overlay to close menu on outside click -->
+<div class="ee-overlay" id="eeOverlay"></div>
+
 <div class="ee-layout">
 
-    <!-- Mobile overlay -->
-    <div class="ee-overlay" id="eeOverlay" onclick="mobClose()"></div>
+    <!-- ════════════════ TOP NAV BAR ════════════════ -->
+    <header class="ee-topnav" id="eeTopnav">
 
-    <!-- ════════════════ SIDEBAR ════════════════ -->
-    <aside class="ee-sidebar" id="eeSidebar">
-
-        <!-- Brand -->
-        <div class="ee-brand">
-            <div class="ee-brand-mark">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-            </div>
-            <div class="ee-brand-info">
-                <div class="ee-brand-name">Portail <em>RH+</em></div>
-                <span class="ee-brand-sub">Espace Employé</span>
-            </div>
-            <!-- Pin toggle -->
-            <button class="ee-pin-btn" id="eePinBtn" title="Épingler la barre latérale">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6"/>
-                </svg>
+        <!-- Left: burger + brand -->
+        <div class="ee-topnav-left">
+            <button class="ee-burger" id="eeBurger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="eeMenuDrop">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
+            <a href="{{ route('espace-employe.dashboard') }}" class="ee-brand-link">
+                <div class="ee-brand-mark">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="ee-brand-name">Portail <em>RH+</em></div>
+                    <span class="ee-brand-sub">Espace Employé</span>
+                </div>
+            </a>
         </div>
 
-        <!-- User card -->
-        @php
-            $sbUser  = auth()->user();
-            $sbPerso = $sbUser->personnel ?? null;
-            $sbAvatarUrl = ($sbPerso && $sbPerso->photo)
-                ? asset('storage/' . $sbPerso->photo)
-                : 'https://ui-avatars.com/api/?name=' . urlencode($sbUser->name) . '&size=200&background=2535A8&color=ffffff&bold=true';
-        @endphp
-        <a href="{{ route('espace-employe.profil') }}" class="ee-user-card">
-            <div class="ee-user-avatar-wrap">
-                <img src="{{ $sbAvatarUrl }}" alt="{{ $sbUser->name }}" class="ee-user-avatar"
-                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($sbUser->name) }}&size=200&background=2535A8&color=ffffff&bold=true'">
-                <span class="ee-user-online"></span>
-            </div>
-            <div class="ee-user-info">
-                <div class="ee-user-name">{{ $sbPerso ? $sbPerso->nom . ' ' . ($sbPerso->prenoms ?? '') : $sbUser->name }}</div>
-                <div class="ee-user-role">{{ $sbPerso->poste ?? 'Employé' }}</div>
-            </div>
-        </a>
+        <!-- Center: current page title -->
+        <div class="ee-topnav-center">
+            <span class="ee-nav-page-title">@yield('page-title', 'Mon Espace')</span>
+        </div>
 
-        <!-- Navigation -->
-        <nav class="ee-nav" id="eeNav">
-
-            <!-- Mon Espace -->
-            <div class="ee-nav-section">
-                <div class="ee-nav-label">
-                    <span class="ee-nav-label-dot"></span>
-                    <span class="ee-nav-label-text">Mon Espace</span>
+        <!-- Right: notifications + avatar -->
+        <div class="ee-topnav-right">
+            <!-- Notifications -->
+            <div class="ee-notif-wrap">
+                <button class="ee-header-btn" id="eeNotifBtn" title="Notifications" aria-label="Notifications">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="hb-badge" id="eeNotifBadge" style="display:none">0</span>
+                </button>
+                <div class="ee-notif-drop" id="eeNotifDrop">
+                    <div class="ee-notif-drop-head">
+                        <span class="ee-notif-drop-title">Notifications</span>
+                        <button class="ee-notif-mark-all" id="eeMarkAll">Tout marquer lu</button>
+                    </div>
+                    <div class="ee-notif-body" id="eeNotifList">
+                        <div class="ee-notif-empty">Aucune notification</div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Avatar -->
+            @php $ha = auth()->user(); $hp = $ha->personnel ?? null; @endphp
+            <a href="{{ route('espace-employe.profil') }}" class="ee-hd-avatar" title="Mon profil">
+                <img
+                    src="{{ $hp && $hp->photo ? asset('storage/'.$hp->photo) : 'https://ui-avatars.com/api/?name='.urlencode($ha->name).'&size=200&background=EA580C&color=ffffff&bold=true' }}"
+                    alt="{{ $ha->name }}"
+                    onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($ha->name) }}&size=200&background=EA580C&color=ffffff&bold=true'">
+                <span class="ee-hd-avatar-dot"></span>
+            </a>
+        </div>
+
+    </header>
+
+    <!-- ════════════════ DROPDOWN NAV MENU ════════════════ -->
+    @php
+        $mu      = auth()->user();
+        $mPerso  = $mu->personnel ?? null;
+        $mAvatar = ($mPerso && $mPerso->photo)
+            ? asset('storage/' . $mPerso->photo)
+            : 'https://ui-avatars.com/api/?name=' . urlencode($mu->name) . '&size=200&background=EA580C&color=ffffff&bold=true';
+    @endphp
+
+    <nav class="ee-menu-drop" id="eeMenuDrop" role="navigation" aria-label="Navigation employé">
+        <div class="ee-menu-inner">
+
+            <!-- User card -->
+            <a href="{{ route('espace-employe.profil') }}" class="ee-menu-user ee-menu-close-trigger">
+                <img src="{{ $mAvatar }}" alt="{{ $mu->name }}" class="ee-menu-user-avatar"
+                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($mu->name) }}&size=200&background=EA580C&color=ffffff&bold=true'">
+                <div class="ee-menu-user-info">
+                    <div class="ee-menu-user-name">{{ $mPerso ? $mPerso->nom . ' ' . ($mPerso->prenoms ?? '') : $mu->name }}</div>
+                    <div class="ee-menu-user-role">{{ $mPerso->poste ?? 'Employé' }}</div>
+                </div>
+                <span class="ee-menu-user-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </span>
+            </a>
+
+            <!-- ── Mon Espace ── -->
+            <div class="ee-menu-section">
+                <div class="ee-menu-section-label">Mon Espace</div>
                 <a href="{{ route('espace-employe.dashboard') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.dashboard') ? 'active' : '' }}"
-                   data-tip="Tableau de bord">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.dashboard') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
                         <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
                     </svg>
-                    <span class="ee-nav-link-label">Tableau de bord</span>
+                    Tableau de bord
                 </a>
                 <a href="{{ route('espace-employe.profil') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.profil') ? 'active' : '' }}"
-                   data-tip="Mon profil">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.profil') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                     </svg>
-                    <span class="ee-nav-link-label">Mon profil</span>
+                    Mon profil
                 </a>
             </div>
 
-            <div class="ee-sidebar-divider"></div>
+            <div class="ee-menu-divider"></div>
 
-            <!-- Documents -->
-            <div class="ee-nav-section">
-                <div class="ee-nav-label">
-                    <span class="ee-nav-label-dot"></span>
-                    <span class="ee-nav-label-text">Documents</span>
-                </div>
+            <!-- ── Documents ── -->
+            <div class="ee-menu-section">
+                <div class="ee-menu-section-label">Documents</div>
                 <a href="{{ route('espace-employe.documents') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.documents') ? 'active' : '' }}"
-                   data-tip="Mes documents">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.documents') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                         <polyline points="14 2 14 8 20 8"/>
                         <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
                     </svg>
-                    <span class="ee-nav-link-label">Mes documents</span>
+                    Mes documents
                 </a>
                 <a href="{{ route('espace-employe.bulletins') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.bulletins') ? 'active' : '' }}"
-                   data-tip="Bulletins de paie">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.bulletins') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="3" width="20" height="14" rx="2"/>
                         <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
                     </svg>
-                    <span class="ee-nav-link-label">Bulletins de paie</span>
+                    Bulletins de paie
                 </a>
                 <a href="{{ route('espace-employe.attestations') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.attestations') ? 'active' : '' }}"
-                   data-tip="Attestations">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.attestations') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
                     </svg>
-                    <span class="ee-nav-link-label">Attestations</span>
+                    Attestations
                 </a>
             </div>
 
-            <div class="ee-sidebar-divider"></div>
+            <div class="ee-menu-divider"></div>
 
-            <!-- Demandes -->
-            <div class="ee-nav-section">
-                <div class="ee-nav-label">
-                    <span class="ee-nav-label-dot"></span>
-                    <span class="ee-nav-label-text">Demandes</span>
-                </div>
+            <!-- ── Demandes ── -->
+            <div class="ee-menu-section">
+                <div class="ee-menu-section-label">Demandes</div>
                 <a href="{{ route('espace-employe.conges') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.conges') ? 'active' : '' }}"
-                   data-tip="Mes congés">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.conges') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="4" width="18" height="18" rx="2"/>
                         <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
                         <line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/>
                     </svg>
-                    <span class="ee-nav-link-label">Mes congés</span>
+                    Mes congés
                 </a>
                 <a href="{{ route('espace-employe.absences') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.absences') ? 'active' : '' }}"
-                   data-tip="Mes absences">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.absences') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"/>
                         <line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
                     </svg>
-                    <span class="ee-nav-link-label">Mes absences</span>
+                    Mes absences
                 </a>
                 <a href="{{ route('espace-employe.demandes') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.demandes') ? 'active' : '' }}"
-                   data-tip="Mes demandes">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.demandes') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
                         <rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 14l2 2 4-4"/>
                     </svg>
-                    <span class="ee-nav-link-label">Mes demandes</span>
+                    Mes demandes
                 </a>
             </div>
 
-            <div class="ee-sidebar-divider"></div>
+            <div class="ee-menu-divider"></div>
 
-            <!-- Compte -->
-            <div class="ee-nav-section">
-                <div class="ee-nav-label">
-                    <span class="ee-nav-label-dot"></span>
-                    <span class="ee-nav-label-text">Compte</span>
-                </div>
+            <!-- ── Compte ── -->
+            <div class="ee-menu-section">
+                <div class="ee-menu-section-label">Compte</div>
                 <a href="{{ route('espace-employe.assistance') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.assistance*') ? 'active' : '' }}"
-                   data-tip="Assistance">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.assistance*') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"/>
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
                         <line x1="12" y1="17" x2="12.01" y2="17"/>
                     </svg>
-                    <span class="ee-nav-link-label">Assistance</span>
+                    Assistance
                 </a>
                 <a href="{{ route('espace-employe.parametres') }}"
-                   class="ee-nav-link {{ request()->routeIs('espace-employe.parametres') ? 'active' : '' }}"
-                   data-tip="Paramètres">
+                   class="ee-menu-link ee-menu-close-trigger {{ request()->routeIs('espace-employe.parametres') ? 'active' : '' }}">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="3"/>
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                     </svg>
-                    <span class="ee-nav-link-label">Paramètres</span>
+                    Paramètres
                 </a>
             </div>
 
-        </nav>
-
-        <!-- Footer -->
-        <div class="ee-sidebar-footer">
-            @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH']))
-            <a href="{{ route('admin.dashboard') }}" class="ee-footer-btn accent" data-tip="Portail Admin">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                    <path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-                </svg>
-                <span class="ee-footer-btn-label">Portail Admin</span>
-            </a>
-            @endif
-            <form method="POST" action="{{ route('logout') }}" class="ee-footer-form">
-                @csrf
-                <button type="submit" class="ee-footer-btn danger" data-tip="Déconnexion">
+            <!-- ── Footer actions ── -->
+            <div class="ee-menu-footer">
+                @if(auth()->user()->hasAnyRole(['Super Admin', 'Admin', 'RH']))
+                <a href="{{ route('admin.dashboard') }}" class="ee-menu-footer-btn accent ee-menu-close-trigger">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" y1="12" x2="9" y2="12"/>
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
                     </svg>
-                    <span class="ee-footer-btn-label">Déconnexion</span>
-                </button>
-            </form>
-        </div>
+                    Portail Admin
+                </a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}" class="ee-menu-footer-form">
+                    @csrf
+                    <button type="submit" class="ee-menu-footer-btn danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Déconnexion
+                    </button>
+                </form>
+            </div>
 
-    </aside>
+        </div>
+    </nav>
 
     <!-- ════════════════ MAIN ════════════════ -->
     <main class="ee-main">
 
-        <header class="ee-header">
-            <div class="ee-header-left">
-                <!-- Desktop toggle -->
-                <button class="ee-sb-toggle" id="eeSbToggle" title="Épingler la barre latérale">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <line x1="3" y1="12" x2="21" y2="12"/>
-                        <line x1="3" y1="6"  x2="21" y2="6"/>
-                        <line x1="3" y1="18" x2="21" y2="18"/>
-                    </svg>
-                </button>
-                <!-- Mobile toggle -->
-                <button class="ee-mobile-toggle" onclick="mobOpen()" aria-label="Menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                        <line x1="3" y1="12" x2="21" y2="12"/>
-                        <line x1="3" y1="6"  x2="21" y2="6"/>
-                        <line x1="3" y1="18" x2="21" y2="18"/>
-                    </svg>
-                </button>
-                <div class="ee-page-info">
-                    <h1 class="ee-page-title">@yield('page-title', 'Mon Espace')</h1>
-                    @hasSection('breadcrumb')
-                        <nav class="ee-breadcrumb">@yield('breadcrumb')</nav>
-                    @endif
-                </div>
+        @hasSection('breadcrumb')
+            <div class="ee-breadcrumb-bar">
+                <nav>@yield('breadcrumb')</nav>
             </div>
-
-            <div class="ee-header-right">
-                <!-- Notifications -->
-                <div class="ee-notif-wrap">
-                    <button class="ee-header-btn" id="eeNotifBtn" title="Notifications">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                        </svg>
-                        <span class="hb-badge" id="eeNotifBadge" style="display:none">0</span>
-                    </button>
-                    <div class="ee-notif-drop" id="eeNotifDrop">
-                        <div class="ee-notif-drop-head">
-                            <span class="ee-notif-drop-title">Notifications</span>
-                            <button class="ee-notif-mark-all" id="eeMarkAll">Tout marquer lu</button>
-                        </div>
-                        <div class="ee-notif-body" id="eeNotifList">
-                            <div class="ee-notif-empty">Aucune notification</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Avatar -->
-                @php $ha = auth()->user(); $hp = $ha->personnel ?? null; @endphp
-                <a href="{{ route('espace-employe.profil') }}" class="ee-hd-avatar">
-                    <img
-                        src="{{ $hp && $hp->photo ? asset('storage/'.$hp->photo) : 'https://ui-avatars.com/api/?name='.urlencode($ha->name).'&size=200&background=2535A8&color=ffffff&bold=true' }}"
-                        alt="{{ $ha->name }}"
-                        onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($ha->name) }}&size=200&background=2535A8&color=ffffff&bold=true'">
-                    <span class="ee-hd-avatar-dot"></span>
-                </a>
-            </div>
-        </header>
+        @endif
 
         <div class="ee-content">
             @yield('content')
@@ -953,6 +820,7 @@
         </footer>
 
     </main>
+
 </div>
 
 @yield('scripts')
@@ -961,99 +829,105 @@
 (function () {
     'use strict';
 
-    var html = document.documentElement;
-    var sb   = document.getElementById('eeSidebar');
-    var PINNED_KEY = 'ee_sb_pinned';
+    var html    = document.documentElement;
+    var burger  = document.getElementById('eeBurger');
+    var menu    = document.getElementById('eeMenuDrop');
+    var overlay = document.getElementById('eeOverlay');
 
-    /* ── Restore pin state ── */
-    if (localStorage.getItem(PINNED_KEY) === '1') {
-        html.classList.add('sb-pinned');
+    /* ── Toggle menu ── */
+    function openMenu() {
+        html.classList.add('menu-open');
+        if (burger) burger.setAttribute('aria-expanded', 'true');
+    }
+    function closeMenu() {
+        html.classList.remove('menu-open');
+        if (burger) burger.setAttribute('aria-expanded', 'false');
+    }
+    function toggleMenu() {
+        html.classList.contains('menu-open') ? closeMenu() : openMenu();
     }
 
-    /* ── Desktop hover (only when not pinned) ── */
-    if (sb) {
-        sb.addEventListener('mouseenter', function () {
-            if (!html.classList.contains('sb-pinned')) html.classList.add('sb-open');
+    if (burger) {
+        burger.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggleMenu();
         });
-        sb.addEventListener('mouseleave', function () {
-            html.classList.remove('sb-open');
-        });
     }
 
-    /* ── Pin toggle (sidebar chevron button) ── */
-    function togglePin() {
-        var pinned = html.classList.toggle('sb-pinned');
-        html.classList.remove('sb-open');
-        localStorage.setItem(PINNED_KEY, pinned ? '1' : '0');
+    /* ── Close on overlay click ── */
+    if (overlay) {
+        overlay.addEventListener('click', closeMenu);
     }
 
-    var pinBtn    = document.getElementById('eePinBtn');
-    var sbToggle  = document.getElementById('eeSbToggle');
-    if (pinBtn)   pinBtn.addEventListener('click', function(e) { e.stopPropagation(); togglePin(); });
-    if (sbToggle) sbToggle.addEventListener('click', togglePin);
+    /* ── Close on nav link click ── */
+    document.querySelectorAll('.ee-menu-close-trigger').forEach(function (el) {
+        el.addEventListener('click', closeMenu);
+    });
 
-    /* ── Mobile sidebar ── */
-    window.mobOpen = function () {
-        if (sb) sb.classList.add('mob-open');
-        var ov = document.getElementById('eeOverlay');
-        if (ov) { ov.style.display = 'block'; requestAnimationFrame(function(){ ov.classList.add('active'); }); }
-    };
-    window.mobClose = function () {
-        if (sb) sb.classList.remove('mob-open');
-        var ov = document.getElementById('eeOverlay');
-        if (ov) { ov.classList.remove('active'); setTimeout(function(){ ov.style.display='none'; }, 300); }
-    };
+    /* ── Close on Escape ── */
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeMenu();
+    });
 
     /* ── Notifications ── */
     var notifBtn  = document.getElementById('eeNotifBtn');
     var notifDrop = document.getElementById('eeNotifDrop');
-    var notifBadge= document.getElementById('eeNotifBadge');
+    var notifBadge = document.getElementById('eeNotifBadge');
     var notifList = document.getElementById('eeNotifList');
     var markAll   = document.getElementById('eeMarkAll');
 
     var iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
 
     function fetchNotifs() {
-        fetch('/notifications/unread', { headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' } })
-            .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
-            .then(function(d) {
-                var items = d.notifications || [];
-                if (items.length) {
-                    notifBadge.textContent = items.length > 9 ? '9+' : items.length;
-                    notifBadge.style.display = 'flex';
-                    notifBtn.classList.add('ee-notif-dot');
-                } else {
-                    notifBadge.style.display = 'none';
-                    notifBtn.classList.remove('ee-notif-dot');
-                }
-                notifList.innerHTML = items.length
-                    ? items.map(function(n) {
-                        return '<div class="ee-notif-item" data-id="'+n.id+'">' +
-                            '<div class="ee-notif-icon '+(n.type||'info')+'">'+iconSvg+'</div>' +
-                            '<div><div class="ee-notif-msg">'+(n.message||(n.data&&n.data.message)||'')+'</div>' +
-                            '<div class="ee-notif-time">'+(n.time||'')+'</div></div></div>';
-                    }).join('')
-                    : '<div class="ee-notif-empty">Aucune notification</div>';
-            })
-            .catch(function(){});
+        fetch('/notifications/unread', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+        .then(function (d) {
+            var items = d.notifications || [];
+            if (items.length) {
+                notifBadge.textContent = items.length > 9 ? '9+' : items.length;
+                notifBadge.style.display = 'flex';
+                notifBtn.classList.add('ee-notif-dot');
+            } else {
+                notifBadge.style.display = 'none';
+                notifBtn.classList.remove('ee-notif-dot');
+            }
+            notifList.innerHTML = items.length
+                ? items.map(function (n) {
+                    return '<div class="ee-notif-item" data-id="' + n.id + '">' +
+                        '<div class="ee-notif-icon ' + (n.type || 'info') + '">' + iconSvg + '</div>' +
+                        '<div><div class="ee-notif-msg">' + (n.message || (n.data && n.data.message) || '') + '</div>' +
+                        '<div class="ee-notif-time">' + (n.time || '') + '</div></div></div>';
+                }).join('')
+                : '<div class="ee-notif-empty">Aucune notification</div>';
+        })
+        .catch(function () {});
     }
 
     if (notifBtn && notifDrop) {
-        notifBtn.addEventListener('click', function(e) {
+        notifBtn.addEventListener('click', function (e) {
             e.stopPropagation();
+            /* Close burger menu if open */
+            closeMenu();
             notifDrop.classList.toggle('open');
             if (notifDrop.classList.contains('open')) fetchNotifs();
         });
-        document.addEventListener('click', function(e) {
-            if (!notifDrop.contains(e.target) && e.target !== notifBtn)
+        document.addEventListener('click', function (e) {
+            if (!notifDrop.contains(e.target) && e.target !== notifBtn) {
                 notifDrop.classList.remove('open');
+            }
         });
     }
+
     if (markAll) {
-        markAll.addEventListener('click', function() {
+        markAll.addEventListener('click', function () {
             fetch('/notifications/mark-all-read', {
                 method: 'POST',
-                headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept': 'application/json' }
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
             }).then(fetchNotifs);
         });
     }

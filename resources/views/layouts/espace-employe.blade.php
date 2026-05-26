@@ -300,34 +300,32 @@
     .ee-notif-empty { padding: 2rem; text-align: center; font-size: .8125rem; color: var(--text-2); }
 
     /* ────────────────────────────────────────
-       BURGER DROPDOWN MENU (fixed below topnav)
+       DRAWER NAV (glisse depuis la gauche)
     ──────────────────────────────────────── */
     .ee-menu-drop {
         position: fixed;
         top: var(--hd-h);
-        left: 0; right: 0; bottom: 0;
+        left: 0; bottom: 0;
+        width: 288px;
         z-index: 95;
         background: var(--surface);
-        box-shadow: 4px 0 40px rgba(7,9,46,.12);
-        height: calc(100vh - var(--hd-h));
+        border-right: 1px solid var(--border);
+        box-shadow: 4px 0 32px rgba(7,9,46,.16);
         overflow-y: auto;
+        overflow-x: hidden;
 
-        /* Hidden state */
-        opacity: 0;
-        transform: translateY(-10px);
+        /* Hidden — glisse à gauche */
+        transform: translateX(-100%);
         pointer-events: none;
-        transition: opacity .22s cubic-bezier(.4,0,.2,1), transform .22s cubic-bezier(.4,0,.2,1);
+        transition: transform .28s cubic-bezier(.4,0,.2,1);
     }
     html.menu-open .ee-menu-drop {
-        opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
         pointer-events: auto;
     }
 
     .ee-menu-inner {
-        max-width: 520px;
-        margin: 0 auto;
-        padding: .625rem .875rem 1rem;
+        padding: .75rem .75rem 1rem;
         min-height: 100%;
         display: flex;
         flex-direction: column;
@@ -487,16 +485,23 @@
     .ee-menu-footer-btn.danger:hover { background: var(--rose-100); color: var(--rose-800); }
 
     /* ────────────────────────────────────────
-       OVERLAY (closes menu on outside click)
+       OVERLAY — backdrop sombre derrière le drawer
     ──────────────────────────────────────── */
     .ee-overlay {
-        display: none;
-        position: fixed; inset: 0;
-        top: var(--hd-h);
+        position: fixed;
+        top: var(--hd-h); left: 0; right: 0; bottom: 0;
         z-index: 90;
+        background: rgba(10,14,40,.45);
+        backdrop-filter: blur(2px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .28s cubic-bezier(.4,0,.2,1);
         cursor: default;
     }
-    html.menu-open .ee-overlay { display: block; }
+    html.menu-open .ee-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
 
     /* ────────────────────────────────────────
        MAIN CONTENT

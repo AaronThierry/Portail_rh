@@ -327,7 +327,7 @@
     .ee-menu-inner {
         max-width: 520px;
         margin: 0 auto;
-        padding: .875rem 1rem 1.5rem;
+        padding: .625rem .875rem 1rem;
         min-height: 100%;
         display: flex;
         flex-direction: column;
@@ -337,13 +337,13 @@
     .ee-menu-user {
         display: flex;
         align-items: center;
-        gap: .875rem;
-        padding: .75rem 1rem;
+        gap: .75rem;
+        padding: .5rem .875rem;
         background: linear-gradient(135deg, var(--org-50) 0%, var(--n-50) 100%);
         border: 1px solid var(--org-100);
         border-radius: var(--r-lg);
         text-decoration: none;
-        margin-bottom: .875rem;
+        margin-bottom: .625rem;
         transition: border-color .15s, background .15s;
         position: relative;
         overflow: hidden;
@@ -360,44 +360,42 @@
         border-color: var(--org-200);
     }
     .ee-menu-user-avatar {
-        width: 42px; height: 42px;
+        width: 36px; height: 36px;
         border-radius: 50%; object-fit: cover;
         border: 2px solid var(--org-200);
         flex-shrink: 0;
-        box-shadow: 0 0 0 3px rgba(249,115,22,.12);
+        box-shadow: 0 0 0 2px rgba(249,115,22,.12);
     }
     .ee-menu-user-info { min-width: 0; flex: 1; }
     .ee-menu-user-name {
-        font-size: .9rem; font-weight: 600;
+        font-size: .8125rem; font-weight: 600;
         color: var(--text); line-height: 1.2;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .ee-menu-user-role {
-        font-size: .75rem; color: var(--text-2);
-        margin-top: 2px;
+        font-size: .6875rem; color: var(--text-2);
+        margin-top: 1px;
         white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .ee-menu-user-arrow {
-        color: var(--text-3); flex-shrink: 0;
-    }
-    .ee-menu-user-arrow svg { width: 14px; height: 14px; stroke-width: 2; }
+    .ee-menu-user-arrow { color: var(--text-3); flex-shrink: 0; }
+    .ee-menu-user-arrow svg { width: 13px; height: 13px; stroke-width: 2; }
 
     /* Section group */
-    .ee-menu-section { margin-bottom: .125rem; }
+    .ee-menu-section { margin-bottom: 0; }
 
     .ee-menu-section-label {
         display: flex;
         align-items: center;
-        gap: .5rem;
-        padding: .5rem 1rem .3rem;
-        font-size: .625rem; font-weight: 700;
+        gap: .4rem;
+        padding: .35rem .875rem .15rem;
+        font-size: .5625rem; font-weight: 700;
         letter-spacing: .13em; text-transform: uppercase;
         color: var(--text-3);
     }
     .ee-menu-section-label::before {
         content: '';
         display: block;
-        width: 4px; height: 4px; border-radius: 50%;
+        width: 3px; height: 3px; border-radius: 50%;
         background: var(--org-400);
         flex-shrink: 0;
     }
@@ -406,19 +404,19 @@
     .ee-menu-link {
         display: flex;
         align-items: center;
-        gap: .875rem;
-        padding: 0 1rem;
-        height: 46px;
+        gap: .75rem;
+        padding: 0 .875rem;
+        height: 38px;
         border-radius: var(--r);
         text-decoration: none;
         color: var(--text-2);
-        font-size: .875rem; font-weight: 500;
+        font-size: .8125rem; font-weight: 500;
         transition: background .13s, color .13s, box-shadow .13s;
         margin-bottom: 1px;
         position: relative;
     }
     .ee-menu-link svg {
-        width: 18px; height: 18px;
+        width: 16px; height: 16px;
         stroke-width: 1.8; flex-shrink: 0;
         color: var(--text-3);
         transition: color .13s;
@@ -436,25 +434,25 @@
     }
     .ee-menu-link.active svg {
         color: var(--org-500);
-        filter: drop-shadow(0 0 5px rgba(249,115,22,.4));
+        filter: drop-shadow(0 0 4px rgba(249,115,22,.4));
     }
 
     /* Badge on link */
     .ee-menu-badge {
         margin-left: auto; flex-shrink: 0;
-        min-width: 18px; height: 18px;
+        min-width: 16px; height: 16px;
         background: var(--rose-400);
-        color: #fff; font-size: .6rem; font-weight: 700;
+        color: #fff; font-size: .58rem; font-weight: 700;
         border-radius: var(--r-f);
         display: flex; align-items: center; justify-content: center;
-        padding: 0 4px;
+        padding: 0 3px;
     }
 
     /* Divider between sections */
     .ee-menu-divider {
         height: 1px;
         background: var(--n-100);
-        margin: .5rem 1rem;
+        margin: .3rem .875rem;
     }
 
     /* Footer actions — colle en bas du menu fullpage */
@@ -462,19 +460,19 @@
         display: flex;
         flex-direction: column;
         gap: 1px;
-        padding-top: .5rem;
+        padding-top: .375rem;
         margin-top: auto;
         border-top: 1px solid var(--border);
     }
     .ee-menu-footer-form { width: 100%; }
     .ee-menu-footer-btn {
-        display: flex; align-items: center; gap: .875rem;
-        padding: 0 1rem;
-        height: 42px;
+        display: flex; align-items: center; gap: .75rem;
+        padding: 0 .875rem;
+        height: 38px;
         width: 100%;
         border-radius: var(--r);
         text-decoration: none;
-        font-size: .875rem; font-weight: 500;
+        font-size: .8125rem; font-weight: 500;
         color: var(--text-2);
         background: transparent; border: none; cursor: pointer;
         font-family: var(--font);
@@ -482,7 +480,7 @@
         transition: background .13s, color .13s;
     }
     .ee-menu-footer-btn svg {
-        width: 17px; height: 17px; stroke-width: 1.8; flex-shrink: 0;
+        width: 16px; height: 16px; stroke-width: 1.8; flex-shrink: 0;
     }
     .ee-menu-footer-btn.accent { color: var(--org-500); }
     .ee-menu-footer-btn.accent:hover { background: var(--org-50); color: var(--org-600); }

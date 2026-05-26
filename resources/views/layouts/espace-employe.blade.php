@@ -305,17 +305,16 @@
     .ee-menu-drop {
         position: fixed;
         top: var(--hd-h);
-        left: 0; right: 0;
+        left: 0; right: 0; bottom: 0;
         z-index: 95;
         background: var(--surface);
-        border-bottom: 1px solid var(--border);
-        box-shadow: 0 8px 40px rgba(7,9,46,.14), 0 2px 8px rgba(7,9,46,.08);
-        max-height: calc(100vh - var(--hd-h));
+        box-shadow: 4px 0 40px rgba(7,9,46,.12);
+        height: calc(100vh - var(--hd-h));
         overflow-y: auto;
 
         /* Hidden state */
         opacity: 0;
-        transform: translateY(-8px);
+        transform: translateY(-10px);
         pointer-events: none;
         transition: opacity .22s cubic-bezier(.4,0,.2,1), transform .22s cubic-bezier(.4,0,.2,1);
     }
@@ -328,7 +327,10 @@
     .ee-menu-inner {
         max-width: 520px;
         margin: 0 auto;
-        padding: .875rem 1rem 1.125rem;
+        padding: .875rem 1rem 1.5rem;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
     /* User card at top of dropdown */
@@ -455,13 +457,13 @@
         margin: .5rem 1rem;
     }
 
-    /* Footer actions (admin / logout) */
+    /* Footer actions — colle en bas du menu fullpage */
     .ee-menu-footer {
         display: flex;
         flex-direction: column;
         gap: 1px;
         padding-top: .5rem;
-        margin-top: .375rem;
+        margin-top: auto;
         border-top: 1px solid var(--border);
     }
     .ee-menu-footer-form { width: 100%; }

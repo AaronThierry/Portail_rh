@@ -28,6 +28,34 @@ class BulletinImportController extends Controller
     }
 
     /**
+     * Prévisualiser les fichiers avant import (AJAX)
+     * Reçoit une liste de noms de fichiers, retourne le statut de chaque bulletin
+     */
+    public function preview(Request $request)
+    {
+        $request->validate([
+            'filenames'    => ['required', 'array', 'min:1', 'max:200'],
+            'filenames.*'  => ['required', 'string', 'max:500'],
+            'entreprise_id' => ['required', 'exists:entreprises,id'],
+        ]);
+
+        $rows = $this->importService->preview(
+            $request->input('filenames'),
+            (int) $request->input('entreprise_id')
+        );
+
+        $stats = [
+            'total'     => count($rows),
+            'ok'        => count(array_filter($rows, fn($r) => $r['statut'] === 'ok')),
+            'doublons'  => count(array_filter($rows, fn($r) => $r['statut'] === 'doublon')),
+            'not_found' => count(array_filter($rows, fn($r) => $r['statut'] === 'not_found')),
+            'errors'    => count(array_filter($rows, fn($r) => $r['statut'] === 'parse_error')),
+        ];
+
+        return response()->json(['rows' => $rows, 'stats' => $stats]);
+    }
+
+    /**
      * Traiter l'upload du ZIP
      */
     public function store(Request $request)

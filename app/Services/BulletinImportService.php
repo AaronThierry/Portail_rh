@@ -138,13 +138,11 @@ class BulletinImportService
         }
 
         // Trouver l'employé correspondant
-        $personnel = $this->matchPersonnel($parsed['matricule'], $parsed['nom'], $entrepriseId);
+        $personnel = $this->matchPersonnel($parsed['police'], $parsed['nom'], $entrepriseId);
         if (!$personnel) {
             $this->result['erreurs'][] = [
                 'fichier' => $basename,
-                'raison'  => $parsed['matricule']
-                    ? "Matricule '{$parsed['matricule']}' introuvable dans cette entreprise."
-                    : "Employé '{$parsed['nom']}' introuvable dans cette entreprise.",
+                'raison'  => "Police «{$parsed['police']}» introuvable dans cette entreprise.",
             ];
             return;
         }
@@ -225,13 +223,14 @@ class BulletinImportService
     /**
      * Parser le nom d'un fichier PDF bulletin
      *
-     * Format : Bulletin_{Matricule}_{Nom}_{YYYY-MM-DD}_au_{YYYY-MM-DD}.pdf
-     * Retourne : ['matricule' => string|null, 'nom' => string, 'annee' => int, 'mois' => int]
-     *            ou null si le format est invalide
+     * Format : Bulletin_{Police}_{NomPrenom}_{YYYY-MM-DD}_au_{YYYY-MM-DD}.pdf
+     *
+     * Exemples :
+     *   Bulletin_580U224_TAMINI_THIERRY_NOHMITE_2026-04-19_au_2026-04-19.pdf
+     *   Bulletin_001ABC_KABORE_BRICE_2026-03-01_au_2026-03-31.pdf
      */
     public function parseFilename(string $filename): ?array
     {
-        // Enlever l'extension
         $basename = pathinfo($filename, PATHINFO_FILENAME);
 
         // Pattern : Bulletin_{middle}_{YYYY-MM-DD}_au_{YYYY-MM-DD}
@@ -239,50 +238,58 @@ class BulletinImportService
             return null;
         }
 
-        $middle    = $m[1];   // e.g. "EMP001_Jean_Dupont" ou "SANS_MATRICULE_Pierre_Bernard"
-        $dateDebut = $m[2];   // e.g. "2024-01-01"
+        $middle    = $m[1];
+        $dateDebut = $m[2];
 
         $annee = (int) substr($dateDebut, 0, 4);
         $mois  = (int) substr($dateDebut, 5, 2);
+        $dateFin = $m[3];
 
         if ($annee < 2000 || $annee > 2100 || $mois < 1 || $mois > 12) {
             return null;
         }
 
-        // Cas spécial : SANS_MATRICULE
-        if (str_starts_with(strtoupper($middle), 'SANS_MATRICULE_')) {
-            $nomRaw = substr($middle, strlen('SANS_MATRICULE_'));
-            $nom    = str_replace('_', ' ', $nomRaw);
-            return ['matricule' => null, 'nom' => $nom, 'annee' => $annee, 'mois' => $mois];
-        }
+        // Premier segment = police, reste = nom
+        $parts  = explode('_', $middle, 2);
+        $police = $parts[0];
+        $nom    = isset($parts[1]) ? str_replace('_', ' ', $parts[1]) : '';
 
-        // Cas normal : premier segment = matricule
-        $parts     = explode('_', $middle, 2);
-        $matricule = $parts[0];
-        $nom       = isset($parts[1]) ? str_replace('_', ' ', $parts[1]) : '';
-
-        return ['matricule' => $matricule, 'nom' => $nom, 'annee' => $annee, 'mois' => $mois];
+        return [
+            'police'     => $police,
+            'nom'        => $nom,
+            'annee'      => $annee,
+            'mois'       => $mois,
+            'date_debut' => $dateDebut,
+            'date_fin'   => $dateFin,
+        ];
     }
 
     /**
      * Trouver l'employé correspondant dans l'entreprise
-     * - Si matricule présent : recherche par matricule
-     * - Sinon (SANS_MATRICULE) : recherche approximative par nom + prénom
+     * - Recherche d'abord par numéro de police
+     * - Repli sur recherche par nom si police non trouvée
      */
-    public function matchPersonnel(?string $matricule, string $nom, int $entrepriseId): ?Personnel
+    public function matchPersonnel(string $police, string $nom, int $entrepriseId): ?Personnel
     {
-        if ($matricule) {
-            return Personnel::where('matricule', $matricule)
-                ->where('entreprise_id', $entrepriseId)
-                ->first();
+        // 1. Recherche par police (identifiant principal)
+        $personnel = Personnel::where('police', $police)
+            ->where('entreprise_id', $entrepriseId)
+            ->first();
+
+        if ($personnel) {
+            return $personnel;
         }
 
-        // Recherche par nom complet (nom contient "Prénom Nom" séparés par espace)
-        $parts = explode(' ', trim($nom));
+        // 2. Repli : recherche approximative par nom
+        $parts = array_filter(explode(' ', trim($nom)));
+        if (empty($parts)) {
+            return null;
+        }
 
         return Personnel::where('entreprise_id', $entrepriseId)
             ->where(function ($query) use ($parts) {
                 foreach ($parts as $part) {
+                    if (strlen($part) < 3) continue;
                     $query->where(function ($q) use ($part) {
                         $q->where('nom', 'like', "%{$part}%")
                           ->orWhere('prenoms', 'like', "%{$part}%");
@@ -290,6 +297,57 @@ class BulletinImportService
                 }
             })
             ->first();
+    }
+
+    /**
+     * Prévisualiser un ensemble de noms de fichiers sans les importer
+     * Retourne pour chaque fichier : police, nom, période, statut (ok/not_found/doublon/parse_error)
+     */
+    public function preview(array $filenames, int $entrepriseId): array
+    {
+        $rows = [];
+
+        foreach ($filenames as $filename) {
+            $parsed = $this->parseFilename($filename);
+
+            if (!$parsed) {
+                $rows[] = [
+                    'fichier'    => $filename,
+                    'police'     => null,
+                    'nom'        => null,
+                    'periode'    => null,
+                    'personnel'  => null,
+                    'doublon'    => false,
+                    'statut'     => 'parse_error',
+                    'raison'     => 'Format invalide. Attendu : Bulletin_{Police}_{Nom}_{date}_au_{date}.pdf',
+                ];
+                continue;
+            }
+
+            $personnel = $this->matchPersonnel($parsed['police'], $parsed['nom'], $entrepriseId);
+
+            $doublon = $personnel
+                ? BulletinPaie::existePourPeriode($personnel->id, $parsed['annee'], $parsed['mois'])
+                : false;
+
+            $rows[] = [
+                'fichier'   => $filename,
+                'police'    => $parsed['police'],
+                'nom'       => $parsed['nom'],
+                'periode'   => sprintf('%02d/%d', $parsed['mois'], $parsed['annee']),
+                'personnel' => $personnel ? [
+                    'id'          => $personnel->id,
+                    'nom_complet' => $personnel->nom_complet,
+                    'matricule'   => $personnel->matricule,
+                    'police'      => $personnel->police,
+                ] : null,
+                'doublon'   => $doublon,
+                'statut'    => $doublon ? 'doublon' : ($personnel ? 'ok' : 'not_found'),
+                'raison'    => $doublon ? 'Bulletin déjà existant pour cette période' : (!$personnel ? "Police «{$parsed['police']}» introuvable" : null),
+            ];
+        }
+
+        return $rows;
     }
 
     /**

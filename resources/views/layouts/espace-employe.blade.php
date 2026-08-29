@@ -6,7 +6,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Mon Espace') — Portail RH+</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon-180x180.png') }}">
+
+    <!-- PWA -->
+    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <meta name="theme-color" content="#EA580C">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('pwa-192x192.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

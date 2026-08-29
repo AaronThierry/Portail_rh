@@ -16,3 +16,11 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Capacitor / Android (le dossier android/ lui-même est versionné, seuls ses artefacts de build sont ignorés)
+/android/app/build
+/android/build
+/android/.gradle
+/android/local.properties
+/android/captures
+/android/.cxx

@@ -1,0 +1,13 @@
+{
+    "appId": "com.portailrh.app",
+    "appName": "Portail RH+",
+    "webDir": "www-capacitor",
+    "server": {
+        "androidScheme": "https",
+        "url": "https://portail-rh.com",
+        "cleartext": false
+    },
+    "android": {
+        "allowMixedContent": false
+    }
+}

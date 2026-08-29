@@ -1,5 +1,12 @@
 import './bootstrap';
 
+// PWA — enregistrement du service worker (mise à jour silencieuse en tâche de fond)
+if ('serviceWorker' in navigator) {
+    import('virtual:pwa-register').then(({ registerSW }) => {
+        registerSW({ immediate: true });
+    });
+}
+
 // Safe localStorage helper
 function safeStorage(action, key, value) {
     try {

@@ -514,12 +514,10 @@ class EspaceEmployeController extends Controller
         if ($adminsRH->isNotEmpty()) {
             Notification::send($adminsRH, new NouvelleDemandeCongeNotification($conge));
 
-            // Notification WhatsApp au Super Admin
+            // Notification WhatsApp aux admins/RH/Chef d'Entreprise
             $whatsapp = app(WhatsAppService::class);
             foreach ($adminsRH as $admin) {
-                if ($admin->personnel) {
-                    $whatsapp->notifyNewConge($conge, $admin->personnel);
-                }
+                $whatsapp->notifyNewConge($conge, $admin);
             }
         }
 
@@ -779,12 +777,10 @@ class EspaceEmployeController extends Controller
         if ($adminsRH->isNotEmpty()) {
             Notification::send($adminsRH, new NouvelleDemandeAbsenceNotification($absence));
 
-            // Notification WhatsApp au Super Admin
+            // Notification WhatsApp aux admins/RH/Chef d'Entreprise
             $whatsapp = app(WhatsAppService::class);
             foreach ($adminsRH as $admin) {
-                if ($admin->personnel) {
-                    $whatsapp->notifyNewAbsence($absence, $admin->personnel);
-                }
+                $whatsapp->notifyNewAbsence($absence, $admin);
             }
         }
 

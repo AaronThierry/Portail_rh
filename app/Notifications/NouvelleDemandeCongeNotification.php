@@ -26,7 +26,8 @@ class NouvelleDemandeCongeNotification extends Notification implements ShouldQue
 
         try {
             $whatsapp = app(WhatsAppService::class);
-            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->telephone) {
+            $aUnNumero = ($notifiable->personnel && $notifiable->personnel->telephone) || $notifiable->phone;
+            if ($whatsapp->isEnabled() && $aUnNumero) {
                 $channels[] = WhatsAppChannel::class;
             }
         } catch (\Throwable $e) {
@@ -58,11 +59,7 @@ class NouvelleDemandeCongeNotification extends Notification implements ShouldQue
 
     public function toWhatsApp(object $notifiable): void
     {
-        if (!$notifiable->personnel) {
-            return;
-        }
-
         $whatsapp = app(WhatsAppService::class);
-        $whatsapp->notifyNewConge($this->conge, $notifiable->personnel);
+        $whatsapp->notifyNewConge($this->conge, $notifiable);
     }
 }

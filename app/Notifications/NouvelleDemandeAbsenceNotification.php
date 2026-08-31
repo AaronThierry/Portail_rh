@@ -26,7 +26,8 @@ class NouvelleDemandeAbsenceNotification extends Notification implements ShouldQ
 
         try {
             $whatsapp = app(WhatsAppService::class);
-            if ($whatsapp->isEnabled() && $notifiable->personnel && $notifiable->personnel->telephone) {
+            $aUnNumero = ($notifiable->personnel && $notifiable->personnel->telephone) || $notifiable->phone;
+            if ($whatsapp->isEnabled() && $aUnNumero) {
                 $channels[] = WhatsAppChannel::class;
             }
         } catch (\Throwable $e) {
@@ -53,11 +54,7 @@ class NouvelleDemandeAbsenceNotification extends Notification implements ShouldQ
 
     public function toWhatsApp(object $notifiable): void
     {
-        if (!$notifiable->personnel) {
-            return;
-        }
-
         $whatsapp = app(WhatsAppService::class);
-        $whatsapp->notifyNewAbsence($this->absence, $notifiable->personnel);
+        $whatsapp->notifyNewAbsence($this->absence, $notifiable);
     }
 }

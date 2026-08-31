@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Personnel;
+use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -125,13 +126,25 @@ class WhatsAppService
         return $this->sendToPersonnel($personnel, $this->buildMessage('Décision sur votre absence', $lines));
     }
 
-    public function notifyNewConge($conge, Personnel $adminPersonnel): bool
+    /**
+     * Notifie un admin/RH/Chef d'Entreprise d'une nouvelle demande de congé.
+     *
+     * $admin est un User (pas forcément lié à une fiche Personnel — ex: un
+     * compte Chef d'Entreprise n'en a pas) : le numéro est résolu depuis sa
+     * fiche Personnel si elle existe, sinon depuis users.phone.
+     */
+    public function notifyNewConge($conge, User $admin): bool
     {
+        $phone = $this->resolveAdminPhone($admin);
+        if (!$phone) {
+            return false;
+        }
+
         $employe = $conge->personnel->nom . ' ' . $conge->personnel->prenoms;
         $typeNom = $conge->typeConge->nom ?? 'Congé';
 
         $lines = [
-            "Bonjour {$adminPersonnel->prenoms},",
+            "Bonjour {$this->resolveAdminName($admin)},",
             '',
             'Une nouvelle demande de congé attend votre validation.',
             '',
@@ -141,16 +154,21 @@ class WhatsAppService
             "*Durée :* {$conge->nombre_jours} jour(s)",
         ];
 
-        return $this->sendToPersonnel($adminPersonnel, $this->buildMessage('Demande à traiter', $lines));
+        return $this->sendMessage($phone, $this->buildMessage('Demande à traiter', $lines));
     }
 
-    public function notifyNewAbsence($absence, Personnel $adminPersonnel): bool
+    public function notifyNewAbsence($absence, User $admin): bool
     {
+        $phone = $this->resolveAdminPhone($admin);
+        if (!$phone) {
+            return false;
+        }
+
         $employe = $absence->personnel->nom . ' ' . $absence->personnel->prenoms;
         $typeNom = $absence->typeAbsence->nom ?? 'Absence';
 
         $lines = [
-            "Bonjour {$adminPersonnel->prenoms},",
+            "Bonjour {$this->resolveAdminName($admin)},",
             '',
             'Une nouvelle absence attend votre validation.',
             '',
@@ -159,7 +177,29 @@ class WhatsAppService
             "*Date :* {$absence->date_absence->format('d/m/Y')}",
         ];
 
-        return $this->sendToPersonnel($adminPersonnel, $this->buildMessage('Absence à traiter', $lines));
+        return $this->sendMessage($phone, $this->buildMessage('Absence à traiter', $lines));
+    }
+
+    /**
+     * Résout le numéro d'un admin : priorité à sa fiche Personnel (avec
+     * indicatif pays dédié), sinon repli sur users.phone (indicatif par défaut).
+     */
+    protected function resolveAdminPhone(User $admin): ?string
+    {
+        if ($admin->personnel && $admin->personnel->telephone) {
+            return $this->buildPhone($admin->personnel);
+        }
+
+        if ($admin->phone) {
+            return $this->defaultCountryCode . preg_replace('/[^0-9]/', '', $admin->phone);
+        }
+
+        return null;
+    }
+
+    protected function resolveAdminName(User $admin): string
+    {
+        return $admin->personnel->prenoms ?? $admin->name;
     }
 
     public function notifyBulletinPaie($bulletin, Personnel $personnel): bool

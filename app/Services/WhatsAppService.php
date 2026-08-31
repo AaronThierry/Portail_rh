@@ -22,7 +22,8 @@ class WhatsAppService
     protected string $defaultCountryCode;
     protected string $apiKey;
 
-    const API_URL = 'https://api.zavu.dev/v1/messages';
+    const API_URL    = 'https://api.zavu.dev/v1/messages';
+    const PORTAL_URL = 'https://portail-rh.com/';
 
     public function __construct()
     {
@@ -90,54 +91,38 @@ class WhatsAppService
     public function notifyCongeValidation($conge, Personnel $personnel): bool
     {
         $approuve = $conge->statut === 'approuve';
-        $emoji    = $approuve ? '✅' : '❌';
-        $statut   = $approuve ? 'APPROUVÉE' : 'REFUSÉE';
+        $statut   = $approuve ? '✅ Approuvée' : '❌ Refusée';
 
-        $body  = "🏢 *Portail RH+ — Décision sur votre congé*\n";
-        $body .= "━━━━━━━━━━━━━━━━━━━━━\n\n";
-        $body .= "Bonjour *{$personnel->prenoms}*,\n\n";
-        $body .= "Votre demande de congé a été traitée.\n\n";
-        $body .= "📋 *Détails de la demande :*\n";
-        $body .= "• Période : {$conge->date_debut->format('d/m/Y')} → {$conge->date_fin->format('d/m/Y')}\n";
-        $body .= "• Durée : *{$conge->nombre_jours} jour(s)*\n";
-        $body .= "• Décision : {$emoji} *{$statut}*\n";
+        $lines   = ["Bonjour {$personnel->prenoms},", '', 'Votre demande de congé a été traitée.', ''];
+        $lines[] = "*Période :* {$conge->date_debut->format('d/m/Y')} au {$conge->date_fin->format('d/m/Y')}";
+        $lines[] = "*Durée :* {$conge->nombre_jours} jour(s)";
+        $lines[] = "*Décision :* {$statut}";
 
         if (!$approuve && $conge->motif_refus) {
-            $body .= "\n💬 *Motif du refus :*\n_{$conge->motif_refus}_\n";
+            $lines[] = '';
+            $lines[] = "*Motif :* {$conge->motif_refus}";
         }
 
-        $body .= "\n🔗 Consultez votre dossier sur le portail :\n";
-        $body .= "https://portail-rh.com/\n\n";
-        $body .= "_Cordialement,\nService des Ressources Humaines_";
-
-        return $this->sendToPersonnel($personnel, $body);
+        return $this->sendToPersonnel($personnel, $this->buildMessage('Décision sur votre congé', $lines));
     }
 
     public function notifyAbsenceValidation($absence, Personnel $personnel): bool
     {
         $approuvee = $absence->statut === 'approuvee';
-        $emoji     = $approuvee ? '✅' : '❌';
-        $statut    = $approuvee ? 'APPROUVÉE' : 'REFUSÉE';
+        $statut    = $approuvee ? '✅ Approuvée' : '❌ Refusée';
         $typeNom   = $absence->typeAbsence->nom ?? 'Absence';
 
-        $body  = "🏢 *Portail RH+ — Décision sur votre absence*\n";
-        $body .= "━━━━━━━━━━━━━━━━━━━━━\n\n";
-        $body .= "Bonjour *{$personnel->prenoms}*,\n\n";
-        $body .= "Votre déclaration d'absence a été traitée.\n\n";
-        $body .= "📋 *Détails de la déclaration :*\n";
-        $body .= "• Type : {$typeNom}\n";
-        $body .= "• Date : *{$absence->date_absence->format('d/m/Y')}*\n";
-        $body .= "• Décision : {$emoji} *{$statut}*\n";
+        $lines   = ["Bonjour {$personnel->prenoms},", '', 'Votre déclaration d\'absence a été traitée.', ''];
+        $lines[] = "*Type :* {$typeNom}";
+        $lines[] = "*Date :* {$absence->date_absence->format('d/m/Y')}";
+        $lines[] = "*Décision :* {$statut}";
 
         if (!$approuvee && $absence->motif_refus) {
-            $body .= "\n💬 *Motif du refus :*\n_{$absence->motif_refus}_\n";
+            $lines[] = '';
+            $lines[] = "*Motif :* {$absence->motif_refus}";
         }
 
-        $body .= "\n🔗 Consultez votre dossier sur le portail :\n";
-        $body .= "https://portail-rh.com/\n\n";
-        $body .= "_Cordialement,\nService des Ressources Humaines_";
-
-        return $this->sendToPersonnel($personnel, $body);
+        return $this->sendToPersonnel($personnel, $this->buildMessage('Décision sur votre absence', $lines));
     }
 
     public function notifyNewConge($conge, Personnel $adminPersonnel): bool
@@ -145,19 +130,18 @@ class WhatsAppService
         $employe = $conge->personnel->nom . ' ' . $conge->personnel->prenoms;
         $typeNom = $conge->typeConge->nom ?? 'Congé';
 
-        $body  = "🔔 *Portail RH+ — Nouvelle demande à traiter*\n";
-        $body .= "━━━━━━━━━━━━━━━━━━━━━\n\n";
-        $body .= "Bonjour *{$adminPersonnel->prenoms}*,\n\n";
-        $body .= "Une nouvelle demande de congé a été soumise et attend votre validation.\n\n";
-        $body .= "👤 *Employé :* {$employe}\n";
-        $body .= "📂 *Type :* {$typeNom}\n";
-        $body .= "📅 *Période :* {$conge->date_debut->format('d/m/Y')} → {$conge->date_fin->format('d/m/Y')}\n";
-        $body .= "⏱ *Durée :* {$conge->nombre_jours} jour(s)\n\n";
-        $body .= "🔗 Traitez cette demande sur le portail :\n";
-        $body .= "https://portail-rh.com/\n\n";
-        $body .= "_Portail RH+ — Gestion des Ressources Humaines_";
+        $lines = [
+            "Bonjour {$adminPersonnel->prenoms},",
+            '',
+            'Une nouvelle demande de congé attend votre validation.',
+            '',
+            "*Employé :* {$employe}",
+            "*Type :* {$typeNom}",
+            "*Période :* {$conge->date_debut->format('d/m/Y')} au {$conge->date_fin->format('d/m/Y')}",
+            "*Durée :* {$conge->nombre_jours} jour(s)",
+        ];
 
-        return $this->sendToPersonnel($adminPersonnel, $body);
+        return $this->sendToPersonnel($adminPersonnel, $this->buildMessage('Demande à traiter', $lines));
     }
 
     public function notifyNewAbsence($absence, Personnel $adminPersonnel): bool
@@ -165,35 +149,34 @@ class WhatsAppService
         $employe = $absence->personnel->nom . ' ' . $absence->personnel->prenoms;
         $typeNom = $absence->typeAbsence->nom ?? 'Absence';
 
-        $body  = "🔔 *Portail RH+ — Absence à traiter*\n";
-        $body .= "━━━━━━━━━━━━━━━━━━━━━\n\n";
-        $body .= "Bonjour *{$adminPersonnel->prenoms}*,\n\n";
-        $body .= "Une nouvelle absence a été déclarée et attend votre validation.\n\n";
-        $body .= "👤 *Employé :* {$employe}\n";
-        $body .= "📂 *Type :* {$typeNom}\n";
-        $body .= "📅 *Date :* {$absence->date_absence->format('d/m/Y')}\n\n";
-        $body .= "🔗 Traitez cette déclaration sur le portail :\n";
-        $body .= "https://portail-rh.com/\n\n";
-        $body .= "_Portail RH+ — Gestion des Ressources Humaines_";
+        $lines = [
+            "Bonjour {$adminPersonnel->prenoms},",
+            '',
+            'Une nouvelle absence attend votre validation.',
+            '',
+            "*Employé :* {$employe}",
+            "*Type :* {$typeNom}",
+            "*Date :* {$absence->date_absence->format('d/m/Y')}",
+        ];
 
-        return $this->sendToPersonnel($adminPersonnel, $body);
+        return $this->sendToPersonnel($adminPersonnel, $this->buildMessage('Absence à traiter', $lines));
     }
 
     public function notifyBulletinPaie($bulletin, Personnel $personnel): bool
     {
         $moisNom = $bulletin->mois_nom ?? $bulletin->mois;
 
-        $body  = "💰 *Portail RH+ — Bulletin de paie disponible*\n";
-        $body .= "━━━━━━━━━━━━━━━━━━━━━\n\n";
-        $body .= "Bonjour *{$personnel->prenoms}*,\n\n";
-        $body .= "Votre bulletin de paie est disponible sur le portail.\n\n";
-        $body .= "📄 *Période :* {$moisNom} {$bulletin->annee}\n";
-        $body .= "\n📥 *Téléchargez votre bulletin en vous connectant :*\n";
-        $body .= "https://portail-rh.com/\n\n";
-        $body .= "_(Rubrique Mon Espace → Bulletins de paie)_\n\n";
-        $body .= "_Cordialement,\nService des Ressources Humaines_";
+        $lines = [
+            "Bonjour {$personnel->prenoms},",
+            '',
+            'Votre bulletin de paie est disponible sur le portail.',
+            '',
+            "*Période :* {$moisNom} {$bulletin->annee}",
+            '',
+            'Rubrique : Mon Espace → Bulletins de paie',
+        ];
 
-        return $this->sendToPersonnel($personnel, $body);
+        return $this->sendToPersonnel($personnel, $this->buildMessage('Bulletin de paie disponible', $lines));
     }
 
     public function notifyDocumentAgent($document, Personnel $personnel): bool
@@ -201,39 +184,50 @@ class WhatsAppService
         $titre     = $document->titre ?? $document->nom_original;
         $categorie = $document->categorie->nom ?? 'Document';
 
-        $body  = "📎 *Portail RH+ — Nouveau document disponible*\n";
-        $body .= "━━━━━━━━━━━━━━━━━━━━━\n\n";
-        $body .= "Bonjour *{$personnel->prenoms}*,\n\n";
-        $body .= "Un nouveau document a été ajouté à votre dossier personnel.\n\n";
-        $body .= "📋 *Document :* {$titre}\n";
-        $body .= "📁 *Catégorie :* {$categorie}\n\n";
-        $body .= "🔗 Consultez votre dossier sur le portail :\n";
-        $body .= "https://portail-rh.com/\n\n";
-        $body .= "_Cordialement,\nService des Ressources Humaines_";
+        $lines = [
+            "Bonjour {$personnel->prenoms},",
+            '',
+            'Un nouveau document a été ajouté à votre dossier personnel.',
+            '',
+            "*Document :* {$titre}",
+            "*Catégorie :* {$categorie}",
+        ];
 
-        return $this->sendToPersonnel($personnel, $body);
+        return $this->sendToPersonnel($personnel, $this->buildMessage('Nouveau document', $lines));
     }
 
     public function notifyAccountCreation($user, Personnel $personnel, string $temporaryPassword): bool
     {
-        $body  = "🎉 *Bienvenue sur le Portail RH+*\n";
-        $body .= "━━━━━━━━━━━━━━━━━━━━━\n\n";
-        $body .= "Bonjour *{$personnel->prenoms}*,\n\n";
-        $body .= "Votre compte d'accès au portail RH a été créé avec succès.\n\n";
-        $body .= "🔐 *Vos identifiants de connexion :*\n";
-        $body .= "• Email : {$user->email}\n";
-        $body .= "• Mot de passe temporaire : *{$temporaryPassword}*\n\n";
-        $body .= "⚠️ *Important :* Changez votre mot de passe dès votre première connexion.\n\n";
-        $body .= "🔗 Accédez au portail ici :\n";
-        $body .= "https://portail-rh.com/\n\n";
-        $body .= "_Cordialement,\nService des Ressources Humaines_";
+        $lines = [
+            "Bonjour {$personnel->prenoms},",
+            '',
+            'Votre accès au Portail RH+ a été créé.',
+            '',
+            "*Email :* {$user->email}",
+            "*Mot de passe temporaire :* {$temporaryPassword}",
+            '',
+            'Merci de le modifier dès votre première connexion.',
+        ];
 
-        return $this->sendToPersonnel($personnel, $body);
+        return $this->sendToPersonnel($personnel, $this->buildMessage('Création de votre compte', $lines));
     }
 
     public function notifyCustom(Personnel $personnel, string $title, string $content): bool
     {
-        return $this->sendToPersonnel($personnel, "*Portail RH+ — {$title}*\n\n{$content}");
+        return $this->sendToPersonnel($personnel, $this->buildMessage($title, [$content]));
+    }
+
+    /**
+     * Assemble un message dans un gabarit cohérent : en-tête, corps, pied de page.
+     *
+     * @param string[] $lines
+     */
+    protected function buildMessage(string $title, array $lines): string
+    {
+        $header = "*Portail RH+*\n{$title}\n" . str_repeat('─', 28);
+        $footer = "\n\n" . self::PORTAL_URL . "\nService des Ressources Humaines";
+
+        return $header . "\n\n" . implode("\n", $lines) . $footer;
     }
 
     public function sendBulkToPersonnels(array $personnelIds, string $message): array

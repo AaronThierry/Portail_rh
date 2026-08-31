@@ -305,6 +305,9 @@
                                 <option value="manager"  {{ ($user->role ?? '') === 'manager'  ? 'selected' : '' }}>Manager</option>
                                 <option value="hr"       {{ ($user->role ?? '') === 'hr'       ? 'selected' : '' }}>Ressources Humaines</option>
                                 <option value="employee" {{ ($user->role ?? '') === 'employee' ? 'selected' : '' }}>Employé</option>
+                                @if(auth()->user()->hasRole('Super Admin'))
+                                <option value="chef_entreprise" {{ ($user->role ?? '') === 'chef_entreprise' ? 'selected' : '' }}>Chef d'Entreprise</option>
+                                @endif
                             </select>
                         </div>
                     </div>

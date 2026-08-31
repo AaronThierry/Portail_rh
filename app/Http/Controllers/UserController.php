@@ -589,7 +589,8 @@ class UserController extends Controller
             'admin' => 'Admin',
             'manager' => 'Manager',
             'employee' => 'Employé',
-            'hr' => 'RH'
+            'hr' => 'RH',
+            'chef_entreprise' => "Chef d'Entreprise",
         ];
 
         $validator = Validator::make($request->all(), [
@@ -598,7 +599,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6',
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|in:admin,manager,employee,hr,super_admin',
+            'role' => 'required|in:admin,manager,employee,hr,super_admin,chef_entreprise',
             'department' => 'nullable|string|max:100',
             'status' => 'required|in:active,inactive'
         ], [
@@ -646,6 +647,32 @@ class UserController extends Controller
                 ], 403);
             }
             return back()->with('error', 'Seul un Super Admin peut assigner le rôle Super Admin');
+        }
+
+        // Vérifier que seul un Super Admin peut assigner le rôle Chef d'Entreprise,
+        // et qu'il n'existe pas déjà un autre Chef d'Entreprise actif pour cette entreprise
+        if ($spatieRoleName === "Chef d'Entreprise") {
+            if (!auth()->user()->hasRole('Super Admin')) {
+                $message = "Seul un Super Admin peut assigner le rôle Chef d'Entreprise";
+                if ($request->expectsJson()) {
+                    return response()->json(['message' => $message], 403);
+                }
+                return back()->with('error', $message);
+            }
+
+            $entrepriseId = $request->entreprise_id ?? $user->entreprise_id;
+            $dejaChef = User::where('entreprise_id', $entrepriseId)
+                ->where('id', '!=', $user->id)
+                ->role("Chef d'Entreprise")
+                ->exists();
+
+            if ($dejaChef) {
+                $message = "Un Chef d'Entreprise existe déjà pour cette entreprise";
+                if ($request->expectsJson()) {
+                    return response()->json(['message' => $message], 422);
+                }
+                return back()->with('error', $message)->withInput();
+            }
         }
 
         try {

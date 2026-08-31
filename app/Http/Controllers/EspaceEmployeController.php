@@ -504,11 +504,11 @@ class EspaceEmployeController extends Controller
             'annee' => $annee,
         ]);
 
-        // Notifier les admins/RH
+        // Notifier les admins/RH/Chef d'Entreprise
         $conge->load('personnel', 'typeConge');
         $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
             ->where('id', '!=', $user->id)
-            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager']))
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager', "Chef d'Entreprise"]))
             ->get();
 
         if ($adminsRH->isNotEmpty()) {
@@ -612,11 +612,11 @@ class EspaceEmployeController extends Controller
             'conge_parent_id' => $conge->id,
         ]);
 
-        // Notifier les admins/RH
+        // Notifier les admins/RH/Chef d'Entreprise
         $prolongation->load('personnel', 'typeConge');
         $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
             ->where('id', '!=', $user->id)
-            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager']))
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager', "Chef d'Entreprise"]))
             ->get();
 
         if ($adminsRH->isNotEmpty()) {
@@ -769,11 +769,11 @@ class EspaceEmployeController extends Controller
             'annee' => Carbon::parse($request->date_absence)->year,
         ]);
 
-        // Notifier les admins/RH
+        // Notifier les admins/RH/Chef d'Entreprise
         $absence->load('personnel', 'typeAbsence');
         $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
             ->where('id', '!=', $user->id)
-            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager']))
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager', "Chef d'Entreprise"]))
             ->get();
 
         if ($adminsRH->isNotEmpty()) {
@@ -824,11 +824,11 @@ class EspaceEmployeController extends Controller
             'statut' => 'en_attente',
         ]);
 
-        // Notifier les admins/RH
+        // Notifier les admins/RH/Chef d'Entreprise
         $absence->load('personnel', 'typeAbsence');
         $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
             ->where('id', '!=', $user->id)
-            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager']))
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager', "Chef d'Entreprise"]))
             ->get();
 
         if ($adminsRH->isNotEmpty()) {

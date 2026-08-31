@@ -46,8 +46,8 @@ return [
         'model'   => env('GEMINI_MODEL', 'gemini-2.0-flash'),
     ],
 
-    'wasender' => [
-        'api_key' => env('WASENDER_API_KEY', ''),
+    'zavu' => [
+        'api_key' => env('ZAVU_API_KEY', ''),
     ],
 
     'whatsapp' => [

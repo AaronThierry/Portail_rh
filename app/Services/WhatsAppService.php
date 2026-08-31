@@ -7,13 +7,12 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * WhatsApp Notification Service — WASenderAPI
+ * WhatsApp Notification Service — Zavu (https://zavu.dev)
  *
- * Envoie des messages WhatsApp via WASenderAPI (connexion QR code).
- * Pas de templates Meta requis — envoi direct comme WhatsApp Web.
+ * Envoie des messages WhatsApp via l'API unifiée de Zavu.
  *
  * Configuration requise dans .env :
- *   WASENDER_API_KEY=your_api_key_here
+ *   ZAVU_API_KEY=your_api_key_here
  *   WHATSAPP_ENABLED=true
  *   WHATSAPP_DEFAULT_COUNTRY_CODE=226
  */
@@ -23,13 +22,13 @@ class WhatsAppService
     protected string $defaultCountryCode;
     protected string $apiKey;
 
-    const API_URL = 'https://wasenderapi.com/api/send-message';
+    const API_URL = 'https://api.zavu.dev/v1/messages';
 
     public function __construct()
     {
         $this->enabled            = config('services.whatsapp.enabled', false);
         $this->defaultCountryCode = config('services.whatsapp.default_country_code', '226');
-        $this->apiKey             = config('services.wasender.api_key', '');
+        $this->apiKey             = config('services.zavu.api_key', '');
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -48,16 +47,17 @@ class WhatsAppService
         try {
             $response = Http::withToken($this->apiKey)
                 ->post(self::API_URL, [
-                    'to'   => $phone,
-                    'text' => $body,
+                    'to'      => $phone,
+                    'channel' => 'whatsapp',
+                    'text'    => $body,
                 ]);
 
             if ($response->successful()) {
-                Log::info('WASender: message envoyé', ['to' => $phone]);
+                Log::info('Zavu: message envoyé', ['to' => $phone]);
                 return true;
             }
 
-            Log::warning('WASender: envoi échoué', [
+            Log::warning('Zavu: envoi échoué', [
                 'to'       => $phone,
                 'status'   => $response->status(),
                 'body'     => $response->body(),
@@ -66,7 +66,7 @@ class WhatsAppService
             return false;
 
         } catch (\Exception $e) {
-            Log::error('WASender: exception', [
+            Log::error('Zavu: exception', [
                 'to'    => $phone,
                 'error' => $e->getMessage(),
             ]);
@@ -280,8 +280,11 @@ class WhatsAppService
         return $code . preg_replace('/[^0-9]/', '', $personnel->telephone);
     }
 
+    /**
+     * Zavu attend les numéros au format E.164 (ex: +22670123456).
+     */
     protected function formatPhone(string $phone): string
     {
-        return preg_replace('/[^0-9]/', '', $phone);
+        return '+' . preg_replace('/[^0-9]/', '', $phone);
     }
 }

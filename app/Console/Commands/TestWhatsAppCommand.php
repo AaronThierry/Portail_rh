@@ -24,7 +24,7 @@ class TestWhatsAppCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Tester l\'envoi d\'un message WhatsApp via Twilio';
+    protected $description = 'Tester l\'envoi d\'un message WhatsApp via Zavu';
 
     protected $whatsapp;
 
@@ -47,7 +47,7 @@ class TestWhatsAppCommand extends Command
         // Vérifier si WhatsApp est activé
         if (!$this->whatsapp->isEnabled()) {
             $this->error('❌ WhatsApp est désactivé dans la configuration.');
-            $this->info('💡 Activez-le en ajoutant TWILIO_WHATSAPP_ENABLED=true dans .env');
+            $this->info('💡 Activez-le en ajoutant WHATSAPP_ENABLED=true et ZAVU_API_KEY=... dans .env');
             return 1;
         }
 
@@ -87,15 +87,12 @@ class TestWhatsAppCommand extends Command
         $this->newLine(2);
 
         try {
-            $success = $this->whatsapp->sendNotification($phone, $message);
+            $success = $this->whatsapp->sendMessage($phone, $message);
 
             if ($success) {
                 $this->info('✅ Message envoyé avec succès !');
                 $this->newLine();
                 $this->info('📱 Vérifiez WhatsApp sur le téléphone ' . $phone);
-                $this->newLine();
-                $this->comment('💡 Astuce : Si vous utilisez le sandbox Twilio, assurez-vous que');
-                $this->comment('   le numéro a bien envoyé le code d\'activation au préalable.');
                 return 0;
             } else {
                 $this->error('❌ Échec de l\'envoi du message.');

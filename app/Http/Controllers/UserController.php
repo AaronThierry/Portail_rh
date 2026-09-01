@@ -633,7 +633,7 @@ class UserController extends Controller
                     'message' => 'Vous n\'avez pas la permission de modifier des utilisateurs'
                 ], 403);
             }
-            return back()->with('error', 'Vous n\'avez pas la permission de modifier des utilisateurs');
+            return back()->withErrors(['role' => 'Vous n\'avez pas la permission de modifier des utilisateurs']);
         }
 
         // Convertir le rôle au format Spatie
@@ -717,7 +717,7 @@ class UserController extends Controller
                 ], 500);
             }
 
-            return back()->with('error', 'Erreur lors de la mise à jour de l\'utilisateur')
+            return back()->withErrors(['role' => 'Erreur lors de la mise à jour : ' . $e->getMessage()])
                 ->withInput();
         }
     }

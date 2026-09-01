@@ -85,7 +85,7 @@ class CreateWhatsAppTemplates extends Command
             'name'     => 'message_personnalise',
             'category' => 'MARKETING',
             'language' => 'fr',
-            'body'     => "*{{1}}*\n\n{{2}}\n\n— Portail RH+",
+            'body'     => "Bonjour,\n\nVous avez reçu un nouveau message du service des Ressources Humaines concernant : *{{1}}*.\n\n{{2}}\n\nMerci de votre attention.\n\n— Portail RH+",
             'footer'   => 'Portail RH+',
             'variables' => ['titre', 'contenu'],
         ],
@@ -127,6 +127,18 @@ class CreateWhatsAppTemplates extends Command
 
         foreach (self::TEMPLATES as $template) {
             $templateId = $results[$template['name']] ?? null;
+
+            // Si le template existant a été rejeté par Meta, on le supprime pour
+            // en recréer un propre avec le contenu (potentiellement corrigé) ci-dessus.
+            if ($templateId) {
+                $existing = Http::withToken($apiKey)->get(self::API_BASE . "/templates/{$templateId}");
+                if ($existing->successful() && $existing->json('status') === 'rejected') {
+                    $this->warn("→ « {$template['name']} » avait été rejeté, suppression et recréation...");
+                    Http::withToken($apiKey)->delete(self::API_BASE . "/templates/{$templateId}");
+                    $templateId = null;
+                    unset($results[$template['name']]);
+                }
+            }
 
             if ($templateId) {
                 $this->info("→ « {$template['name']} » déjà créé (id: {$templateId}), soumission...");

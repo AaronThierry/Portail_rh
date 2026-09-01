@@ -646,7 +646,7 @@ class UserController extends Controller
                     'message' => 'Seul un Super Admin peut assigner le rôle Super Admin'
                 ], 403);
             }
-            return back()->with('error', 'Seul un Super Admin peut assigner le rôle Super Admin');
+            return back()->withErrors(['role' => 'Seul un Super Admin peut assigner le rôle Super Admin']);
         }
 
         // Vérifier que seul un Super Admin peut assigner le rôle Chef d'Entreprise,
@@ -657,7 +657,7 @@ class UserController extends Controller
                 if ($request->expectsJson()) {
                     return response()->json(['message' => $message], 403);
                 }
-                return back()->with('error', $message);
+                return back()->withErrors(['role' => $message]);
             }
 
             $entrepriseId = $request->entreprise_id ?? $user->entreprise_id;
@@ -671,7 +671,7 @@ class UserController extends Controller
                 if ($request->expectsJson()) {
                     return response()->json(['message' => $message], 422);
                 }
-                return back()->with('error', $message)->withInput();
+                return back()->withErrors(['role' => $message])->withInput();
             }
         }
 

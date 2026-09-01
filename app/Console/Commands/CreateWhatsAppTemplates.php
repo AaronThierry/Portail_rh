@@ -29,7 +29,7 @@ class CreateWhatsAppTemplates extends Command
             'name'     => 'conge_decision',
             'category' => 'UTILITY',
             'language' => 'fr',
-            'body'     => "Bonjour {{1}},\n\nVotre demande de congé du {{2}} au {{3}} ({{4}} jour(s)) a été *{{5}}*.\n\n{{6}}",
+            'body'     => "Bonjour {{1}},\n\nVotre demande de congé du {{2}} au {{3}} ({{4}} jour(s)) a été *{{5}}*.\n\n{{6}}\n\nCordialement, Portail RH+",
             'footer'   => 'Portail RH+',
             'variables' => ['prenom', 'date_debut', 'date_fin', 'duree', 'decision', 'details'],
         ],
@@ -37,7 +37,7 @@ class CreateWhatsAppTemplates extends Command
             'name'     => 'absence_decision',
             'category' => 'UTILITY',
             'language' => 'fr',
-            'body'     => "Bonjour {{1}},\n\nVotre déclaration d'absence ({{2}}) du {{3}} a été *{{4}}*.\n\n{{5}}",
+            'body'     => "Bonjour {{1}},\n\nVotre déclaration d'absence ({{2}}) du {{3}} a été *{{4}}*.\n\n{{5}}\n\nCordialement, Portail RH+",
             'footer'   => 'Portail RH+',
             'variables' => ['prenom', 'type', 'date', 'decision', 'details'],
         ],
@@ -53,7 +53,7 @@ class CreateWhatsAppTemplates extends Command
             'name'     => 'nouvelle_demande_absence',
             'category' => 'UTILITY',
             'language' => 'fr',
-            'body'     => "Bonjour {{1}},\n\nNouvelle absence à traiter.\n\nEmployé : {{2}}\nType : {{3}}\nDate : {{4}}",
+            'body'     => "Bonjour {{1}},\n\nNouvelle absence à traiter.\n\nEmployé : {{2}}\nType : {{3}}\nDate : {{4}}.\n\nMerci de traiter cette demande sur le portail.",
             'footer'   => 'Portail RH+',
             'variables' => ['prenom_admin', 'employe', 'type', 'date'],
         ],
@@ -85,7 +85,7 @@ class CreateWhatsAppTemplates extends Command
             'name'     => 'message_personnalise',
             'category' => 'MARKETING',
             'language' => 'fr',
-            'body'     => "*{{1}}*\n\n{{2}}",
+            'body'     => "*{{1}}*\n\n{{2}}\n\n— Portail RH+",
             'footer'   => 'Portail RH+',
             'variables' => ['titre', 'contenu'],
         ],
@@ -100,38 +100,47 @@ class CreateWhatsAppTemplates extends Command
             return 1;
         }
 
+        // Reprend les ids déjà créés lors d'un run précédent (évite les doublons)
         $results = [];
+        if (Storage::disk('local')->exists('zavu-templates.json')) {
+            $results = json_decode(Storage::disk('local')->get('zavu-templates.json'), true) ?? [];
+        }
 
         foreach (self::TEMPLATES as $template) {
-            $this->info("→ Création du template « {$template['name']} »...");
+            $templateId = $results[$template['name']] ?? null;
 
-            $response = Http::withToken($apiKey)
-                ->post(self::API_BASE . '/templates', $template);
+            if ($templateId) {
+                $this->info("→ « {$template['name']} » déjà créé (id: {$templateId}), soumission...");
+            } else {
+                $this->info("→ Création du template « {$template['name']} »...");
 
-            if (!$response->successful()) {
-                $this->error("  Échec création : {$response->status()} — {$response->body()}");
-                continue;
+                $response = Http::withToken($apiKey)
+                    ->post(self::API_BASE . '/templates', $template);
+
+                if (!$response->successful()) {
+                    $this->error("  Échec création : {$response->status()} — {$response->body()}");
+                    continue;
+                }
+
+                $templateId = $response->json('id') ?? $response->json('template.id');
+
+                if (!$templateId) {
+                    $this->error('  Réponse inattendue, pas d\'id trouvé : ' . $response->body());
+                    continue;
+                }
+
+                $this->info("  Créé (id: {$templateId}), soumission à l'approbation Meta...");
+                $results[$template['name']] = $templateId;
             }
-
-            $templateId = $response->json('id') ?? $response->json('template.id');
-
-            if (!$templateId) {
-                $this->error('  Réponse inattendue, pas d\'id trouvé : ' . $response->body());
-                continue;
-            }
-
-            $this->info("  Créé (id: {$templateId}), soumission à l'approbation Meta...");
 
             $submit = Http::withToken($apiKey)
-                ->post(self::API_BASE . '/templates/submit-for-approval', ['id' => $templateId]);
+                ->post(self::API_BASE . "/templates/{$templateId}/submit");
 
             if (!$submit->successful()) {
-                $this->warn("  Créé mais soumission échouée : {$submit->status()} — {$submit->body()}");
+                $this->warn("  Soumission échouée : {$submit->status()} — {$submit->body()}");
             } else {
                 $this->info('  Soumis à Meta pour approbation.');
             }
-
-            $results[$template['name']] = $templateId;
         }
 
         Storage::disk('local')->put('zavu-templates.json', json_encode($results, JSON_PRETTY_PRINT));

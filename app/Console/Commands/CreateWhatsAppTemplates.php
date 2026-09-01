@@ -100,6 +100,25 @@ class CreateWhatsAppTemplates extends Command
             return 1;
         }
 
+        $sendersResponse = Http::withToken($apiKey)->get(self::API_BASE . '/senders');
+
+        if (!$sendersResponse->successful()) {
+            $this->error("Impossible de récupérer les senders : {$sendersResponse->status()} — {$sendersResponse->body()}");
+            return 1;
+        }
+
+        $whatsappSender = collect($sendersResponse->json('items', []))
+            ->first(fn ($sender) => in_array('whatsapp', $sender['channels'] ?? []));
+
+        if (!$whatsappSender) {
+            $this->error("Aucun sender WhatsApp trouvé sur ce compte Zavu. Connectez un numéro WhatsApp (dashboard.zavu.dev > Senders) avant de continuer.");
+            return 1;
+        }
+
+        $senderId = $whatsappSender['id'];
+        $this->info("Sender WhatsApp : {$whatsappSender['name']} ({$senderId})");
+        $this->newLine();
+
         // Reprend les ids déjà créés lors d'un run précédent (évite les doublons)
         $results = [];
         if (Storage::disk('local')->exists('zavu-templates.json')) {
@@ -134,7 +153,7 @@ class CreateWhatsAppTemplates extends Command
             }
 
             $submit = Http::withToken($apiKey)
-                ->post(self::API_BASE . "/templates/{$templateId}/submit");
+                ->post(self::API_BASE . "/templates/{$templateId}/submit", ['senderId' => $senderId]);
 
             if (!$submit->successful()) {
                 $this->warn("  Soumission échouée : {$submit->status()} — {$submit->body()}");

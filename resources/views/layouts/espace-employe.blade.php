@@ -709,6 +709,8 @@
     @media (max-width: 768px) {
         .ee-bottomnav { display: flex; }
         .ee-main { padding-bottom: calc(66px + env(safe-area-inset-bottom, 0px)); }
+        /* La navbar du bas couvre la navigation principale : le burger devient redondant. */
+        .ee-burger { display: none; }
     }
     </style>
     @yield('styles')

@@ -659,6 +659,57 @@
         .ee-brand-name { font-size: .8125rem; }
         .ee-brand-info { display: none; }
     }
+
+    /* ════════════════════════════════════════
+       BOTTOM NAV — mobile
+    ════════════════════════════════════════ */
+    .ee-bottomnav {
+        display: none;
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 80;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        box-shadow: var(--shadow-lg);
+        padding: .375rem .375rem calc(.375rem + env(safe-area-inset-bottom, 0px));
+        align-items: flex-end; justify-content: space-between; gap: .125rem;
+        overflow: visible;
+    }
+    .ee-bn-item {
+        flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+        gap: .1875rem; padding: .375rem .125rem; border-radius: var(--r-lg);
+        text-decoration: none; color: var(--text-3);
+        -webkit-tap-highlight-color: transparent;
+        transition: color .15s ease, transform .15s ease;
+    }
+    .ee-bn-item:active { transform: scale(.92); }
+    .ee-bn-icon {
+        position: relative; width: 26px; height: 26px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        transition: width .2s cubic-bezier(.34,1.56,.64,1), height .2s cubic-bezier(.34,1.56,.64,1),
+                    margin-top .2s cubic-bezier(.34,1.56,.64,1), background .2s ease, box-shadow .2s ease;
+    }
+    .ee-bn-icon svg { width: 22px; height: 22px; stroke-width: 1.8; transition: width .2s ease, height .2s ease, stroke-width .15s ease; }
+    .ee-bn-label {
+        font-family: var(--font); font-size: .625rem; font-weight: 600;
+        letter-spacing: .01em; line-height: 1;
+        transition: opacity .15s ease;
+    }
+
+    /* Onglet actif : l'icône se détache en bulle surélevée au-dessus de la barre */
+    .ee-bn-item.active { color: var(--org-500); }
+    .ee-bn-item.active .ee-bn-icon {
+        width: 52px; height: 52px; margin-top: -28px;
+        background: linear-gradient(150deg, var(--org-400) 0%, var(--org-600) 100%);
+        border: 4px solid var(--surface);
+        box-shadow: 0 10px 20px rgba(234,88,12,.35), 0 3px 6px rgba(234,88,12,.2);
+    }
+    .ee-bn-item.active .ee-bn-icon svg { width: 24px; height: 24px; stroke-width: 2.2; color: #fff; }
+    .ee-bn-item.active .ee-bn-label { font-weight: 700; }
+
+    @media (max-width: 768px) {
+        .ee-bottomnav { display: flex; }
+        .ee-main { padding-bottom: calc(66px + env(safe-area-inset-bottom, 0px)); }
+    }
     </style>
     @yield('styles')
 </head>
@@ -901,6 +952,63 @@
             </form>
         </div>
 
+    </nav>
+
+    <!-- ════════════════ BOTTOM NAV (mobile) ════════════════ -->
+    <nav class="ee-bottomnav" aria-label="Navigation principale">
+        <a href="{{ route('espace-employe.dashboard') }}"
+           class="ee-bn-item {{ request()->routeIs('espace-employe.dashboard') ? 'active' : '' }}">
+            <span class="ee-bn-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+            </span>
+            <span class="ee-bn-label">Accueil</span>
+        </a>
+        <a href="{{ route('espace-employe.conges') }}"
+           class="ee-bn-item {{ request()->routeIs('espace-employe.conges') ? 'active' : '' }}">
+            <span class="ee-bn-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+            </span>
+            <span class="ee-bn-label">Congés</span>
+        </a>
+        <a href="{{ route('espace-employe.bulletins') }}"
+           class="ee-bn-item {{ request()->routeIs('espace-employe.bulletins*') ? 'active' : '' }}">
+            <span class="ee-bn-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+            </span>
+            <span class="ee-bn-label">Bulletins</span>
+        </a>
+        <a href="{{ route('espace-employe.assistance') }}"
+           class="ee-bn-item {{ request()->routeIs('espace-employe.assistance*') ? 'active' : '' }}">
+            <span class="ee-bn-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+            </span>
+            <span class="ee-bn-label">Assistance</span>
+        </a>
+        <a href="{{ route('espace-employe.profil') }}"
+           class="ee-bn-item {{ request()->routeIs('espace-employe.profil') ? 'active' : '' }}">
+            <span class="ee-bn-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </span>
+            <span class="ee-bn-label">Profil</span>
+        </a>
     </nav>
 
     <!-- ════════════════ MAIN ════════════════ -->

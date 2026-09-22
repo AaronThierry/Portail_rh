@@ -566,7 +566,7 @@
 
                     <div class="au-opts">
                         <label class="au-check">
-                            <input type="checkbox" name="remember">
+                            <input type="checkbox" name="remember" id="rememberMe">
                             <span>Se souvenir de moi</span>
                         </label>
                         <a href="{{ route('password.request') }}" class="au-forgot">Mot de passe oublié ?</a>
@@ -588,6 +588,20 @@
     </div>
 
     <script>
+    // Dans l'app mobile, la connexion doit persister pour que le déverrouillage
+    // par code PIN ait un sens après une fermeture complète de l'app.
+    (function () {
+        try {
+            var isApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())
+                || window.matchMedia('(display-mode: standalone)').matches
+                || window.navigator.standalone === true;
+            if (isApp) {
+                var remember = document.getElementById('rememberMe');
+                if (remember) remember.checked = true;
+            }
+        } catch (e) {}
+    })();
+
     function togglePwd(inputId, svgId) {
         const inp = document.getElementById(inputId);
         const svg = document.getElementById(svgId);

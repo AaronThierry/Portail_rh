@@ -665,6 +665,7 @@
 <body>
 
 @include('partials.app-loader')
+@include('partials.pin-gate')
 
 <div class="ee-overlay" id="eeOverlay"></div>
 

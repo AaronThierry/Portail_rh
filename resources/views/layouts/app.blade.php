@@ -34,6 +34,7 @@
 </head>
 <body class="h-full font-sans antialiased">
     @include('partials.app-loader')
+    @include('partials.pin-gate')
 
     <div class="app-layout bg-gray-50 dark:bg-gray-900">
         <!-- Sidebar -->

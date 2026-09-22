@@ -409,6 +409,8 @@
 </head>
 <body>
 
+    @include('partials.app-loader')
+
     <!-- Orbs -->
     <div class="au-orbs">
         <div class="au-orb au-orb-1"></div>

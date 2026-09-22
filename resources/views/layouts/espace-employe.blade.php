@@ -661,6 +661,8 @@
 </head>
 <body>
 
+@include('partials.app-loader')
+
 <div class="ee-overlay" id="eeOverlay"></div>
 
 <div class="ee-layout">

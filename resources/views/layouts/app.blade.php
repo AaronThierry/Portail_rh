@@ -30,6 +30,8 @@
     @yield('styles')
 </head>
 <body class="h-full font-sans antialiased">
+    @include('partials.app-loader')
+
     <div class="app-layout bg-gray-50 dark:bg-gray-900">
         <!-- Sidebar -->
         @include('partials.sidebar')

@@ -285,13 +285,17 @@
     var el = document.getElementById('appLoader');
     if (!el) return;
 
-    var isNative = false;
+    var isApp = false;
     try {
-        isNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+        var isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+        // "Ajouter à l'écran d'accueil" (iOS Safari / Android Chrome) : l'app s'ouvre
+        // sans barre de navigateur, exactement comme une app installée.
+        var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        isApp = isCapacitor || isStandalone;
     } catch (e) {}
 
-    // Hors de l'app mobile (navigateur classique) : pas d'écran de chargement.
-    if (!isNative) {
+    // Navigation classique dans le navigateur : pas d'écran de chargement.
+    if (!isApp) {
         el.remove();
         return;
     }

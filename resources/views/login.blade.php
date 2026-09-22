@@ -2,20 +2,21 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#F8FAFC">
     <title>Connexion — Portail RH+</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     :root {
-        --ind:    #6366f1;
-        --ind-dk: #4338ca;
-        --ind-dkr:#312e81;
+        --ind:    #2563eb;
+        --ind-dk: #1d4ed8;
+        --ind-dkr:#1e3a8a;
         --teal:   #14b8a6;
         --teal-dk:#0d9488;
         --green:  #10b981;
@@ -26,13 +27,17 @@
         --bg:     #f8fafc;
     }
 
+    html { overscroll-behavior-y: none; }
+
     body {
         font-family: 'DM Sans', sans-serif;
         min-height: 100vh;
+        min-height: 100dvh;
         display: flex;
-        background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 55%, #0F172A 100%);
+        background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 50%, #F8FAFC 100%);
         position: relative;
         overflow-x: hidden;
+        overscroll-behavior-y: none;
     }
 
     /* ── Grid overlay ─────────────────────────────────── */
@@ -40,8 +45,8 @@
         content: '';
         position: fixed; inset: 0;
         background-image:
-            linear-gradient(rgba(99,102,241,.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(99,102,241,.04) 1px, transparent 1px);
+            linear-gradient(rgba(37,99,235,.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(37,99,235,.04) 1px, transparent 1px);
         background-size: 44px 44px;
         pointer-events: none; z-index: 0;
     }
@@ -49,9 +54,9 @@
     /* ── Orbs ─────────────────────────────────────────── */
     .au-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     .au-orb   { position: absolute; border-radius: 50%; filter: blur(90px); }
-    .au-orb-1 { width:520px;height:520px;background:var(--ind);  opacity:.35;top:-160px;right:-100px;  animation:au-float 22s ease-in-out infinite; }
-    .au-orb-2 { width:440px;height:440px;background:var(--teal); opacity:.22;bottom:-130px;left:-80px; animation:au-float 28s ease-in-out infinite reverse; animation-delay:-8s; }
-    .au-orb-3 { width:280px;height:280px;background:var(--ind-dk);opacity:.14;top:48%;left:38%;       animation:au-float 18s ease-in-out infinite; animation-delay:-4s; }
+    .au-orb-1 { width:520px;height:520px;background:var(--ind);  opacity:.14;top:-160px;right:-100px;  animation:au-float 22s ease-in-out infinite; }
+    .au-orb-2 { width:440px;height:440px;background:var(--teal); opacity:.12;bottom:-130px;left:-80px; animation:au-float 28s ease-in-out infinite reverse; animation-delay:-8s; }
+    .au-orb-3 { width:280px;height:280px;background:var(--ind-dk);opacity:.08;top:48%;left:38%;       animation:au-float 18s ease-in-out infinite; animation-delay:-4s; }
 
     @keyframes au-float {
         0%,100% { transform:translate(0,0) scale(1); }
@@ -82,21 +87,21 @@
         border-radius: 28px;
         display: flex; align-items: center; justify-content: center;
         margin: 0 auto 2rem;
-        box-shadow: 0 20px 60px rgba(99,102,241,.45);
+        box-shadow: 0 20px 60px rgba(37,99,235,.45);
         animation: logo-glow 3s ease-in-out infinite;
     }
     .lp-logo svg { width: 52px; height: 52px; color: #fff; }
 
     @keyframes logo-glow {
-        0%,100% { box-shadow: 0 20px 60px rgba(99,102,241,.45); }
-        50%      { box-shadow: 0 25px 80px rgba(99,102,241,.65); }
+        0%,100% { box-shadow: 0 20px 60px rgba(37,99,235,.45); }
+        50%      { box-shadow: 0 25px 80px rgba(37,99,235,.65); }
     }
 
     /* Title */
     .lp-title {
         font-family: 'Syne', sans-serif;
         font-size: 3rem; font-weight: 800;
-        color: #fff; margin-bottom: .875rem;
+        color: var(--tx); margin-bottom: .875rem;
         line-height: 1.1; letter-spacing: -.5px;
     }
     .lp-title span {
@@ -107,7 +112,7 @@
 
     .lp-sub {
         font-size: 1.0625rem;
-        color: rgba(255,255,255,.72);
+        color: var(--mt);
         line-height: 1.7; margin-bottom: 2.75rem;
     }
 
@@ -117,13 +122,15 @@
     .lp-feat {
         display: flex; align-items: center; gap: 1rem;
         padding: 1rem 1.375rem;
-        background: rgba(255,255,255,.05);
-        backdrop-filter: blur(12px);
+        background: #fff;
         border-radius: 16px;
-        border: 1px solid rgba(255,255,255,.09);
-        transition: background .3s, transform .3s;
+        border: 1px solid var(--br);
+        box-shadow: 0 1px 2px rgba(15,23,42,.04);
+        transition: background .3s, transform .3s, border-color .3s;
     }
-    .lp-feat:hover { background: rgba(255,255,255,.1); transform: translateX(8px); }
+    @media (hover:hover) and (pointer:fine) {
+        .lp-feat:hover { background: rgba(37,99,235,.05); border-color: rgba(37,99,235,.25); transform: translateX(8px); }
+    }
 
     .lp-feat-icon {
         width: 44px; height: 44px; border-radius: 13px;
@@ -134,7 +141,7 @@
     .lp-feat-icon.teal { background: linear-gradient(135deg,var(--teal),var(--teal-dk)); }
 
     .lp-feat-icon svg { width: 22px; height: 22px; color: #fff; }
-    .lp-feat-txt { font-size: .9375rem; font-weight: 500; color: rgba(255,255,255,.9); }
+    .lp-feat-txt { font-size: .9375rem; font-weight: 500; color: var(--tx); }
 
     /* ══════════════════════════════════════════════════
        RIGHT PANEL — Card
@@ -161,7 +168,7 @@
 
     /* Card header */
     .au-head {
-        background: linear-gradient(135deg, var(--ind-dkr) 0%, var(--ind-dk) 50%, var(--teal-dk) 100%);
+        background: linear-gradient(135deg, var(--ind) 0%, var(--ind-dk) 100%);
         padding: 1.5rem 2rem 1.375rem;
         text-align: center;
         position: relative; overflow: hidden;
@@ -247,7 +254,7 @@
     }
     .au-input:focus {
         border-color: var(--ind); background: #fff;
-        box-shadow: 0 0 0 4px rgba(99,102,241,.1);
+        box-shadow: 0 0 0 4px rgba(37,99,235,.1);
     }
     .au-wrap:focus-within .au-ico { color: var(--ind); }
     .au-input::placeholder { color: #9ca3af; }
@@ -259,7 +266,9 @@
         color: #94a3b8; padding: .25rem;
         border-radius: 6px; transition: color .2s;
     }
-    .au-eye:hover { color: var(--ind); }
+    @media (hover:hover) and (pointer:fine) {
+        .au-eye:hover { color: var(--ind); }
+    }
     .au-eye svg { width: 18px; height: 18px; }
 
     /* Options row */
@@ -275,7 +284,9 @@
         color: var(--ind); text-decoration: none;
         transition: color .2s;
     }
-    .au-forgot:hover { color: var(--ind-dk); }
+    @media (hover:hover) and (pointer:fine) {
+        .au-forgot:hover { color: var(--ind-dk); }
+    }
 
     /* Submit */
     .au-btn {
@@ -286,7 +297,7 @@
         border: none; border-radius: 13px; cursor: pointer;
         display: flex; align-items: center; justify-content: center; gap: .625rem;
         transition: transform .25s, box-shadow .25s;
-        box-shadow: 0 8px 24px rgba(99,102,241,.35);
+        box-shadow: 0 8px 24px rgba(37,99,235,.35);
         position: relative; overflow: hidden;
     }
     .au-btn::before {
@@ -295,12 +306,14 @@
         background: linear-gradient(135deg, var(--ind-dk) 0%, var(--ind-dkr) 100%);
         opacity: 0; transition: opacity .3s;
     }
-    .au-btn:hover::before { opacity: 1; }
-    .au-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(99,102,241,.45); }
-    .au-btn:active { transform: translateY(0); }
+    @media (hover:hover) and (pointer:fine) {
+        .au-btn:hover::before { opacity: 1; }
+        .au-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(37,99,235,.45); }
+        .au-btn:hover svg { transform: translateX(4px); }
+    }
+    .au-btn:active { transform: scale(.97); box-shadow: 0 4px 14px rgba(37,99,235,.35); }
     .au-btn > * { position: relative; z-index: 1; }
     .au-btn svg { width: 18px; height: 18px; transition: transform .25s; }
-    .au-btn:hover svg { transform: translateX(4px); }
 
     /* Card footer */
     .au-foot {
@@ -311,17 +324,86 @@
     }
     .au-foot strong { color: var(--ind); font-weight: 700; }
 
-    /* ── Responsive ───────────────────────────────────── */
+    /* ══════════════════════════════════════════════════
+       MOBILE — Native app treatment (bottom sheet)
+    ══════════════════════════════════════════════════ */
+    .mob-brand { display: none; }
+
     @media (max-width: 1024px) {
         .lp { display: none; }
-        .rp { width: 100%; min-height: 100vh; }
-    }
-    @media (max-width: 480px) {
-        .rp { padding: 1rem; }
-        .au-card { border-radius: 22px; }
-        .au-head { padding: 1.5rem 1.5rem 1.25rem; }
-        .au-body { padding: 1.5rem; }
-        .au-foot { padding: 1rem 1.5rem; }
+
+        body { align-items: stretch; }
+        .rp {
+            width: 100%;
+            min-height: 100vh; min-height: 100dvh;
+            display: flex; flex-direction: column;
+            justify-content: flex-end;
+            padding: 0;
+        }
+
+        /* Reduce orb cost on mobile GPUs */
+        .au-orb-1, .au-orb-2, .au-orb-3 { filter: blur(60px); }
+
+        /* Condensed brand hero above the sheet */
+        .mob-brand {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: .75rem; flex: 1; min-height: 0;
+            padding: max(2rem, env(safe-area-inset-top) + 1.25rem) 2rem 1.75rem;
+        }
+        .mob-brand-icon {
+            width: 60px; height: 60px; border-radius: 18px;
+            background: linear-gradient(135deg, var(--ind) 0%, var(--ind-dk) 100%);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 16px 40px rgba(37,99,235,.4);
+        }
+        .mob-brand-icon svg { width: 32px; height: 32px; color: #fff; }
+        .mob-brand-title {
+            font-family: 'Syne', sans-serif; font-weight: 800;
+            font-size: 1.625rem; color: var(--tx); letter-spacing: -.5px;
+        }
+        .mob-brand-title span {
+            background: linear-gradient(135deg, var(--ind) 0%, var(--teal) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        /* Card becomes a full-width bottom sheet */
+        .au-card {
+            width: 100%; max-width: 100%;
+            border-radius: 26px 26px 0 0;
+            box-shadow: 0 -12px 48px rgba(0,0,0,.35);
+            animation: au-enter-up .45s cubic-bezier(.16,1,.3,1);
+            position: relative;
+            flex-shrink: 0;
+        }
+        .au-card::before {
+            content: '';
+            position: absolute; top: .625rem; left: 50%;
+            transform: translateX(-50%);
+            width: 36px; height: 4px; border-radius: 2px;
+            background: var(--br);
+        }
+        @keyframes au-enter-up {
+            from { opacity: 0; transform: translateY(48px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header loses its gradient — branding already lives in the hero above */
+        .au-head { background: none; padding: 1.75rem 1.75rem .25rem; text-align: left; }
+        .au-head::before, .au-head::after { display: none; }
+        .au-icon { display: none; }
+        .au-head h1 { color: var(--tx); font-size: 1.375rem; }
+        .au-head p { color: var(--mt); }
+
+        /* Larger touch targets, 16px inputs to prevent auto-zoom */
+        .au-body { padding: 1.25rem 1.75rem; }
+        .au-input {
+            padding: 1rem 1rem 1rem 3.25rem;
+            font-size: 1rem; border-radius: 16px;
+        }
+        .au-eye { padding: .5rem; }
+        .au-btn { padding: 1.125rem; font-size: 1.0625rem; border-radius: 16px; }
+        .au-check input { width: 20px; height: 20px; }
+        .au-foot { padding: .875rem 1.75rem calc(.875rem + env(safe-area-inset-bottom)); }
     }
     </style>
 </head>
@@ -387,6 +469,19 @@
 
     <!-- ── Right Panel — Login card ───────────────────── -->
     <div class="rp">
+
+        <!-- Mobile-only condensed hero (native app header) -->
+        <div class="mob-brand">
+            <div class="mob-brand-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+            </div>
+            <h1 class="mob-brand-title">Portail <span>RH+</span></h1>
+        </div>
+
         <div class="au-card">
 
             <div class="au-head">

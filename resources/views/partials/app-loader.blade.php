@@ -300,6 +300,18 @@
         return;
     }
 
+    // Déjà joué plus tôt dans cette même session d'app (navigation interne, ex. la
+    // navbar du bas) : on ne rejoue pas la chorégraphie à chaque page, seulement à
+    // une nouvelle ouverture de l'app.
+    var SESSION_FLAG = 'rhloader_shown';
+    try {
+        if (sessionStorage.getItem(SESSION_FLAG) === '1') {
+            el.remove();
+            return;
+        }
+        sessionStorage.setItem(SESSION_FLAG, '1');
+    } catch (e) {}
+
     var shownAt = Date.now();
     var MIN_VISIBLE_MS = 3400; // laisse l'ouverture cinématique se jouer jusqu'au bout
     var MAX_VISIBLE_MS = 7500;

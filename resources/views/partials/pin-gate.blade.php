@@ -153,14 +153,24 @@
 
     var email = el.getAttribute('data-email') || '';
     var STORE_KEY = 'rhpin_v1';
-    var SESSION_FLAG = 'rhpin_unlocked';
     var PIN_LEN = 4;
     var MAX_ATTEMPTS = 5;
 
-    // Déjà déverrouillé plus tôt dans cette même session d'app (navigation interne) :
-    // on ne redemande pas le code à chaque page, seulement à une nouvelle ouverture de l'app.
+    // Déjà déverrouillé récemment (navigation interne) : on ne redemande pas le code
+    // à chaque page, seulement si l'app a été quittée un moment. localStorage (pas
+    // sessionStorage — peu fiable d'une navigation à l'autre dans certaines WebView
+    // Android) + fenêtre de temps glissante, la même que l'écran de chargement.
+    var UNLOCK_AT_KEY = 'rhpin_unlocked_at';
+    var UNLOCK_EMAIL_KEY = 'rhpin_unlocked_email';
+    var SESSION_GAP_MS = 20 * 60 * 1000;
     try {
-        if (sessionStorage.getItem(SESSION_FLAG) === email) { el.remove(); return; }
+        var lastUnlockAt = parseInt(localStorage.getItem(UNLOCK_AT_KEY) || '0', 10);
+        var lastUnlockEmail = localStorage.getItem(UNLOCK_EMAIL_KEY) || '';
+        if (lastUnlockEmail === email && lastUnlockAt > 0 && (Date.now() - lastUnlockAt) < SESSION_GAP_MS) {
+            localStorage.setItem(UNLOCK_AT_KEY, String(Date.now())); // prolonge la fenêtre
+            el.remove();
+            return;
+        }
     } catch (e) {}
 
     function loadRecord() {
@@ -173,7 +183,10 @@
         try { localStorage.removeItem(STORE_KEY); } catch (e) {}
     }
     function markUnlocked() {
-        try { sessionStorage.setItem(SESSION_FLAG, email); } catch (e) {}
+        try {
+            localStorage.setItem(UNLOCK_AT_KEY, String(Date.now()));
+            localStorage.setItem(UNLOCK_EMAIL_KEY, email);
+        } catch (e) {}
     }
 
     function toHex(buffer) {

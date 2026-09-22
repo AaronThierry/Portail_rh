@@ -300,17 +300,23 @@
         return;
     }
 
-    // Déjà joué plus tôt dans cette même session d'app (navigation interne, ex. la
-    // navbar du bas) : on ne rejoue pas la chorégraphie à chaque page, seulement à
-    // une nouvelle ouverture de l'app.
-    var SESSION_FLAG = 'rhloader_shown';
+    // Déjà joué récemment (navigation interne, ex. la navbar du bas) : on ne rejoue
+    // pas la chorégraphie à chaque page, seulement si l'app a été quittée un moment.
+    // localStorage (pas sessionStorage — peu fiable d'une navigation à l'autre dans
+    // certaines WebView Android) + fenêtre de temps glissante.
+    var ACTIVITY_KEY = 'rhloader_last_active';
+    var SESSION_GAP_MS = 20 * 60 * 1000; // 20 min d'inactivité = nouvelle "ouverture"
+    var recentlyActive = false;
     try {
-        if (sessionStorage.getItem(SESSION_FLAG) === '1') {
-            el.remove();
-            return;
-        }
-        sessionStorage.setItem(SESSION_FLAG, '1');
+        var last = parseInt(localStorage.getItem(ACTIVITY_KEY) || '0', 10);
+        recentlyActive = last > 0 && (Date.now() - last) < SESSION_GAP_MS;
+        localStorage.setItem(ACTIVITY_KEY, String(Date.now()));
     } catch (e) {}
+
+    if (recentlyActive) {
+        el.remove();
+        return;
+    }
 
     var shownAt = Date.now();
     var MIN_VISIBLE_MS = 3400; // laisse l'ouverture cinématique se jouer jusqu'au bout

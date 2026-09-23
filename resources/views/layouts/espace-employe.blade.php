@@ -377,6 +377,7 @@
     .ee-notif-item {
         display: flex; gap: .75rem; padding: .75rem 1.125rem;
         border-bottom: 1px solid var(--n-100); cursor: pointer; transition: background .12s;
+        text-decoration: none; color: inherit;
     }
     .ee-notif-item:hover { background: var(--n-50); }
     .ee-notif-item:last-child { border-bottom: none; }
@@ -1088,24 +1089,28 @@
     var notifBtn  = document.getElementById('eeNotifBtn');
     var notifDrop = document.getElementById('eeNotifDrop');
     var notifBadge= document.getElementById('eeNotifBadge');
+    var notifCount= document.getElementById('eeNotifCount');
     var notifList = document.getElementById('eeNotifList');
     var markAll   = document.getElementById('eeMarkAll');
 
     var iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
 
     function fetchNotifs() {
-        fetch('/notifications/unread', { headers:{ 'X-Requested-With':'XMLHttpRequest','Accept':'application/json' } })
+        fetch('/api/notifications', { headers:{ 'X-Requested-With':'XMLHttpRequest','Accept':'application/json' } })
         .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
         .then(function(d){
             var items = d.notifications || [];
             if (notifBadge) notifBadge.style.display = items.length ? 'block' : 'none';
+            if (notifCount) notifCount.textContent = items.length ? String(items.length) : '';
             if (notifBtn)   items.length ? notifBtn.classList.add('has-notif') : notifBtn.classList.remove('has-notif');
             if (notifList) notifList.innerHTML = items.length
                 ? items.map(function(n){
-                    return '<div class="ee-notif-item" data-id="'+n.id+'">' +
-                        '<div class="ee-notif-icon '+(n.type||'info')+'">'+iconSvg+'</div>' +
-                        '<div><div class="ee-notif-msg">'+(n.message||(n.data&&n.data.message)||'')+'</div>' +
-                        '<div class="ee-notif-time">'+(n.time||'')+'</div></div></div>';
+                    var body = '<div class="ee-notif-icon '+(n.type||'info')+'">'+iconSvg+'</div>' +
+                        '<div><div class="ee-notif-msg">'+(n.message||'')+'</div>' +
+                        '<div class="ee-notif-time">'+(n.created_at||'')+'</div></div>';
+                    return n.link
+                        ? '<a href="'+n.link+'" class="ee-notif-item" data-id="'+n.id+'">'+body+'</a>'
+                        : '<div class="ee-notif-item" data-id="'+n.id+'">'+body+'</div>';
                 }).join('')
                 : '<div class="ee-notif-empty">Aucune notification</div>';
         }).catch(function(){});
@@ -1125,10 +1130,22 @@
     }
     if (markAll) {
         markAll.addEventListener('click', function(){
-            fetch('/notifications/mark-all-read',{
+            fetch('/api/notifications/read-all',{
                 method:'POST',
                 headers:{ 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept':'application/json' }
             }).then(fetchNotifs);
+        });
+    }
+    if (notifList) {
+        notifList.addEventListener('click', function(e){
+            var item = e.target.closest('.ee-notif-item');
+            if (!item) return;
+            var id = item.getAttribute('data-id');
+            if (!id) return;
+            fetch('/api/notifications/'+id+'/read', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content, 'Accept':'application/json' }
+            }).catch(function(){});
         });
     }
 

@@ -31,6 +31,22 @@ if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.is
             console.warn('Push registration error', err);
         });
 
+        // Android n'affiche PAS automatiquement la bannière système quand l'app est au
+        // premier plan (seulement en arrière-plan/fermée) — on la déclenche nous-mêmes
+        // via une notification locale pour avoir le même rendu natif dans tous les cas.
+        PushNotifications.addListener('pushNotificationReceived', function (notification) {
+            import('@capacitor/local-notifications').then(function (mod) {
+                mod.LocalNotifications.schedule({
+                    notifications: [{
+                        id: Date.now() % 2147483647,
+                        title: notification.title || 'Portail RH+',
+                        body: notification.body || '',
+                        extra: notification.data || {},
+                    }],
+                }).catch(function () {});
+            });
+        });
+
         // Tap sur une notification (app en arrière-plan ou fermée) : pour l'instant on se
         // contente de ramener l'app au premier plan (comportement par défaut du plugin).
         PushNotifications.addListener('pushNotificationActionPerformed', function () {});

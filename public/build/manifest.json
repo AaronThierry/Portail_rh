@@ -1,6 +1,6 @@
 {
   "../../../@vite-plugin-pwa/virtual:pwa-register": {
-    "file": "assets/virtual_pwa-register-D-YmvjLy.js",
+    "file": "assets/virtual_pwa-register-C5NgQrGX.js",
     "name": "virtual_pwa-register",
     "src": "../../../@vite-plugin-pwa/virtual:pwa-register",
     "isDynamicEntry": true,
@@ -11,11 +11,40 @@
       "node_modules/workbox-window/build/workbox-window.prod.es5.mjs"
     ]
   },
+  "_index-a34zLPwc.js": {
+    "file": "assets/index-a34zLPwc.js",
+    "name": "index"
+  },
+  "node_modules/@capacitor/local-notifications/dist/esm/index.js": {
+    "file": "assets/index-OXM_6LgD.js",
+    "name": "index",
+    "src": "node_modules/@capacitor/local-notifications/dist/esm/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_index-a34zLPwc.js"
+    ],
+    "dynamicImports": [
+      "node_modules/@capacitor/local-notifications/dist/esm/web.js"
+    ]
+  },
+  "node_modules/@capacitor/local-notifications/dist/esm/web.js": {
+    "file": "assets/web-BGTs-Seq.js",
+    "name": "web",
+    "src": "node_modules/@capacitor/local-notifications/dist/esm/web.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-a34zLPwc.js"
+    ]
+  },
   "node_modules/@capacitor/push-notifications/dist/esm/index.js": {
-    "file": "assets/index-GxQSr_JE.js",
+    "file": "assets/index-CeZChL_u.js",
     "name": "index",
     "src": "node_modules/@capacitor/push-notifications/dist/esm/index.js",
-    "isDynamicEntry": true
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-a34zLPwc.js"
+    ]
   },
   "node_modules/workbox-window/build/workbox-window.prod.es5.mjs": {
     "file": "assets/workbox-window.prod.es5-BqEJf4Xk.js",
@@ -29,13 +58,14 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-C5zwjI7W.js",
+    "file": "assets/app-DUYUDdh0.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
       "../../../@vite-plugin-pwa/virtual:pwa-register",
-      "node_modules/@capacitor/push-notifications/dist/esm/index.js"
+      "node_modules/@capacitor/push-notifications/dist/esm/index.js",
+      "node_modules/@capacitor/local-notifications/dist/esm/index.js"
     ]
   }
 }

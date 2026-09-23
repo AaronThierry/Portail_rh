@@ -452,6 +452,7 @@
     border-radius: var(--r-f);
     letter-spacing: .02em;
 }
+.qa-count { display: none; }
 
 .panel-link {
     display: inline-flex;
@@ -913,6 +914,11 @@
 
     /* Déjà dans la navbar du bas — évite un bouton orphelin en fin de grille */
     .qa-profil { display: none; }
+
+    /* Équilibre l'en-tête « Actions rapides » : pas de "Voir tout" naturel,
+       donc pas de justify-content:space-between qui laisse un grand vide */
+    .qa-count { display: inline-block; }
+    .actions-card .panel-head { justify-content: flex-start; }
 }
 </style>
 @endsection
@@ -1139,7 +1145,10 @@
             {{-- Actions --}}
             <div class="actions-card">
                 <div class="panel-head">
-                    <span class="panel-title">Actions rapides</span>
+                    <span class="panel-title">
+                        Actions rapides
+                        <span class="panel-count qa-count">5</span>
+                    </span>
                 </div>
                 <div class="actions-grid">
 

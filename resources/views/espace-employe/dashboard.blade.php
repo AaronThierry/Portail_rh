@@ -895,6 +895,9 @@
     .qa-btn:hover .qa-ic, .qa-btn:active .qa-ic { background: var(--org-100); color: var(--org-600); }
     .qa-btn.qa-primary { background: var(--org-600); box-shadow: none; }
     .qa-btn.qa-primary:hover { background: var(--org-700); }
+
+    /* Déjà dans la navbar du bas — évite un bouton orphelin en fin de grille */
+    .qa-profil { display: none; }
 }
 </style>
 @endsection
@@ -1160,7 +1163,7 @@
                         Demandes
                     </a>
 
-                    <a href="{{ route('espace-employe.profil') }}" class="qa-btn">
+                    <a href="{{ route('espace-employe.profil') }}" class="qa-btn qa-profil">
                         <div class="qa-ic">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         </div>

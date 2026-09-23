@@ -10,10 +10,10 @@
 
     <!-- PWA -->
     <link rel="manifest" href="{{ asset('build/manifest.webmanifest') }}">
-    <meta name="theme-color" content="#EA580C">
+    <meta name="theme-color" content="#0C0400">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/images/pwa-192x192.png') }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Portail RH+">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -632,7 +632,7 @@
     .ee-breadcrumb-bar a:hover { text-decoration: underline; }
     .ee-breadcrumb-bar svg { width: 9px; height: 9px; opacity: .4; }
 
-    .ee-content { flex: 1; padding: 1.5rem; }
+    .ee-content { flex: 1; min-width: 0; padding: 1.5rem; }
 
     .ee-footer {
         padding: .875rem 1.5rem;

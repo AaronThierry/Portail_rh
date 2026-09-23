@@ -837,7 +837,8 @@
         --org-800: #1E3A8A;
     }
 
-    .dash { padding: 2px 2px 4px; }
+    .dash { width: 100%; max-width: 100%; overflow-x: hidden; }
+    .dash-main, .panel, .actions-card, .act-item, .act-body { min-width: 0; }
 
     /* ── Hero : sobre, un seul dégradé, pas de fioriture ── */
     .dash-hero {

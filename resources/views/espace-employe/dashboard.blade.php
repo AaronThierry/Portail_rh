@@ -820,6 +820,82 @@
     .hero-name   { font-size: 1.7rem; }
     .clock-hm    { font-size: 2rem; }
 }
+
+/* ════════════════════════════════════════════════════════════
+   APP MOBILE — un seul accent bleu, sobre
+════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    :root {
+        --org-50:  #EFF6FF;
+        --org-100: #DBEAFE;
+        --org-200: #BFDBFE;
+        --org-300: #93C5FD;
+        --org-400: #60A5FA;
+        --org-500: #2563EB;
+        --org-600: #1D4ED8;
+        --org-700: #1E40AF;
+        --org-800: #1E3A8A;
+    }
+
+    .dash { padding: 2px 2px 4px; }
+
+    /* ── Hero : sobre, un seul dégradé, pas de fioriture ── */
+    .dash-hero {
+        background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+        box-shadow: 0 12px 28px rgba(37,99,235,.2);
+    }
+    .dash-hero::before { display: none; }
+    .hero-pulse { box-shadow: 0 0 0 0 rgba(37,99,235,.5); }
+    @keyframes pulse-ring {
+        0%   { box-shadow: 0 0 0 0 rgba(37,99,235,.5); }
+        70%  { box-shadow: 0 0 0 8px rgba(37,99,235,0); }
+        100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+    }
+    .chip, .chip-teal {
+        color: rgba(255,255,255,.7);
+        background: rgba(255,255,255,.1);
+        border-color: rgba(255,255,255,.14);
+    }
+    .day-bar-fill { background: var(--org-300); box-shadow: none; }
+
+    /* ── KPI : un seul bleu, pas d'arc-en-ciel ── */
+    .dash-stats { gap: 10px; }
+    .scard {
+        border-radius: 18px;
+        border-color: transparent;
+        padding: 16px 16px 14px;
+        box-shadow: 0 1px 3px rgba(15,23,42,.05);
+    }
+    .scard::before { display: none; }
+    .scard-top { margin-top: 0; margin-bottom: 10px; }
+    .scard-icon, .sc-teal .scard-icon, .sc-amber .scard-icon, .sc-rose .scard-icon {
+        width: 34px; height: 34px; border-radius: 10px;
+        background: var(--org-50); color: var(--org-600);
+    }
+    .scard-icon svg { width: 15px; height: 15px; }
+    .scard-val { font-size: 1.625rem; margin-bottom: 6px; }
+    .scard-badge, .sc-teal .scard-badge, .sc-amber .scard-badge, .sc-rose .scard-badge {
+        background: var(--n-100); color: var(--n-600);
+    }
+
+    /* ── Réordonne le contenu : actions d'abord, puis activité ── */
+    .dash-main { display: flex; flex-direction: column; gap: 12px; }
+    .right-col { display: contents; }
+    .actions-card { order: 1; }
+    .panel        { order: 2; }
+
+    /* La carte profil fait doublon avec l'onglet « Profil » de la navbar du bas */
+    .profile-card { display: none; }
+
+    /* ── Actions rapides : reste en liste compacte, un seul accent sur le CTA ── */
+    .actions-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+    .qa-btn { border-radius: 12px; }
+    .qa-ic { background: var(--n-0); }
+    .qa-btn:hover, .qa-btn:active { background: var(--org-50); border-color: var(--org-200); color: var(--org-600); }
+    .qa-btn:hover .qa-ic, .qa-btn:active .qa-ic { background: var(--org-100); color: var(--org-600); }
+    .qa-btn.qa-primary { background: var(--org-600); box-shadow: none; }
+    .qa-btn.qa-primary:hover { background: var(--org-700); }
+}
 </style>
 @endsection
 

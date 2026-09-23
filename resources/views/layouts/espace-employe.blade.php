@@ -2,7 +2,7 @@
 <html lang="fr" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Mon Espace') — Portail RH+</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
@@ -81,6 +81,10 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+        background: var(--bg);
+    }
+
     body {
         font-family: var(--font);
         background: var(--bg);
@@ -107,7 +111,7 @@
     .ee-topnav {
         position: fixed;
         top: 0; left: 0; right: 0;
-        height: var(--hd-h);
+        height: calc(var(--hd-h) + env(safe-area-inset-top, 0px));
         z-index: 100;
         background: var(--tn-bg);
         backdrop-filter: blur(20px) saturate(1.6);
@@ -118,9 +122,15 @@
             0 1px 0 rgba(249,115,22,.08),
             0 4px 32px rgba(0,0,0,.5);
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         padding: 0 1.25rem;
+        padding-bottom: 0;
         gap: 0;
+    }
+    .ee-topnav > * { padding-bottom: 0; }
+    .ee-tn-left, .ee-tn-center, .ee-tn-right {
+        display: flex; align-items: center;
+        height: var(--hd-h);
     }
 
     /* ── Left zone: burger + brand ── */
@@ -399,7 +409,7 @@
     ════════════════════════════════════════ */
     .ee-drawer {
         position: fixed;
-        top: var(--hd-h); left: 0; bottom: 0;
+        top: calc(var(--hd-h) + env(safe-area-inset-top, 0px)); left: 0; bottom: 0;
         width: 272px;
         z-index: 95;
         display: flex; flex-direction: column;
@@ -605,9 +615,9 @@
     ════════════════════════════════════════ */
     .ee-main {
         flex: 1;
-        margin-top: var(--hd-h);
+        margin-top: calc(var(--hd-h) + env(safe-area-inset-top, 0px));
         display: flex; flex-direction: column;
-        min-height: calc(100vh - var(--hd-h));
+        min-height: calc(100vh - var(--hd-h) - env(safe-area-inset-top, 0px));
     }
 
     /* Breadcrumb bar */

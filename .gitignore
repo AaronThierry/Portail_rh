@@ -24,3 +24,7 @@ yarn-error.log
 /android/local.properties
 /android/captures
 /android/.cxx
+
+# Notifications push — secret Firebase, jamais commité
+/storage/app/firebase-service-account.json
+google-services.json

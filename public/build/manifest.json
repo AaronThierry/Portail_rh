@@ -1,13 +1,41 @@
 {
+  "../../../@vite-plugin-pwa/virtual:pwa-register": {
+    "file": "assets/virtual_pwa-register-D-YmvjLy.js",
+    "name": "virtual_pwa-register",
+    "src": "../../../@vite-plugin-pwa/virtual:pwa-register",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "dynamicImports": [
+      "node_modules/workbox-window/build/workbox-window.prod.es5.mjs"
+    ]
+  },
+  "node_modules/@capacitor/push-notifications/dist/esm/index.js": {
+    "file": "assets/index-GxQSr_JE.js",
+    "name": "index",
+    "src": "node_modules/@capacitor/push-notifications/dist/esm/index.js",
+    "isDynamicEntry": true
+  },
+  "node_modules/workbox-window/build/workbox-window.prod.es5.mjs": {
+    "file": "assets/workbox-window.prod.es5-BqEJf4Xk.js",
+    "name": "workbox-window.prod.es5",
+    "src": "node_modules/workbox-window/build/workbox-window.prod.es5.mjs",
+    "isDynamicEntry": true
+  },
   "resources/css/app.css": {
-    "file": "assets/app-DAmlEbyG.css",
+    "file": "assets/app-DXAJfxV5.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-B5UPFrXK.js",
+    "file": "assets/app-C5zwjI7W.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "dynamicImports": [
+      "../../../@vite-plugin-pwa/virtual:pwa-register",
+      "node_modules/@capacitor/push-notifications/dist/esm/index.js"
+    ]
   }
 }

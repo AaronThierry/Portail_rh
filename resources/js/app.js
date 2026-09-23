@@ -7,6 +7,48 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// Notifications push — app mobile uniquement (Capacitor natif)
+if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+    import('@capacitor/push-notifications').then(({ PushNotifications }) => {
+        function sendTokenToServer(token) {
+            var csrf = document.querySelector('meta[name="csrf-token"]');
+            fetch('/api/device-tokens', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf ? csrf.content : '',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ token: token, platform: 'android' }),
+            }).catch(function () {});
+        }
+
+        PushNotifications.addListener('registration', function (token) {
+            sendTokenToServer(token.value);
+        });
+
+        PushNotifications.addListener('registrationError', function (err) {
+            console.warn('Push registration error', err);
+        });
+
+        // Tap sur une notification (app en arrière-plan ou fermée) : pour l'instant on se
+        // contente de ramener l'app au premier plan (comportement par défaut du plugin).
+        PushNotifications.addListener('pushNotificationActionPerformed', function () {});
+
+        PushNotifications.checkPermissions().then(function (perm) {
+            var ready = perm.receive === 'granted'
+                ? Promise.resolve(perm)
+                : PushNotifications.requestPermissions();
+
+            ready.then(function (result) {
+                if (result.receive === 'granted') {
+                    PushNotifications.register();
+                }
+            });
+        }).catch(function () {});
+    });
+}
+
 // Safe localStorage helper
 function safeStorage(action, key, value) {
     try {

@@ -55,4 +55,9 @@ return [
         'default_country_code' => env('WHATSAPP_DEFAULT_COUNTRY_CODE', '226'),
     ],
 
+    'fcm' => [
+        'project_id'  => env('FCM_PROJECT_ID', ''),
+        'credentials' => env('FCM_CREDENTIALS_PATH', storage_path('app/firebase-service-account.json')),
+    ],
+
 ];

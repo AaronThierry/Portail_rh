@@ -84,4 +84,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Personnel::class, 'personnel_id');
     }
+
+    /**
+     * Jetons d'appareils enregistrés pour les notifications push (app mobile)
+     */
+    public function deviceTokens()
+    {
+        return $this->hasMany(DeviceToken::class);
+    }
 }

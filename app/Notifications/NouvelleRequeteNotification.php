@@ -17,7 +17,7 @@ class NouvelleRequeteNotification extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        $channels = ['database'];
+        $channels = ['database', \App\Channels\FcmChannel::class];
 
         try {
             $whatsapp = app(WhatsAppService::class);

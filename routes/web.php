@@ -20,6 +20,7 @@ use App\Http\Controllers\BulletinPaieController;
 use App\Http\Controllers\CongeAdminController;
 use App\Http\Controllers\AbsenceAdminController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\DeviceTokenController;
 use App\Http\Controllers\ChefEntrepriseController;
 use App\Http\Controllers\RequeteController;
 use App\Http\Controllers\BulletinImportController;
@@ -447,6 +448,10 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+
+    // Notifications push (app mobile) — enregistrement du jeton d'appareil
+    Route::post('device-tokens', [DeviceTokenController::class, 'store'])->name('device-tokens.store');
+    Route::delete('device-tokens', [DeviceTokenController::class, 'destroy'])->name('device-tokens.destroy');
 });
 
 // Redirection racine selon le rôle

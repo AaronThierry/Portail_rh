@@ -888,14 +888,28 @@
     /* La carte profil fait doublon avec l'onglet « Profil » de la navbar du bas */
     .profile-card { display: none; }
 
-    /* ── Actions rapides : reste en liste compacte, un seul accent sur le CTA ── */
-    .actions-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
-    .qa-btn { border-radius: 12px; }
-    .qa-ic { background: var(--n-0); }
-    .qa-btn:hover, .qa-btn:active { background: var(--org-50); border-color: var(--org-200); color: var(--org-600); }
-    .qa-btn:hover .qa-ic, .qa-btn:active .qa-ic { background: var(--org-100); color: var(--org-600); }
-    .qa-btn.qa-primary { background: var(--org-600); box-shadow: none; }
-    .qa-btn.qa-primary:hover { background: var(--org-700); }
+    /* ── Actions rapides : boutons plus présents ── */
+    .actions-grid { grid-template-columns: 1fr 1fr; gap: 8px; padding: 16px; }
+    .qa-btn {
+        border-radius: 14px;
+        padding: 14px 12px;
+        font-size: .875rem;
+        gap: 10px;
+    }
+    .qa-ic { width: 32px; height: 32px; border-radius: 10px; background: var(--n-0); }
+    .qa-ic svg { width: 15px; height: 15px; }
+    .qa-btn:active { background: var(--org-50); border-color: var(--org-200); color: var(--org-600); }
+    .qa-btn:active .qa-ic { background: var(--org-100); color: var(--org-600); }
+    .qa-btn.qa-primary { background: var(--org-600); box-shadow: none; padding: 15px 14px; font-size: .9375rem; }
+    .qa-btn.qa-primary:active { background: var(--org-700); }
+
+    /* ── Activité récente : plus compacte, limitée à 3 lignes ── */
+    .act-item { padding: 9px 16px; gap: 10px; }
+    .act-ico { width: 28px; height: 28px; }
+    .act-ico svg { width: 13px; height: 13px; }
+    .act-title { font-size: .75rem; }
+    .act-sub, .act-date { font-size: .625rem; }
+    .act-item:nth-child(n+4) { display: none; }
 
     /* Déjà dans la navbar du bas — évite un bouton orphelin en fin de grille */
     .qa-profil { display: none; }

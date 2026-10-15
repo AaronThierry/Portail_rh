@@ -6,7 +6,9 @@
         : null;
     $hdParts = preg_split('/\s+/', trim($hdUser->name ?? 'Admin'));
     $hdInitiales = mb_strtoupper(mb_substr($hdParts[0] ?? 'A', 0, 1) . mb_substr($hdParts[1] ?? '', 0, 1));
-    $hdSearch = $hdUser->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', "Chef d'Entreprise", 'Agent administratif']);
+    // Recherche un agent → renvoie vers la gestion du personnel, que le Chef
+    // d'Entreprise n'a plus dans son menu (voir partials/sidebar.blade.php).
+    $hdSearch = $hdUser->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Agent administratif']);
 @endphp
 
 <header class="app-header">

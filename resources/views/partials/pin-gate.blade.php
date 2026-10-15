@@ -1,9 +1,4 @@
 <div id="pinGate" class="pin-gate" aria-hidden="true" data-email="{{ Auth::user()->email }}">
-    <div class="pin-orbs">
-        <span class="pin-orb pin-orb-a"></span>
-        <span class="pin-orb pin-orb-b"></span>
-    </div>
-
     <div class="pin-card">
         <div class="pin-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -46,16 +41,11 @@
 .pin-gate {
     position: fixed; inset: 0; z-index: 999998;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 50%, #F8FAFC 100%);
+    background: var(--page, #f8fafc);
     overflow: hidden;
     transition: opacity .38s ease, transform .38s ease;
 }
 .pin-gate--hide { opacity: 0; transform: scale(1.02); pointer-events: none; }
-
-.pin-orbs { position: absolute; inset: 0; pointer-events: none; }
-.pin-orb { position: absolute; border-radius: 50%; filter: blur(70px); }
-.pin-orb-a { width: 280px; height: 280px; top: -90px; right: -70px; background: #2563EB; opacity: .14; }
-.pin-orb-b { width: 240px; height: 240px; bottom: -70px; left: -60px; background: #14B8A6; opacity: .12; }
 
 .pin-card {
     position: relative; z-index: 1;
@@ -66,38 +56,36 @@
 .pin-card.pin-shake { animation: pin-shake .45s ease; }
 
 .pin-icon {
-    width: 52px; height: 52px; border-radius: 16px;
-    background: rgba(255,255,255,.6);
-    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,255,255,.7);
-    box-shadow: 0 10px 26px rgba(37,99,235,.16);
+    width: 52px; height: 52px; border-radius: var(--radius, 16px);
+    background: var(--brand-bg, #eff6ff);
+    border: 1px solid var(--line-soft, #e2e8f0);
     display: flex; align-items: center; justify-content: center;
-    color: #2563EB; margin-bottom: 1rem;
+    color: var(--brand, #2563eb); margin-bottom: 1rem;
 }
 .pin-icon svg { width: 24px; height: 24px; }
 
 .pin-title {
-    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem;
-    color: #0f172a; margin: 0 0 .25rem;
+    font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: 1.25rem;
+    color: var(--ink, #0f172a); margin: 0 0 .25rem;
 }
 .pin-sub {
-    font-family: 'DM Sans', sans-serif; font-size: .8125rem; color: #64748b; margin: 0 0 1.5rem;
+    font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; color: var(--muted, #64748b); margin: 0 0 1.5rem;
 }
 
 .pin-dots { display: flex; gap: .875rem; margin-bottom: .5rem; }
 .pin-dots span {
     width: 14px; height: 14px; border-radius: 50%;
-    border: 2px solid #cbd5e1; background: transparent;
+    border: 2px solid var(--line, #cbd5e1); background: transparent;
     transition: background .15s ease, border-color .15s ease, transform .15s ease;
 }
 .pin-dots span.filled {
-    background: linear-gradient(135deg, #2563EB, #14B8A6);
+    background: var(--brand, #2563eb);
     border-color: transparent; transform: scale(1.1);
 }
 
 .pin-error {
-    font-family: 'DM Sans', sans-serif; font-size: .8125rem; font-weight: 600;
-    color: #ef4444; min-height: 1.2em; margin: 0 0 1.25rem;
+    font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; font-weight: 600;
+    color: var(--no, #dc2626); min-height: 1.2em; margin: 0 0 1.25rem;
 }
 
 .pin-pad {
@@ -106,24 +94,23 @@
 }
 .pin-pad button {
     width: 64px; height: 64px; border-radius: 50%;
-    border: 1px solid rgba(226,232,240,.9);
-    background: #fff;
-    font-family: 'DM Sans', sans-serif; font-size: 1.375rem; font-weight: 600; color: #0f172a;
-    box-shadow: 0 2px 6px rgba(15,23,42,.06);
+    border: 1px solid var(--line-soft, #e2e8f0);
+    background: var(--surface, #fff);
+    font-family: var(--font, 'DM Sans', sans-serif); font-size: 1.375rem; font-weight: 600; color: var(--ink, #0f172a);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; -webkit-tap-highlight-color: transparent;
     transition: transform .12s ease, background .12s ease;
 }
-.pin-pad button:active { transform: scale(.92); background: #eff6ff; }
+.pin-pad button:active { transform: scale(.92); background: var(--brand-bg, #eff6ff); }
 .pin-key-spacer { width: 64px; height: 64px; }
-.pin-key-back { color: #64748b; }
+.pin-key-back { color: var(--muted, #64748b); }
 .pin-key-back svg { width: 20px; height: 20px; }
 
 .pin-logout {
-    font-family: 'DM Sans', sans-serif; font-size: .8125rem; font-weight: 600;
-    color: #64748b; text-decoration: none;
+    font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; font-weight: 600;
+    color: var(--muted, #64748b); text-decoration: none;
 }
-.pin-logout:active { color: #2563EB; }
+.pin-logout:active { color: var(--brand, #2563eb); }
 
 @keyframes pin-shake {
     10%, 90% { transform: translateX(-2px); }
@@ -155,6 +142,7 @@
     var STORE_KEY = 'rhpin_v1';
     var PIN_LEN = 4;
     var MAX_ATTEMPTS = 5;
+    var LOGOUT_URL = '{{ route("logout.get") }}';
 
     // Déjà déverrouillé récemment (navigation interne) : on ne redemande pas le code
     // à chaque page, seulement si l'app a été quittée un moment. localStorage (pas
@@ -189,6 +177,28 @@
         } catch (e) {}
     }
 
+    // ── Compteur de tentatives, PERSISTÉ (pas une simple variable JS) ──────────
+    // Faille corrigée : un compteur en mémoire se remet à 0 au moindre rechargement
+    // de page, ce qui annulait complètement la limite de 5 essais. Le compteur vit
+    // maintenant dans localStorage, par compte (email), et survit à toute
+    // navigation/rechargement — seule une vraie reconnexion (mot de passe) le reset.
+    var ATTEMPTS_KEY = 'rhpin_attempts';
+    function attemptsKey() { return ATTEMPTS_KEY + ':' + email; }
+    function getAttempts() {
+        try { return parseInt(localStorage.getItem(attemptsKey()) || '0', 10); } catch (e) { return 0; }
+    }
+    function setAttempts(n) {
+        try { localStorage.setItem(attemptsKey(), String(n)); } catch (e) {}
+    }
+    function clearAttempts() {
+        try { localStorage.removeItem(attemptsKey()); } catch (e) {}
+    }
+    function forceLogout() {
+        clearRecord();
+        clearAttempts();
+        window.location.href = LOGOUT_URL;
+    }
+
     function toHex(buffer) {
         return Array.prototype.map.call(new Uint8Array(buffer), function (b) {
             return ('0' + b.toString(16)).slice(-2);
@@ -207,6 +217,14 @@
     var record = loadRecord();
     var mode = (record && record.email === email) ? 'unlock' : 'setup';
 
+    // Déjà au max de tentatives (ex. l'app a été tuée juste après le 5e échec,
+    // avant que la redirection de déconnexion n'ait eu le temps de partir) :
+    // on ne montre même pas le clavier, direction déconnexion immédiatement.
+    if (mode === 'unlock' && getAttempts() >= MAX_ATTEMPTS) {
+        forceLogout();
+        return;
+    }
+
     var dotsEl = document.getElementById('pinDots');
     var titleEl = document.getElementById('pinTitle');
     var subEl = document.getElementById('pinSub');
@@ -216,7 +234,6 @@
 
     var buffer = '';
     var firstEntry = null;
-    var attempts = 0;
     var setupStage = 'create'; // 'create' | 'confirm'
     var busy = false;
 
@@ -251,6 +268,7 @@
     if (mode === 'setup') setupTexts(); else unlockTexts();
 
     function closeGate() {
+        clearAttempts();
         markUnlocked();
         el.classList.add('pin-gate--hide');
         setTimeout(function () { el.remove(); }, 380);
@@ -285,16 +303,18 @@
 
         hashPin(buffer, record.salt).then(function (hash) {
             if (hash === record.hash) {
-                attempts = 0;
                 closeGate();
                 return;
             }
-            attempts++;
+
+            var attempts = getAttempts() + 1;
+            setAttempts(attempts);
+
             if (attempts >= MAX_ATTEMPTS) {
-                clearRecord();
-                window.location.href = '{{ route("logout.get") }}';
+                forceLogout();
                 return;
             }
+
             var left = MAX_ATTEMPTS - attempts;
             shake('Code incorrect — ' + left + ' essai' + (left > 1 ? 's' : '') + ' restant' + (left > 1 ? 's' : ''));
             resetBuffer();
@@ -306,7 +326,7 @@
         var btn = e.target.closest('button[data-key]');
         if (!btn || busy) return;
         var key = btn.getAttribute('data-key');
-        errorEl.textContent = ' ';
+        errorEl.textContent = ' ';
 
         if (key === 'back') {
             buffer = buffer.slice(0, -1);

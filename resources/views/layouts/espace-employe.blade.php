@@ -327,6 +327,56 @@
         .rh-head > .rh-actions .rh-btn { flex: 0 0 auto; }
     }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+    /* ── Bascule clair / sombre ──────────────────────────────────── */
+    .rh-theme-moon { display: none; }
+    html.dark .rh-theme-sun { display: none; }
+    html.dark .rh-theme-moon { display: block; }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       THÈME SOMBRE — mêmes composants, palette réassignée
+       ═══════════════════════════════════════════════════════════════════ */
+    html.dark {
+        color-scheme: dark;
+        --ink: #f1f5f9; --ink-2: #cbd5e1; --muted: #94a3b8; --faint: #64748b;
+        --line: #334155; --line-soft: #1e293b; --page: #0b1220; --subtle: #111c2e;
+        --surface: #141e2e;
+        --brand: #3b82f6; --brand-dk: #60a5fa; --brand-soft: rgba(59,130,246,.22); --brand-bg: rgba(59,130,246,.14);
+        --orange: #fb923c; --orange-bg: rgba(251,146,60,.16); --orange-tx: #fdba74;
+        --wait: #fbbf24; --wait-bg: rgba(251,191,36,.16);
+        --ok: #34d399; --ok-bg: rgba(52,211,153,.16);
+        --no: #f87171; --no-bg: rgba(248,113,113,.16);
+        --off: #94a3b8; --off-bg: rgba(148,163,184,.14);
+        --info: #60a5fa; --info-bg: rgba(96,165,250,.16);
+    }
+    html.dark body { background: var(--page); }
+    html.dark .rh-top { background: rgba(11,18,32,.88); }
+    html.dark .rh-menu,
+    html.dark .rh-bottom,
+    html.dark .rh-tabs a,
+    html.dark .rh-card,
+    html.dark .rh-card-flat,
+    html.dark .rh-figure,
+    html.dark .rh-btn.ghost,
+    html.dark .rh-btn.danger,
+    html.dark .rh-input, html.dark .rh-select, html.dark .rh-textarea,
+    html.dark .rh-sheet-box {
+        background: var(--surface);
+    }
+    html.dark .rh-select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    }
+    /* Pastilles qui utilisent --ink comme fond (texte blanc) : --ink devient clair en
+       sombre, donc le texte blanc ne passerait plus — on le repasse en sombre ici. */
+    html.dark .rh-tabs a[aria-current="page"],
+    html.dark .rh-avatar {
+        color: var(--page);
+    }
+    html.dark .rh-dot { border-color: var(--page); }
+    html.dark .rh-alert.ok   { color: #6ee7b7; }
+    html.dark .rh-alert.err  { color: #fca5a5; }
+    html.dark .rh-alert.info { color: #93c5fd; }
+    html.dark .rh-sheet { background: rgba(0,0,0,.6); }
     </style>
     @yield('styles')
 </head>
@@ -363,6 +413,10 @@
         </nav>
 
         <div class="rh-top-right">
+            <button type="button" class="rh-iconbtn rh-theme-toggle" data-theme-toggle aria-label="Changer de thème">
+                <svg class="rh-theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                <svg class="rh-theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
             <div class="rh-pop">
                 <button type="button" class="rh-iconbtn" id="rhNotifBtn" aria-label="Notifications" aria-expanded="false" aria-controls="rhNotifMenu">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>

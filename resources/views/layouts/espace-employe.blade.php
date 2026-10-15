@@ -339,8 +339,8 @@
     html.dark {
         color-scheme: dark;
         --ink: #f1f5f9; --ink-2: #cbd5e1; --muted: #94a3b8; --faint: #64748b;
-        --line: #334155; --line-soft: #1e293b; --page: #0b1220; --subtle: #111c2e;
-        --surface: #141e2e;
+        --line: #3d4b68; --line-soft: #273349; --page: #0a0f1a; --subtle: #131c2c;
+        --surface: #1b263b;
         --brand: #3b82f6; --brand-dk: #60a5fa; --brand-soft: rgba(59,130,246,.22); --brand-bg: rgba(59,130,246,.14);
         --orange: #fb923c; --orange-bg: rgba(251,146,60,.16); --orange-tx: #fdba74;
         --wait: #fbbf24; --wait-bg: rgba(251,191,36,.16);

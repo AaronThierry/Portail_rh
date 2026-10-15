@@ -462,13 +462,14 @@ class UserController extends Controller
             'Admin' => 'Admin',
             'Manager' => 'Manager',
             'Employé' => 'Employé',
-            'RH' => 'RH'
+            'RH' => 'RH',
+            "Chef d'Entreprise" => "Chef d'Entreprise",
         ];
 
         $validator = Validator::make($request->all(), [
             'personnel_id' => 'required|exists:personnels,id',
             'email' => 'required|email|unique:users,email',
-            'role' => 'required|in:Super Admin,Admin,Manager,Employé,RH',
+            'role' => "required|in:Super Admin,Admin,Manager,Employé,RH,Chef d'Entreprise",
             'status' => 'required|in:active,inactive'
         ], [
             'personnel_id.required' => 'Veuillez sélectionner un employé',
@@ -533,6 +534,30 @@ class UserController extends Controller
                 ], 403);
             }
             return back()->with('error', 'Seul un Super Admin peut créer un compte Super Admin');
+        }
+
+        // Vérifier que seul un Super Admin peut créer un Chef d'Entreprise,
+        // et qu'il n'en existe pas déjà un pour cette entreprise
+        if ($spatieRoleName === "Chef d'Entreprise") {
+            if (!auth()->user()->hasRole('Super Admin')) {
+                $message = "Seul un Super Admin peut assigner le rôle Chef d'Entreprise";
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => $message], 403);
+                }
+                return back()->with('error', $message);
+            }
+
+            $dejaChef = User::where('entreprise_id', $personnel->entreprise_id)
+                ->role("Chef d'Entreprise")
+                ->exists();
+
+            if ($dejaChef) {
+                $message = "Un Chef d'Entreprise existe déjà pour cette entreprise";
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => $message], 422);
+                }
+                return back()->with('error', $message)->withInput();
+            }
         }
 
         try {

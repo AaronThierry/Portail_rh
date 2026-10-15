@@ -5,8 +5,12 @@
     $sbEntreprise = $sbUser->entreprise ?? null;
     $sbIsSuper = $sbUser->hasRole('Super Admin');
     $sbIsChef = $sbUser->hasRole("Chef d'Entreprise");
-    $sbRh = $sbUser->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', "Chef d'Entreprise", 'Agent administratif']);
+    {{-- Le Chef d'Entreprise n'a qu'une chose à faire ici : valider les congés/absences
+         de son entreprise et suivre ses requêtes. Le reste (personnel, bulletins,
+         dossiers, assistant IA) ne le concerne pas, donc son menu l'exclut. --}}
+    $sbRh = $sbUser->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Agent administratif']);
     $sbPaie = $sbUser->hasAnyRole(['Super Admin', 'Admin', 'RH', "Chef d'Entreprise", 'Agent administratif']);
+    $sbBulletins = $sbUser->hasAnyRole(['Super Admin', 'Admin', 'RH', 'Agent administratif']);
     $sbRepertoires = $sbUser->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Agent administratif']);
     $sbOrga = $sbUser->hasAnyRole(['Super Admin', 'Admin']);
     $sbPill = fn ($n) => $n > 0 ? '<span class="sb-count" aria-label="' . $n . ' à traiter">' . ($n > 99 ? '99+' : $n) . '</span>' : '';
@@ -59,6 +63,8 @@
                 <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
                 <span class="nav-link-text">Absences</span>{!! $sbPill($sbCounts['absences']) !!}
             </a>
+        @endif
+        @if($sbBulletins)
             <a href="{{ route('admin.bulletins-paie.index') }}" class="nav-link {{ Request::is('admin/bulletins-paie*') ? 'active' : '' }}">
                 <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
                 <span class="nav-link-text">Bulletins de paie</span>
@@ -91,10 +97,12 @@
             </a>
         @endif
 
+        @unless($sbIsChef)
         <a href="{{ route('admin.assistant.index') }}" class="nav-link {{ Request::is('admin/assistant*') ? 'active' : '' }}">
             <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
             <span class="nav-link-text">Assistant IA</span>
         </a>
+        @endunless
 
         @if($sbOrga)
             <p class="sb-section">Organisation</p>

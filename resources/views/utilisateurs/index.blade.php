@@ -2351,6 +2351,9 @@
                                     <option value="Manager">Manager</option>
                                     <option value="RH">Ressources Humaines</option>
                                     <option value="Employé">Employé</option>
+                                    @if(auth()->user()->hasRole('Super Admin'))
+                                    <option value="Chef d'Entreprise">Chef d'Entreprise</option>
+                                    @endif
                                 </select>
                             </div>
                         </div>

@@ -8,6 +8,7 @@ use App\Models\Absence;
 use App\Models\BulletinPaie;
 use App\Models\DocumentAgent;
 use App\Models\Entreprise;
+use App\Support\AdminQueue;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -154,7 +155,82 @@ class DashbordController extends Controller
             ? Entreprise::count()
             : ($entrepriseId ? 1 : 0);
 
+        // --- File « À traiter » (mêmes règles que les pastilles de la barre latérale) ---
+        $queue = AdminQueue::counts($user);
+        $estChef = AdminQueue::estChef($user);
+
+        $fileConges = AdminQueue::congesQuery($user)
+            ->with(['personnel', 'typeConge', 'entreprise'])
+            ->orderByRaw('COALESCE(valide_chef_at, created_at) asc')
+            ->limit(6)
+            ->get();
+
+        $fileAbsences = AdminQueue::absencesQuery($user)
+            ->with(['personnel', 'typeAbsence', 'entreprise'])
+            ->orderBy('date_absence')
+            ->limit(6)
+            ->get();
+
+        $requetesQuery = AdminQueue::requetesQuery($user);
+        $fileRequetes = $requetesQuery
+            ? $requetesQuery->with(['user', 'entreprise'])->latest()->limit(4)->get()
+            : collect();
+
+        // Justificatifs déposés sur une absence encore « non justifiée »
+        $fileJustificatifs = collect();
+        if (!$estChef) {
+            $fileJustificatifs = Absence::with(['personnel', 'entreprise'])
+                ->where('statut', 'approuvee')
+                ->where('justifiee', false)
+                ->whereNotNull('justificatif')
+                ->when($entrepriseId, fn($q) => $q->forEntreprise($entrepriseId))
+                ->orderByDesc('updated_at')
+                ->limit(4)
+                ->get();
+        }
+
+        // --- Aujourd'hui ---
+        $aujourdhui = now()->toDateString();
+        $enCongeAujourdhui = Conge::with(['personnel', 'typeConge'])
+            ->where('statut', 'approuve')
+            ->whereDate('date_debut', '<=', $aujourdhui)
+            ->whereDate('date_fin', '>=', $aujourdhui)
+            ->when($entrepriseId, fn($q) => $q->forEntreprise($entrepriseId))
+            ->orderBy('date_fin')
+            ->get();
+        $absentsAujourdhui = Absence::with(['personnel', 'typeAbsence'])
+            ->where('statut', 'approuvee')
+            ->whereDate('date_absence', $aujourdhui)
+            ->when($entrepriseId, fn($q) => $q->forEntreprise($entrepriseId))
+            ->get();
+
+        // --- À surveiller / ce mois-ci ---
+        $agentsSansCompte = Personnel::actif()->sansCompte()
+            ->when($entrepriseId, fn($q) => $q->forEntreprise($entrepriseId))
+            ->count();
+
+        $congesApprouvesMois = Conge::where('statut', 'approuve')
+            ->whereBetween('traite_at', [now()->startOfMonth(), now()])
+            ->when($entrepriseId, fn($q) => $q->forEntreprise($entrepriseId))
+            ->count();
+
+        $absencesMois = Absence::where('statut', 'approuvee')
+            ->whereBetween('date_absence', [now()->startOfMonth()->toDateString(), now()->endOfMonth()->toDateString()])
+            ->when($entrepriseId, fn($q) => $q->forEntreprise($entrepriseId))
+            ->count();
+
         return view('dashboard', compact(
+            'queue',
+            'estChef',
+            'fileConges',
+            'fileAbsences',
+            'fileRequetes',
+            'fileJustificatifs',
+            'enCongeAujourdhui',
+            'absentsAujourdhui',
+            'agentsSansCompte',
+            'congesApprouvesMois',
+            'absencesMois',
             'totalEmployes',
             'employesAvecCompte',
             'statsConges',

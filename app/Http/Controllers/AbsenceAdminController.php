@@ -10,9 +10,39 @@ use App\Models\Personnel;
 use App\Models\User;
 use App\Notifications\AbsenceStatusNotification;
 use App\Services\WhatsAppService;
+use App\Support\AdminQueue;
 
 class AbsenceAdminController extends Controller
 {
+    /**
+     * Onglets de la page Absences, selon l'étape que l'utilisateur fait avancer.
+     */
+    protected function vues(bool $estChef): array
+    {
+        return $estChef
+            ? [
+                'a_traiter' => ['label' => 'À valider', 'statuts' => ['en_attente']],
+                'en_cours'  => ['label' => 'Chez le service RH', 'statuts' => ['valide_chef']],
+                'registre'  => ['label' => 'Registre', 'statuts' => ['approuvee', 'refusee']],
+            ]
+            : [
+                'a_traiter' => ['label' => 'À approuver', 'statuts' => ['valide_chef']],
+                'en_cours'  => ['label' => 'Chez le chef', 'statuts' => ['en_attente']],
+                'registre'  => ['label' => 'Registre', 'statuts' => ['approuvee', 'refusee']],
+            ];
+    }
+
+    /**
+     * Un utilisateur rattaché à une entreprise ne traite que les absences de celle-ci.
+     */
+    protected function verifierPerimetre(Absence $absence): void
+    {
+        $entrepriseId = Auth::user()->entreprise_id;
+        if ($entrepriseId && (int) $absence->entreprise_id !== (int) $entrepriseId) {
+            abort(403);
+        }
+    }
+
     /**
      * Liste des absences (admin)
      */
@@ -20,21 +50,35 @@ class AbsenceAdminController extends Controller
     {
         $user = Auth::user();
         $entrepriseId = $user->entreprise_id;
+        $estChef = AdminQueue::estChef($user);
+        $vues = $this->vues($estChef);
 
-        $annee = $request->get('annee', now()->year);
+        $annee = (int) $request->get('annee', now()->year);
         $typeAbsenceId = $request->get('type_absence');
         $justifiee = $request->get('justifiee');
-        $search = $request->get('search');
+        $search = trim((string) $request->get('search', ''));
         $statut = $request->get('statut');
 
-        $query = Absence::with(['personnel', 'typeAbsence', 'enregistrePar', 'traitePar'])
-            ->orderBy('date_absence', 'desc');
-
-        if ($entrepriseId) {
-            $query->forEntreprise($entrepriseId);
+        $vue = $request->get('vue');
+        if (!$vue || !isset($vues[$vue])) {
+            // Ancien lien filtré (?statut=, ?justifiee=…) → registre ; sinon ce qui attend une action
+            $vue = ($statut || ($justifiee !== null && $justifiee !== '') || $typeAbsenceId) ? 'registre' : 'a_traiter';
+            if ($vue === 'a_traiter' && AdminQueue::absencesQuery($user)->count() === 0) {
+                $vue = 'registre';
+            }
         }
 
-        if ($annee) {
+        $base = Absence::query()->when($entrepriseId, fn ($q) => $q->forEntreprise($entrepriseId));
+
+        $query = (clone $base)->with(['personnel', 'typeAbsence', 'enregistrePar', 'traitePar', 'entreprise']);
+
+        if ($statut && in_array($statut, ['en_attente', 'valide_chef', 'approuvee', 'refusee'], true)) {
+            $query->where('statut', $statut);
+        } else {
+            $query->whereIn('statut', $vues[$vue]['statuts']);
+        }
+
+        if ($vue === 'registre') {
             $query->annee($annee);
         }
 
@@ -46,11 +90,7 @@ class AbsenceAdminController extends Controller
             $query->where('justifiee', $justifiee === '1');
         }
 
-        if ($statut) {
-            $query->where('statut', $statut);
-        }
-
-        if ($search) {
+        if ($search !== '') {
             $query->whereHas('personnel', function ($q) use ($search) {
                 $q->where('nom', 'like', "%{$search}%")
                     ->orWhere('prenoms', 'like', "%{$search}%")
@@ -58,7 +98,18 @@ class AbsenceAdminController extends Controller
             });
         }
 
-        $absences = $query->paginate(20);
+        $query->orderBy('date_absence', $vue === 'registre' ? 'desc' : 'asc');
+
+        $absences = $query->paginate(20)->withQueryString();
+
+        $compteurs = [];
+        foreach ($vues as $cle => $v) {
+            $q = (clone $base)->whereIn('statut', $v['statuts']);
+            if ($cle === 'registre') {
+                $q->annee($annee);
+            }
+            $compteurs[$cle] = $q->count();
+        }
 
         $stats = Absence::getStatistiques($entrepriseId, $annee);
 
@@ -83,7 +134,8 @@ class AbsenceAdminController extends Controller
 
         return view('admin.absences.index', compact(
             'absences', 'stats', 'annee', 'typeAbsenceId', 'justifiee', 'search', 'statut',
-            'anneesDisponibles', 'typesAbsence', 'personnels'
+            'anneesDisponibles', 'typesAbsence', 'personnels',
+            'vue', 'vues', 'compteurs', 'estChef'
         ));
     }
 
@@ -131,6 +183,9 @@ class AbsenceAdminController extends Controller
         }
 
         $personnel = Personnel::findOrFail($request->personnel_id);
+        if ($user->entreprise_id && (int) $personnel->entreprise_id !== (int) $user->entreprise_id) {
+            abort(403);
+        }
 
         Absence::create([
             'entreprise_id' => $personnel->entreprise_id,
@@ -159,6 +214,7 @@ class AbsenceAdminController extends Controller
      */
     public function show(Absence $absence)
     {
+        $this->verifierPerimetre($absence);
         $absence->load(['personnel', 'typeAbsence', 'enregistrePar', 'traitePar']);
         return response()->json($absence);
     }
@@ -171,6 +227,7 @@ class AbsenceAdminController extends Controller
      */
     public function approve(Absence $absence)
     {
+        $this->verifierPerimetre($absence);
         $user = Auth::user();
 
         // Étape 1 : Chef d'Entreprise valide en premier
@@ -228,6 +285,8 @@ class AbsenceAdminController extends Controller
             'motif_refus.required' => 'Le motif de refus est obligatoire.',
         ]);
 
+        $this->verifierPerimetre($absence);
+
         $user = Auth::user();
 
         // Chef d'Entreprise peut refuser uniquement en_attente
@@ -277,6 +336,7 @@ class AbsenceAdminController extends Controller
      */
     public function toggleJustifiee(Absence $absence)
     {
+        $this->verifierPerimetre($absence);
         $absence->update(['justifiee' => !$absence->justifiee]);
         return back()->with('success', 'Le statut a été mis à jour.');
     }
@@ -286,6 +346,7 @@ class AbsenceAdminController extends Controller
      */
     public function destroy(Absence $absence)
     {
+        $this->verifierPerimetre($absence);
         $absence->delete();
         return back()->with('success', 'L\'absence a été supprimée.');
     }

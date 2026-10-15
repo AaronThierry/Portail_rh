@@ -7,37 +7,78 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Conge;
 use App\Notifications\CongeStatusNotification;
 use App\Services\WhatsAppService;
+use App\Support\AdminQueue;
 
 class CongeAdminController extends Controller
 {
     /**
-     * Liste des demandes de congés (admin)
+     * Onglets de la page Congés, selon l'étape que l'utilisateur fait avancer.
+     *
+     * @return array<string, array{label:string, statuts:array}>
+     */
+    protected function vues(bool $estChef): array
+    {
+        return $estChef
+            ? [
+                'a_traiter' => ['label' => 'À valider', 'statuts' => ['en_attente']],
+                'en_cours'  => ['label' => 'Chez le service RH', 'statuts' => ['valide_chef']],
+                'traitees'  => ['label' => 'Traitées', 'statuts' => ['approuve', 'refuse', 'annule']],
+                'toutes'    => ['label' => 'Toutes', 'statuts' => []],
+            ]
+            : [
+                'a_traiter' => ['label' => 'À approuver', 'statuts' => ['valide_chef']],
+                'en_cours'  => ['label' => 'Chez le chef', 'statuts' => ['en_attente']],
+                'traitees'  => ['label' => 'Traitées', 'statuts' => ['approuve', 'refuse', 'annule']],
+                'toutes'    => ['label' => 'Toutes', 'statuts' => []],
+            ];
+    }
+
+    /**
+     * Un utilisateur rattaché à une entreprise ne traite que les congés de celle-ci.
+     */
+    protected function verifierPerimetre(Conge $conge): void
+    {
+        $entrepriseId = Auth::user()->entreprise_id;
+        if ($entrepriseId && (int) $conge->entreprise_id !== (int) $entrepriseId) {
+            abort(403);
+        }
+    }
+
+    /**
+     * Liste des demandes de congés (admin) + détail de la demande sélectionnée
      */
     public function index(Request $request)
     {
         $user = Auth::user();
         $entrepriseId = $user->entreprise_id;
+        $estChef = AdminQueue::estChef($user);
+        $vues = $this->vues($estChef);
 
-        $annee = $request->get('annee', now()->year);
         $statut = $request->get('statut');
-        $search = $request->get('search');
+        $search = trim((string) $request->get('search', ''));
+        $vue = $request->get('vue');
+        if (!$vue || !isset($vues[$vue])) {
+            $vue = $statut ? 'toutes' : 'a_traiter';
+        }
+        // L'année ne filtre que l'historique : une demande en attente reste visible.
+        $anneeDemandee = $request->filled('annee');
+        $annee = (int) $request->get('annee', now()->year);
 
-        $query = Conge::with(['personnel', 'typeConge', 'user', 'traitePar', 'congeParent'])
-            ->orderBy('created_at', 'desc');
+        $base = Conge::query()->when($entrepriseId, fn ($q) => $q->forEntreprise($entrepriseId));
 
-        if ($entrepriseId) {
-            $query->forEntreprise($entrepriseId);
+        $query = (clone $base)->with(['personnel', 'typeConge', 'entreprise', 'congeParent']);
+
+        if ($statut && array_key_exists($statut, Conge::STATUTS)) {
+            $query->statut($statut);
+        } elseif ($vues[$vue]['statuts']) {
+            $query->whereIn('statut', $vues[$vue]['statuts']);
         }
 
-        if ($annee) {
+        if (in_array($vue, ['traitees', 'toutes'], true) || $anneeDemandee) {
             $query->annee($annee);
         }
 
-        if ($statut) {
-            $query->statut($statut);
-        }
-
-        if ($search) {
+        if ($search !== '') {
             $query->whereHas('personnel', function ($q) use ($search) {
                 $q->where('nom', 'like', "%{$search}%")
                     ->orWhere('prenoms', 'like', "%{$search}%")
@@ -45,14 +86,64 @@ class CongeAdminController extends Controller
             });
         }
 
-        $conges = $query->paginate(20);
+        if ($vue === 'a_traiter' || $vue === 'en_cours') {
+            $query->orderByRaw('COALESCE(valide_chef_at, created_at) asc');
+        } else {
+            $query->orderByDesc('created_at');
+        }
+
+        $conges = $query->paginate(20)->withQueryString();
+
+        // Compteurs des onglets (sans la recherche)
+        $compteurs = [];
+        foreach ($vues as $cle => $v) {
+            $q = clone $base;
+            if ($v['statuts']) {
+                $q->whereIn('statut', $v['statuts']);
+            }
+            if (in_array($cle, ['traitees', 'toutes'], true)) {
+                $q->annee($annee);
+            }
+            $compteurs[$cle] = $q->count();
+        }
+
+        // Demande sélectionnée : explicitement (?conge=) ou la première de la liste
+        $selection = null;
+        $selectionExplicite = false;
+        if ($request->filled('conge')) {
+            $selection = (clone $base)->with(['personnel', 'typeConge', 'entreprise', 'congeParent', 'valideChefPar', 'traitePar'])
+                ->find((int) $request->get('conge'));
+            $selectionExplicite = (bool) $selection;
+        }
+        if (!$selection && $conges->count() > 0) {
+            $selection = $conges->first()->load(['valideChefPar', 'traitePar']);
+        }
+
+        $chevauchements = collect();
+        $solde = null;
+        if ($selection) {
+            $chevauchements = Conge::with(['personnel', 'typeConge'])
+                ->where('entreprise_id', $selection->entreprise_id)
+                ->where('id', '!=', $selection->id)
+                ->whereIn('statut', ['approuve', 'valide_chef', 'en_attente'])
+                ->whereDate('date_debut', '<=', $selection->date_fin)
+                ->whereDate('date_fin', '>=', $selection->date_debut)
+                ->orderBy('date_debut')
+                ->limit(8)
+                ->get();
+
+            if ($selection->personnel_id && $selection->typeConge && $selection->typeConge->deductible) {
+                $solde = Conge::getSolde($selection->personnel_id, $selection->annee ?: $annee, $selection->entreprise_id);
+            }
+        }
 
         $stats = Conge::getStatistiques($entrepriseId, $annee);
-
         $anneesDisponibles = Conge::getAnneesDisponibles(null, $entrepriseId);
 
         return view('admin.conges.index', compact(
-            'conges', 'stats', 'annee', 'statut', 'search', 'anneesDisponibles'
+            'conges', 'stats', 'annee', 'statut', 'search', 'anneesDisponibles',
+            'vue', 'vues', 'compteurs', 'estChef',
+            'selection', 'selectionExplicite', 'chevauchements', 'solde'
         ));
     }
 
@@ -61,6 +152,7 @@ class CongeAdminController extends Controller
      */
     public function show(Conge $conge)
     {
+        $this->verifierPerimetre($conge);
         $conge->load(['personnel', 'typeConge', 'user', 'traitePar', 'congeParent']);
 
         return response()->json($conge);
@@ -79,6 +171,7 @@ class CongeAdminController extends Controller
             'document_officiel' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
+        $this->verifierPerimetre($conge);
         $user = Auth::user();
 
         // Étape 1 : Chef d'Entreprise valide en premier
@@ -144,6 +237,7 @@ class CongeAdminController extends Controller
             'commentaire_admin' => 'nullable|string|max:1000',
         ]);
 
+        $this->verifierPerimetre($conge);
         $user = Auth::user();
 
         // Chef d'Entreprise peut refuser uniquement en_attente

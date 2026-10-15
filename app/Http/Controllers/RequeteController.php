@@ -7,6 +7,7 @@ use App\Models\RequeteMessage;
 use App\Models\User;
 use App\Notifications\NouvelleRequeteNotification;
 use App\Notifications\ReponseRequeteNotification;
+use App\Notifications\RequeteFermeeNotification;
 use App\Services\OllamaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -304,6 +305,10 @@ class RequeteController extends Controller
     public function adminClose(Requete $requete)
     {
         $requete->update(['statut' => 'fermee']);
+
+        if ($requete->user) {
+            $requete->user->notify(new RequeteFermeeNotification($requete));
+        }
 
         return redirect()->route('admin.admin-requetes.index')
             ->with('success', "La requête « {$requete->sujet} » a été fermée.");

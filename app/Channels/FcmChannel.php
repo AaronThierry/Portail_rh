@@ -18,6 +18,13 @@ class FcmChannel
         'nouvelle_demande_absence' => 'Nouvelle déclaration d\'absence',
         'requete' => 'Nouvelle requête',
         'reponse_requete' => 'Réponse à votre requête',
+        'conge_annule' => 'Congé annulé',
+        'absence_annulee' => 'Absence annulée',
+        'nouveau_document' => 'Nouveau document',
+        'requete_fermee' => 'Requête fermée',
+        '2fa_active' => 'Sécurité du compte',
+        '2fa_desactive' => 'Sécurité du compte',
+        'mot_de_passe_modifie' => 'Sécurité du compte',
     ];
 
     public function __construct(FcmService $fcm)

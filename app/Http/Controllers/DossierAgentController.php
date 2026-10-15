@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Services\WhatsAppService;
+use App\Notifications\NouveauDocumentAgentNotification;
 
 class DossierAgentController extends Controller
 {
@@ -212,13 +213,18 @@ class DossierAgentController extends Controller
 
             DB::commit();
 
-            // Notification WhatsApp à l'employé si document visible
+            // Notification à l'employé si document visible
             if ($document->visible_employe && !$document->confidentiel) {
+                $document->load('categorie');
+
                 try {
-                    $document->load('categorie');
                     app(WhatsAppService::class)->notifyDocumentAgent($document, $personnel);
                 } catch (\Throwable $e) {
                     Log::warning('WhatsApp notification document echouee', ['error' => $e->getMessage()]);
+                }
+
+                if ($personnel->user) {
+                    $personnel->user->notify(new NouveauDocumentAgentNotification($document));
                 }
             }
 
@@ -438,17 +444,20 @@ class DossierAgentController extends Controller
             'visible_employe' => $newVisible,
         ]);
 
-        // Notification WhatsApp si le document devient visible
+        // Notification si le document devient visible
         if ($newVisible && $document->personnel->user) {
+            $document->load('categorie');
+
             try {
                 $whatsapp = app(WhatsAppService::class);
                 if ($whatsapp->isEnabled()) {
-                    $document->load('categorie');
                     $whatsapp->notifyDocumentAgent($document, $document->personnel);
                 }
             } catch (\Throwable $e) {
                 Log::warning('WhatsApp notification document echouee', ['error' => $e->getMessage()]);
             }
+
+            $document->personnel->user->notify(new NouveauDocumentAgentNotification($document));
         }
 
         if (request()->ajax()) {
@@ -547,13 +556,18 @@ class DossierAgentController extends Controller
                 $document->logAction('upload');
                 $uploaded[] = $document;
 
-                // Notification WhatsApp à l'employé si document visible
+                // Notification à l'employé si document visible
                 if ($document->visible_employe && !$document->confidentiel) {
+                    $document->load('categorie');
+
                     try {
-                        $document->load('categorie');
                         app(WhatsAppService::class)->notifyDocumentAgent($document, $personnel);
                     } catch (\Throwable $e2) {
                         Log::warning('WhatsApp notification document echouee', ['error' => $e2->getMessage()]);
+                    }
+
+                    if ($personnel->user) {
+                        $personnel->user->notify(new NouveauDocumentAgentNotification($document));
                     }
                 }
 

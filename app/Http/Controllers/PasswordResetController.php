@@ -12,6 +12,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Mail\ResetCodeMail;
+use App\Notifications\SecuriteCompteNotification;
 
 class PasswordResetController extends Controller
 {
@@ -256,6 +257,11 @@ class PasswordResetController extends Controller
             $user->save();
 
             event(new PasswordReset($user));
+
+            $user->notify(new SecuriteCompteNotification(
+                'mot_de_passe_modifie',
+                'Le mot de passe de votre compte a été réinitialisé.'
+            ));
 
             // Supprimer le token du cache
             Cache::forget('password_reset_token_' . $request->token);

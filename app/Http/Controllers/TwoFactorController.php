@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Notifications\SecuriteCompteNotification;
 use PragmaRX\Google2FA\Google2FA;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
@@ -75,6 +76,11 @@ class TwoFactorController extends Controller
             $user->google2fa_verified_at = now();
             $user->save();
 
+            $user->notify(new SecuriteCompteNotification(
+                '2fa_active',
+                'L\'authentification à deux facteurs a été activée sur votre compte.'
+            ));
+
             // Rediriger selon le rôle
             if ($user->hasRole('Super Admin')) {
                 return redirect()->route('admin.profile.index')->with('success', 'Authentification à deux facteurs activée avec succès!');
@@ -98,6 +104,11 @@ class TwoFactorController extends Controller
         $user->google2fa_secret = null;
         $user->google2fa_verified_at = null;
         $user->save();
+
+        $user->notify(new SecuriteCompteNotification(
+            '2fa_desactive',
+            'L\'authentification à deux facteurs a été désactivée sur votre compte.'
+        ));
 
         // Rediriger selon le rôle
         if ($user->hasRole('Super Admin')) {

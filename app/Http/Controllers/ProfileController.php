@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Notifications\SecuriteCompteNotification;
 
 class ProfileController extends Controller
 {
@@ -131,6 +132,11 @@ class ProfileController extends Controller
         $user->update([
             'password' => Hash::make($request->password),
         ]);
+
+        $user->notify(new SecuriteCompteNotification(
+            'mot_de_passe_modifie',
+            'Le mot de passe de votre compte a été modifié.'
+        ));
 
         return back()->with('success', 'Mot de passe modifié avec succès');
     }

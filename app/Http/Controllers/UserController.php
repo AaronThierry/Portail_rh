@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Personnel;
 use App\Mail\UserCredentialsMail;
 use App\Helpers\PasswordHelper;
+use App\Notifications\SecuriteCompteNotification;
 
 class UserController extends Controller
 {
@@ -302,6 +303,11 @@ class UserController extends Controller
 
             // Révoquer tous les tokens Sanctum pour forcer une reconnexion
             $user->tokens()->delete();
+
+            $user->notify(new SecuriteCompteNotification(
+                'mot_de_passe_modifie',
+                'Le mot de passe de votre compte a été modifié.'
+            ));
 
             return back()->with('success', 'Mot de passe changé avec succès');
         } catch (\Exception $e) {

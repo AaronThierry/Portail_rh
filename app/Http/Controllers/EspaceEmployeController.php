@@ -22,6 +22,9 @@ use App\Services\OllamaService;
 use App\Http\Requests\StoreCongeRequest;
 use App\Notifications\NouvelleDemandeCongeNotification;
 use App\Notifications\NouvelleDemandeAbsenceNotification;
+use App\Notifications\CongeAnnuleNotification;
+use App\Notifications\AbsenceAnnuleeNotification;
+use App\Notifications\SecuriteCompteNotification;
 use App\Services\WhatsAppService;
 use Illuminate\Support\Facades\Log;
 
@@ -236,6 +239,11 @@ class EspaceEmployeController extends Controller
         $user->update([
             'password' => Hash::make($request->password),
         ]);
+
+        $user->notify(new SecuriteCompteNotification(
+            'mot_de_passe_modifie',
+            'Le mot de passe de votre compte a été modifié.'
+        ));
 
         return back()->with('success', 'Mot de passe modifié avec succès.');
     }
@@ -610,6 +618,17 @@ class EspaceEmployeController extends Controller
 
         $conge->update(['statut' => 'annule']);
 
+        // Notifier les admins/RH/Chef d'Entreprise qui avaient été prévenus de la demande
+        $conge->load('personnel', 'typeConge');
+        $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
+            ->where('id', '!=', $user->id)
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager', "Chef d'Entreprise"]))
+            ->get();
+
+        if ($adminsRH->isNotEmpty()) {
+            Notification::send($adminsRH, new CongeAnnuleNotification($conge));
+        }
+
         return back()->with('success', 'La demande de congé a été annulée.');
     }
 
@@ -915,6 +934,17 @@ class EspaceEmployeController extends Controller
 
         if ($absence->statut !== 'en_attente' || $absence->source !== 'employe') {
             return back()->with('error', 'Seules vos demandes en attente peuvent être annulées.');
+        }
+
+        // Notifier les admins/RH/Chef d'Entreprise avant la suppression définitive
+        $absence->load('personnel', 'typeAbsence');
+        $adminsRH = User::where('entreprise_id', $personnel->entreprise_id)
+            ->where('id', '!=', $user->id)
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['Super Admin', 'Admin', 'RH', 'Manager', "Chef d'Entreprise"]))
+            ->get();
+
+        if ($adminsRH->isNotEmpty()) {
+            Notification::send($adminsRH, new AbsenceAnnuleeNotification($absence));
         }
 
         $absence->delete();

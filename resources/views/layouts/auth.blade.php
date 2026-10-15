@@ -31,7 +31,7 @@
         --orange-tx:  #9a3412;
         --ink:        #0f172a;
         --ink-2:      #475569;
-        --muted:      #64748b;
+        --muted:      #475569;
         --line:       #cbd5e1;
         --line-soft:  #e2e8f0;
         --page:       #f8fafc;
@@ -43,7 +43,7 @@
         --green-tx:   #065f46;
     }
 
-    html { overscroll-behavior-y: none; }
+    html { overscroll-behavior-y: none; color-scheme: light; background: #ffffff; }
     body {
         font-family: 'DM Sans', system-ui, sans-serif;
         color: var(--ink);

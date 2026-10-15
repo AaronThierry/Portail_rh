@@ -26,7 +26,7 @@
     :root {
         --brand: #2563eb; --brand-dk: #1d4ed8; --brand-soft: #dbeafe; --brand-bg: #eff6ff;
         --orange: #ea580c; --orange-bg: #fff7ed; --orange-tx: #9a3412;
-        --ink: #0f172a; --ink-2: #334155; --muted: #64748b; --faint: #94a3b8;
+        --ink: #0f172a; --ink-2: #334155; --muted: #475569; --faint: #94a3b8;
         --line: #cbd5e1; --line-soft: #e2e8f0; --page: #f8fafc; --subtle: #f1f5f9;
         --wait: #b45309; --wait-bg: #fef3c7;
         --ok: #047857; --ok-bg: #d1fae5;
@@ -38,7 +38,7 @@
         --font: 'DM Sans', system-ui, -apple-system, sans-serif;
         --display: 'Syne', 'DM Sans', sans-serif;
     }
-    html { overscroll-behavior-y: none; -webkit-text-size-adjust: 100%; }
+    html { overscroll-behavior-y: none; -webkit-text-size-adjust: 100%; color-scheme: light; background: var(--page, #f8fafc); }
     body {
         margin: 0; background: var(--page); color: var(--ink);
         font-family: var(--font); font-size: 15px; line-height: 1.5;

@@ -5,9 +5,9 @@
     $sbEntreprise = $sbUser->entreprise ?? null;
     $sbIsSuper = $sbUser->hasRole('Super Admin');
     $sbIsChef = $sbUser->hasRole("Chef d'Entreprise");
-    {{-- Le Chef d'Entreprise n'a qu'une chose à faire ici : valider les congés/absences
-         de son entreprise et suivre ses requêtes. Le reste (personnel, bulletins,
-         dossiers, assistant IA) ne le concerne pas, donc son menu l'exclut. --}}
+    // Le Chef d'Entreprise n'a qu'une chose à faire ici : valider les congés/absences
+    // de son entreprise et suivre ses requêtes. Le reste (personnel, bulletins,
+    // dossiers, assistant IA) ne le concerne pas, donc son menu l'exclut.
     $sbRh = $sbUser->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Agent administratif']);
     $sbPaie = $sbUser->hasAnyRole(['Super Admin', 'Admin', 'RH', "Chef d'Entreprise", 'Agent administratif']);
     $sbBulletins = $sbUser->hasAnyRole(['Super Admin', 'Admin', 'RH', 'Agent administratif']);

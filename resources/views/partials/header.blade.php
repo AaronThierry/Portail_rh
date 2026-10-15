@@ -9,17 +9,35 @@
     // Recherche un agent → renvoie vers la gestion du personnel, que le Chef
     // d'Entreprise n'a plus dans son menu (voir partials/sidebar.blade.php).
     $hdSearch = $hdUser->hasAnyRole(['Super Admin', 'Admin', 'Manager', 'RH', 'Agent administratif']);
+    // Le Chef d'Entreprise n'a pas de sidebar : sa navigation (4 liens) tient
+    // dans une navbar horizontale ici, comme .rh-topnav côté espace employé.
+    $hdIsChef = $hdUser->hasRole("Chef d'Entreprise");
+    $hdCounts = $hdIsChef ? \App\Support\AdminQueue::counts($hdUser) : null;
 @endphp
 
 <header class="app-header">
     <div class="header-container">
+        @unless($hdIsChef)
         <button type="button" class="mobile-menu-btn" id="mobileMenuButton" aria-label="Ouvrir le menu" aria-controls="sidebar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
         </button>
+        @endunless
 
+        @if($hdIsChef)
+            <a href="{{ route('admin.dashboard') }}" class="hd-logo">Portail RH<b>+</b></a>
+            <nav class="hd-nav" aria-label="Navigation principale">
+                <a href="{{ route('admin.dashboard') }}" @if(Request::is('admin') || Request::is('admin/dashboard')) aria-current="page" @endif>
+                    À traiter{!! $hdCounts['total'] > 0 ? ' · ' . min($hdCounts['total'], 99) : '' !!}
+                </a>
+                <a href="{{ route('admin.conges.index') }}" @if(Request::is('admin/conges*')) aria-current="page" @endif>Congés</a>
+                <a href="{{ route('admin.absences.index') }}" @if(Request::is('admin/absences*')) aria-current="page" @endif>Absences</a>
+                <a href="{{ route('admin.requetes.index') }}" @if(Request::is('admin/requetes*')) aria-current="page" @endif>Mes requêtes</a>
+            </nav>
+        @else
         <div class="header-title">
             <span class="page-title">@yield('page-title', 'Tableau de bord')</span>
         </div>
+        @endif
 
         @if($hdSearch)
         <form class="hd-search" role="search" method="GET" action="{{ route('admin.personnels.index') }}">

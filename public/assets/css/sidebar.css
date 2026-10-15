@@ -121,6 +121,8 @@
     border-bottom: 1px solid var(--line-soft);
     font-family: var(--font);
 }
+/* Chef d'Entreprise : pas de sidebar (navbar du haut à la place) */
+body.no-sidebar .app-header { left: 0; }
 .header-container {
     height: 100%; display: flex; align-items: center; gap: 16px;
     padding: 0 32px; box-sizing: border-box;
@@ -137,6 +139,28 @@
     display: block; margin: 0;
     font-family: var(--font); font-size: 15px; font-weight: 700; color: var(--ink);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── Navbar du Chef d'Entreprise (pas de sidebar) — comme .rh-topnav côté employé ── */
+.hd-logo {
+    flex-shrink: 0; font-family: var(--display); font-weight: 800; font-size: 19px;
+    letter-spacing: -0.02em; color: var(--ink); text-decoration: none; white-space: nowrap;
+}
+.hd-logo b { color: var(--orange); }
+.hd-nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.hd-nav a {
+    height: 40px; padding: 0 16px; border-radius: 999px; display: flex; align-items: center;
+    color: var(--muted); font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap;
+}
+.hd-nav a:hover { background: var(--subtle); color: var(--ink); }
+.hd-nav a[aria-current="page"] { background: var(--brand-soft); color: var(--brand-dk); font-weight: 700; }
+@media (max-width: 1024px) {
+    .hd-logo { display: none; }
+    .hd-nav { gap: 2px; }
+    .hd-nav a { padding: 0 10px; font-size: 13px; }
+}
+@media (max-width: 640px) {
+    .hd-nav a { padding: 0 8px; }
 }
 
 .hd-search {

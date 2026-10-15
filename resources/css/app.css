@@ -320,6 +320,11 @@
     }
   }
 
+  /* Chef d'Entreprise : pas de sidebar, le contenu prend toute la largeur */
+  body.no-sidebar .main-content {
+    margin-left: 0 !important;
+  }
+
   /* App Main */
   .app-main {
     @apply flex-1 p-4 md:p-6;

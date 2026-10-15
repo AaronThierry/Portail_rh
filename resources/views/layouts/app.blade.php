@@ -46,12 +46,18 @@
 
     @yield('styles')
 </head>
-<body class="h-full font-sans antialiased">
+@php $laIsChef = auth()->check() && auth()->user()->hasRole("Chef d'Entreprise"); @endphp
+<body class="h-full font-sans antialiased @if($laIsChef) no-sidebar @endif">
     @include('partials.app-loader')
     @include('partials.pin-gate')
 
     <div class="app-layout">
-        @include('partials.sidebar')
+        {{-- Le Chef d'Entreprise n'a que 4 choses à faire : pas besoin d'une
+             sidebar complète, sa navigation tient dans la navbar du haut
+             (voir partials/header.blade.php), comme côté espace employé. --}}
+        @unless($laIsChef)
+            @include('partials.sidebar')
+        @endunless
 
         @include('partials.header')
 

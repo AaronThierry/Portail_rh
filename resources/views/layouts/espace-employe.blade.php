@@ -338,9 +338,9 @@
        ═══════════════════════════════════════════════════════════════════ */
     html.dark {
         color-scheme: dark;
-        --ink: #f1f5f9; --ink-2: #cbd5e1; --muted: #94a3b8; --faint: #64748b;
-        --line: #3d4b68; --line-soft: #273349; --page: #0a0f1a; --subtle: #131c2c;
-        --surface: #1b263b;
+        --ink: #f8fafc; --ink-2: #e2e8f0; --muted: #a8b6ca; --faint: #7489a6;
+        --line: #4f6085; --line-soft: #2f3e5c; --page: #060a13; --subtle: #141f33;
+        --surface: #202d47;
         --brand: #3b82f6; --brand-dk: #60a5fa; --brand-soft: rgba(59,130,246,.22); --brand-bg: rgba(59,130,246,.14);
         --orange: #fb923c; --orange-bg: rgba(251,146,60,.16); --orange-tx: #fdba74;
         --wait: #fbbf24; --wait-bg: rgba(251,191,36,.16);
@@ -350,7 +350,15 @@
         --info: #60a5fa; --info-bg: rgba(96,165,250,.16);
     }
     html.dark body { background: var(--page); }
-    html.dark .rh-top { background: rgba(11,18,32,.88); }
+    html.dark .rh-top { background: rgba(6,10,19,.9); }
+    html.dark .rh-card,
+    html.dark .rh-card-flat,
+    html.dark .rh-figure,
+    html.dark .bp-m,
+    html.dark .doc-folder,
+    html.dark .att-type {
+        box-shadow: 0 4px 16px rgba(0,0,0,.35), 0 0 0 1px var(--line-soft);
+    }
     html.dark .rh-menu,
     html.dark .rh-bottom,
     html.dark .rh-tabs a,

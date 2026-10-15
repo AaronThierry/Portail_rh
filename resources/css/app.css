@@ -88,6 +88,39 @@
     --transition: all 0.3s ease;
   }
 
+  /* ── Jetons « Direction B » — identiques à l'espace employé ──
+     Permet au shell admin (sidebar, header, dashboard) de partager
+     exactement la même palette claire/sombre que resources/views/layouts/espace-employe.blade.php,
+     sans toucher aux anciens tokens (--primary, --card-bg, …) encore utilisés
+     par les pages admin pas encore migrées. */
+  :root {
+    --brand: #2563eb; --brand-dk: #1d4ed8; --brand-soft: #dbeafe; --brand-bg: #eff6ff;
+    --orange: #ea580c; --orange-bg: #fff7ed; --orange-tx: #9a3412;
+    --ink: #0f172a; --ink-2: #334155; --muted: #475569; --faint: #94a3b8;
+    --line: #cbd5e1; --line-soft: #e2e8f0; --page: #f8fafc; --subtle: #f1f5f9;
+    --surface: #ffffff;
+    --wait: #b45309; --wait-bg: #fef3c7;
+    --ok: #047857; --ok-bg: #d1fae5;
+    --no: #b91c1c; --no-bg: #fee2e2;
+    --off: #475569; --off-bg: #f1f5f9;
+    --info: #1d4ed8; --info-bg: #dbeafe;
+    --radius: 16px; --radius-lg: 24px;
+    --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+    --display: 'Syne', 'DM Sans', sans-serif;
+  }
+  .dark {
+    --ink: #f8fafc; --ink-2: #e2e8f0; --muted: #a8b6ca; --faint: #7489a6;
+    --line: #4f6085; --line-soft: #2f3e5c; --page: #060a13; --subtle: #141f33;
+    --surface: #202d47;
+    --brand: #3b82f6; --brand-dk: #60a5fa; --brand-soft: rgba(59,130,246,.22); --brand-bg: rgba(59,130,246,.14);
+    --orange: #fb923c; --orange-bg: rgba(251,146,60,.16); --orange-tx: #fdba74;
+    --wait: #fbbf24; --wait-bg: rgba(251,191,36,.16);
+    --ok: #34d399; --ok-bg: rgba(52,211,153,.16);
+    --no: #f87171; --no-bg: rgba(248,113,113,.16);
+    --off: #94a3b8; --off-bg: rgba(148,163,184,.14);
+    --info: #60a5fa; --info-bg: rgba(96,165,250,.16);
+  }
+
   body {
     @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased;
     font-family: 'DM Sans', sans-serif;

@@ -2,23 +2,27 @@
 /* Syne · DM Sans · cursor glow · spring animations                          */
 
 :root {
-    --sb-ind:     #3b82f6;
-    --sb-ind-dk:  #1d4ed8;
-    --sb-ind-md:  #2563eb;
+    /* Jetons repris tels quels de la charte « Direction B » (espace employé) :
+       la sidebar bascule désormais clair/sombre avec le reste de l'app au lieu
+       d'être figée en sombre en permanence. */
+    --sb-ind:     var(--brand);
+    --sb-ind-dk:  var(--brand-dk);
+    --sb-ind-md:  var(--brand);
     --sb-teal:    #14b8a6;
     --sb-teal-dk: #0d9488;
-    --sb-red:     #ef4444;
-    --sb-amber:   #f59e0b;
-    --sb-green:   #10b981;
+    --sb-red:     var(--no);
+    --sb-amber:   var(--wait);
+    --sb-green:   var(--ok);
 
-    --sb-bg:      #0b1120;
-    --sb-bg2:     #111827;
-    --sb-bg3:     #1a2236;
-    --sb-text:    #e2e8f0;
-    --sb-text2:   #94a3b8;
-    --sb-text3:   #64748b;
-    --sb-border:  rgba(255,255,255,.07);
-    --sb-hover:   rgba(255,255,255,.04);
+    --sb-bg:      var(--surface);
+    --sb-bg2:     var(--subtle);
+    --sb-bg3:     var(--line-soft);
+    --sb-text:    var(--ink);
+    --sb-text2:   var(--muted);
+    --sb-text3:   var(--faint);
+    --sb-border:  var(--line-soft);
+    --sb-hover:   var(--sb-ov);
+    --sb-ov:      rgba(15,23,42,.045);
 
     --sb-w:       280px;
     --sb-cw:      72px;
@@ -110,7 +114,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e3a5f 100%);
+    background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 40%, #0d9488 100%);
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
@@ -479,8 +483,8 @@
 
 /* Hover */
 .nav-link:hover {
-    background: rgba(255,255,255,.05);
-    color: #fff;
+    background: var(--sb-ov);
+    color: var(--sb-text);
 }
 
 .nav-link:hover::before {
@@ -497,7 +501,7 @@
 
 .nav-link:hover .nav-link-text {
     transform: translateX(2px);
-    color: #fff;
+    color: var(--sb-text);
 }
 
 /* Active */
@@ -826,8 +830,7 @@
    DARK MODE
 ══════════════════════════════ */
 .dark .sidebar {
-    --sb-bg:  #070d1a;
-    --sb-bg2: #0d1525;
+    --sb-ov: rgba(255,255,255,.05);
 }
 
 /* ══════════════════════════════

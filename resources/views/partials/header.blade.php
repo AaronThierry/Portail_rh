@@ -184,18 +184,18 @@
 :root {
     --hdr-h: 70px;
     --hdr-bg: rgba(255,255,255,0.92);
-    --hdr-border: rgba(226,232,240,0.8);
-    --hdr-text:  #1e293b;
-    --hdr-text2: #64748b;
-    --hdr-btn-bg: #f1f5f9;
+    --hdr-border: var(--line-soft, rgba(226,232,240,0.8));
+    --hdr-text:  var(--ink, #1e293b);
+    --hdr-text2: var(--muted, #64748b);
+    --hdr-btn-bg: var(--subtle, #f1f5f9);
     --hdr-btn-hover: rgba(37,99,235,0.08);
     --hdr-shadow: 0 1px 0 rgba(0,0,0,.04), 0 4px 24px rgba(0,0,0,.04);
 }
 .dark {
     --hdr-bg: rgba(15,23,42,0.88);
-    --hdr-border: rgba(51,65,85,0.7);
-    --hdr-text:  #f1f5f9;
-    --hdr-text2: #94a3b8;
+    --hdr-border: var(--line-soft, rgba(51,65,85,0.7));
+    --hdr-text:  var(--ink, #f1f5f9);
+    --hdr-text2: var(--muted, #94a3b8);
     --hdr-btn-bg: rgba(255,255,255,0.06);
     --hdr-btn-hover: rgba(59,130,246,0.15);
     --hdr-shadow: 0 1px 0 rgba(0,0,0,.2), 0 4px 24px rgba(0,0,0,.25);

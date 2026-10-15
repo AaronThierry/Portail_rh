@@ -6,12 +6,12 @@
 <style>
     .bp-viewer { width: 100%; height: 70vh; min-height: 420px; border: 0; border-radius: var(--radius-lg); background: var(--subtle); box-shadow: 0 0 0 1px var(--line-soft); }
     .bp-mois { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-    .bp-m { display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 1px var(--line-soft); text-decoration: none; color: inherit; min-height: 88px; }
+    .bp-m { display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: var(--radius); background: var(--surface, #fff); box-shadow: 0 0 0 1px var(--line-soft); text-decoration: none; color: inherit; min-height: 88px; }
     a.bp-m:hover { box-shadow: 0 0 0 1.5px var(--brand); }
     .bp-m strong { font-size: 16px; }
     .bp-m span { font-size: 13px; color: var(--muted); }
-    .bp-m.vide { background: transparent; box-shadow: inset 0 0 0 1px var(--line-soft); }
-    .bp-m.vide strong { color: var(--faint); font-weight: 600; }
+    .bp-m.vide { background: var(--subtle, transparent); box-shadow: inset 0 0 0 1px var(--line-soft); }
+    .bp-m.vide strong { color: var(--muted); font-weight: 600; }
 </style>
 @endsection
 

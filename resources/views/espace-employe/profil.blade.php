@@ -8,6 +8,7 @@
     .pf-photo { position: relative; width: 88px; height: 88px; flex-shrink: 0; }
     .pf-photo img, .pf-photo .pf-init { width: 88px; height: 88px; border-radius: 999px; object-fit: cover; }
     .pf-photo .pf-init { display: flex; align-items: center; justify-content: center; background: var(--ink); color: #fff; font-family: var(--display); font-size: 30px; font-weight: 700; }
+    html.dark .pf-photo .pf-init { color: var(--page); }
     .pf-photo button { position: absolute; right: -2px; bottom: -2px; width: 36px; height: 36px; border-radius: 999px; border: 3px solid var(--page); background: var(--brand); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .pf-photo button svg { width: 16px; height: 16px; }
     .pf-grid { display: grid; gap: 28px; }

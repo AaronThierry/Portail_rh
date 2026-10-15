@@ -5,7 +5,7 @@
 @section('styles')
 <style>
     .att-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
-    .att-type { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 16px 16px 16px 48px; border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 1px var(--line); cursor: pointer; }
+    .att-type { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 16px 16px 16px 48px; border-radius: var(--radius); background: var(--surface, #fff); box-shadow: 0 0 0 1px var(--line); cursor: pointer; }
     .att-type input { position: absolute; left: 16px; top: 18px; width: 20px; height: 20px; accent-color: var(--brand); margin: 0; }
     .att-type strong { font-size: 15px; }
     .att-type span { font-size: 13px; color: var(--muted); }

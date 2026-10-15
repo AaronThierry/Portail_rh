@@ -14,14 +14,14 @@
     .as-chat-head span { font-size: 13px; color: var(--muted); }
     .as-msgs { display: flex; flex-direction: column; gap: 10px; padding: 16px 20px; height: 360px; overflow-y: auto; background: var(--page); }
     .as-b { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
-    .as-b.bot { align-self: flex-start; background: #fff; box-shadow: 0 0 0 1px var(--line-soft); border-bottom-left-radius: 6px; }
+    .as-b.bot { align-self: flex-start; background: var(--surface, #fff); box-shadow: 0 0 0 1px var(--line-soft); border-bottom-left-radius: 6px; }
     .as-b.user { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 6px; }
     .as-typing { display: none; align-self: flex-start; gap: 4px; padding: 14px; }
     .as-typing.on { display: flex; }
     .as-typing i { width: 7px; height: 7px; border-radius: 999px; background: var(--faint); animation: as-dot 1s infinite ease-in-out; }
     .as-typing i:nth-child(2) { animation-delay: .15s; } .as-typing i:nth-child(3) { animation-delay: .3s; }
     @keyframes as-dot { 0%, 80%, 100% { opacity: .3; } 40% { opacity: 1; } }
-    .as-bar { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line-soft); background: #fff; }
+    .as-bar { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line-soft); background: var(--surface, #fff); }
     .as-bar textarea { flex: 1; min-height: 48px; max-height: 120px; padding: 12px 16px; resize: none; border-radius: 24px; }
     .as-send { width: 48px; height: 48px; flex-shrink: 0; border: 0; border-radius: 999px; background: var(--brand); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .as-send[disabled] { opacity: .5; cursor: default; }

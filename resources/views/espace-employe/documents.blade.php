@@ -7,17 +7,17 @@
     .doc-folders { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
     .doc-folder {
         position: relative; display: flex; align-items: center; gap: 14px; padding: 16px; min-height: 76px;
-        background: #fff; border-radius: var(--radius); box-shadow: 0 0 0 1px var(--line-soft);
+        background: var(--surface, #fff); border-radius: var(--radius); box-shadow: 0 0 0 1px var(--line-soft);
         text-decoration: none; color: inherit;
     }
     .doc-folder:hover { box-shadow: 0 0 0 1.5px var(--brand); }
     .doc-folder-ico { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff; }
     .doc-folder-ico svg { width: 22px; height: 22px; }
     .doc-ext { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; flex-shrink: 0; background: var(--subtle); color: var(--ink-2); }
-    .doc-ext.pdf { background: #fee2e2; color: #b91c1c; }
-    .doc-ext.img { background: #ede9fe; color: #6d28d9; }
+    .doc-ext.pdf { background: var(--no-bg); color: var(--no); }
+    .doc-ext.img { background: var(--info-bg); color: var(--info); }
     .doc-ext.doc { background: var(--brand-soft); color: var(--brand-dk); }
-    .doc-ext.xls { background: #dcfce7; color: #15803d; }
+    .doc-ext.xls { background: var(--ok-bg); color: var(--ok); }
     .doc-search { position: relative; max-width: 360px; width: 100%; }
     .doc-search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--faint); pointer-events: none; }
     .doc-search .rh-input { padding-left: 44px; min-height: 44px; }

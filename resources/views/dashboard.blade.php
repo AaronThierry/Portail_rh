@@ -27,9 +27,9 @@
     --d-text:     #e2e8f0;
     --d-text2:    #94a3b8;
     --d-text3:    #4b6070;
-    --d-ind:      #6366f1;
-    --d-ind-d:    #4338ca;
-    --d-ind-l:    rgba(99,102,241,.12);
+    --d-ind:      #3b82f6;
+    --d-ind-d:    #1d4ed8;
+    --d-ind-l:    rgba(59,130,246,.12);
     --d-teal:     #14b8a6;
     --d-teal-l:   rgba(20,184,166,.12);
     --d-amb:      #f59e0b;
@@ -56,7 +56,7 @@
 /* ═══════════════════════ HERO ═══════════════════════ */
 .db-hero {
     position: relative; overflow: hidden;
-    background: linear-gradient(135deg, #312e81 0%, #4338ca 40%, #0d9488 100%);
+    background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 40%, #0d9488 100%);
     border-radius: 20px;
     padding: 44px 48px 40px;
     margin-bottom: 24px;
@@ -195,7 +195,7 @@
     content: ''; position: absolute;
     top: -30px; right: -20px;
     width: 110px; height: 110px; border-radius: 50%;
-    background: radial-gradient(circle, var(--db-kg, rgba(99,102,241,.07)) 0%, transparent 70%);
+    background: radial-gradient(circle, var(--db-kg, rgba(59,130,246,.07)) 0%, transparent 70%);
     pointer-events: none;
 }
 /* bottom bar slides in */
@@ -210,7 +210,7 @@
 .db-kpi:hover::after { transform: scaleX(1); }
 .db-kpi:hover .db-kpi-icon { transform: scale(1.1) rotate(-5deg); }
 
-.db-kpi-ind  { --db-kc: var(--d-ind);  --db-kg: rgba(99,102,241,.08); }
+.db-kpi-ind  { --db-kc: var(--d-ind);  --db-kg: rgba(59,130,246,.08); }
 .db-kpi-teal { --db-kc: var(--d-teal); --db-kg: rgba(20,184,166,.08); }
 .db-kpi-amb  { --db-kc: var(--d-amb);  --db-kg: rgba(245,158,11,.07); }
 .db-kpi-red  { --db-kc: var(--d-red);  --db-kg: rgba(239,68,68,.07); }
@@ -243,7 +243,7 @@
     white-space: nowrap;
 }
 .db-tag::before { content:''; width:4px; height:4px; border-radius:50%; flex-shrink:0; background:currentColor; opacity:.7; }
-.db-tag-ind  { background: var(--d-ind-l);  color: #818cf8; }
+.db-tag-ind  { background: var(--d-ind-l);  color: #60a5fa; }
 .db-tag-teal { background: var(--d-teal-l); color: #2dd4bf; }
 .db-tag-emer { background: var(--d-emer-l); color: #34d399; }
 .db-tag-red  { background: var(--d-red-l);  color: #f87171; }
@@ -277,7 +277,7 @@
     font-size: .62rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
 }
 .db-pill-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
-.db-pill-ind  { background: var(--d-ind-l);  color: #818cf8; border: 1px solid rgba(99,102,241,.2); }
+.db-pill-ind  { background: var(--d-ind-l);  color: #60a5fa; border: 1px solid rgba(59,130,246,.2); }
 .db-pill-teal { background: var(--d-teal-l); color: #2dd4bf; border: 1px solid rgba(20,184,166,.2); }
 
 /* ═══════════════════════ ACTIVITY TIMELINE ═══════════════════════ */
@@ -309,7 +309,7 @@
 }
 .db-tl-item:hover .db-tl-icon { transform: scale(1.12); }
 .db-tl-icon svg { width: 13px; height: 13px; }
-.db-tl-icon-ind  { background: var(--d-ind-l);  color: #818cf8; }
+.db-tl-icon-ind  { background: var(--d-ind-l);  color: #60a5fa; }
 .db-tl-icon-teal { background: var(--d-teal-l); color: #2dd4bf; }
 .db-tl-icon-emer { background: var(--d-emer-l); color: #34d399; }
 .db-tl-icon-red  { background: var(--d-red-l);  color: #f87171; }
@@ -345,11 +345,11 @@
 .db-sum-icon svg { width: 13px; height: 13px; }
 .db-sum-label { font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--d-text3); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .db-sum-val { font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--d-text); letter-spacing: -.02em; line-height: 1.1; }
-.db-sum-cell.c-ind  .db-sum-val { color: #818cf8; }
+.db-sum-cell.c-ind  .db-sum-val { color: #60a5fa; }
 .db-sum-cell.c-teal .db-sum-val { color: #2dd4bf; }
 .db-sum-cell.c-amb  .db-sum-val { color: #fbbf24; }
 .db-sum-cell.c-emer .db-sum-val { color: #34d399; }
-.db-sum-cell.c-ind  .db-sum-icon { background: var(--d-ind-l);  color: #818cf8; }
+.db-sum-cell.c-ind  .db-sum-icon { background: var(--d-ind-l);  color: #60a5fa; }
 .db-sum-cell.c-teal .db-sum-icon { background: var(--d-teal-l); color: #2dd4bf; }
 .db-sum-cell.c-amb  .db-sum-icon { background: var(--d-amb-l);  color: #fbbf24; }
 .db-sum-cell.c-emer .db-sum-icon { background: var(--d-emer-l); color: #34d399; }
@@ -393,7 +393,7 @@
 .db-ac-label { font-size: .8rem; font-weight: 700; color: var(--d-text); letter-spacing: -.01em; margin-bottom: 3px; line-height: 1.3; }
 .db-ac-desc  { font-size: .68rem; color: var(--d-text3); line-height: 1.5; }
 
-.db-ac-ind  { --db-ac-c: var(--d-ind);  --db-ac-rgb: 99,102,241; }
+.db-ac-ind  { --db-ac-c: var(--d-ind);  --db-ac-rgb: 59,130,246; }
 .db-ac-teal { --db-ac-c: var(--d-teal); --db-ac-rgb: 20,184,166; }
 .db-ac-amb  { --db-ac-c: var(--d-amb);  --db-ac-rgb: 245,158,11; }
 .db-ac-red  { --db-ac-c: var(--d-red);  --db-ac-rgb: 239,68,68; }
@@ -622,7 +622,7 @@
                 <div style="display:flex;align-items:center;gap:10px">
                     <div class="db-pills">
                         <div class="db-pill db-pill-ind">
-                            <div class="db-pill-dot" style="background:#6366f1"></div>Congés
+                            <div class="db-pill-dot" style="background:#3b82f6"></div>Congés
                         </div>
                         <div class="db-pill db-pill-teal">
                             <div class="db-pill-dot" style="background:#14b8a6"></div>Absences
@@ -885,8 +885,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* Gradients */
     const gInd = ctx.createLinearGradient(0, 0, 0, 220);
-    gInd.addColorStop(0, 'rgba(99,102,241,.65)');
-    gInd.addColorStop(1, 'rgba(99,102,241,.04)');
+    gInd.addColorStop(0, 'rgba(59,130,246,.65)');
+    gInd.addColorStop(1, 'rgba(59,130,246,.04)');
 
     const gTeal = ctx.createLinearGradient(0, 0, 0, 220);
     gTeal.addColorStop(0, 'rgba(20,184,166,.65)');
@@ -901,7 +901,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     label: 'Congés',
                     data: congesData,
                     backgroundColor: gInd,
-                    borderColor: 'rgba(99,102,241,.9)',
+                    borderColor: 'rgba(59,130,246,.9)',
                     borderWidth: 1.5,
                     borderRadius: 5,
                     borderSkipped: false,
@@ -927,7 +927,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: '#1e293b',
                     titleColor: '#e2e8f0',
                     bodyColor:  '#94a3b8',
-                    borderColor: 'rgba(99,102,241,.3)',
+                    borderColor: 'rgba(59,130,246,.3)',
                     borderWidth: 1,
                     padding: 12,
                     cornerRadius: 10,

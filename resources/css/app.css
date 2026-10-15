@@ -424,6 +424,10 @@
   .rh-timeline li:last-child .rail::after { display: none; }
   .rh-timeline .body { padding-bottom: 18px; display: flex; flex-direction: column; gap: 2px; }
 
+  .rh-empty { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .rh-empty strong { font-size: 16px; color: var(--ink); }
+  .rh-empty p { margin: 0; color: var(--muted); font-size: 14px; max-width: 42ch; }
+
   .rh-iconbtn {
     position: relative; width: 44px; height: 44px; border: 0; border-radius: 999px;
     background: transparent; color: var(--ink); display: flex; align-items: center; justify-content: center; cursor: pointer;

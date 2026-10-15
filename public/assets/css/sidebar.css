@@ -154,13 +154,30 @@ body.no-sidebar .app-header { left: 0; }
 }
 .hd-nav a:hover { background: var(--subtle); color: var(--ink); }
 .hd-nav a[aria-current="page"] { background: var(--brand-soft); color: var(--brand-dk); font-weight: 700; }
-@media (max-width: 1024px) {
-    .hd-logo { display: none; }
-    .hd-nav { gap: 2px; }
-    .hd-nav a { padding: 0 10px; font-size: 13px; }
+
+/* Mobile : la navbar du haut laisse place à une barre d'onglets en bas,
+   comme .rh-bottom côté espace employé (app mobile). */
+.hd-bottom {
+    display: none;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+    background: var(--surface); border-top: 1px solid var(--line-soft);
+    padding-bottom: env(safe-area-inset-bottom);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
-@media (max-width: 640px) {
-    .hd-nav a { padding: 0 8px; }
+.hd-bottom a {
+    height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    color: var(--muted); font-size: 11px; font-weight: 600; text-decoration: none;
+}
+.hd-bi { position: relative; width: 50px; height: 28px; border-radius: 999px; display: flex; align-items: center; justify-content: center; }
+.hd-bottom svg { width: 20px; height: 20px; }
+.hd-bi-dot { position: absolute; top: 2px; right: 10px; width: 7px; height: 7px; border-radius: 999px; background: var(--no); border: 1.5px solid var(--surface); }
+.hd-bottom a[aria-current="page"] { color: var(--ink); font-weight: 700; }
+.hd-bottom a[aria-current="page"] .hd-bi { background: var(--brand-soft); color: var(--brand-dk); }
+
+@media (max-width: 1024px) {
+    .hd-nav { display: none; }
+    body.no-sidebar .hd-bottom { display: grid; }
+    body.no-sidebar .app-main { padding-bottom: calc(60px + env(safe-area-inset-bottom) + 24px); }
 }
 
 .hd-search {

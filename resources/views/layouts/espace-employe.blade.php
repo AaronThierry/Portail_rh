@@ -127,7 +127,7 @@
         position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
         background: #fff; border-top: 1px solid var(--line-soft);
         padding-bottom: env(safe-area-inset-bottom);
-        display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+        display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
     }
     .rh-bottom a {
         height: var(--bottom-h); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
@@ -504,10 +504,7 @@
     <a href="{{ route('espace-employe.bulletins') }}" {{ $rhCur('documents') }}>
         <span class="rh-bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span>Documents
     </a>
-    <a href="{{ route('espace-employe.assistance') }}" {{ $rhCur('assistance') }}>
-        <span class="rh-bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Aide
-    </a>
-    <a href="{{ route('espace-employe.profil') }}" {{ $rhCur('profil') }}>
+    <a href="{{ route('espace-employe.profil') }}" @if(in_array($rhGroup, ['profil', 'assistance'])) aria-current="page" @endif>
         <span class="rh-bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>Profil
     </a>
 </nav>

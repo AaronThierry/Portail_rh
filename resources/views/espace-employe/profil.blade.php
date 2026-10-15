@@ -33,6 +33,8 @@
 @endphp
 
 <div class="rh-page">
+    @include('espace-employe.partials.tabs', ['section' => 'compte'])
+
     <section class="rh-head">
         <div class="pf-id">
             <div class="pf-photo">

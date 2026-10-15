@@ -61,6 +61,8 @@
 @endphp
 
 <div class="rh-page">
+    @include('espace-employe.partials.tabs', ['section' => 'compte'])
+
     <section class="rh-head">
         <div class="rh-head-txt">
             <h1 class="rh-h1">Assistance</h1>

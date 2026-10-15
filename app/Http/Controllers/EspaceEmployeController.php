@@ -97,7 +97,66 @@ class EspaceEmployeController extends Controller
             $activities = $activities->sortByDesc('date')->take(5)->values();
         }
 
-        return view('espace-employe.dashboard', compact('personnel', 'stats', 'activities'));
+        // ── Frise de l'année : un code par jour ouvré concerné ──
+        //    'c' = congé approuvé, 'a' = congé en attente de décision, 'x' = absence
+        $calendrier = [];
+        $aVenir = collect([]);
+        $dernierBulletin = null;
+
+        if ($personnel) {
+            $debutAnnee = now()->startOfYear();
+            $finAnnee   = now()->endOfYear();
+
+            $congesAnnee = Conge::forPersonnel($personnel->id)
+                ->whereIn('statut', ['en_attente', 'valide_chef', 'approuve'])
+                ->where('date_fin', '>=', $debutAnnee)
+                ->where('date_debut', '<=', $finAnnee)
+                ->with('typeConge')
+                ->get();
+
+            foreach ($congesAnnee as $conge) {
+                $code = $conge->statut === 'approuve' ? 'c' : 'a';
+                $jour = ($conge->date_debut->lt($debutAnnee) ? $debutAnnee : $conge->date_debut)->copy();
+                $fin  = ($conge->date_fin->gt($finAnnee) ? $finAnnee : $conge->date_fin)->copy();
+                for (; $jour->lte($fin); $jour->addDay()) {
+                    if (!$jour->isWeekend()) {
+                        $calendrier[$jour->format('Y-m-d')] = $code;
+                    }
+                }
+            }
+
+            Absence::forPersonnel($personnel->id)
+                ->whereYear('date_absence', now()->year)
+                ->whereNotIn('statut', ['refusee', 'annulee'])
+                ->pluck('date_absence')
+                ->each(function ($date) use (&$calendrier) {
+                    $calendrier[Carbon::parse($date)->format('Y-m-d')] ??= 'x';
+                });
+
+            // Prochains congés (à venir ou en cours)
+            $aVenir = $congesAnnee
+                ->merge(
+                    Conge::forPersonnel($personnel->id)
+                        ->whereIn('statut', ['en_attente', 'valide_chef', 'approuve'])
+                        ->where('date_debut', '>', $finAnnee)
+                        ->with('typeConge')
+                        ->get()
+                )
+                ->filter(fn ($c) => $c->date_fin->gte(now()->startOfDay()))
+                ->sortBy('date_debut')
+                ->take(3)
+                ->values();
+
+            $dernierBulletin = BulletinPaie::where('personnel_id', $personnel->id)
+                ->visibleEmploye()
+                ->orderBy('annee', 'desc')
+                ->orderBy('mois', 'desc')
+                ->first();
+        }
+
+        return view('espace-employe.dashboard', compact(
+            'personnel', 'stats', 'activities', 'soldeConges', 'calendrier', 'aVenir', 'dernierBulletin'
+        ));
     }
 
     /**
@@ -115,7 +174,9 @@ class EspaceEmployeController extends Controller
 
         $personnel->load(['entreprise', 'departement', 'service']);
 
-        return view('espace-employe.profil', compact('personnel'));
+        $soldeConges = Conge::getSolde($personnel->id, now()->year, $personnel->entreprise_id);
+
+        return view('espace-employe.profil', compact('personnel', 'soldeConges'));
     }
 
     /**
@@ -381,7 +442,13 @@ class EspaceEmployeController extends Controller
         $user = Auth::user();
         $personnel = $user->personnel;
 
-        return view('espace-employe.attestations', compact('personnel'));
+        // Les demandes d'attestation passent par le circuit des requêtes (traitées par la RH)
+        $demandesAttestation = Requete::where('user_id', $user->id)
+            ->where('sujet', 'like', 'Demande d\'attestation%')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('espace-employe.attestations', compact('personnel', 'demandesAttestation'));
     }
 
     /**

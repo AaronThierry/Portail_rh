@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Personnel;
 use App\Mail\UserCredentialsMail;
@@ -54,7 +56,22 @@ class UserController extends Controller
                     'errors' => $validator->errors()
                 ], 422);
             }
-            return back()->withErrors($validator)->withInput();
+            return back()->withErrors($validator)->withInput($request->only('courrier', 'remember'));
+        }
+
+        // Limitation des tentatives : 5 essais par adresse e-mail et par IP,
+        // puis blocage de 5 minutes (protection contre les attaques par force brute)
+        $throttleKey = Str::lower((string) $request->courrier) . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $minutes = (int) ceil(RateLimiter::availableIn($throttleKey) / 60);
+            $message = 'Trop de tentatives de connexion. Réessayez dans ' . $minutes . ' minute' . ($minutes > 1 ? 's' : '') . '.';
+
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => $message], 429);
+            }
+
+            return back()->withErrors(['courrier' => $message])->withInput($request->only('courrier', 'remember'));
         }
 
         // Tentative de connexion
@@ -65,6 +82,8 @@ class UserController extends Controller
 
         // Tentative d'authentification
         if (Auth::attempt($credentials, $request->filled('remember'))) {
+            RateLimiter::clear($throttleKey);
+
             // Régénération de la session pour sécurité
             $request->session()->regenerate();
 
@@ -129,7 +148,9 @@ class UserController extends Controller
             return redirect()->to($redirectRoute)->with('success', 'Connexion réussie !');
         }
 
-        // Échec de l'authentification
+        // Échec de l'authentification : on compte la tentative (expire après 5 minutes)
+        RateLimiter::hit($throttleKey, 300);
+
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => false,
@@ -139,7 +160,7 @@ class UserController extends Controller
 
         return back()->withErrors([
             'courrier' => 'E-mail ou mot de passe incorrect',
-        ])->withInput();
+        ])->withInput($request->only('courrier', 'remember'));
     }
 
     /**

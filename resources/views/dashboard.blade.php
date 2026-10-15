@@ -13,32 +13,41 @@
 @section('styles')
 <style>
 /* ═══════════════════════════════════════════════════════════════════
-   DASHBOARD — Indigo × Teal · Precision Dark Design System
+   DASHBOARD — charte « Direction B » (bleu), clair/sombre
    Syne (display) · DM Sans (body) · DM Mono (data)
    ═══════════════════════════════════════════════════════════════════ */
 
 :root {
-    --d-bg:       #0b1120;
-    --d-surf:     #111827;
-    --d-surf2:    #1a2332;
-    --d-surf3:    #1f2d3f;
-    --d-bdr:      rgba(255,255,255,.07);
-    --d-bdr2:     rgba(255,255,255,.12);
-    --d-text:     #e2e8f0;
-    --d-text2:    #94a3b8;
-    --d-text3:    #4b6070;
-    --d-ind:      #3b82f6;
-    --d-ind-d:    #1d4ed8;
-    --d-ind-l:    rgba(59,130,246,.12);
+    /* Jetons repris de la charte « Direction B » (espace employé) : la page
+       bascule désormais clair/sombre avec le reste de l'app au lieu d'être
+       figée en sombre en permanence. */
+    --d-bg:       var(--page);
+    --d-surf:     var(--surface);
+    --d-surf2:    var(--subtle);
+    --d-surf3:    var(--line-soft);
+    --d-bdr:      var(--line-soft);
+    --d-bdr2:     var(--line);
+    --d-text:     var(--ink);
+    --d-text2:    var(--muted);
+    --d-text3:    var(--faint);
+    --d-ind:      var(--brand);
+    --d-ind-d:    var(--brand-dk);
+    --d-ind-l:    var(--brand-bg);
+    --d-ind-tx:   var(--brand-dk);
     --d-teal:     #14b8a6;
-    --d-teal-l:   rgba(20,184,166,.12);
-    --d-amb:      #f59e0b;
-    --d-amb-l:    rgba(245,158,11,.12);
-    --d-red:      #ef4444;
-    --d-red-l:    rgba(239,68,68,.12);
-    --d-emer:     #10b981;
-    --d-emer-l:   rgba(16,185,129,.12);
+    --d-teal-l:   rgba(20,184,166,.10);
+    --d-teal-tx:  #0f766e;
+    --d-amb:      var(--wait);
+    --d-amb-l:    var(--wait-bg);
+    --d-red:      var(--no);
+    --d-red-l:    var(--no-bg);
+    --d-emer:     var(--ok);
+    --d-emer-l:   var(--ok-bg);
     --d-r:        14px;
+}
+.dark {
+    --d-teal-l:  rgba(45,212,191,.16);
+    --d-teal-tx: #2dd4bf;
 }
 
 /* ── Page ── */
@@ -163,10 +172,10 @@
 .db-alert-icon { color: var(--d-amb); flex-shrink: 0; }
 .db-alert-icon svg { width: 17px; height: 17px; display: block; }
 .db-alert-text { flex: 1; font-size: .78rem; color: var(--d-text2); line-height: 1.5; }
-.db-alert-text strong { color: #fbbf24; font-weight: 700; }
+.db-alert-text strong { color: var(--d-amb); font-weight: 700; }
 .db-alert-links { display: flex; gap: 8px; flex-shrink: 0; }
 .db-alert-link {
-    font-size: .72rem; font-weight: 700; color: #fbbf24; text-decoration: none; white-space: nowrap;
+    font-size: .72rem; font-weight: 700; color: var(--d-amb); text-decoration: none; white-space: nowrap;
     padding: 6px 13px; background: rgba(245,158,11,.12);
     border-radius: 8px; transition: background .2s;
 }
@@ -243,12 +252,12 @@
     white-space: nowrap;
 }
 .db-tag::before { content:''; width:4px; height:4px; border-radius:50%; flex-shrink:0; background:currentColor; opacity:.7; }
-.db-tag-ind  { background: var(--d-ind-l);  color: #60a5fa; }
-.db-tag-teal { background: var(--d-teal-l); color: #2dd4bf; }
-.db-tag-emer { background: var(--d-emer-l); color: #34d399; }
-.db-tag-red  { background: var(--d-red-l);  color: #f87171; }
-.db-tag-amb  { background: var(--d-amb-l);  color: #fbbf24; }
-.db-tag-gray { background: rgba(100,116,139,.1); color: #64748b; }
+.db-tag-ind  { background: var(--d-ind-l);  color: var(--d-ind-tx); }
+.db-tag-teal { background: var(--d-teal-l); color: var(--d-teal-tx); }
+.db-tag-emer { background: var(--d-emer-l); color: var(--d-emer); }
+.db-tag-red  { background: var(--d-red-l);  color: var(--d-red); }
+.db-tag-amb  { background: var(--d-amb-l);  color: var(--d-amb); }
+.db-tag-gray { background: var(--d-surf2); color: var(--d-text2); }
 
 /* ═══════════════════════ MAIN GRID ═══════════════════════ */
 .db-main { display: grid; grid-template-columns: 5fr 3fr; gap: 14px; margin-bottom: 14px; }
@@ -277,8 +286,8 @@
     font-size: .62rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
 }
 .db-pill-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
-.db-pill-ind  { background: var(--d-ind-l);  color: #60a5fa; border: 1px solid rgba(59,130,246,.2); }
-.db-pill-teal { background: var(--d-teal-l); color: #2dd4bf; border: 1px solid rgba(20,184,166,.2); }
+.db-pill-ind  { background: var(--d-ind-l);  color: var(--d-ind-tx);  border: 1px solid rgba(59,130,246,.2); }
+.db-pill-teal { background: var(--d-teal-l); color: var(--d-teal-tx); border: 1px solid rgba(20,184,166,.2); }
 
 /* ═══════════════════════ ACTIVITY TIMELINE ═══════════════════════ */
 .db-timeline { flex: 1; overflow-y: auto; padding: 8px 0; scrollbar-width: thin; scrollbar-color: var(--d-bdr) transparent; }
@@ -309,11 +318,11 @@
 }
 .db-tl-item:hover .db-tl-icon { transform: scale(1.12); }
 .db-tl-icon svg { width: 13px; height: 13px; }
-.db-tl-icon-ind  { background: var(--d-ind-l);  color: #60a5fa; }
-.db-tl-icon-teal { background: var(--d-teal-l); color: #2dd4bf; }
-.db-tl-icon-emer { background: var(--d-emer-l); color: #34d399; }
-.db-tl-icon-red  { background: var(--d-red-l);  color: #f87171; }
-.db-tl-icon-amb  { background: var(--d-amb-l);  color: #fbbf24; }
+.db-tl-icon-ind  { background: var(--d-ind-l);  color: var(--d-ind-tx); }
+.db-tl-icon-teal { background: var(--d-teal-l); color: var(--d-teal-tx); }
+.db-tl-icon-emer { background: var(--d-emer-l); color: var(--d-emer); }
+.db-tl-icon-red  { background: var(--d-red-l);  color: var(--d-red); }
+.db-tl-icon-amb  { background: var(--d-amb-l);  color: var(--d-amb); }
 
 .db-tl-body { flex: 1; min-width: 0; }
 .db-tl-title { font-size: .78rem; font-weight: 600; color: var(--d-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
@@ -345,15 +354,15 @@
 .db-sum-icon svg { width: 13px; height: 13px; }
 .db-sum-label { font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--d-text3); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .db-sum-val { font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--d-text); letter-spacing: -.02em; line-height: 1.1; }
-.db-sum-cell.c-ind  .db-sum-val { color: #60a5fa; }
-.db-sum-cell.c-teal .db-sum-val { color: #2dd4bf; }
-.db-sum-cell.c-amb  .db-sum-val { color: #fbbf24; }
-.db-sum-cell.c-emer .db-sum-val { color: #34d399; }
-.db-sum-cell.c-ind  .db-sum-icon { background: var(--d-ind-l);  color: #60a5fa; }
-.db-sum-cell.c-teal .db-sum-icon { background: var(--d-teal-l); color: #2dd4bf; }
-.db-sum-cell.c-amb  .db-sum-icon { background: var(--d-amb-l);  color: #fbbf24; }
-.db-sum-cell.c-emer .db-sum-icon { background: var(--d-emer-l); color: #34d399; }
-.db-sum-cell:not([class*="c-"]) .db-sum-icon { background: rgba(100,116,139,.1); color: #64748b; }
+.db-sum-cell.c-ind  .db-sum-val { color: var(--d-ind-tx); }
+.db-sum-cell.c-teal .db-sum-val { color: var(--d-teal-tx); }
+.db-sum-cell.c-amb  .db-sum-val { color: var(--d-amb); }
+.db-sum-cell.c-emer .db-sum-val { color: var(--d-emer); }
+.db-sum-cell.c-ind  .db-sum-icon { background: var(--d-ind-l);  color: var(--d-ind-tx); }
+.db-sum-cell.c-teal .db-sum-icon { background: var(--d-teal-l); color: var(--d-teal-tx); }
+.db-sum-cell.c-amb  .db-sum-icon { background: var(--d-amb-l);  color: var(--d-amb); }
+.db-sum-cell.c-emer .db-sum-icon { background: var(--d-emer-l); color: var(--d-emer); }
+.db-sum-cell:not([class*="c-"]) .db-sum-icon { background: var(--d-surf2); color: var(--d-text2); }
 
 /* ═══════════════════════ QUICK ACTIONS ═══════════════════════ */
 .db-actions-grid {
@@ -691,7 +700,7 @@
     <div class="db-summary">
         <div class="db-sum-inner">
             <div class="db-sum-cell">
-                <div class="db-sum-icon" style="background:rgba(100,116,139,.1);color:#64748b">
+                <div class="db-sum-icon" style="background:var(--d-surf2);color:var(--d-text2)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
                     </svg>
@@ -700,7 +709,7 @@
                 <div class="db-sum-val">{{ $statsConges['total'] }}</div>
             </div>
             <div class="db-sum-cell">
-                <div class="db-sum-icon" style="background:rgba(100,116,139,.1);color:#64748b">
+                <div class="db-sum-icon" style="background:var(--d-surf2);color:var(--d-text2)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
                     </svg>
@@ -739,7 +748,7 @@
                 </div>
             </div>
             <div class="db-sum-cell">
-                <div class="db-sum-icon" style="background:rgba(100,116,139,.1);color:#64748b">
+                <div class="db-sum-icon" style="background:var(--d-surf2);color:var(--d-text2)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/>
                     </svg>
@@ -883,6 +892,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const absencesData = @json($absencesParMois);
     const ctx = canvas.getContext('2d');
 
+    /* Couleurs lues depuis les variables du thème courant (clair/sombre),
+       pour que le graphique Chart.js (rendu sur canvas, pas en CSS) suive
+       la même palette que le reste de la page. */
+    const isDark = document.documentElement.classList.contains('dark');
+    const cs = getComputedStyle(document.documentElement);
+    const v = (name, fallback) => (cs.getPropertyValue(name) || '').trim() || fallback;
+    const cInk    = v('--ink',    isDark ? '#f8fafc' : '#0f172a');
+    const cMuted  = v('--muted',  isDark ? '#a8b6ca' : '#475569');
+    const cSurf   = v('--surface', isDark ? '#202d47' : '#ffffff');
+    const gridColor = isDark ? 'rgba(255,255,255,.06)' : 'rgba(15,23,42,.06)';
+
     /* Gradients */
     const gInd = ctx.createLinearGradient(0, 0, 0, 220);
     gInd.addColorStop(0, 'rgba(59,130,246,.65)');
@@ -924,9 +944,9 @@ document.addEventListener('DOMContentLoaded', function() {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#1e293b',
-                    titleColor: '#e2e8f0',
-                    bodyColor:  '#94a3b8',
+                    backgroundColor: cSurf,
+                    titleColor: cInk,
+                    bodyColor:  cMuted,
                     borderColor: 'rgba(59,130,246,.3)',
                     borderWidth: 1,
                     padding: 12,
@@ -942,17 +962,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     grid: { display: false },
                     border: { display: false },
                     ticks: {
-                        color: '#4b6070',
+                        color: cMuted,
                         font: { size: 10, weight: '600', family: "'DM Sans',sans-serif" },
                         maxRotation: 0,
                     }
                 },
                 y: {
                     beginAtZero: true,
-                    grid: { color: 'rgba(255,255,255,.05)', drawBorder: false },
+                    grid: { color: gridColor, drawBorder: false },
                     border: { display: false },
                     ticks: {
-                        color: '#4b6070',
+                        color: cMuted,
                         font: { size: 10, family: "'DM Mono',monospace" },
                         stepSize: 1, precision: 0, padding: 6,
                     }

@@ -63,7 +63,7 @@
     $peutRefuserSeulement = $selection && !$estChef && $selection->statut === 'en_attente';
 @endphp
 
-<div class="rh-wrap rh-page" style="max-width:1200px">
+<div class="rh-wrap rh-page">
 
     @if(session('success'))
         <div class="rh-alert ok" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>{{ session('success') }}</span></div>

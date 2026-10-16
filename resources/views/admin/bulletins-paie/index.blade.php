@@ -36,15 +36,22 @@
     .bp-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .bp-toolbar .rh-input { max-width: 300px; min-height: 44px; }
 
-    /* ── Liste ── */
-    .bp-item { display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-top: 1px solid var(--line-soft); }
-    .bp-item:first-child { border-top: 0; }
-    .bp-item:hover { background: var(--page); }
-    .bp-av { width: 40px; height: 40px; border-radius: 999px; flex-shrink: 0; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 700; font-size: 13px; }
+    /* ── Tableau ── */
+    .bp-table-wrap { overflow-x: auto; }
+    .bp-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .bp-table thead th {
+        padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700; color: var(--faint);
+        text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; border-bottom: 1px solid var(--line-soft);
+    }
+    .bp-table tbody tr { border-top: 1px solid var(--line-soft); }
+    .bp-table tbody tr:first-child { border-top: 0; }
+    .bp-table tbody tr:hover { background: var(--page); }
+    .bp-table tbody td { padding: 11px 16px; color: var(--ink); vertical-align: middle; white-space: nowrap; }
+    .bp-person { display: flex; align-items: center; gap: 12px; }
+    .bp-av { width: 36px; height: 36px; border-radius: 999px; flex-shrink: 0; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 700; font-size: 12px; }
     .dark .bp-av { color: var(--page); }
-    .bp-item-main { flex: 1; min-width: 0; }
-    .bp-item-name { font-weight: 600; display: block; line-height: 1.3; }
-    .bp-item-meta { font-size: 12.5px; color: var(--faint); }
+    .bp-pname { font-weight: 600; display: block; line-height: 1.3; }
+    .bp-pmat { font-size: 12px; color: var(--faint); display: block; }
     .bp-act { width: 34px; height: 34px; border-radius: 10px; border: 0; background: transparent; color: var(--muted); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
     .bp-act svg { width: 16px; height: 16px; }
     .bp-act:hover { background: var(--subtle); color: var(--ink); }
@@ -158,34 +165,56 @@
         </div>
 
         <div class="rh-card-flat">
-            @forelse($bulletins as $bulletin)
-                @php
-                    $initials = collect(explode(' ', $bulletin->personnel->nom_complet))->take(2)->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))->implode('');
-                @endphp
-                <div class="bp-item">
-                    <span class="bp-av" aria-hidden="true">{{ $initials }}</span>
-                    <div class="bp-item-main">
-                        <span class="bp-item-name">{{ $bulletin->personnel->nom_complet }}</span>
-                        <span class="bp-item-meta">
-                            {{ $bulletin->personnel->matricule }} · {{ $bulletin->fichier_taille_formatee }}
-                            @if($bulletin->salaire_net) · {{ number_format($bulletin->salaire_net, 0, ',', ' ') }} FCFA net @endif
-                        </span>
-                    </div>
-                    <span class="rh-badge info">{{ $bulletin->mois_court }} {{ $bulletin->annee }}</span>
-                    <a href="{{ route('admin.bulletins-paie.preview', $bulletin) }}" target="_blank" class="bp-act" title="Aperçu">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                    </a>
-                    <a href="{{ route('admin.bulletins-paie.download', $bulletin) }}" class="bp-act" title="Télécharger">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    </a>
-                    <form method="POST" action="{{ route('admin.bulletins-paie.destroy', $bulletin) }}" onsubmit="return confirm('Supprimer ce bulletin ?')">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="bp-act del" title="Supprimer">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-                        </button>
-                    </form>
-                </div>
-            @empty
+            @if($bulletins->count() > 0)
+            <div class="bp-table-wrap">
+                <table class="bp-table">
+                    <thead>
+                        <tr>
+                            <th>Employé</th>
+                            <th>Période</th>
+                            <th>Taille</th>
+                            <th>Salaire net</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($bulletins as $bulletin)
+                            @php
+                                $initials = collect(explode(' ', $bulletin->personnel->nom_complet))->take(2)->map(fn($w) => mb_strtoupper(mb_substr($w, 0, 1)))->implode('');
+                            @endphp
+                            <tr>
+                                <td>
+                                    <div class="bp-person">
+                                        <span class="bp-av" aria-hidden="true">{{ $initials }}</span>
+                                        <div>
+                                            <span class="bp-pname">{{ $bulletin->personnel->nom_complet }}</span>
+                                            <span class="bp-pmat">{{ $bulletin->personnel->matricule }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="rh-badge info">{{ $bulletin->mois_court }} {{ $bulletin->annee }}</span></td>
+                                <td>{{ $bulletin->fichier_taille_formatee }}</td>
+                                <td>{{ $bulletin->salaire_net ? number_format($bulletin->salaire_net, 0, ',', ' ') . ' FCFA' : '—' }}</td>
+                                <td>
+                                    <a href="{{ route('admin.bulletins-paie.preview', $bulletin) }}" target="_blank" class="bp-act" title="Aperçu">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </a>
+                                    <a href="{{ route('admin.bulletins-paie.download', $bulletin) }}" class="bp-act" title="Télécharger">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    </a>
+                                    <form method="POST" action="{{ route('admin.bulletins-paie.destroy', $bulletin) }}" onsubmit="return confirm('Supprimer ce bulletin ?')" style="display:inline">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="bp-act del" title="Supprimer">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @else
                 <div class="rh-empty">
                     <strong>Aucun bulletin trouvé</strong>
                     <p>
@@ -197,7 +226,7 @@
                     </p>
                     <button type="button" class="rh-btn" onclick="openUploadModal()">Ajouter un bulletin</button>
                 </div>
-            @endforelse
+            @endif
         </div>
 
         @if($bulletins->hasPages())

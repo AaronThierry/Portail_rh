@@ -308,11 +308,12 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
         $request->validate([
             'fichier_zip'   => ['required', 'file', 'mimes:zip', 'max:102400'],
             'entreprise_id' => ['required', 'exists:entreprises,id'],
-            'notifier'      => ['nullable', 'boolean'],
             'overrides'     => ['nullable', 'string', 'max:20000'],
         ]);
         $entrepriseId = (int) $request->entreprise_id;
-        $notifier     = (bool) $request->input('notifier', false);
+        // Chaque employé est notifié (push + WhatsApp) dès que son bulletin est importé,
+        // comme pour l'ajout d'un bulletin unique — plus d'option pour le désactiver.
+        $notifier     = true;
         $zip          = $request->file('fichier_zip');
         $zipPath      = $zip->store('imports/bulletins/zips', 'local');
 

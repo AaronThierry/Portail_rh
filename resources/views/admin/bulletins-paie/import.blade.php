@@ -82,7 +82,7 @@
     <section class="rh-head">
         <div class="rh-head-txt">
             <h1 class="rh-h1">Import en lot de bulletins</h1>
-            <p class="rh-lead">Chargez un ZIP contenant vos PDF — le système identifie chaque bulletin par numéro de police (ou matricule) et vous demande de confirmer manuellement ceux qu'il ne reconnaît pas.</p>
+            <p class="rh-lead">Chargez un ZIP contenant vos PDF — le système identifie chaque bulletin par numéro de police (ou matricule) et vous demande de confirmer manuellement ceux qu'il ne reconnaît pas. Chaque employé reçoit automatiquement une notification (notification push et WhatsApp) dès que son bulletin est importé.</p>
         </div>
         <div class="rh-actions">
             <a href="{{ route('admin.bulletins-paie.index') }}" class="rh-link">Retour aux bulletins</a>
@@ -118,12 +118,6 @@
                             <option value="{{ $ent->id }}">{{ $ent->nom }}</option>
                         @endforeach
                     </select>
-                </div>
-                <div class="rh-field" style="justify-content:flex-end">
-                    <label style="display:flex; align-items:center; gap:10px; font-weight:400; cursor:pointer">
-                        <input type="checkbox" id="notifierCheck">
-                        <span><strong>Notifier les employés</strong> après import (WhatsApp)</span>
-                    </label>
                 </div>
                 <div class="bi-drop" id="dropZone">
                     <input type="file" id="fichierZip" accept=".zip">
@@ -227,7 +221,7 @@
     @csrf
     <input type="file" name="fichier_zip" id="hiddenZipInput">
     <input type="hidden" name="entreprise_id" id="hiddenEntrepriseId">
-    <input type="hidden" name="notifier" id="hiddenNotifier" value="0">
+    <input type="hidden" name="notifier" id="hiddenNotifier" value="1">
     <input type="hidden" name="overrides" id="hiddenOverrides" value="{}">
 </form>
 @endsection
@@ -245,7 +239,6 @@ const fileNameEl    = document.getElementById('fileName');
 const fileSizeEl    = document.getElementById('fileSize');
 const pdfCountBadge = document.getElementById('pdfCountBadge');
 const entrepriseEl  = document.getElementById('entreprise_id');
-const notifierEl    = document.getElementById('notifierCheck');
 const analyserBtn   = document.getElementById('analyserBtn');
 const analyseMsg    = document.getElementById('analyseMsg');
 const phasePreview  = document.getElementById('phasePreview');
@@ -258,7 +251,6 @@ const nfAlertText   = document.getElementById('nfAlertText');
 const importForm    = document.getElementById('importForm');
 const hiddenZipInput= document.getElementById('hiddenZipInput');
 const hiddenEnt     = document.getElementById('hiddenEntrepriseId');
-const hiddenNotif   = document.getElementById('hiddenNotifier');
 const hiddenOverrides = document.getElementById('hiddenOverrides');
 const stepEls       = [document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3')];
 
@@ -491,7 +483,6 @@ lancerBtn.addEventListener('click', () => {
     const dt = new DataTransfer(); dt.items.add(currentFile);
     hiddenZipInput.files = dt.files;
     hiddenEnt.value = entrepriseEl.value;
-    hiddenNotif.value = notifierEl.checked ? '1' : '0';
     hiddenOverrides.value = JSON.stringify(overrides);
     importForm.submit();
 });

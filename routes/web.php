@@ -309,11 +309,26 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
             'fichier_zip'   => ['required', 'file', 'mimes:zip', 'max:102400'],
             'entreprise_id' => ['required', 'exists:entreprises,id'],
             'notifier'      => ['nullable', 'boolean'],
+            'overrides'     => ['nullable', 'string', 'max:20000'],
         ]);
         $entrepriseId = (int) $request->entreprise_id;
         $notifier     = (bool) $request->input('notifier', false);
         $zip          = $request->file('fichier_zip');
         $zipPath      = $zip->store('imports/bulletins/zips', 'local');
+
+        // Affectations manuelles décidées à l'étape de prévisualisation (fichier => personnel_id|"skip"),
+        // pour les bulletins que la police/le matricule n'ont pas permis d'associer automatiquement.
+        $overrides = [];
+        if ($request->filled('overrides')) {
+            $decoded = json_decode($request->input('overrides'), true);
+            if (is_array($decoded)) {
+                foreach ($decoded as $fichier => $val) {
+                    if ($val === 'skip' || (is_numeric($val) && (int) $val > 0)) {
+                        $overrides[(string) $fichier] = $val === 'skip' ? 'skip' : (int) $val;
+                    }
+                }
+            }
+        }
 
         $import = \App\Models\BulletinImport::create([
             'entreprise_id' => $entrepriseId,
@@ -324,7 +339,7 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
 
         try {
             $svc    = new \App\Services\BulletinImportServiceFix();
-            $result = $svc->processZip($zip, $entrepriseId, \Illuminate\Support\Facades\Auth::id(), $notifier);
+            $result = $svc->processZip($zip, $entrepriseId, \Illuminate\Support\Facades\Auth::id(), $notifier, $overrides);
 
             $statut = 'termine';
             if (!empty($result['erreurs']) && $result['succes'] === 0) $statut = 'echec';
@@ -373,24 +388,17 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
                 $rows[] = ['fichier' => $filename, 'police' => $police, 'nom' => $nom, 'periode' => null, 'personnel' => null, 'doublon' => false, 'statut' => 'parse_error', 'raison' => 'Date invalide.'];
                 continue;
             }
-            // Recherche par police (avec fallback si colonne absente)
+            // Recherche exacte uniquement (police puis matricule) — un nom seul ne suffit pas
+            // à identifier un employé ici, trop de risque d'erreur. Si rien ne correspond,
+            // l'admin devra affecter le fichier manuellement en prévisualisation.
             $personnel = null;
             try {
                 $personnel = \App\Models\Personnel::where('police', $police)->where('entreprise_id', $entrepriseId)->first();
             } catch (\Exception $e) {}
-            // Fallback par nom si police introuvable
-            if (!$personnel && trim($nom) !== '') {
-                $nameParts = array_filter(explode(' ', trim($nom)), fn($p) => strlen($p) >= 3);
-                if ($nameParts) {
-                    $personnel = \App\Models\Personnel::where('entreprise_id', $entrepriseId)
-                        ->where(function ($q) use ($nameParts) {
-                            foreach ($nameParts as $p) {
-                                $q->where(function ($qq) use ($p) {
-                                    $qq->where('nom', 'like', "%{$p}%")->orWhere('prenoms', 'like', "%{$p}%");
-                                });
-                            }
-                        })->first();
-                }
+            if (!$personnel) {
+                try {
+                    $personnel = \App\Models\Personnel::where('matricule', $police)->where('entreprise_id', $entrepriseId)->first();
+                } catch (\Exception $e) {}
             }
             $doublon = false;
             if ($personnel) {

@@ -20,7 +20,12 @@ class BulletinImportServiceFix
         'total' => 0, 'succes' => 0, 'doublons' => 0, 'erreurs' => [], 'bulletins_ids' => [],
     ];
 
-    public function processZip(UploadedFile $zip, int $entrepriseId, int $uploadedBy, bool $notifier = true): array
+    /**
+     * @param array<string,int|string> $overrides Correspondance manuelle décidée en prévisualisation :
+     *   nom de fichier => id personnel (affectation manuelle) ou "skip" (fichier à ignorer).
+     *   Prioritaire sur le repérage automatique par police/matricule.
+     */
+    public function processZip(UploadedFile $zip, int $entrepriseId, int $uploadedBy, bool $notifier = true, array $overrides = []): array
     {
         $this->result = ['total' => 0, 'succes' => 0, 'doublons' => 0, 'erreurs' => [], 'bulletins_ids' => []];
 
@@ -40,7 +45,7 @@ class BulletinImportServiceFix
             $this->result['total'] = count($pdfs);
 
             foreach ($pdfs as $pdfPath) {
-                $this->traiterPdf($pdfPath, $entrepriseId, $uploadedBy, $salaires, $notifier);
+                $this->traiterPdf($pdfPath, $entrepriseId, $uploadedBy, $salaires, $notifier, $overrides);
             }
         } finally {
             $this->supprimerRepertoire($tmpDir);
@@ -49,7 +54,7 @@ class BulletinImportServiceFix
         return $this->result;
     }
 
-    private function traiterPdf(string $pdfPath, int $entrepriseId, int $uploadedBy, array $salaires, bool $notifier): void
+    private function traiterPdf(string $pdfPath, int $entrepriseId, int $uploadedBy, array $salaires, bool $notifier, array $overrides = []): void
     {
         $basename = basename($pdfPath);
         $parsed = $this->parseFilename($basename);
@@ -59,9 +64,17 @@ class BulletinImportServiceFix
             return;
         }
 
-        $personnel = $this->matchPersonnel($parsed['police'], $parsed['nom'], $entrepriseId);
+        $override = $overrides[$basename] ?? null;
+        if ($override === 'skip') {
+            return;
+        }
+
+        $personnel = $override
+            ? Personnel::where('id', $override)->where('entreprise_id', $entrepriseId)->first()
+            : $this->matchPersonnel($parsed['police'], $parsed['nom'], $entrepriseId);
+
         if (!$personnel) {
-            $this->result['erreurs'][] = ['fichier' => $basename, 'raison' => "Police «{$parsed['police']}» introuvable dans cette entreprise."];
+            $this->result['erreurs'][] = ['fichier' => $basename, 'raison' => "Police «{$parsed['police']}» introuvable — aucune affectation manuelle fournie."];
             return;
         }
 
@@ -143,32 +156,26 @@ class BulletinImportServiceFix
         return ['police' => $police, 'nom' => $nom, 'annee' => $annee, 'mois' => $mois, 'date_debut' => $m[2], 'date_fin' => $m[3]];
     }
 
+    /**
+     * Recherche exacte uniquement (police puis matricule). Un nom ne suffit jamais à lui
+     * seul à identifier un employé ici — trop de risque d'associer le bulletin de paie à
+     * la mauvaise personne sur un nom approché. Quand ni la police ni le matricule ne
+     * correspondent, l'appelant doit passer par une affectation manuelle (voir $overrides
+     * dans processZip) plutôt que de deviner.
+     */
     public function matchPersonnel(string $police, string $nom, int $entrepriseId): ?Personnel
     {
-        // 1. Par police
         try {
             $p = Personnel::where('police', $police)->where('entreprise_id', $entrepriseId)->first();
             if ($p) return $p;
         } catch (\Exception $e) {}
 
-        // 2. Par matricule
         try {
             $p = Personnel::where('matricule', $police)->where('entreprise_id', $entrepriseId)->first();
             if ($p) return $p;
         } catch (\Exception $e) {}
 
-        // 3. Par nom approché
-        $parts = array_filter(explode(' ', trim($nom)), fn($p) => strlen($p) >= 3);
-        if (empty($parts)) return null;
-
-        return Personnel::where('entreprise_id', $entrepriseId)
-            ->where(function ($q) use ($parts) {
-                foreach ($parts as $part) {
-                    $q->where(function ($qq) use ($part) {
-                        $qq->where('nom', 'like', "%{$part}%")->orWhere('prenoms', 'like', "%{$part}%");
-                    });
-                }
-            })->first();
+        return null;
     }
 
     private function lireSalairesCsv(string $dir): array

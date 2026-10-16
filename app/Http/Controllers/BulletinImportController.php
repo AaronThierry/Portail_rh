@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BulletinImport;
 use App\Models\Entreprise;
+use App\Models\Personnel;
 use App\Services\BulletinImportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,18 @@ class BulletinImportController extends Controller
             ->take(20)
             ->get();
 
-        return view('admin.bulletins-paie.import', compact('entreprises', 'historique'));
+        // Pour l'affectation manuelle en prévisualisation, groupé par entreprise
+        // (un fichier dont la police/le matricule n'est pas reconnu automatiquement).
+        $personnelsParEntreprise = Personnel::actif()
+            ->orderBy('nom')->orderBy('prenoms')
+            ->get(['id', 'entreprise_id', 'nom', 'prenoms', 'matricule', 'police'])
+            ->groupBy('entreprise_id')
+            ->map(fn ($g) => $g->map(fn ($p) => [
+                'id' => $p->id,
+                'label' => trim(($p->nom ?? '') . ' ' . ($p->prenoms ?? '')) . ' — ' . ($p->matricule ?? 'sans matricule'),
+            ])->values());
+
+        return view('admin.bulletins-paie.import', compact('entreprises', 'historique', 'personnelsParEntreprise'));
     }
 
     /**

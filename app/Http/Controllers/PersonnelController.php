@@ -19,6 +19,22 @@ use Spatie\Permission\Models\Role;
 class PersonnelController extends Controller
 {
     /**
+     * Le Chef d'Entreprise a un accès lecture seule au personnel (voir le
+     * commentaire sur la route `personnels` dans routes/web.php) — cette
+     * règle n'était vérifiée nulle part dans ce contrôleur : la limite
+     * d'écriture ne reposait que sur l'interface (bouton/menu masqués),
+     * pas sur le serveur. N'importe quel Chef d'Entreprise pouvait donc
+     * créer/modifier/supprimer du personnel en appelant la route
+     * directement. Appelé en tête de chaque méthode qui écrit.
+     */
+    private function assertPeutEcrire(): void
+    {
+        if (auth()->user()->hasRole("Chef d'Entreprise")) {
+            abort(403, 'Accès en lecture seule pour ce rôle.');
+        }
+    }
+
+    /**
      * Afficher la liste du personnel
      */
     public function index(Request $request)
@@ -124,6 +140,8 @@ class PersonnelController extends Controller
      */
     public function store(StorePersonnelRequest $request)
     {
+        $this->assertPeutEcrire();
+
         try {
             DB::beginTransaction();
 
@@ -180,6 +198,8 @@ class PersonnelController extends Controller
      */
     public function update(UpdatePersonnelRequest $request, $id)
     {
+        $this->assertPeutEcrire();
+
         try {
             DB::beginTransaction();
 
@@ -237,6 +257,8 @@ class PersonnelController extends Controller
      */
     public function uploadPhoto(Request $request, $personnelId)
     {
+        $this->assertPeutEcrire();
+
         $request->validate([
             'photo' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
@@ -270,6 +292,8 @@ class PersonnelController extends Controller
      */
     public function destroy($id)
     {
+        $this->assertPeutEcrire();
+
         try {
             $personnel = Personnel::findOrFail($id);
 
@@ -306,6 +330,8 @@ class PersonnelController extends Controller
      */
     public function assignUser(AssignUserRequest $request, $id)
     {
+        $this->assertPeutEcrire();
+
         try {
             DB::beginTransaction();
 
@@ -316,6 +342,18 @@ class PersonnelController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Accès non autorisé'
+                ], 403);
+            }
+
+            // Seul un Super Admin peut accorder les rôles Super Admin ou Chef d'Entreprise
+            // via la création d'un compte — sinon un RH ou un Agent administratif pourrait
+            // s'octroyer (ou octroyer à quelqu'un d'autre) les pleins pouvoirs via ce flux.
+            if (in_array($request->validated('role'), ['Super Admin', "Chef d'Entreprise"], true)
+                && !auth()->user()->hasRole('Super Admin')) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => "Seul un Super Admin peut assigner le rôle Super Admin ou Chef d'Entreprise"
                 ], 403);
             }
 
@@ -399,6 +437,8 @@ class PersonnelController extends Controller
      */
     public function detachUser($id)
     {
+        $this->assertPeutEcrire();
+
         try {
             DB::beginTransaction();
 

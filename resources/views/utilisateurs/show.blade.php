@@ -1,245 +1,122 @@
 @extends('layouts.app')
 
-@section('title', 'Détails Utilisateur')
+@section('title', 'Profil utilisateur')
+@section('page-title', 'Profil utilisateur')
+
+@section('styles')
+<style>
+    .uh-grid { display: grid; gap: 28px; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); align-items: start; }
+    @media (max-width: 900px) { .uh-grid { grid-template-columns: 1fr; } }
+    .uh-avatar { width: 96px; height: 96px; border-radius: 999px; object-fit: cover; margin: 0 auto 14px; display: block; border: 3px solid var(--line-soft); }
+    .uh-name { text-align: center; font-family: var(--display); font-size: 20px; font-weight: 700; margin: 0 0 2px; }
+    .uh-email { text-align: center; color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+    .uh-badges { display: flex; justify-content: center; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+    .uh-actions { display: flex; flex-direction: column; gap: 8px; }
+    .uh-dl div { display: flex; justify-content: space-between; gap: 16px; padding: 14px 16px; border-top: 1px solid var(--line-soft); }
+    .uh-dl div:first-child { border-top: 0; }
+    .uh-dl dt { color: var(--muted); font-size: 14px; flex-shrink: 0; }
+    .uh-dl dd { margin: 0; font-weight: 600; font-size: 15px; text-align: right; overflow-wrap: anywhere; }
+    .uh-dl dd.vide { color: var(--faint); font-weight: 500; }
+</style>
+@endsection
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Header avec retour -->
-    <div class="mb-8">
-        <div class="flex items-center gap-4 mb-4">
-            <a href="{{ route('admin.utilisateurs.index') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                <span class="font-medium">Retour à la liste</span>
-            </a>
+@php
+    $roleName = $user->getRoleNames()->first() ?? 'Aucun rôle';
+    $personnel = $user->personnel;
+    $vide = fn ($v) => $v ?: null;
+@endphp
+
+<div class="rh-page">
+    @if(session('success'))
+        <div class="rh-alert ok" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>{{ session('success') }}</span></div>
+    @endif
+    @if(session('error'))
+        <div class="rh-alert err" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>{{ session('error') }}</span></div>
+    @endif
+
+    <section class="rh-head">
+        <div class="rh-head-txt">
+            <a href="{{ route('admin.utilisateurs.index') }}" class="rh-link">← Retour à la liste</a>
+            <h1 class="rh-h1" style="margin-top:6px">Profil utilisateur</h1>
         </div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Profil Utilisateur</h1>
-    </div>
+    </section>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Carte Profil Principal -->
-        <div class="lg:col-span-1">
-            <div class="card bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 text-white overflow-hidden">
-                <div class="p-6 text-center">
-                    <!-- Avatar -->
-                    <div class="mb-4 inline-block relative">
-                        <img src="{{ $user->avatar ? asset($user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->nom . ' ' . $user->prenom) . '&size=200&background=ffffff&color=667eea' }}"
-                             alt="Avatar"
-                             class="w-32 h-32 rounded-full border-4 border-white shadow-xl mx-auto">
-                        <div class="absolute bottom-2 right-2 w-6 h-6 bg-green-400 border-4 border-white rounded-full"></div>
-                    </div>
-
-                    <!-- Nom -->
-                    <h2 class="text-2xl font-bold mb-1">{{ $user->nom }} {{ $user->prenom }}</h2>
-                    <p class="text-purple-100 mb-4">{{ $user->email }}</p>
-
-                    <!-- Badges -->
-                    <div class="flex justify-center gap-2 mb-6">
-                        @php
-                            $roleBadgeClass = match($user->role ?? 'employee') {
-                                'super_admin' => 'bg-red-500',
-                                'admin' => 'bg-yellow-500',
-                                'manager' => 'bg-blue-500',
-                                'hr' => 'bg-orange-500',
-                                default => 'bg-green-500'
-                            };
-                            $roleLabel = match($user->role ?? 'employee') {
-                                'super_admin' => 'Super Admin',
-                                'admin' => 'Administrateur',
-                                'manager' => 'Manager',
-                                'hr' => 'Ressources Humaines',
-                                default => 'Employé'
-                            };
-                        @endphp
-                        <span class="px-4 py-1.5 {{ $roleBadgeClass }} text-white text-xs font-bold rounded-full shadow-lg">
-                            {{ $roleLabel }}
-                        </span>
-                        @if($user->statut === 'actif')
-                        <span class="px-4 py-1.5 bg-green-500 text-white text-xs font-bold rounded-full shadow-lg">
-                            Actif
-                        </span>
-                        @else
-                        <span class="px-4 py-1.5 bg-red-500 text-white text-xs font-bold rounded-full shadow-lg">
-                            Inactif
-                        </span>
-                        @endif
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="flex gap-2 justify-center">
-                        <a href="{{ route('admin.utilisateurs.edit', $user->id) }}" class="btn bg-white text-purple-600 hover:bg-purple-50 flex-1">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                            Modifier
-                        </a>
-                    </div>
-                </div>
+    <div class="uh-grid">
+        <div class="rh-card">
+            <img src="{{ $user->avatar ? asset($user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&size=200&background=2563EB&color=fff&bold=true' }}" alt="" class="uh-avatar">
+            <h2 class="uh-name">{{ $user->name }}</h2>
+            <p class="uh-email">{{ $user->email }}</p>
+            <div class="uh-badges">
+                <span class="rh-badge info">{{ $roleName }}</span>
+                <span class="rh-badge {{ $user->status === 'active' ? 'ok' : 'no' }}">{{ $user->status === 'active' ? 'Actif' : 'Inactif' }}</span>
             </div>
-
-            <!-- Statistiques Rapides -->
-            <div class="card mt-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Statistiques</h3>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">Projets actifs</span>
-                        <span class="text-2xl font-bold text-purple-600">0</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">Tâches complétées</span>
-                        <span class="text-2xl font-bold text-green-600">0</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-600 dark:text-gray-400">Jours de congé</span>
-                        <span class="text-2xl font-bold text-blue-600">0</span>
-                    </div>
-                </div>
+            <div class="uh-actions">
+                <a href="{{ route('admin.utilisateurs.edit', $user->id) }}" class="rh-btn block">Modifier</a>
+                @if($user->id !== auth()->id())
+                    <form method="POST" action="{{ route('admin.utilisateurs.toggle-status', $user->id) }}"
+                          data-confirm="{{ $user->status === 'active' ? 'Désactiver ce compte ? Il ne pourra plus se connecter.' : 'Réactiver ce compte ?' }}">
+                        @csrf
+                        <button type="submit" class="rh-btn block {{ $user->status === 'active' ? 'danger' : 'soft' }}">
+                            {{ $user->status === 'active' ? 'Désactiver ce compte' : 'Réactiver ce compte' }}
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
 
-        <!-- Informations Détaillées -->
-        <div class="lg:col-span-2 space-y-6">
-            <!-- Informations Personnelles -->
-            <div class="card">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Informations Personnelles</h3>
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                </div>
+        <div class="rh-page" style="gap: 20px">
+            <section class="rh-section" aria-labelledby="uhPerso">
+                <h2 class="rh-h2" id="uhPerso">Informations personnelles</h2>
+                <dl class="uh-dl rh-card-flat">
+                    <div><dt>Nom</dt><dd class="{{ $personnel ? '' : 'vide' }}">{{ $personnel->nom ?? 'Aucun personnel lié' }}</dd></div>
+                    <div><dt>Prénoms</dt><dd class="{{ $personnel?->prenoms ? '' : 'vide' }}">{{ $personnel->prenoms ?? 'Non renseigné' }}</dd></div>
+                    <div><dt>Téléphone</dt><dd class="{{ $personnel?->telephone ? '' : 'vide' }}">{{ $personnel?->telephone_complet ?? 'Non renseigné' }}</dd></div>
+                    <div><dt>Date de naissance</dt><dd class="{{ $personnel?->date_naissance ? '' : 'vide' }}">{{ $personnel?->date_naissance ? $personnel->date_naissance->format('d/m/Y') : 'Non renseignée' }}</dd></div>
+                    <div><dt>Adresse</dt><dd class="{{ $personnel?->adresse ? '' : 'vide' }}">{{ $personnel->adresse ?? 'Non renseignée' }}</dd></div>
+                </dl>
+            </section>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Nom</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->nom ?? 'Non renseigné' }}</p>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Prénom</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->prenom ?? 'Non renseigné' }}</p>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Email</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->email }}</p>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Téléphone</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->telephone ?? 'Non renseigné' }}</p>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Date de naissance</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->date_naissance ? \Carbon\Carbon::parse($user->date_naissance)->format('d/m/Y') : 'Non renseigné' }}</p>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Lieu de naissance</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->lieu_naissance ?? 'Non renseigné' }}</p>
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Adresse</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->adresse ?? 'Non renseignée' }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Informations Professionnelles -->
-            <div class="card">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">Informations Professionnelles</h3>
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                    </svg>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Matricule</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->matricule ?? 'Non renseigné' }}</p>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Poste</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->poste ?? 'Non renseigné' }}</p>
-                    </div>
-
-                    @if($user->entreprise)
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Entreprise</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->entreprise->nom }}</p>
-                    </div>
+            <section class="rh-section" aria-labelledby="uhPro">
+                <h2 class="rh-h2" id="uhPro">Informations professionnelles</h2>
+                <dl class="uh-dl rh-card-flat">
+                    <div><dt>Matricule</dt><dd class="{{ $personnel?->matricule ? '' : 'vide' }}">{{ $personnel->matricule ?? 'Non renseigné' }}</dd></div>
+                    <div><dt>Poste</dt><dd class="{{ $personnel?->poste ? '' : 'vide' }}">{{ $personnel->poste ?? 'Non renseigné' }}</dd></div>
+                    <div><dt>Entreprise</dt><dd class="{{ $user->entreprise ? '' : 'vide' }}">{{ $user->entreprise->nom ?? 'Non renseignée' }}</dd></div>
+                    @if($personnel?->departement)
+                        <div><dt>Département</dt><dd>{{ $personnel->departement->nom }}</dd></div>
                     @endif
-
-                    @if($user->departement)
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Département</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->departement->nom }}</p>
-                    </div>
+                    @if($personnel?->service)
+                        <div><dt>Service</dt><dd>{{ $personnel->service->nom }}</dd></div>
                     @endif
+                    <div><dt>Date d'embauche</dt><dd class="{{ $personnel?->date_embauche ? '' : 'vide' }}">{{ $personnel?->date_embauche ? $personnel->date_embauche->format('d/m/Y') : 'Non renseignée' }}</dd></div>
+                    <div><dt>Type de contrat</dt><dd class="{{ $personnel?->type_contrat ? '' : 'vide' }}">{{ $personnel->type_contrat ?? 'Non renseigné' }}</dd></div>
+                </dl>
+            </section>
 
-                    @if($user->service)
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Service</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->service->nom }}</p>
-                    </div>
+            <section class="rh-section" aria-labelledby="uhHisto">
+                <h2 class="rh-h2" id="uhHisto">Historique</h2>
+                <ol class="rh-timeline rh-card-flat" style="padding: 14px 16px">
+                    <li style="--rail: var(--ok)">
+                        <span class="d">{{ $user->created_at->format('d/m/Y') }}</span>
+                        <span class="rail"></span>
+                        <span class="body">
+                            <span class="rh-row-title">Compte créé</span>
+                            <span class="rh-row-sub">{{ $user->created_at->format('H:i') }}</span>
+                        </span>
+                    </li>
+                    @if($user->updated_at && !$user->updated_at->equalTo($user->created_at))
+                        <li style="--rail: var(--brand)">
+                            <span class="d">{{ $user->updated_at->format('d/m/Y') }}</span>
+                            <span class="rail"></span>
+                            <span class="body">
+                                <span class="rh-row-title">Dernière modification</span>
+                                <span class="rh-row-sub">{{ $user->updated_at->format('H:i') }}</span>
+                            </span>
+                        </li>
                     @endif
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Date d'embauche</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->date_embauche ? \Carbon\Carbon::parse($user->date_embauche)->format('d/m/Y') : 'Non renseigné' }}</p>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Type de contrat</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->type_contrat ?? 'Non renseigné' }}</p>
-                    </div>
-
-                    <div>
-                        <label class="text-sm font-semibold text-gray-500 dark:text-gray-400">Salaire de base</label>
-                        <p class="text-base font-medium text-gray-900 dark:text-white mt-1">{{ $user->salaire_base ? number_format($user->salaire_base, 0, ',', ' ') . ' FCFA' : 'Non renseigné' }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Timeline -->
-            <div class="card">
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Historique</h3>
-                <div class="space-y-4">
-                    <div class="flex gap-4">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900 dark:text-white">Compte créé</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->created_at ? $user->created_at->format('d/m/Y à H:i') : 'N/A' }}</p>
-                        </div>
-                    </div>
-
-                    @if($user->updated_at && $user->updated_at != $user->created_at)
-                    <div class="flex gap-4">
-                        <div class="flex-shrink-0">
-                            <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900 dark:text-white">Dernière modification</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->updated_at->format('d/m/Y à H:i') }}</p>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div>
+                </ol>
+            </section>
         </div>
     </div>
 </div>

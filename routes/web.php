@@ -76,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
 // ============================================================================
 // ESPACE EMPLOYE - Mini-site dédié aux employés
 // ============================================================================
-Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace')->name('espace-employe.')->group(function () {
+Route::middleware(['auth', 'account.active', 'force.password.change', '2fa'])->prefix('mon-espace')->name('espace-employe.')->group(function () {
     // Dashboard employé
     Route::get('/', [EspaceEmployeController::class, 'dashboard'])->name('dashboard');
 
@@ -136,7 +136,7 @@ Route::middleware(['auth', 'force.password.change', '2fa'])->prefix('mon-espace'
 // ============================================================================
 // PORTAIL ADMIN - Super Admin + RH + Chef d'Entreprise + Agent administratif
 // ============================================================================
-Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|Chef d'Entreprise|Agent administratif"])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'account.active', 'force.password.change', '2fa', "role:Super Admin|RH|Chef d'Entreprise|Agent administratif"])->prefix('admin')->name('admin.')->group(function () {
     // Purger les bulletins soft-deleted (pour permettre ré-import)
     Route::get('bulletins-purge-deleted', function () {
         $count = \App\Models\BulletinPaie::onlyTrashed()->forceDelete();
@@ -220,6 +220,7 @@ Route::middleware(['auth', 'force.password.change', '2fa', "role:Super Admin|RH|
         Route::get('utilisateurs/{user}', [UserController::class, 'show'])->name('utilisateurs.show');
         Route::get('utilisateurs/{user}/edit', [UserController::class, 'edit'])->name('utilisateurs.edit');
         Route::put('utilisateurs/{user}', [UserController::class, 'update'])->name('utilisateurs.update');
+        Route::post('utilisateurs/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('utilisateurs.toggle-status');
         Route::delete('utilisateurs/{user}', [UserController::class, 'destroy'])->name('utilisateurs.destroy');
     });
 

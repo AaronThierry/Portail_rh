@@ -77,6 +77,7 @@ class Kernel extends HttpKernel
         'same.company' => \App\Http\Middleware\EnsureSameCompany::class,
         'log.permissions' => \App\Http\Middleware\LogPermissionChecks::class,
         'force.password.change' => \App\Http\Middleware\ForcePasswordChange::class,
+        'account.active' => \App\Http\Middleware\EnsureAccountActive::class,
 
         // Middleware 2FA
         '2fa' => \App\Http\Middleware\TwoFactorMiddleware::class,

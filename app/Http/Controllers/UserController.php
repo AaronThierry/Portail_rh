@@ -90,6 +90,21 @@ class UserController extends Controller
 
             $user = Auth::user();
 
+            // Compte désactivé : le statut "inactive" n'était qu'un badge d'affichage
+            // jusqu'ici, sans effet sur la connexion elle-même. On refuse l'accès ici,
+            // et EnsureAccountActive (middleware "account.active") prend le relais pour
+            // les sessions déjà ouvertes au moment où un compte est désactivé.
+            if ($user->status !== 'active') {
+                Auth::logout();
+                $message = 'Ce compte a été désactivé. Contactez votre administrateur.';
+
+                if ($request->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => $message], 403);
+                }
+
+                return back()->withErrors(['courrier' => $message])->withInput($request->only('courrier', 'remember'));
+            }
+
             // Vérifier si l'utilisateur doit changer son mot de passe
             if ($user->force_password_change) {
                 // Marquer que l'utilisateur doit changer son mot de passe
@@ -431,7 +446,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with(['personnel.departement', 'personnel.service', 'entreprise', 'roles'])->findOrFail($id);
 
         if (request()->expectsJson()) {
             return response()->json([
@@ -440,6 +455,32 @@ class UserController extends Controller
         }
 
         return view('utilisateurs.show', compact('user'));
+    }
+
+    /**
+     * Active ou désactive un compte en un clic depuis sa fiche — jusqu'ici
+     * seul le formulaire d'édition complet permettait de changer le statut.
+     * Un compte désactivé est immédiatement déconnecté (voir
+     * EnsureAccountActive) et ne peut plus se reconnecter (voir login()).
+     */
+    public function toggleStatus($id)
+    {
+        if (!auth()->user()->can('edit-users')) {
+            abort(403, "Vous n'avez pas la permission de modifier des utilisateurs");
+        }
+
+        $user = User::findOrFail($id);
+
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Vous ne pouvez pas désactiver votre propre compte.');
+        }
+
+        $user->status = $user->status === 'active' ? 'inactive' : 'active';
+        $user->save();
+
+        return back()->with('success', $user->status === 'active'
+            ? 'Le compte a été réactivé.'
+            : 'Le compte a été désactivé — il ne peut plus être utilisé.');
     }
 
     /**

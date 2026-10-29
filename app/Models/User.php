@@ -37,6 +37,9 @@ class User extends Authenticatable
         'role',
         'department',
         'status',
+        'motif_desactivation',
+        'desactive_le',
+        'desactive_par_id',
         'password_reset_code',
         'password_reset_expires_at',
         'force_password_change',
@@ -64,6 +67,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'desactive_le' => 'datetime',
         'force_password_change' => 'boolean',
         'google2fa_enabled' => 'boolean',
         'google2fa_verified_at' => 'datetime',
@@ -91,5 +95,27 @@ class User extends Authenticatable
     public function deviceTokens()
     {
         return $this->hasMany(DeviceToken::class);
+    }
+
+    /**
+     * Admin ayant désactivé ce compte (null si toujours actif ou jamais désactivé)
+     */
+    public function desactivePar()
+    {
+        return $this->belongsTo(User::class, 'desactive_par_id');
+    }
+
+    /**
+     * Libellé lisible du motif de désactivation
+     */
+    public function getMotifDesactivationLabelAttribute(): ?string
+    {
+        return match ($this->motif_desactivation) {
+            'demission' => 'Démission',
+            'licenciement' => 'Licenciement',
+            'fin_contrat' => 'Fin de contrat',
+            'autre' => 'Autre',
+            default => null,
+        };
     }
 }

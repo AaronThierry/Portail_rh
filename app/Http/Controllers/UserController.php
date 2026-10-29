@@ -458,12 +458,16 @@ class UserController extends Controller
     }
 
     /**
-     * Active ou désactive un compte en un clic depuis sa fiche — jusqu'ici
-     * seul le formulaire d'édition complet permettait de changer le statut.
-     * Un compte désactivé est immédiatement déconnecté (voir
+     * Active ou désactive un compte depuis sa fiche — jusqu'ici seul le
+     * formulaire d'édition complet permettait de changer le statut. Un
+     * compte désactivé est immédiatement déconnecté (voir
      * EnsureAccountActive) et ne peut plus se reconnecter (voir login()).
+     *
+     * La désactivation exige un motif (démission, licenciement, fin de
+     * contrat, autre) ; la date et l'heure sont capturées automatiquement
+     * (now()), pas saisies à la main.
      */
-    public function toggleStatus($id)
+    public function toggleStatus(Request $request, $id)
     {
         if (!auth()->user()->can('edit-users')) {
             abort(403, "Vous n'avez pas la permission de modifier des utilisateurs");
@@ -475,12 +479,30 @@ class UserController extends Controller
             return back()->with('error', 'Vous ne pouvez pas désactiver votre propre compte.');
         }
 
-        $user->status = $user->status === 'active' ? 'inactive' : 'active';
+        if ($user->status === 'active') {
+            $request->validate([
+                'motif_desactivation' => ['required', 'in:demission,licenciement,fin_contrat,autre'],
+            ], [
+                'motif_desactivation.required' => 'Le motif de désactivation est obligatoire.',
+                'motif_desactivation.in' => 'Motif invalide.',
+            ]);
+
+            $user->status = 'inactive';
+            $user->motif_desactivation = $request->motif_desactivation;
+            $user->desactive_le = now();
+            $user->desactive_par_id = auth()->id();
+            $user->save();
+
+            return back()->with('success', 'Le compte a été désactivé — il ne peut plus être utilisé.');
+        }
+
+        $user->status = 'active';
+        $user->motif_desactivation = null;
+        $user->desactive_le = null;
+        $user->desactive_par_id = null;
         $user->save();
 
-        return back()->with('success', $user->status === 'active'
-            ? 'Le compte a été réactivé.'
-            : 'Le compte a été désactivé — il ne peut plus être utilisé.');
+        return back()->with('success', 'Le compte a été réactivé.');
     }
 
     /**

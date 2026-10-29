@@ -54,15 +54,25 @@
             <div class="uh-actions">
                 <a href="{{ route('admin.utilisateurs.edit', $user->id) }}" class="rh-btn block">Modifier</a>
                 @if($user->id !== auth()->id())
-                    <form method="POST" action="{{ route('admin.utilisateurs.toggle-status', $user->id) }}"
-                          data-confirm="{{ $user->status === 'active' ? 'Désactiver ce compte ? Il ne pourra plus se connecter.' : 'Réactiver ce compte ?' }}">
-                        @csrf
-                        <button type="submit" class="rh-btn block {{ $user->status === 'active' ? 'danger' : 'soft' }}">
-                            {{ $user->status === 'active' ? 'Désactiver ce compte' : 'Réactiver ce compte' }}
-                        </button>
-                    </form>
+                    @if($user->status === 'active')
+                        <button type="button" class="rh-btn block danger" data-open="deactivateModal">Désactiver ce compte</button>
+                    @else
+                        <form method="POST" action="{{ route('admin.utilisateurs.toggle-status', $user->id) }}" data-confirm="Réactiver ce compte ?">
+                            @csrf
+                            <button type="submit" class="rh-btn block soft">Réactiver ce compte</button>
+                        </form>
+                    @endif
                 @endif
             </div>
+
+            @if($user->status === 'inactive' && $user->desactive_le)
+                <div class="uh-dl" style="margin-top:18px; border-top:1px solid var(--line-soft); padding-top:14px">
+                    <p class="rh-hint" style="margin:0 0 6px">Désactivé le {{ $user->desactive_le->format('d/m/Y à H:i') }}@if($user->desactivePar) par {{ $user->desactivePar->name }}@endif</p>
+                    @if($user->motif_desactivation_label)
+                        <span class="rh-badge off">{{ $user->motif_desactivation_label }}</span>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <div class="rh-page" style="gap: 20px">
@@ -115,9 +125,62 @@
                             </span>
                         </li>
                     @endif
+                    @if($user->desactive_le)
+                        <li style="--rail: var(--no)">
+                            <span class="d">{{ $user->desactive_le->format('d/m/Y') }}</span>
+                            <span class="rail"></span>
+                            <span class="body">
+                                <span class="rh-row-title">Compte désactivé{{ $user->motif_desactivation_label ? ' — ' . $user->motif_desactivation_label : '' }}</span>
+                                <span class="rh-row-sub">{{ $user->desactive_le->format('H:i') }}@if($user->desactivePar) · par {{ $user->desactivePar->name }}@endif</span>
+                            </span>
+                        </li>
+                    @endif
                 </ol>
             </section>
         </div>
     </div>
 </div>
+
+@if($user->status === 'active' && $user->id !== auth()->id())
+<div class="rh-sheet" id="deactivateModal" role="dialog" aria-modal="true" aria-labelledby="deactivateTitre">
+    <div class="rh-sheet-box">
+        <div class="rh-sheet-grip"></div>
+        <div class="rh-sheet-head">
+            <div>
+                <h2 id="deactivateTitre">Désactiver ce compte</h2>
+                <p>{{ $user->name }} ne pourra plus se connecter. La date et l'heure sont enregistrées automatiquement.</p>
+            </div>
+            <button type="button" class="rh-iconbtn" data-close aria-label="Fermer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+        </div>
+        <form method="POST" action="{{ route('admin.utilisateurs.toggle-status', $user->id) }}" class="rh-form">
+            @csrf
+            <div class="rh-field">
+                <label for="motifDesactivation">Motif</label>
+                <select name="motif_desactivation" id="motifDesactivation" class="rh-select" required>
+                    <option value="">— Sélectionner —</option>
+                    <option value="demission">Démission</option>
+                    <option value="licenciement">Licenciement</option>
+                    <option value="fin_contrat">Fin de contrat</option>
+                    <option value="autre">Autre</option>
+                </select>
+                @error('motif_desactivation')<p class="rh-err">{{ $message }}</p>@enderror
+            </div>
+            <div class="rh-sheet-foot">
+                <button type="button" class="rh-btn soft" data-close>Annuler</button>
+                <button type="submit" class="rh-btn danger">Désactiver</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+@endsection
+
+@section('scripts')
+<script>
+@if($errors->has('motif_desactivation'))
+    rhOpen('deactivateModal');
+@endif
+</script>
 @endsection

@@ -20,7 +20,7 @@
        Portail RH+ — pages d'authentification (charte « Direction B »)
        Bleu = action · Orange = touche de marque (le « + », aujourd'hui)
        ═══════════════════════════════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
     :root {
         --brand:      #2563eb;

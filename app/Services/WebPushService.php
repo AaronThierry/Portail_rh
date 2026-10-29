@@ -22,7 +22,9 @@ class WebPushService
 {
     public function isEnabled(): bool
     {
-        return (bool) config('services.web_push.public_key') && (bool) config('services.web_push.private_key');
+        return (bool) config('services.web_push.public_key')
+            && (bool) config('services.web_push.private_key')
+            && class_exists(WebPush::class);
     }
 
     public function publicKey(): string
@@ -51,31 +53,38 @@ class WebPushService
             return false;
         }
 
-        $webPush = $this->client();
-        $subscription = Subscription::create([
-            'endpoint' => $sub->endpoint,
-            'keys' => [
-                'p256dh' => $sub->p256dh,
-                'auth' => $sub->auth,
-            ],
-        ]);
+        // Canal annexe au meilleur effort : une erreur ici (lib absente, clé invalide,
+        // panne du service push...) ne doit jamais faire échouer l'action déclenchante
+        // (ex. création d'un bulletin de paie) ni les autres canaux de notification.
+        try {
+            $webPush = $this->client();
+            $subscription = Subscription::create([
+                'endpoint' => $sub->endpoint,
+                'keys' => [
+                    'p256dh' => $sub->p256dh,
+                    'auth' => $sub->auth,
+                ],
+            ]);
 
-        $payload = json_encode([
-            'title' => $title,
-            'body' => $body,
-            'data' => $data,
-        ]);
+            $payload = json_encode([
+                'title' => $title,
+                'body' => $body,
+                'data' => $data,
+            ]);
 
-        $report = $webPush->sendOneNotification($subscription, $payload);
+            $report = $webPush->sendOneNotification($subscription, $payload);
 
-        if ($report->isSuccess()) {
-            return true;
-        }
+            if ($report->isSuccess()) {
+                return true;
+            }
 
-        if ($report->isSubscriptionExpired()) {
-            $sub->delete();
-        } else {
-            Log::warning('WebPush: échec de l\'envoi', ['reason' => $report->getReason()]);
+            if ($report->isSubscriptionExpired()) {
+                $sub->delete();
+            } else {
+                Log::warning('WebPush: échec de l\'envoi', ['reason' => $report->getReason()]);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('WebPush: exception lors de l\'envoi', ['message' => $e->getMessage()]);
         }
 
         return false;

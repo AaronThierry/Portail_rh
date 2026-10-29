@@ -1840,7 +1840,7 @@ select.form-input {
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                         </a>
-                        <form action="{{ route('admin.departements.destroy', $departement->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce département ?');">
+                        <form action="{{ route('admin.departements.destroy', $departement->id) }}" method="POST" style="display: inline;" data-confirm="Êtes-vous sûr de vouloir supprimer ce département ?">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="dp-action-btn delete" title="Supprimer">
@@ -1949,7 +1949,7 @@ select.form-input {
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                         </svg>
                                     </a>
-                                    <form action="{{ route('admin.departements.destroy', $departement->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Supprimer ce département ?');">
+                                    <form action="{{ route('admin.departements.destroy', $departement->id) }}" method="POST" style="display: inline;" data-confirm="Supprimer ce département ?">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="dp-action-btn delete" title="Supprimer">

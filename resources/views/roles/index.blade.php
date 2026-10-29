@@ -125,7 +125,7 @@
                                 {{-- Supprimer --}}
                                 @unless(in_array($role->name, ['Super Admin', 'Admin']))
                                     <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" class="inline"
-                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rôle ?')">
+                                          data-confirm="Êtes-vous sûr de vouloir supprimer ce rôle ?">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"

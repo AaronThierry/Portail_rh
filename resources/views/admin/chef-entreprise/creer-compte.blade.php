@@ -53,14 +53,14 @@
                 — créé le {{ $compteExistant->created_at->format('d/m/Y') }}
             </p>
             <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
-                <form method="POST" action="{{ route('admin.chef-entreprise.renvoyer', $entreprise) }}" onsubmit="return confirm('Réinitialiser le mot de passe et renvoyer les identifiants par email ?')">
+                <form method="POST" action="{{ route('admin.chef-entreprise.renvoyer', $entreprise) }}" data-confirm="Réinitialiser le mot de passe et renvoyer les identifiants par email ?">
                     @csrf
                     <button type="submit" style="display:inline-flex;align-items:center;gap:6px;background:#e8850c;color:white;border:none;padding:8px 16px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer;">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         Réinitialiser et renvoyer
                     </button>
                 </form>
-                <form method="POST" action="{{ route('admin.chef-entreprise.destroy', $entreprise) }}" onsubmit="return confirm('Supprimer définitivement ce compte Chef d\'Entreprise ?')">
+                <form method="POST" action="{{ route('admin.chef-entreprise.destroy', $entreprise) }}" data-confirm="Supprimer définitivement ce compte Chef d'Entreprise ?">
                     @csrf
                     @method('DELETE')
                     <button type="submit" style="display:inline-flex;align-items:center;gap:6px;background:transparent;color:#dc2626;border:1px solid #fca5a5;padding:8px 16px;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer;">

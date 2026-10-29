@@ -1058,7 +1058,7 @@ async function toggleCategorie(id, newState) {
 }
 
 async function deleteCategorie(id, nom) {
-    if (!confirm('Supprimer le répertoire "' + nom + '" ?')) return;
+    if (!(await rhConfirm('Supprimer le répertoire "' + nom + '" ?'))) return;
     try {
         const res = await fetch('{{ url("admin/dossier-agent/categories") }}/' + id, {
             method: 'DELETE',
@@ -1074,7 +1074,7 @@ async function deleteCategorie(id, nom) {
 }
 
 async function initDefaultCategories() {
-    if (!confirm('Initialiser les 10 répertoires par défaut ?')) return;
+    if (!(await rhConfirm('Initialiser les 10 répertoires par défaut ?'))) return;
     try {
         const res = await fetch('{{ route("admin.dossier-agent.categories.init") }}', {
             method: 'POST',

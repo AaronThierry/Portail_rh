@@ -699,7 +699,7 @@
                         </svg>
                     </button>
                     @if(!in_array($role->name, ['Super Admin', 'Admin']))
-                    <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rôle ?');">
+                    <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" style="margin: 0;" data-confirm="Êtes-vous sûr de vouloir supprimer ce rôle ?">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn-action btn-delete">

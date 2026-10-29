@@ -635,7 +635,7 @@
                             </div>
                         </div>
 
-                        <form method="POST" action="{{ route('two-factor.disable') }}" onsubmit="return confirm('Êtes-vous sûr de vouloir désactiver l\'authentification à deux facteurs ?');">
+                        <form method="POST" action="{{ route('two-factor.disable') }}" data-confirm="Êtes-vous sûr de vouloir désactiver l'authentification à deux facteurs ?">
                             @csrf
                             @method('DELETE')
 

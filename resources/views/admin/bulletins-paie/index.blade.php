@@ -202,7 +202,7 @@
                                     <a href="{{ route('admin.bulletins-paie.download', $bulletin) }}" class="bp-act" title="Télécharger">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                     </a>
-                                    <form method="POST" action="{{ route('admin.bulletins-paie.destroy', $bulletin) }}" onsubmit="return confirm('Supprimer ce bulletin ?')" style="display:inline">
+                                    <form method="POST" action="{{ route('admin.bulletins-paie.destroy', $bulletin) }}" data-confirm="Supprimer ce bulletin ?" style="display:inline">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="bp-act del" title="Supprimer">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>

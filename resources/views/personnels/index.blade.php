@@ -204,7 +204,7 @@
 <script>
 /* ── Delete ── */
 async function deletePersonnel(id, name) {
-    if (!confirm(`Supprimer ${name} ? Cette action est irréversible.`)) return;
+    if (!(await rhConfirm(`Supprimer ${name} ? Cette action est irréversible.`))) return;
     try {
         const res = await fetch(`/admin/personnels/${id}`, {
             method: 'DELETE',

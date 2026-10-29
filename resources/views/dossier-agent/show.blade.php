@@ -1946,7 +1946,8 @@ document.querySelectorAll('.ds-form-check input[type="radio"][name="visibilite"]
 
 // Supprimer document existant
 function deleteDocument(id) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce document ?')) {
+    rhConfirm('Êtes-vous sûr de vouloir supprimer ce document ?').then(ok => {
+        if (!ok) return;
         fetch(`{{ url('admin/dossier-agent/document') }}/${id}`, {
             method: 'DELETE',
             headers: {
@@ -1963,7 +1964,7 @@ function deleteDocument(id) {
             }
         })
         .catch(() => alert('Erreur lors de la suppression'));
-    }
+    });
 }
 
 // Basculer la visibilité d'un document existant

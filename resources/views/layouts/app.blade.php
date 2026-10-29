@@ -72,13 +72,60 @@
         </div>
     </div>
 
+    {{-- Fenêtre de confirmation partagée : remplace window.confirm(), natif et
+         jamais stylé, par une fenêtre aux couleurs de l'application. Utilisée
+         automatiquement par data-confirm="…", et directement via rhConfirm(message)
+         depuis n'importe quel script de page (retourne une Promise<boolean>). --}}
+    <div class="rh-sheet rh-confirm" id="rhConfirmModal" role="alertdialog" aria-modal="true" aria-labelledby="rhConfirmMsg">
+        <div class="rh-sheet-box" style="max-width:420px">
+            <div class="rh-sheet-grip"></div>
+            <p id="rhConfirmMsg" style="margin:0 0 22px; font-size:15px; line-height:1.5; color:var(--ink)"></p>
+            <div class="rh-sheet-foot">
+                <button type="button" class="rh-btn soft" id="rhConfirmCancel">Annuler</button>
+                <button type="button" class="rh-btn danger" id="rhConfirmOk">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
     <script>
     /* Petits comportements partagés des pages « rh-* » :
        data-open="id" / data-close  → ouvre / ferme une fenêtre .rh-sheet
-       data-confirm="Question ?"    → demande confirmation avant d'envoyer un formulaire
-       data-lock                    → désactive le bouton d'envoi pendant l'envoi */
+       data-confirm="Question ?"    → demande confirmation stylée avant d'envoyer un formulaire
+       data-lock                    → désactive le bouton d'envoi pendant l'envoi
+       rhConfirm(message)           → Promise<boolean>, utilisable depuis n'importe quel script */
     (function () {
         var lastTrigger = null;
+
+        window.rhConfirm = function (message) {
+            return new Promise(function (resolve) {
+                var modal = document.getElementById('rhConfirmModal');
+                var msgEl = document.getElementById('rhConfirmMsg');
+                var okBtn = document.getElementById('rhConfirmOk');
+                var cancelBtn = document.getElementById('rhConfirmCancel');
+                msgEl.textContent = message;
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+
+                function cleanup(result) {
+                    modal.classList.remove('open');
+                    if (!document.querySelector('.rh-sheet.open')) document.body.style.overflow = '';
+                    okBtn.removeEventListener('click', onOk);
+                    cancelBtn.removeEventListener('click', onCancel);
+                    modal.removeEventListener('click', onOverlay);
+                    document.removeEventListener('keydown', onKey);
+                    resolve(result);
+                }
+                function onOk() { cleanup(true); }
+                function onCancel() { cleanup(false); }
+                function onOverlay(e) { if (e.target === modal) cleanup(false); }
+                function onKey(e) { if (e.key === 'Escape') cleanup(false); }
+
+                okBtn.addEventListener('click', onOk);
+                cancelBtn.addEventListener('click', onCancel);
+                modal.addEventListener('click', onOverlay);
+                document.addEventListener('keydown', onKey);
+            });
+        };
         window.rhOpen = function (id, trigger) {
             var s = document.getElementById(id);
             if (!s) return;
@@ -107,13 +154,26 @@
             var open = document.querySelectorAll('.rh-sheet.open');
             if (open.length) rhClose(open[open.length - 1]);
         });
+        function lockSubmitBtn(f) {
+            var b = f.querySelector('[type=submit]') || (f.id ? document.querySelector('[type=submit][form="' + f.id + '"]') : null);
+            if (b) { setTimeout(function () { b.disabled = true; }, 0); }
+        }
         document.addEventListener('submit', function (e) {
             var f = e.target;
             var q = f.getAttribute('data-confirm');
-            if (q && !window.confirm(q)) { e.preventDefault(); e.stopPropagation(); return; }
+            if (q && !f.dataset.rhConfirmed) {
+                e.preventDefault();
+                e.stopPropagation();
+                rhConfirm(q).then(function (ok) {
+                    if (!ok) return;
+                    f.dataset.rhConfirmed = '1';
+                    if (f.hasAttribute('data-lock')) lockSubmitBtn(f);
+                    if (f.requestSubmit) f.requestSubmit(); else f.submit();
+                });
+                return;
+            }
             if (f.hasAttribute('data-lock')) {
-                var b = f.querySelector('[type=submit]') || (f.id ? document.querySelector('[type=submit][form="' + f.id + '"]') : null);
-                if (b) { setTimeout(function () { b.disabled = true; }, 0); }
+                lockSubmitBtn(f);
             }
         }, true);
         document.addEventListener('DOMContentLoaded', function () {

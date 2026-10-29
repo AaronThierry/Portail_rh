@@ -1044,7 +1044,7 @@
                             Supprimer
                         </button>
                         @else
-                        <form action="{{ route('admin.departements.destroy', $departement->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce département ? Cette action est irréversible.');">
+                        <form action="{{ route('admin.departements.destroy', $departement->id) }}" method="POST" data-confirm="Êtes-vous sûr de vouloir supprimer ce département ? Cette action est irréversible.">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="ds-btn ds-btn-danger">

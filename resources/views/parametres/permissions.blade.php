@@ -721,7 +721,7 @@
                         </svg>
                         Modifier
                     </button>
-                    <form action="{{ route('parametres.permissions.destroy', $permission) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette permission ? Cette action est irréversible.');">
+                    <form action="{{ route('parametres.permissions.destroy', $permission) }}" method="POST" style="margin: 0;" data-confirm="Êtes-vous sûr de vouloir supprimer cette permission ? Cette action est irréversible.">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn-action btn-delete">

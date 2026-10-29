@@ -2892,29 +2892,10 @@ function showNoUserState() {
  * Fonction de dissociation du compte utilisateur
  */
 async function detachUser() {
-    // Confirmation détaillée et professionnelle
-    const confirmLines = [
-        '╔══════════════════════════════════════╗',
-        '║   ⚠️ CONFIRMATION DE DISSOCIATION   ║',
-        '╚══════════════════════════════════════╝',
-        '',
-        'Êtes-vous sûr de vouloir dissocier ce compte utilisateur?',
-        '',
-        '📋 ACTIONS QUI SERONT EFFECTUÉES:',
-        '──────────────────────────────────────',
-        '  ❌ Le lien entre le personnel et le compte sera supprimé',
-        '  🔒 Le compte utilisateur sera désactivé',
-        '  💾 Le compte restera dans la base de données',
-        '  📧 L\'utilisateur ne pourra plus se connecter',
-        '',
-        '⚠️ ATTENTION: Cette action peut être réversible en',
-        '   recréant manuellement l\'association.',
-        '',
-        '──────────────────────────────────────',
-        '        Continuer la dissociation ?'
-    ].join('\n');
-
-    if (!confirm(confirmLines)) {
+    const ok = await rhConfirm(
+        "Dissocier ce compte utilisateur ? Le lien avec le personnel sera supprimé et le compte désactivé (il restera en base, mais l'utilisateur ne pourra plus se connecter — l'association peut être recréée manuellement par la suite)."
+    );
+    if (!ok) {
         console.log('ℹ️ Dissociation annulée par l\'utilisateur');
         return;
     }

@@ -482,13 +482,17 @@ class UserController extends Controller
         if ($user->status === 'active') {
             $request->validate([
                 'motif_desactivation' => ['required', 'in:demission,licenciement,fin_contrat,autre'],
+                'date_motif_desactivation' => ['required', 'date'],
             ], [
                 'motif_desactivation.required' => 'Le motif de désactivation est obligatoire.',
                 'motif_desactivation.in' => 'Motif invalide.',
+                'date_motif_desactivation.required' => 'La date est obligatoire.',
+                'date_motif_desactivation.date' => 'Date invalide.',
             ]);
 
             $user->status = 'inactive';
             $user->motif_desactivation = $request->motif_desactivation;
+            $user->date_motif_desactivation = $request->date_motif_desactivation;
             $user->desactive_le = now();
             $user->desactive_par_id = auth()->id();
             $user->save();
@@ -498,6 +502,7 @@ class UserController extends Controller
 
         $user->status = 'active';
         $user->motif_desactivation = null;
+        $user->date_motif_desactivation = null;
         $user->desactive_le = null;
         $user->desactive_par_id = null;
         $user->save();

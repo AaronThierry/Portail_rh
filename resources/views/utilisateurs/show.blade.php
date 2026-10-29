@@ -17,6 +17,12 @@
     .uh-dl dt { color: var(--muted); font-size: 14px; flex-shrink: 0; }
     .uh-dl dd { margin: 0; font-weight: 600; font-size: 15px; text-align: right; overflow-wrap: anywhere; }
     .uh-dl dd.vide { color: var(--faint); font-weight: 500; }
+    .uh-deact { margin-top: 18px; flex-direction: column; align-items: stretch; gap: 10px; }
+    .uh-deact-head { display: flex; align-items: center; gap: 8px; font-family: var(--display); font-size: 15px; font-weight: 700; }
+    .uh-deact dl { margin: 0; display: flex; flex-direction: column; gap: 5px; }
+    .uh-deact dl div { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
+    .uh-deact dt { opacity: .8; font-weight: 500; }
+    .uh-deact dd { margin: 0; font-weight: 700; text-align: right; }
 </style>
 @endsection
 
@@ -66,11 +72,20 @@
             </div>
 
             @if($user->status === 'inactive' && $user->desactive_le)
-                <div class="uh-dl" style="margin-top:18px; border-top:1px solid var(--line-soft); padding-top:14px">
-                    <p class="rh-hint" style="margin:0 0 6px">Désactivé le {{ $user->desactive_le->format('d/m/Y à H:i') }}@if($user->desactivePar) par {{ $user->desactivePar->name }}@endif</p>
-                    @if($user->motif_desactivation_label)
-                        <span class="rh-badge off">{{ $user->motif_desactivation_label }}</span>
-                    @endif
+                <div class="rh-alert err uh-deact" role="status">
+                    <div class="uh-deact-head">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+                        <span>Compte désactivé{{ $user->motif_desactivation_label ? ' — ' . $user->motif_desactivation_label : '' }}</span>
+                    </div>
+                    <dl>
+                        @if($user->date_motif_desactivation)
+                            <div><dt>Date d'effet</dt><dd>{{ $user->date_motif_desactivation->format('d/m/Y') }}</dd></div>
+                        @endif
+                        <div><dt>Désactivé le</dt><dd>{{ $user->desactive_le->format('d/m/Y à H:i') }}</dd></div>
+                        @if($user->desactivePar)
+                            <div><dt>Par</dt><dd>{{ $user->desactivePar->name }}</dd></div>
+                        @endif
+                    </dl>
                 </div>
             @endif
         </div>
@@ -132,6 +147,9 @@
                             <span class="body">
                                 <span class="rh-row-title">Compte désactivé{{ $user->motif_desactivation_label ? ' — ' . $user->motif_desactivation_label : '' }}</span>
                                 <span class="rh-row-sub">{{ $user->desactive_le->format('H:i') }}@if($user->desactivePar) · par {{ $user->desactivePar->name }}@endif</span>
+                                @if($user->date_motif_desactivation)
+                                    <span class="rh-row-sub">Date d'effet : {{ $user->date_motif_desactivation->format('d/m/Y') }}</span>
+                                @endif
                             </span>
                         </li>
                     @endif
@@ -167,6 +185,12 @@
                 </select>
                 @error('motif_desactivation')<p class="rh-err">{{ $message }}</p>@enderror
             </div>
+            <div class="rh-field">
+                <label for="dateMotifDesactivation">Date d'effet</label>
+                <input type="date" name="date_motif_desactivation" id="dateMotifDesactivation" class="rh-input" value="{{ old('date_motif_desactivation', now()->format('Y-m-d')) }}" required>
+                <p class="rh-hint">Date réelle du départ (dernier jour travaillé). L'horodatage de l'action est, lui, enregistré automatiquement.</p>
+                @error('date_motif_desactivation')<p class="rh-err">{{ $message }}</p>@enderror
+            </div>
             <div class="rh-sheet-foot">
                 <button type="button" class="rh-btn soft" data-close>Annuler</button>
                 <button type="submit" class="rh-btn danger">Désactiver</button>
@@ -179,7 +203,7 @@
 
 @section('scripts')
 <script>
-@if($errors->has('motif_desactivation'))
+@if($errors->has('motif_desactivation') || $errors->has('date_motif_desactivation'))
     rhOpen('deactivateModal');
 @endif
 </script>

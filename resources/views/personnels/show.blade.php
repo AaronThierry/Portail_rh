@@ -2463,8 +2463,8 @@ select.form-input-compact:hover {
                     <div class="form-grid-compact">
                         <div class="form-group-compact">
                             <label for="edit_matricule" class="form-label-compact">Matricule</label>
-                            <input type="text" id="edit_matricule" name="matricule" class="form-input-compact" readonly style="background: #f3f4f6; cursor: not-allowed; color: #6b7280;">
-                            <span class="form-hint-compact">🔒 Non modifiable</span>
+                            <input type="text" id="edit_matricule" name="matricule" class="form-input-compact">
+                            <span class="form-hint-compact">Doit rester unique dans l'entreprise</span>
                         </div>
 
                         <div class="form-group-compact" style="grid-column: span 2;">

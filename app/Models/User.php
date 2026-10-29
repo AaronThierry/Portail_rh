@@ -100,6 +100,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Abonnements Web Push (navigateurs / PWA installée — notamment iPhone Safari)
+     */
+    public function webPushSubscriptions()
+    {
+        return $this->hasMany(WebPushSubscription::class);
+    }
+
+    /**
      * Admin ayant désactivé ce compte (null si toujours actif ou jamais désactivé)
      */
     public function desactivePar()

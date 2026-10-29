@@ -7,8 +7,10 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Notifications push — app mobile uniquement (Capacitor natif)
-if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) {
+var isCapacitorNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+
+// Notifications push — app mobile (Capacitor natif)
+if (isCapacitorNative) {
     import('@capacitor/push-notifications').then(({ PushNotifications }) => {
         function sendTokenToServer(token) {
             var csrf = document.querySelector('meta[name="csrf-token"]');
@@ -63,6 +65,70 @@ if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.is
             });
         }).catch(function () {});
     });
+}
+
+// Notifications push — navigateurs / PWA installée (Safari iPhone, Chrome Android, desktop)
+// Safari n'autorise les push que pour une PWA "Ajoutée à l'écran d'accueil", jamais un
+// onglet classique : on ne demande donc la permission qu'en mode standalone.
+if (!isCapacitorNative && 'serviceWorker' in navigator && 'PushManager' in window) {
+    var isStandaloneApp = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    if (isStandaloneApp) {
+        navigator.serviceWorker.ready.then(function (registration) {
+            subscribeWebPush(registration);
+        }).catch(function () {});
+    }
+}
+
+function urlBase64ToUint8Array(base64String) {
+    var padding = '='.repeat((4 - base64String.length % 4) % 4);
+    var base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    var rawData = window.atob(base64);
+    var outputArray = new Uint8Array(rawData.length);
+    for (var i = 0; i < rawData.length; i++) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+function sendWebPushSubscriptionToServer(subscription) {
+    var csrf = document.querySelector('meta[name="csrf-token"]');
+    var json = subscription.toJSON();
+    fetch('/api/web-push-subscriptions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrf ? csrf.content : '',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({ endpoint: json.endpoint, keys: json.keys }),
+    }).catch(function () {});
+}
+
+function subscribeWebPush(registration) {
+    var meta = document.querySelector('meta[name="vapid-public-key"]');
+    var vapidKey = meta ? meta.content : '';
+    if (!vapidKey) return;
+
+    registration.pushManager.getSubscription().then(function (existing) {
+        if (existing) {
+            sendWebPushSubscriptionToServer(existing);
+            return;
+        }
+
+        if (Notification.permission === 'denied') return;
+
+        Notification.requestPermission().then(function (permission) {
+            if (permission !== 'granted') return;
+
+            registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(vapidKey),
+            }).then(sendWebPushSubscriptionToServer).catch(function (err) {
+                console.warn('Web Push subscribe error', err);
+            });
+        });
+    }).catch(function () {});
 }
 
 // Safe localStorage helper

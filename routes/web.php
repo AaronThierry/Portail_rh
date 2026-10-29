@@ -21,6 +21,7 @@ use App\Http\Controllers\CongeAdminController;
 use App\Http\Controllers\AbsenceAdminController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DeviceTokenController;
+use App\Http\Controllers\WebPushSubscriptionController;
 use App\Http\Controllers\ChefEntrepriseController;
 use App\Http\Controllers\RequeteController;
 use App\Http\Controllers\BulletinImportController;
@@ -462,6 +463,10 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
     // Notifications push (app mobile) — enregistrement du jeton d'appareil
     Route::post('device-tokens', [DeviceTokenController::class, 'store'])->name('device-tokens.store');
     Route::delete('device-tokens', [DeviceTokenController::class, 'destroy'])->name('device-tokens.destroy');
+
+    // Notifications push (navigateurs / PWA installée, dont iPhone Safari)
+    Route::post('web-push-subscriptions', [WebPushSubscriptionController::class, 'store'])->name('web-push-subscriptions.store');
+    Route::delete('web-push-subscriptions', [WebPushSubscriptionController::class, 'destroy'])->name('web-push-subscriptions.destroy');
 });
 
 // Redirection racine selon le rôle

@@ -1,6 +1,6 @@
 {
   "../../../@vite-plugin-pwa/virtual:pwa-register": {
-    "file": "assets/virtual_pwa-register-C5NgQrGX.js",
+    "file": "assets/virtual_pwa-register-DxGfSVMj.js",
     "name": "virtual_pwa-register",
     "src": "../../../@vite-plugin-pwa/virtual:pwa-register",
     "isDynamicEntry": true,
@@ -16,7 +16,7 @@
     "name": "index"
   },
   "node_modules/@capacitor/local-notifications/dist/esm/index.js": {
-    "file": "assets/index-OXM_6LgD.js",
+    "file": "assets/index-Ce6uOYXH.js",
     "name": "index",
     "src": "node_modules/@capacitor/local-notifications/dist/esm/index.js",
     "isDynamicEntry": true,
@@ -53,12 +53,12 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-DXAJfxV5.css",
+    "file": "assets/app-Cae-gn9q.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DUYUDdh0.js",
+    "file": "assets/app-DP2zeEO4.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

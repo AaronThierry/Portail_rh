@@ -3,11 +3,17 @@
 namespace App\Channels;
 
 use App\Services\FcmService;
+use App\Services\WebPushService;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Canal push unifié : relaie vers l'app mobile (FCM/Capacitor) ET vers les
+ * navigateurs abonnés en Web Push (notamment la PWA installée sur iPhone).
+ */
 class FcmChannel
 {
     protected FcmService $fcm;
+    protected WebPushService $webPush;
 
     /** Titre affiché dans la notification push, selon le type déjà utilisé par toArray(). */
     protected static array $titles = [
@@ -27,17 +33,14 @@ class FcmChannel
         'mot_de_passe_modifie' => 'Sécurité du compte',
     ];
 
-    public function __construct(FcmService $fcm)
+    public function __construct(FcmService $fcm, WebPushService $webPush)
     {
         $this->fcm = $fcm;
+        $this->webPush = $webPush;
     }
 
     public function send(object $notifiable, Notification $notification): void
     {
-        if (!$this->fcm->isEnabled() || !method_exists($notifiable, 'deviceTokens')) {
-            return;
-        }
-
         if (!method_exists($notification, 'toArray')) {
             return;
         }
@@ -59,6 +62,12 @@ class FcmChannel
             $data['conge_id'] = $payload['conge_id'];
         }
 
-        $this->fcm->sendToUser($notifiable, $title, $message, $data);
+        if ($this->fcm->isEnabled() && method_exists($notifiable, 'deviceTokens')) {
+            $this->fcm->sendToUser($notifiable, $title, $message, $data);
+        }
+
+        if ($this->webPush->isEnabled() && method_exists($notifiable, 'webPushSubscriptions')) {
+            $this->webPush->sendToUser($notifiable, $title, $message, $data);
+        }
     }
 }

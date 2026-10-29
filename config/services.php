@@ -60,4 +60,10 @@ return [
         'credentials' => env('FCM_CREDENTIALS_PATH', storage_path('app/firebase-service-account.json')),
     ],
 
+    'web_push' => [
+        'public_key'  => env('VAPID_PUBLIC_KEY', ''),
+        'private_key' => env('VAPID_PRIVATE_KEY', ''),
+        'subject'     => env('VAPID_SUBJECT', 'mailto:contact@portail-rh.com'),
+    ],
+
 ];

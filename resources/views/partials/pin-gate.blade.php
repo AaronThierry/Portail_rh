@@ -60,17 +60,17 @@
 
 .pin-badge {
     position: relative;
-    width: 68px; height: 68px; border-radius: 22px;
+    width: 92px; height: 92px; border-radius: 28px;
     background: var(--surface, #fff);
     border: 1px solid var(--line-soft, #e2e8f0);
     box-shadow: 0 10px 28px rgba(37, 99, 235, .14);
     display: flex; align-items: center; justify-content: center;
-    margin-bottom: .875rem;
+    margin-bottom: 1rem;
     transition: background .3s ease, border-color .3s ease;
 }
-.pin-badge-logo { width: 42px; height: 42px; object-fit: contain; transition: opacity .2s ease, transform .2s ease; }
+.pin-badge-logo { width: 60px; height: 60px; object-fit: contain; transition: opacity .2s ease, transform .2s ease; }
 .pin-badge-check {
-    position: absolute; inset: 0; margin: auto; width: 30px; height: 30px;
+    position: absolute; inset: 0; margin: auto; width: 40px; height: 40px;
     opacity: 0; transform: scale(.5);
     transition: opacity .25s ease, transform .25s ease;
 }
@@ -83,9 +83,9 @@
 .pin-badge--ok .pin-badge-check { opacity: 1; transform: scale(1); color: var(--ok, #059669); }
 
 .pin-brand {
-    font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: .75rem;
-    letter-spacing: .06em; text-transform: uppercase; color: var(--muted, #64748b);
-    margin: 0 0 .875rem;
+    font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: 1.0625rem;
+    letter-spacing: .02em; color: var(--ink, #0f172a);
+    margin: 0 0 1rem;
 }
 
 .pin-title {

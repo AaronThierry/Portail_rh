@@ -317,5 +317,7 @@
         });
     })();
     </script>
+
+    @include('partials.ios-install-banner')
 </body>
 </html>

@@ -51,6 +51,7 @@
 <body class="h-full font-sans antialiased @if($laIsChef) no-sidebar @endif">
     @include('partials.app-loader')
     @include('partials.pin-gate')
+    @include('partials.ios-install-banner')
 
     <div class="app-layout">
         {{-- Le Chef d'Entreprise n'a que 4 choses à faire : pas besoin d'une

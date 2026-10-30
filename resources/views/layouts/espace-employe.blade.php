@@ -392,6 +392,7 @@
 <body>
 @include('partials.app-loader')
 @include('partials.pin-gate')
+@include('partials.ios-install-banner')
 
 @php
     $rhUser   = auth()->user();

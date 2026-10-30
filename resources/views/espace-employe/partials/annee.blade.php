@@ -7,8 +7,7 @@
     $rhNow    = now()->startOfDay();
     $rhYear   = $rhNow->year;
     $rhMois   = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
-    // Jours fériés à date fixe au Burkina Faso (les fêtes religieuses mobiles ne sont pas incluses)
-    $rhFeries = ['01-01', '01-03', '03-08', '05-01', '08-05', '08-15', '11-01', '12-11', '12-25'];
+    $rhFeries = \App\Models\Conge::JOURS_FERIES_FIXES;
     $calendrier = $calendrier ?? [];
 @endphp
 <div class="rh-year" aria-hidden="true">

@@ -11,6 +11,12 @@ class Conge extends Model
 {
     use HasFactory, SoftDeletes;
 
+    /**
+     * Jours fériés chômés à date fixe au Burkina Faso (format MM-DD).
+     * Les fêtes religieuses mobiles ne sont pas incluses (dates variables).
+     */
+    public const JOURS_FERIES_FIXES = ['01-01', '01-03', '03-08', '05-01', '08-05', '08-15', '11-01', '12-11', '12-25'];
+
     protected $fillable = [
         'entreprise_id',
         'personnel_id',
@@ -211,7 +217,8 @@ class Conge extends Model
     }
 
     /**
-     * Calculer le nombre de jours ouvres entre deux dates (hors weekends)
+     * Calculer le nombre de jours ouvres entre deux dates
+     * (hors weekends et jours fériés chômés)
      */
     public static function calculerNombreJours($dateDebut, $dateFin, $demiJourneeDebut = false, $demiJourneeFin = false): int
     {
@@ -222,8 +229,8 @@ class Conge extends Model
         $current = $debut->copy();
 
         while ($current->lte($fin)) {
-            // Exclure samedi (6) et dimanche (0)
-            if (!$current->isWeekend()) {
+            // Exclure samedi (6), dimanche (0) et les jours fériés chômés
+            if (!$current->isWeekend() && !in_array($current->format('m-d'), self::JOURS_FERIES_FIXES, true)) {
                 $jours++;
             }
             $current->addDay();

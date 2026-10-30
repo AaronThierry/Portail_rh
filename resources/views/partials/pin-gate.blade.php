@@ -180,22 +180,43 @@
     var MAX_ATTEMPTS = 5;
     var LOGOUT_URL = '{{ route("logout.get") }}';
 
-    // Déjà déverrouillé récemment (navigation interne) : on ne redemande pas le code
-    // à chaque page, seulement si l'app a été quittée un moment. localStorage (pas
-    // sessionStorage — peu fiable d'une navigation à l'autre dans certaines WebView
-    // Android) + fenêtre de temps glissante, la même que l'écran de chargement.
+    // ── Reverrouillage dès que l'app quitte le premier plan ─────────────────
+    // Pas de délai de grâce : si l'app a été mise en arrière-plan (changement
+    // d'app, mise en veille, écran verrouillé...) ne serait-ce qu'un instant
+    // depuis le dernier déverrouillage, le code est redemandé — immédiatement
+    // au retour au premier plan si l'app est restée en mémoire, ou au prochain
+    // chargement de page si le système a tué le processus entre-temps. En
+    // revanche, une simple navigation interne (clic sur un lien) ne déclenche
+    // jamais 'visibilitychange' : on ne redemande donc pas le code à chaque page.
     var UNLOCK_AT_KEY = 'rhpin_unlocked_at';
     var UNLOCK_EMAIL_KEY = 'rhpin_unlocked_email';
-    var SESSION_GAP_MS = 20 * 60 * 1000;
-    try {
-        var lastUnlockAt = parseInt(localStorage.getItem(UNLOCK_AT_KEY) || '0', 10);
-        var lastUnlockEmail = localStorage.getItem(UNLOCK_EMAIL_KEY) || '';
-        if (lastUnlockEmail === email && lastUnlockAt > 0 && (Date.now() - lastUnlockAt) < SESSION_GAP_MS) {
-            localStorage.setItem(UNLOCK_AT_KEY, String(Date.now())); // prolonge la fenêtre
-            el.remove();
-            return;
+    var BG_AT_KEY = 'rhpin_bg_at';
+
+    function markUnlocked() {
+        try {
+            localStorage.setItem(UNLOCK_AT_KEY, String(Date.now()));
+            localStorage.setItem(UNLOCK_EMAIL_KEY, email);
+        } catch (e) {}
+    }
+    function markBackgrounded() {
+        try { localStorage.setItem(BG_AT_KEY, String(Date.now())); } catch (e) {}
+    }
+    function wasBackgroundedSinceUnlock() {
+        try {
+            var unlockAt = parseInt(localStorage.getItem(UNLOCK_AT_KEY) || '0', 10);
+            var unlockEmail = localStorage.getItem(UNLOCK_EMAIL_KEY) || '';
+            var bgAt = parseInt(localStorage.getItem(BG_AT_KEY) || '0', 10);
+            if (unlockEmail !== email || unlockAt <= 0) return true;
+            return bgAt > unlockAt;
+        } catch (e) { return true; }
+    }
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            markBackgrounded();
+        } else if (typeof relock === 'function') {
+            relock();
         }
-    } catch (e) {}
+    });
 
     function loadRecord() {
         try { return JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { return null; }
@@ -205,12 +226,6 @@
     }
     function clearRecord() {
         try { localStorage.removeItem(STORE_KEY); } catch (e) {}
-    }
-    function markUnlocked() {
-        try {
-            localStorage.setItem(UNLOCK_AT_KEY, String(Date.now()));
-            localStorage.setItem(UNLOCK_EMAIL_KEY, email);
-        } catch (e) {}
     }
 
     // ── Compteur de tentatives, PERSISTÉ (pas une simple variable JS) ──────────
@@ -308,7 +323,23 @@
         subEl.textContent = email;
     }
 
-    if (mode === 'setup') setupTexts(); else unlockTexts();
+    function showGate() {
+        el.style.display = '';
+        el.classList.remove('pin-gate--hide');
+    }
+    function hideGate() { el.classList.add('pin-gate--hide'); }
+
+    // État initial : si un code existe déjà pour ce compte et que l'app n'a
+    // pas quitté le premier plan depuis le dernier déverrouillage, inutile de
+    // montrer l'écran — sans animation de sortie, pour ne rien laisser voir
+    // (contrairement à closeGate(), qui conclut une saisie réussie).
+    if (mode === 'unlock' && !wasBackgroundedSinceUnlock()) {
+        hideGate();
+        el.style.display = 'none';
+    } else {
+        showGate();
+        if (mode === 'setup') setupTexts(); else unlockTexts();
+    }
 
     // « Code oublié ? » n'a de sens qu'une fois un code déjà créé.
     if (mode === 'unlock') {
@@ -322,8 +353,20 @@
     function closeGate() {
         clearAttempts();
         markUnlocked();
-        el.classList.add('pin-gate--hide');
-        setTimeout(function () { el.remove(); }, 380);
+        hideGate();
+    }
+
+    function relock() {
+        // N'a de sens qu'une fois un code déjà créé, et seulement si l'app a
+        // effectivement quitté le premier plan depuis le dernier déverrouillage.
+        if (mode !== 'unlock' || !wasBackgroundedSinceUnlock()) return;
+        if (getAttempts() >= MAX_ATTEMPTS) { forceLogout(); return; }
+        badgeEl.classList.remove('pin-badge--ok');
+        resetBuffer();
+        errorEl.textContent = ' ';
+        unlockTexts();
+        busy = false;
+        showGate();
     }
 
     function showSuccessThenClose() {

@@ -182,15 +182,24 @@
 
     // ── Reverrouillage dès que l'app quitte le premier plan ─────────────────
     // Pas de délai de grâce : si l'app a été mise en arrière-plan (changement
-    // d'app, mise en veille, écran verrouillé...) ne serait-ce qu'un instant
-    // depuis le dernier déverrouillage, le code est redemandé — immédiatement
-    // au retour au premier plan si l'app est restée en mémoire, ou au prochain
-    // chargement de page si le système a tué le processus entre-temps. En
-    // revanche, une simple navigation interne (clic sur un lien) ne déclenche
-    // jamais 'visibilitychange' : on ne redemande donc pas le code à chaque page.
+    // d'app, mise en veille, écran verrouillé...) depuis le dernier
+    // déverrouillage, le code est redemandé — immédiatement au retour au
+    // premier plan si l'app est restée en mémoire, ou au prochain chargement
+    // de page si le système a tué le processus entre-temps.
+    //
+    // Une simple navigation interne (clic sur un lien) ne doit PAS redemander
+    // le code. En théorie 'visibilitychange' ne devrait se déclencher que pour
+    // un vrai passage en arrière-plan — mais certains WebView Android le
+    // déclenchent aussi, transitoirement, pendant le remplacement de page d'une
+    // navigation normale. On ne confirme donc la mise en arrière-plan qu'après
+    // un court délai : si c'était une simple navigation, le document (et ce
+    // minuteur) auront déjà été détruits avant que le délai n'expire, donc rien
+    // ne sera écrit à tort.
     var UNLOCK_AT_KEY = 'rhpin_unlocked_at';
     var UNLOCK_EMAIL_KEY = 'rhpin_unlocked_email';
     var BG_AT_KEY = 'rhpin_bg_at';
+    var BG_CONFIRM_DELAY_MS = 1200;
+    var bgTimer = null;
 
     function markUnlocked() {
         try {
@@ -212,9 +221,10 @@
     }
     document.addEventListener('visibilitychange', function () {
         if (document.hidden) {
-            markBackgrounded();
-        } else if (typeof relock === 'function') {
-            relock();
+            bgTimer = setTimeout(markBackgrounded, BG_CONFIRM_DELAY_MS);
+        } else {
+            if (bgTimer) { clearTimeout(bgTimer); bgTimer = null; }
+            if (typeof relock === 'function') relock();
         }
     });
 

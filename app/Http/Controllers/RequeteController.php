@@ -268,10 +268,13 @@ class RequeteController extends Controller
     public function adminReply(Request $request, Requete $requete)
     {
         $request->validate([
-            'reponse' => 'required|string|min:5|max:3000',
+            'reponse'  => 'required|string|min:5|max:3000',
+            'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ], [
             'reponse.required' => 'La réponse est obligatoire.',
             'reponse.min'      => 'La réponse doit contenir au moins 5 caractères.',
+            'document.mimes'   => 'Le document doit être un PDF ou une image (jpg, png).',
+            'document.max'     => 'Le document ne doit pas dépasser 5 Mo.',
         ]);
 
         // Enregistrer le message dans le fil
@@ -283,13 +286,22 @@ class RequeteController extends Controller
         ]);
 
         // Mettre à jour la requête
-        $requete->update([
+        $data = [
             'reponse'     => $request->reponse,
             'statut'      => 'repondue',
             'repondu_par' => Auth::id(),
             'repondu_le'  => now(),
             'lu_par_chef' => false,
-        ]);
+        ];
+
+        if ($request->hasFile('document')) {
+            if ($requete->document) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($requete->document);
+            }
+            $data['document'] = $request->file('document')->store('requetes', 'public');
+        }
+
+        $requete->update($data);
 
         // Notifier le Chef
         try {

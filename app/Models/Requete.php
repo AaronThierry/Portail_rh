@@ -17,6 +17,7 @@ class Requete extends Model
         'message',
         'statut',
         'reponse',
+        'document',
         'repondu_par',
         'repondu_le',
         'lu_par_admin',

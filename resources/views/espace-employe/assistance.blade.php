@@ -156,7 +156,13 @@
                                 <div class="as-thread">
                                     <div class="as-msg moi"><small>Vous · {{ $req->created_at->format('d/m/Y à H\hi') }}</small><p>{{ $req->message }}</p></div>
                                     @if($req->reponse)
-                                        <div class="as-msg rh"><small>Service RH · {{ $req->repondu_le ? $req->repondu_le->format('d/m/Y à H\hi') : '' }}</small><p>{{ $req->reponse }}</p></div>
+                                        <div class="as-msg rh">
+                                            <small>Service RH · {{ $req->repondu_le ? $req->repondu_le->format('d/m/Y à H\hi') : '' }}</small>
+                                            <p>{{ $req->reponse }}</p>
+                                            @if($req->document)
+                                                <a href="{{ asset('storage/' . $req->document) }}" target="_blank" rel="noopener" class="rh-btn soft sm" style="margin-top: 8px">Télécharger le document</a>
+                                            @endif
+                                        </div>
                                     @endif
                                     @foreach($req->messages as $msg)
                                         @php $isRH = $msg->isFromAdmin(); @endphp

@@ -504,6 +504,19 @@
             @endforeach
         </div>
 
+        @if($requete->document)
+        <div class="client-banner" style="margin: 0 28px 8px; background: rgba(16,185,129,0.05); border-color: rgba(16,185,129,0.15);">
+            <div class="client-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <div class="client-info" style="flex: 1">
+                <span class="client-name">Document joint</span>
+                <span class="client-sub">Envoyé au client avec la réponse</span>
+            </div>
+            <a href="{{ asset('storage/' . $requete->document) }}" target="_blank" rel="noopener" class="back-btn" style="margin: 0">Télécharger</a>
+        </div>
+        @endif
+
         {{-- Client banner --}}
         <div class="client-banner">
             <div class="client-avatar">{{ strtoupper(substr($requete->entreprise->nom ?? 'E', 0, 1)) }}</div>
@@ -577,7 +590,7 @@
             Répondre au client
         </div>
 
-        <form id="replyForm" action="{{ route('admin.admin-requetes.reply', $requete) }}" method="POST" class="reply-form">
+        <form id="replyForm" action="{{ route('admin.admin-requetes.reply', $requete) }}" method="POST" class="reply-form" enctype="multipart/form-data">
             @csrf
 
             @if($errors->any())
@@ -587,6 +600,14 @@
             @endif
 
             <textarea name="reponse" class="reply-textarea" placeholder="Rédigez votre réponse ici…" rows="6" required>{{ old('reponse') }}</textarea>
+
+            <div>
+                <label for="document" style="display:block; font-size: 0.82rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+                    Document à joindre <span style="font-weight: 500; color: var(--text-muted);">(attestation demandée, PDF ou image — optionnel)</span>
+                </label>
+                <input type="file" name="document" id="document" accept=".pdf,.jpg,.jpeg,.png"
+                       style="width: 100%; padding: 10px 12px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--bg-tertiary); color: var(--text-primary); font-size: 0.84rem; box-sizing: border-box;">
+            </div>
 
             <div class="reply-actions">
                 <button type="button" class="btn-close-ticket" id="btnCloseTicket">

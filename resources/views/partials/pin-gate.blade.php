@@ -83,13 +83,13 @@
 .pin-badge--ok .pin-badge-check { opacity: 1; transform: scale(1); color: var(--ok, #059669); }
 
 .pin-brand {
-    font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: 1.0625rem;
-    letter-spacing: .02em; color: var(--ink, #0f172a);
+    font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: 2rem;
+    letter-spacing: -.01em; color: var(--ink, #0f172a);
     margin: 0 0 1rem;
 }
 
 .pin-title {
-    font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: 1.25rem;
+    font-family: var(--display, 'Syne', sans-serif); font-weight: 700; font-size: 1.0625rem;
     color: var(--ink, #0f172a); margin: 0 0 .25rem;
 }
 .pin-sub {

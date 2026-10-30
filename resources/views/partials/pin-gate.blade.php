@@ -1,11 +1,10 @@
 <div id="pinGate" class="pin-gate" aria-hidden="true" data-email="{{ Auth::user()->email }}">
     <div class="pin-card">
-        <div class="pin-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
+        <div class="pin-badge" id="pinBadge">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="" class="pin-badge-logo">
+            <svg class="pin-badge-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
         </div>
+        <p class="pin-brand">Portail RH+</p>
         <h2 class="pin-title" id="pinTitle">Entrez votre code</h2>
         <p class="pin-sub" id="pinSub">{{ Auth::user()->email }}</p>
 
@@ -33,7 +32,11 @@
             </button>
         </div>
 
-        <a href="{{ route('logout.get') }}" class="pin-logout">Se déconnecter</a>
+        <div class="pin-foot">
+            <button type="button" class="pin-link pin-link--accent" id="pinForgot" style="display:none">Code oublié ?</button>
+            <span class="pin-foot-sep" id="pinFootSep" aria-hidden="true" style="display:none">·</span>
+            <a href="{{ route('logout.get') }}" class="pin-link">Se déconnecter</a>
+        </div>
     </div>
 </div>
 
@@ -55,14 +58,35 @@
 }
 .pin-card.pin-shake { animation: pin-shake .45s ease; }
 
-.pin-icon {
-    width: 52px; height: 52px; border-radius: var(--radius, 16px);
-    background: var(--brand-bg, #eff6ff);
+.pin-badge {
+    position: relative;
+    width: 68px; height: 68px; border-radius: 22px;
+    background: var(--surface, #fff);
     border: 1px solid var(--line-soft, #e2e8f0);
+    box-shadow: 0 10px 28px rgba(37, 99, 235, .14);
     display: flex; align-items: center; justify-content: center;
-    color: var(--brand, #2563eb); margin-bottom: 1rem;
+    margin-bottom: .875rem;
+    transition: background .3s ease, border-color .3s ease;
 }
-.pin-icon svg { width: 24px; height: 24px; }
+.pin-badge-logo { width: 42px; height: 42px; object-fit: contain; transition: opacity .2s ease, transform .2s ease; }
+.pin-badge-check {
+    position: absolute; inset: 0; margin: auto; width: 30px; height: 30px;
+    opacity: 0; transform: scale(.5);
+    transition: opacity .25s ease, transform .25s ease;
+}
+.pin-badge--ok {
+    background: var(--ok-bg, rgba(52, 211, 153, .16));
+    border-color: transparent;
+    animation: pin-pop .4s ease;
+}
+.pin-badge--ok .pin-badge-logo { opacity: 0; transform: scale(.6); }
+.pin-badge--ok .pin-badge-check { opacity: 1; transform: scale(1); color: var(--ok, #059669); }
+
+.pin-brand {
+    font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: .75rem;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--muted, #64748b);
+    margin: 0 0 .875rem;
+}
 
 .pin-title {
     font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: 1.25rem;
@@ -106,11 +130,16 @@
 .pin-key-back { color: var(--muted, #64748b); }
 .pin-key-back svg { width: 20px; height: 20px; }
 
-.pin-logout {
+.pin-foot { display: flex; align-items: center; gap: .5rem; }
+.pin-foot-sep { color: var(--line, #cbd5e1); font-size: .75rem; }
+
+.pin-link {
     font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; font-weight: 600;
     color: var(--muted, #64748b); text-decoration: none;
+    background: none; border: 0; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
-.pin-logout:active { color: var(--brand, #2563eb); }
+.pin-link:active { color: var(--brand, #2563eb); }
+.pin-link--accent { color: var(--brand, #2563eb); }
 
 @keyframes pin-shake {
     10%, 90% { transform: translateX(-2px); }
@@ -119,8 +148,15 @@
     40%, 60% { transform: translateX(8px); }
 }
 
+@keyframes pin-pop {
+    0% { transform: scale(.75); }
+    55% { transform: scale(1.07); }
+    100% { transform: scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .pin-card.pin-shake { animation: none !important; }
+    .pin-badge--ok { animation: none !important; }
 }
 </style>
 
@@ -231,6 +267,13 @@
     var errorEl = document.getElementById('pinError');
     var padEl = document.getElementById('pinPad');
     var cardEl = el.querySelector('.pin-card');
+    var badgeEl = document.getElementById('pinBadge');
+    var forgotEl = document.getElementById('pinForgot');
+    var forgotSepEl = document.getElementById('pinFootSep');
+
+    function vibrate(pattern) {
+        try { if ('vibrate' in navigator) navigator.vibrate(pattern); } catch (e) {}
+    }
 
     var buffer = '';
     var firstEntry = null;
@@ -267,11 +310,26 @@
 
     if (mode === 'setup') setupTexts(); else unlockTexts();
 
+    // « Code oublié ? » n'a de sens qu'une fois un code déjà créé.
+    if (mode === 'unlock') {
+        forgotEl.style.display = '';
+        forgotSepEl.style.display = '';
+    }
+    forgotEl.addEventListener('click', function () {
+        forceLogout();
+    });
+
     function closeGate() {
         clearAttempts();
         markUnlocked();
         el.classList.add('pin-gate--hide');
         setTimeout(function () { el.remove(); }, 380);
+    }
+
+    function showSuccessThenClose() {
+        vibrate(15);
+        badgeEl.classList.add('pin-badge--ok');
+        setTimeout(closeGate, 550);
     }
 
     function onComplete() {
@@ -296,14 +354,14 @@
             var salt = randomHex(16);
             hashPin(buffer, salt).then(function (hash) {
                 saveRecord({ email: email, salt: salt, hash: hash });
-                closeGate();
+                showSuccessThenClose();
             });
             return;
         }
 
         hashPin(buffer, record.salt).then(function (hash) {
             if (hash === record.hash) {
-                closeGate();
+                showSuccessThenClose();
                 return;
             }
 
@@ -315,6 +373,7 @@
                 return;
             }
 
+            vibrate([15, 40, 15]);
             var left = MAX_ATTEMPTS - attempts;
             shake('Code incorrect — ' + left + ' essai' + (left > 1 ? 's' : '') + ' restant' + (left > 1 ? 's' : ''));
             resetBuffer();
@@ -330,11 +389,13 @@
 
         if (key === 'back') {
             buffer = buffer.slice(0, -1);
+            vibrate(8);
             renderDots();
             return;
         }
         if (buffer.length >= PIN_LEN) return;
         buffer += key;
+        vibrate(8);
         renderDots();
         if (buffer.length === PIN_LEN) {
             busy = true;

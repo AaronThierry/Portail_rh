@@ -217,24 +217,15 @@ class Conge extends Model
     }
 
     /**
-     * Calculer le nombre de jours ouvres entre deux dates
-     * (hors weekends et jours fériés chômés)
+     * Calculer le nombre de jours de congé entre deux dates (calendaires,
+     * du début à la fin inclus — week-ends et jours fériés comptent).
      */
     public static function calculerNombreJours($dateDebut, $dateFin, $demiJourneeDebut = false, $demiJourneeFin = false): int
     {
         $debut = Carbon::parse($dateDebut);
         $fin = Carbon::parse($dateFin);
 
-        $jours = 0;
-        $current = $debut->copy();
-
-        while ($current->lte($fin)) {
-            // Exclure samedi (6), dimanche (0) et les jours fériés chômés
-            if (!$current->isWeekend() && !in_array($current->format('m-d'), self::JOURS_FERIES_FIXES, true)) {
-                $jours++;
-            }
-            $current->addDay();
-        }
+        $jours = $debut->diffInDays($fin) + 1;
 
         // Ajustements demi-journees
         if ($demiJourneeDebut && $jours > 0) {

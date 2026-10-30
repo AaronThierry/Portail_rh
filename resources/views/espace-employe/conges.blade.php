@@ -227,22 +227,16 @@
         });
     });
 
-    // Durée indicative (jours ouvrés, hors week-ends et jours fériés chômés)
-    // Même liste que Conge::JOURS_FERIES_FIXES côté serveur, qui fait foi.
-    var rhFeries = @json(\App\Models\Conge::JOURS_FERIES_FIXES);
+    // Durée indicative (jours calendaires, du début à la fin inclus)
     var d1 = document.getElementById('date_debut'), d2 = document.getElementById('date_fin'), out = document.getElementById('dureeConge');
     function duree() {
         out.textContent = '';
         if (!d1.value || !d2.value) return;
         if (d1.value > d2.value) { out.textContent = 'Le dernier jour doit être après le premier.'; return; }
         d2.min = d1.value;
-        var n = 0, d = new Date(d1.value + 'T12:00:00'), end = new Date(d2.value + 'T12:00:00');
-        for (; d <= end; d.setDate(d.getDate() + 1)) {
-            var w = d.getDay();
-            var md = String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-            if (w !== 0 && w !== 6 && rhFeries.indexOf(md) === -1) n++;
-        }
-        out.textContent = n + ' jour' + (n > 1 ? 's' : '') + ' ouvré' + (n > 1 ? 's' : '') + ' (hors jours fériés).';
+        var start = new Date(d1.value + 'T12:00:00'), end = new Date(d2.value + 'T12:00:00');
+        var n = Math.round((end - start) / 86400000) + 1;
+        out.textContent = n + ' jour' + (n > 1 ? 's' : '') + '.';
     }
     d1.addEventListener('change', duree);
     d2.addEventListener('change', duree);

@@ -73,14 +73,15 @@
 .ios-banner-box {
     position: relative; z-index: 1;
     width: 100%; max-width: 420px;
-    background: var(--surface, #fff);
-    border: 1px solid var(--line-soft, #e2e8f0);
+    background: #fff;
+    border: 1px solid #e2e8f0;
     border-radius: var(--radius-lg, 20px);
     box-shadow: 0 16px 40px rgba(15, 23, 42, .16);
     padding: 16px 18px;
     opacity: 0; transform: translateY(16px);
     transition: opacity .25s ease, transform .25s ease;
 }
+.dark .ios-banner-box { background: #202d47; border-color: #2f3e5c; }
 .ios-banner--show { pointer-events: auto; }
 .ios-banner--show .ios-banner-backdrop { opacity: 1; }
 .ios-banner--show .ios-banner-box { opacity: 1; transform: translateY(0); }
@@ -88,29 +89,34 @@
 .ios-banner-close {
     position: absolute; top: 10px; right: 10px;
     width: 30px; height: 30px; border-radius: 999px; border: 0;
-    background: var(--subtle, #f1f5f9); color: var(--muted, #64748b);
+    background: #f1f5f9; color: #64748b;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
 .ios-banner-close svg { width: 16px; height: 16px; }
+.dark .ios-banner-close { background: #141f33; color: #a8b6ca; }
 
 .ios-banner-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-right: 24px; }
 .ios-banner-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(15, 23, 42, .12); }
-.ios-banner-title { font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: .9375rem; color: var(--ink, #0f172a); margin: 0; }
-.ios-banner-sub { font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; color: var(--muted, #64748b); margin: 2px 0 0; }
+.ios-banner-title { font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: .9375rem; color: #0f172a; margin: 0; }
+.ios-banner-sub { font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; color: #64748b; margin: 2px 0 0; }
+.dark .ios-banner-title { color: #f8fafc; }
+.dark .ios-banner-sub { color: #a8b6ca; }
 
 .ios-banner-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .ios-banner-steps li {
     display: flex; align-items: center; gap: 10px;
-    font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; color: var(--ink, #0f172a);
+    font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; color: #0f172a;
 }
+.dark .ios-banner-steps li { color: #f8fafc; }
 .ios-banner-steps strong { font-weight: 700; }
 .ios-banner-step-ico {
     width: 30px; height: 30px; border-radius: 10px; flex-shrink: 0;
-    background: var(--brand-bg, #eff6ff); color: var(--brand, #2563eb);
+    background: #eff6ff; color: #2563eb;
     display: flex; align-items: center; justify-content: center;
 }
 .ios-banner-step-ico svg { width: 16px; height: 16px; }
+.dark .ios-banner-step-ico { background: rgba(59, 130, 246, .16); color: #60a5fa; }
 
 @media (prefers-reduced-motion: reduce) {
     .ios-banner-backdrop, .ios-banner-box { transition: none; }
@@ -119,9 +125,10 @@
 .ios-banner-step-ico--pulse { position: relative; }
 .ios-banner-step-ico--pulse::after {
     content: ''; position: absolute; inset: -4px; border-radius: 12px;
-    border: 2px solid var(--brand, #2563eb);
+    border: 2px solid #2563eb;
     animation: iosStepPulse 1.6s ease-out infinite;
 }
+.dark .ios-banner-step-ico--pulse::after { border-color: #60a5fa; }
 @keyframes iosStepPulse {
     0% { transform: scale(.9); opacity: .9; }
     70% { transform: scale(1.35); opacity: 0; }
@@ -132,7 +139,7 @@
     position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px));
     transform: translate(-50%, 16px);
     display: flex; align-items: center; gap: 10px;
-    background: var(--ok, #16a34a); color: #fff;
+    background: #16a34a; color: #fff;
     font-family: var(--font, 'DM Sans', sans-serif); font-size: .875rem; font-weight: 600;
     padding: 12px 18px; border-radius: 999px;
     box-shadow: 0 12px 28px rgba(15, 23, 42, .22);
@@ -179,7 +186,7 @@
 }
 .rh-install-nudge-cta {
     flex-shrink: 0; border: 0; border-radius: 999px; padding: 8px 14px;
-    background: var(--brand, #2563eb); color: #fff; font-weight: 700; font-size: .8125rem;
+    background: #2563eb; color: #fff; font-weight: 700; font-size: .8125rem;
     font-family: var(--font, 'DM Sans', sans-serif); cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
 .rh-install-nudge-close {

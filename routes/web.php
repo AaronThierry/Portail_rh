@@ -25,6 +25,7 @@ use App\Http\Controllers\WebPushSubscriptionController;
 use App\Http\Controllers\ChefEntrepriseController;
 use App\Http\Controllers\RequeteController;
 use App\Http\Controllers\BulletinImportController;
+use App\Http\Controllers\IosProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +40,7 @@ use App\Http\Controllers\BulletinImportController;
 
 // Routes publiques
 
-
+Route::get('/installer-ios.mobileconfig', [IosProfileController::class, 'download'])->name('ios.profile');
 
 // Routes d'authentification (accessible uniquement si non connecté)
 Route::middleware('guest')->group(function () {

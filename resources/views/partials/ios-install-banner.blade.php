@@ -213,6 +213,7 @@
 
     var alreadyInstalled = false;
     var isIOSEligible = false;
+    var isAndroid = false;
     var deferredPrompt = null;
 
     try {
@@ -228,6 +229,7 @@
         var isSafari = /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(ua);
 
         isIOSEligible = !alreadyInstalled && isIOS && isSafari;
+        isAndroid = !alreadyInstalled && /Android/i.test(ua);
     } catch (e) {}
 
     // iOS n'a pas d'évènement "installé" : on ne peut détecter le succès qu'au
@@ -319,6 +321,12 @@
     // complet avant de chercher [data-ios-install-btn], sans quoi il n'existe
     // pas encore. Rappelé une 2e fois si beforeinstallprompt arrive plus tard.
     function wireTriggers() {
+        if (isAndroid) {
+            document.querySelectorAll('[data-apk-download-link]').forEach(function (link) {
+                link.hidden = false;
+            });
+        }
+
         var eligible = isIOSEligible || !!deferredPrompt;
         if (!eligible) return;
 

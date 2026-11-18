@@ -80,6 +80,7 @@
         </div>
         <div class="rh-actions">
             <button type="button" class="rh-btn soft" data-ios-install-btn hidden>Installer l'application</button>
+            <a href="{{ asset('app/portail-rh.apk') }}" class="rh-btn soft" data-apk-download-link hidden download>Télécharger l'APK Android</a>
             <button type="button" class="rh-btn" data-open="editModal">Modifier mes informations</button>
         </div>
     </section>

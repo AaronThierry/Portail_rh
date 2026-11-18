@@ -8,6 +8,17 @@
     - iOS/Safari : aucune API ne peut ouvrir "Partager" à la place de
       l'utilisateur, donc ce panneau affiche le mini-guide 2 étapes.
 --}}
+<div id="rhInstallNudge" class="rh-install-nudge" aria-hidden="true">
+    <span class="rh-install-nudge-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </span>
+    <span class="rh-install-nudge-text">Recevez vos fiches de paie et alertes instantanément : ajoutez Portail RH+ à l'écran d'accueil.</span>
+    <button type="button" class="rh-install-nudge-cta" id="rhInstallNudgeCta">Installer</button>
+    <button type="button" class="rh-install-nudge-close" id="rhInstallNudgeClose" aria-label="Plus tard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+</div>
+
 <div id="iosInstallModal" class="ios-banner" aria-hidden="true">
     <div class="ios-banner-backdrop" id="iosBannerBackdrop"></div>
     <div class="ios-banner-box" role="dialog" aria-label="Installer Portail RH+ sur l'écran d'accueil">
@@ -141,6 +152,47 @@
     .ios-banner-step-ico--pulse::after { animation: none; }
     .install-toast { transition: none; }
 }
+
+.rh-install-nudge {
+    position: fixed; left: 12px; right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    z-index: 999980;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--ink, #0f172a); color: #fff;
+    border-radius: var(--radius-lg, 16px);
+    padding: 12px 10px 12px 14px;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, .22);
+    max-width: 480px; margin: 0 auto;
+    opacity: 0; transform: translateY(24px);
+    pointer-events: none;
+    transition: opacity .3s ease, transform .3s ease;
+}
+.rh-install-nudge--show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.rh-install-nudge-ico {
+    width: 30px; height: 30px; border-radius: 999px; flex-shrink: 0;
+    background: rgba(255, 255, 255, .12); color: #fbbf24;
+    display: flex; align-items: center; justify-content: center;
+}
+.rh-install-nudge-ico svg { width: 16px; height: 16px; }
+.rh-install-nudge-text {
+    flex: 1; font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; line-height: 1.35;
+}
+.rh-install-nudge-cta {
+    flex-shrink: 0; border: 0; border-radius: 999px; padding: 8px 14px;
+    background: var(--brand, #2563eb); color: #fff; font-weight: 700; font-size: .8125rem;
+    font-family: var(--font, 'DM Sans', sans-serif); cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.rh-install-nudge-close {
+    flex-shrink: 0; width: 26px; height: 26px; border-radius: 999px; border: 0;
+    background: transparent; color: rgba(255, 255, 255, .6);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.rh-install-nudge-close svg { width: 14px; height: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+    .rh-install-nudge { transition: none; }
+}
 </style>
 
 <script>
@@ -192,10 +244,54 @@
     }
 
     function open() {
+        hideNudge();
         el.classList.add('ios-banner--show');
         try { localStorage.setItem(GUIDE_OPENED_KEY, '1'); } catch (e) {}
     }
     function close() { el.classList.remove('ios-banner--show'); }
+
+    function triggerInstall() {
+        if (deferredPrompt) {
+            var prompt = deferredPrompt;
+            deferredPrompt = null;
+            prompt.prompt();
+        } else if (isIOSEligible) {
+            open();
+        }
+    }
+
+    // Bannière discrète proposant l'installation avec un bénéfice concret
+    // (les notifications push, impossibles sur iOS hors mode standalone —
+    // voir app.js) plutôt qu'un simple argument esthétique. Respecte un
+    // délai avant de se représenter si l'utilisateur l'a déjà fermée.
+    var NUDGE_DISMISSED_KEY = 'rh_install_nudge_dismissed_at';
+    var NUDGE_COOLDOWN_MS = 10 * 24 * 60 * 60 * 1000;
+    var nudge = document.getElementById('rhInstallNudge');
+
+    function hideNudge() {
+        if (nudge) nudge.classList.remove('rh-install-nudge--show');
+    }
+
+    function maybeShowNudge() {
+        if (!nudge || alreadyInstalled) return;
+        if (!isIOSEligible && !deferredPrompt) return;
+        try {
+            var dismissedAt = parseInt(localStorage.getItem(NUDGE_DISMISSED_KEY) || '0', 10);
+            if (dismissedAt && (Date.now() - dismissedAt) < NUDGE_COOLDOWN_MS) return;
+        } catch (e) {}
+        nudge.classList.add('rh-install-nudge--show');
+    }
+
+    if (nudge) {
+        document.getElementById('rhInstallNudgeCta').addEventListener('click', function () {
+            hideNudge();
+            triggerInstall();
+        });
+        document.getElementById('rhInstallNudgeClose').addEventListener('click', function () {
+            hideNudge();
+            try { localStorage.setItem(NUDGE_DISMISSED_KEY, String(Date.now())); } catch (e) {}
+        });
+    }
 
     // Android/Chrome : le navigateur propose lui-même l'installation native
     // via cet évènement, en général quelques secondes après le chargement —
@@ -205,10 +301,12 @@
             e.preventDefault();
             deferredPrompt = e;
             wireTriggers();
+            maybeShowNudge();
         });
 
         window.addEventListener('appinstalled', function () {
             celebrate();
+            hideNudge();
             deferredPrompt = null;
             document.querySelectorAll('[data-ios-install-btn]').forEach(function (btn) {
                 btn.hidden = true;
@@ -229,25 +327,22 @@
             btn.hidden = false;
             if (btn.dataset.installWired) return;
             btn.dataset.installWired = '1';
-            btn.addEventListener('click', function () {
-                if (deferredPrompt) {
-                    var prompt = deferredPrompt;
-                    deferredPrompt = null;
-                    prompt.prompt();
-                } else if (isIOSEligible) {
-                    open();
-                }
-            });
+            btn.addEventListener('click', triggerInstall);
         });
 
         document.getElementById('iosBannerClose').addEventListener('click', close);
         document.getElementById('iosBannerBackdrop').addEventListener('click', close);
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', wireTriggers);
-    } else {
+    function init() {
         wireTriggers();
+        maybeShowNudge();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
     }
 })();
 </script>

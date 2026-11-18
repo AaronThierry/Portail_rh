@@ -60,6 +60,13 @@ return [
         'default_country_code' => env('SMS_DEFAULT_COUNTRY_CODE', '226'),
     ],
 
+    'orange_sms' => [
+        'client_id'      => env('ORANGE_SMS_CLIENT_ID', ''),
+        'client_secret'  => env('ORANGE_SMS_CLIENT_SECRET', ''),
+        'sender_address' => env('ORANGE_SMS_SENDER_ADDRESS', ''),
+        'sender_name'    => env('ORANGE_SMS_SENDER_NAME', 'PortailRH'),
+    ],
+
     'fcm' => [
         'project_id'  => env('FCM_PROJECT_ID', ''),
         'credentials' => env('FCM_CREDENTIALS_PATH', storage_path('app/firebase-service-account.json')),

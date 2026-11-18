@@ -1,7 +1,12 @@
 {{--
-    Panneau d'installation iOS, ouvert à la demande depuis un bouton
+    Installation de l'app, déclenchée à la demande depuis un bouton
     [data-ios-install-btn] ailleurs dans la page (ex. "Mon profil") —
     jamais affiché automatiquement.
+
+    - Android/Chrome : installation native en un tap (API beforeinstallprompt),
+      ce panneau ne s'affiche pas, le bouton appelle directement prompt().
+    - iOS/Safari : aucune API ne peut ouvrir "Partager" à la place de
+      l'utilisateur, donc ce panneau affiche le mini-guide 2 étapes.
 --}}
 <div id="iosInstallModal" class="ios-banner" aria-hidden="true">
     <div class="ios-banner-backdrop" id="iosBannerBackdrop"></div>
@@ -99,40 +104,68 @@
     var el = document.getElementById('iosInstallModal');
     if (!el) return;
 
-    var isEligible = false;
+    var alreadyInstalled = false;
+    var isIOSEligible = false;
+    var deferredPrompt = null;
+
     try {
         // Déjà dans l'app installée (standalone) ou dans l'app Capacitor : rien à proposer.
         var isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
         var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        alreadyInstalled = isCapacitor || isStandalone;
 
-        // iPhone/iPad sous Safari uniquement — Chrome/Firefox iOS n'offrent pas la
-        // même installation, et Android a déjà sa propre installation native.
+        // iPhone/iPad sous Safari uniquement — Chrome/Firefox iOS n'offrent pas
+        // la même installation.
         var ua = window.navigator.userAgent || '';
         var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         var isSafari = /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(ua);
 
-        isEligible = !isCapacitor && !isStandalone && isIOS && isSafari;
+        isIOSEligible = !alreadyInstalled && isIOS && isSafari;
     } catch (e) {}
+
+    function open() { el.classList.add('ios-banner--show'); }
+    function close() { el.classList.remove('ios-banner--show'); }
+
+    // Android/Chrome : le navigateur propose lui-même l'installation native
+    // via cet évènement, en général quelques secondes après le chargement —
+    // on le capture pour pouvoir la déclencher en un tap depuis notre bouton.
+    if (!alreadyInstalled) {
+        window.addEventListener('beforeinstallprompt', function (e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            wireTriggers();
+        });
+
+        window.addEventListener('appinstalled', function () {
+            deferredPrompt = null;
+            document.querySelectorAll('[data-ios-install-btn]').forEach(function (btn) {
+                btn.hidden = true;
+            });
+        });
+    }
 
     // Ce script s'exécute tôt dans la page (avant le contenu de la vue, qui
     // contient le bouton déclencheur) : il faut attendre que le DOM soit
     // complet avant de chercher [data-ios-install-btn], sans quoi il n'existe
-    // pas encore et reste caché pour toujours.
+    // pas encore. Rappelé une 2e fois si beforeinstallprompt arrive plus tard.
     function wireTriggers() {
+        var eligible = isIOSEligible || !!deferredPrompt;
+        if (!eligible) return;
+
         var triggers = document.querySelectorAll('[data-ios-install-btn]');
-
-        if (!isEligible) {
-            el.remove();
-            triggers.forEach(function (btn) { btn.remove(); });
-            return;
-        }
-
-        function open() { el.classList.add('ios-banner--show'); }
-        function close() { el.classList.remove('ios-banner--show'); }
-
         triggers.forEach(function (btn) {
             btn.hidden = false;
-            btn.addEventListener('click', open);
+            if (btn.dataset.installWired) return;
+            btn.dataset.installWired = '1';
+            btn.addEventListener('click', function () {
+                if (deferredPrompt) {
+                    var prompt = deferredPrompt;
+                    deferredPrompt = null;
+                    prompt.prompt();
+                } else if (isIOSEligible) {
+                    open();
+                }
+            });
         });
 
         document.getElementById('iosBannerClose').addEventListener('click', close);

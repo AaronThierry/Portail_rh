@@ -143,23 +143,35 @@
         isEligible = !isCapacitor && !isStandalone && isIOS && isSafari;
     } catch (e) {}
 
-    var triggers = document.querySelectorAll('[data-ios-install-btn]');
+    // Ce script s'exécute tôt dans la page (avant le contenu de la vue, qui
+    // contient le bouton déclencheur) : il faut attendre que le DOM soit
+    // complet avant de chercher [data-ios-install-btn], sans quoi il n'existe
+    // pas encore et reste caché pour toujours.
+    function wireTriggers() {
+        var triggers = document.querySelectorAll('[data-ios-install-btn]');
 
-    if (!isEligible) {
-        el.remove();
-        triggers.forEach(function (btn) { btn.remove(); });
-        return;
+        if (!isEligible) {
+            el.remove();
+            triggers.forEach(function (btn) { btn.remove(); });
+            return;
+        }
+
+        function open() { el.classList.add('ios-banner--show'); }
+        function close() { el.classList.remove('ios-banner--show'); }
+
+        triggers.forEach(function (btn) {
+            btn.hidden = false;
+            btn.addEventListener('click', open);
+        });
+
+        document.getElementById('iosBannerClose').addEventListener('click', close);
+        document.getElementById('iosBannerBackdrop').addEventListener('click', close);
     }
 
-    function open() { el.classList.add('ios-banner--show'); }
-    function close() { el.classList.remove('ios-banner--show'); }
-
-    triggers.forEach(function (btn) {
-        btn.hidden = false;
-        btn.addEventListener('click', open);
-    });
-
-    document.getElementById('iosBannerClose').addEventListener('click', close);
-    document.getElementById('iosBannerBackdrop').addEventListener('click', close);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', wireTriggers);
+    } else {
+        wireTriggers();
+    }
 })();
 </script>

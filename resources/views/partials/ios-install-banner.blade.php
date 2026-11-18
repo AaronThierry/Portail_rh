@@ -158,7 +158,7 @@
     bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     z-index: 999980;
     display: flex; align-items: center; gap: 10px;
-    background: var(--ink, #0f172a); color: #fff;
+    background: #0f172a; color: #fff;
     border-radius: var(--radius-lg, 16px);
     padding: 12px 10px 12px 14px;
     box-shadow: 0 14px 32px rgba(15, 23, 42, .22);

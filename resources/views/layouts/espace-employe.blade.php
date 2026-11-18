@@ -376,8 +376,16 @@
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     }
     /* Pastilles qui utilisent --ink comme fond (texte blanc) : --ink devient clair en
-       sombre, donc le texte blanc ne passerait plus — on le repasse en sombre ici. */
-    html.dark .rh-tabs a[aria-current="page"],
+       sombre, donc le texte blanc ne passerait plus — on le repasse en sombre ici.
+       L'onglet actif doit aussi reprendre son fond clair ici : la règle générale
+       "html.dark .rh-tabs a { background: var(--surface) }" ci-dessus est plus
+       spécifique que la règle de base et écrasait sinon ce fond, laissant un texte
+       sombre sur fond sombre. */
+    html.dark .rh-tabs a[aria-current="page"] {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--page);
+    }
     html.dark .rh-avatar {
         color: var(--page);
     }

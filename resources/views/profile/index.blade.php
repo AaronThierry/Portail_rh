@@ -79,6 +79,7 @@
             </div>
         </div>
         <div class="rh-actions">
+            <button type="button" class="rh-btn soft" data-ios-install-btn hidden>Installer l'application</button>
             <button type="button" class="rh-btn" data-open="editModal">Modifier mes informations</button>
         </div>
     </section>

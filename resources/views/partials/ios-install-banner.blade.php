@@ -1,4 +1,10 @@
-<div id="iosInstallBanner" class="ios-banner" aria-hidden="true">
+{{--
+    Panneau d'installation iOS, ouvert à la demande depuis un bouton
+    [data-ios-install-btn] ailleurs dans la page (ex. "Mon profil") —
+    jamais affiché automatiquement.
+--}}
+<div id="iosInstallModal" class="ios-banner" aria-hidden="true">
+    <div class="ios-banner-backdrop" id="iosBannerBackdrop"></div>
     <div class="ios-banner-box" role="dialog" aria-label="Installer Portail RH+ sur l'écran d'accueil">
         <button type="button" class="ios-banner-close" id="iosBannerClose" aria-label="Fermer">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -39,24 +45,30 @@
 
 <style>
 .ios-banner {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 999990;
-    display: flex; justify-content: center;
+    position: fixed; inset: 0; z-index: 999990;
+    display: flex; align-items: flex-end; justify-content: center;
     padding: 0 12px calc(12px + env(safe-area-inset-bottom, 0px));
     pointer-events: none;
-    opacity: 0; transform: translateY(16px);
-    transition: opacity .3s ease, transform .3s ease;
 }
-.ios-banner--show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-
+.ios-banner-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(15, 23, 42, .4);
+    opacity: 0; transition: opacity .25s ease;
+}
 .ios-banner-box {
-    position: relative;
+    position: relative; z-index: 1;
     width: 100%; max-width: 420px;
     background: var(--surface, #fff);
     border: 1px solid var(--line-soft, #e2e8f0);
     border-radius: var(--radius-lg, 20px);
     box-shadow: 0 16px 40px rgba(15, 23, 42, .16);
     padding: 16px 18px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .25s ease, transform .25s ease;
 }
+.ios-banner--show { pointer-events: auto; }
+.ios-banner--show .ios-banner-backdrop { opacity: 1; }
+.ios-banner--show .ios-banner-box { opacity: 1; transform: translateY(0); }
 
 .ios-banner-close {
     position: absolute; top: 10px; right: 10px;
@@ -107,46 +119,47 @@
 .ios-banner-step-ico svg { width: 16px; height: 16px; }
 
 @media (prefers-reduced-motion: reduce) {
-    .ios-banner { transition: none; }
+    .ios-banner-backdrop, .ios-banner-box { transition: none; }
 }
 </style>
 
 <script>
 (function () {
-    var el = document.getElementById('iosInstallBanner');
+    var el = document.getElementById('iosInstallModal');
     if (!el) return;
 
-    var DISMISS_KEY = 'rhios_banner_dismissed_at';
-    var COOLDOWN_MS = 14 * 24 * 60 * 60 * 1000; // 14 jours avant de reproposer
-
+    var isEligible = false;
     try {
         // Déjà dans l'app installée (standalone) ou dans l'app Capacitor : rien à proposer.
         var isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
         var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        if (isCapacitor || isStandalone) { el.remove(); return; }
 
         // iPhone/iPad sous Safari uniquement — Chrome/Firefox iOS n'offrent pas la
-        // même installation, et Android a déjà sa propre bannière native.
+        // même installation, et Android a déjà sa propre installation native.
         var ua = window.navigator.userAgent || '';
         var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         var isSafari = /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(ua);
-        if (!isIOS || !isSafari) { el.remove(); return; }
 
-        var dismissedAt = parseInt(localStorage.getItem(DISMISS_KEY) || '0', 10);
-        if (dismissedAt > 0 && (Date.now() - dismissedAt) < COOLDOWN_MS) { el.remove(); return; }
-    } catch (e) {
+        isEligible = !isCapacitor && !isStandalone && isIOS && isSafari;
+    } catch (e) {}
+
+    var triggers = document.querySelectorAll('[data-ios-install-btn]');
+
+    if (!isEligible) {
         el.remove();
+        triggers.forEach(function (btn) { btn.remove(); });
         return;
     }
 
-    function dismiss() {
-        try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (e) {}
-        el.classList.remove('ios-banner--show');
-        setTimeout(function () { el.remove(); }, 320);
-    }
+    function open() { el.classList.add('ios-banner--show'); }
+    function close() { el.classList.remove('ios-banner--show'); }
 
-    document.getElementById('iosBannerClose').addEventListener('click', dismiss);
+    triggers.forEach(function (btn) {
+        btn.hidden = false;
+        btn.addEventListener('click', open);
+    });
 
-    setTimeout(function () { el.classList.add('ios-banner--show'); }, 1200);
+    document.getElementById('iosBannerClose').addEventListener('click', close);
+    document.getElementById('iosBannerBackdrop').addEventListener('click', close);
 })();
 </script>

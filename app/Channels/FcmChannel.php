@@ -31,6 +31,7 @@ class FcmChannel
         '2fa_active' => 'Sécurité du compte',
         '2fa_desactive' => 'Sécurité du compte',
         'mot_de_passe_modifie' => 'Sécurité du compte',
+        'anniversaire' => '🎉 Joyeux anniversaire',
     ];
 
     public function __construct(FcmService $fcm, WebPushService $webPush)

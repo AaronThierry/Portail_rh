@@ -15,6 +15,9 @@ class Kernel extends ConsoleKernel
         // Import automatique des bulletins de paie : le 1er du mois à 01h00
         // Place les PDFs dans storage/app/imports/bulletins/{entreprise_id}/ avant l'exécution
         // $schedule->command('bulletins:import --notify')->monthlyOn(1, '01:00');
+
+        // Messages de joyeux anniversaire : tous les jours à 8h00
+        $schedule->command('anniversaires:envoyer')->dailyAt('08:00');
     }
 
     /**

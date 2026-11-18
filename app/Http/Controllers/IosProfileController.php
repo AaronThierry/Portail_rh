@@ -81,7 +81,7 @@ class IosProfileController extends Controller
             <string>{$webclipUuidEsc}</string>
             <key>PayloadVersion</key>
             <integer>1</integer>
-            <key>TargetURL</key>
+            <key>URL</key>
             <string>{$targetUrlEsc}</string>
         </dict>
     </array>

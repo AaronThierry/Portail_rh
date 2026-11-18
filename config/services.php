@@ -57,6 +57,7 @@ return [
 
     'sms' => [
         'enabled'              => env('SMS_ENABLED', false),
+        'provider'             => env('SMS_PROVIDER', 'zavu'),
         'default_country_code' => env('SMS_DEFAULT_COUNTRY_CODE', '226'),
     ],
 

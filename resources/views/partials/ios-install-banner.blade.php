@@ -18,14 +18,6 @@
             </div>
         </div>
 
-        <a href="{{ route('ios.profile') }}" class="ios-banner-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 9l5-5 5 5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-            Installer automatiquement
-        </a>
-        <p class="ios-banner-hint">Réglages confirmera l'installation (profil non signé, c'est normal).</p>
-
-        <div class="ios-banner-or"><span>ou manuellement</span></div>
-
         <ol class="ios-banner-steps">
             <li>
                 <span class="ios-banner-step-ico">
@@ -37,7 +29,7 @@
                 <span class="ios-banner-step-ico">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>
                 </span>
-                <span>Choisissez <strong>Sur l'écran d'accueil</strong> — recommandé pour les notifications</span>
+                <span>Choisissez <strong>Sur l'écran d'accueil</strong></span>
             </li>
         </ol>
     </div>
@@ -83,27 +75,6 @@
 .ios-banner-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(15, 23, 42, .12); }
 .ios-banner-title { font-family: var(--display, 'Syne', sans-serif); font-weight: 800; font-size: .9375rem; color: var(--ink, #0f172a); margin: 0; }
 .ios-banner-sub { font-family: var(--font, 'DM Sans', sans-serif); font-size: .8125rem; color: var(--muted, #64748b); margin: 2px 0 0; }
-
-.ios-banner-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 12px; border-radius: var(--radius, 14px);
-    background: var(--brand, #2563eb); color: #fff;
-    font-family: var(--font, 'DM Sans', sans-serif); font-size: .875rem; font-weight: 700;
-    text-decoration: none; -webkit-tap-highlight-color: transparent;
-}
-.ios-banner-btn svg { width: 17px; height: 17px; }
-.ios-banner-btn:active { background: var(--brand-dk, #1d4ed8); }
-
-.ios-banner-hint {
-    font-family: var(--font, 'DM Sans', sans-serif); font-size: .75rem; color: var(--muted, #64748b);
-    text-align: center; margin: 8px 0 0;
-}
-
-.ios-banner-or {
-    display: flex; align-items: center; gap: 10px; margin: 14px 0 12px;
-    font-family: var(--font, 'DM Sans', sans-serif); font-size: .75rem; color: var(--faint, #94a3b8);
-}
-.ios-banner-or::before, .ios-banner-or::after { content: ''; flex: 1; height: 1px; background: var(--line-soft, #e2e8f0); }
 
 .ios-banner-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .ios-banner-steps li {
